@@ -73,8 +73,8 @@ class ExecutionFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        execute_button = Button(self)
-        stop_button = Button(self)
+        execute_button = Button(self, text="Ejecutar")
+        stop_button = Button(self, text="Parar")
 
         execute_button.grid(row=0, column=1, padx=5, pady=5)
         stop_button.grid(row=0, column=2, padx=5, pady=5)
@@ -85,8 +85,8 @@ class HistoryFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        undo_button = Button(self)
-        redo_button = Button(self)
+        undo_button = Button(self, text="Deshacer")
+        redo_button = Button(self, text="Rehacer")
         undo_button.grid(row=0, column=1, padx=5, pady=5)
         redo_button.grid(row=0, column=2, padx=5, pady=5)
 
@@ -96,12 +96,10 @@ class UtilitiesFrame(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        save_button = Button(self)
-        note_button = Button(self)
-        hide_notes_button = Button(self)
+        save_button = Button(self, text="Guardar")
+        import_button = Button(self, text="Cargar")
         save_button.grid(row=0, column=1, padx=5, pady=5)
-        note_button.grid(row=0, column=2, padx=5, pady=5)
-        hide_notes_button.grid(row=0, column=3, padx=5, pady=5)
+        import_button.grid(row=0, column=2, padx=5, pady=5)
         
 
 def main():
