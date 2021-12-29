@@ -27,12 +27,12 @@ class LexicalAnalyzer:
         'COBITAND', # &=
 
         # --COMPARACION--
-        'NEQ',      # !=
-        'EQUALS',   # ==
-        'LTHAN',    # <
-        'LEQTHAN',  # <=
-        'GTHAN',    # >
-        'GEQTHAN',  # >=
+        'NE',       # !=
+        'EQ',       # ==
+        'LT',       # <
+        'LE',       # <=
+        'GT',       # >
+        'GE',       # >=
 
         # --BOOLEANOS--
         'NOT',      # !
@@ -117,3 +117,50 @@ class LexicalAnalyzer:
     }
 
     tokens += reserved.values()
+
+    t_COPLUS = r'\+='
+    t_INC = r'\+\+'
+    t_COMINUS = r'-='
+    t_DEC = r'--'
+    t_COMULT = r'\*='
+    t_CODIV = r'/='
+    t_COREM = r'%='
+    t_COBITXOR = r'\^='
+    t_COBITOR = r'\|='
+    t_COBITAND = r'&='
+
+    t_NE = r'!='
+    t_EQ = r'=='
+    t_LT = r'<'
+    t_LE = r'<='
+    t_GT = r'>'
+    t_GE = r'>='
+
+    t_NOT = r'!'
+    t_AND = r'&&'
+    t_OR = r'\|\|'
+
+    t_BITAND = r'&'
+    t_BITLEFT = r'<<'
+    t_BITRIGHT = r'>>'
+    t_BITXOR = r'\^'
+    t_BITOR = r'\|'
+    t_BITNOT = r'~'
+
+    t_ASSIGN = r'='
+    t_PLUS = r'\+'
+    t_MINUS = r'-'
+    t_MULT = r'\*'
+    t_DIV = r'/'
+    t_REM = r'%'
+
+    t_LPAREN = r'\('
+    t_RPAREN = r'\)'
+    t_LBRACK = r'\['
+    t_RBRACK = r'\]'
+    t_LBRACE = r'\{'
+    t_RBRACE = r'\}'
+    t_COMMA = r','
+    t_PERIOD = r'\.'
+    t_SCOLON = r';'
+    t_COLON = r':'
