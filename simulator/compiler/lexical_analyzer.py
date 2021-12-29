@@ -3,10 +3,6 @@ import ply.lex as lex
 
 class LexicalAnalyzer:
 
-    def __init__(self):
-        pass
-
-    # Lista de nombres de tokens
     tokens = [
         'ID',       # ids
         'FCONST',   # numero float
@@ -118,6 +114,15 @@ class LexicalAnalyzer:
 
     tokens += reserved.values()
 
+    t_ignore = ' \t\x0c'
+
+    def t_line_comment(self, t):
+        r'//(.)*\n'
+
+    def t_NEWLINE(self, t):
+        r'\n+'
+        t.lexer.lineno += t.value.count("\n")
+
     t_COPLUS = r'\+='
     t_INC = r'\+\+'
     t_COMINUS = r'-='
@@ -164,3 +169,53 @@ class LexicalAnalyzer:
     t_PERIOD = r'\.'
     t_SCOLON = r';'
     t_COLON = r':'
+
+
+    def t_ID(self, t):
+        r'[A-Za-z_][\w_]*'
+        t.type = self.reserved.get(t.value, "ID")
+        return t
+
+    # Integer literal
+    t_ICONST = r'\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
+
+    # Floating literal
+    t_FCONST = r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))([lL]|[fF])?'
+
+    # String literal
+    t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
+
+    # Character constant 'c' or L'c'
+    t_CCONST = r'(L)?\'([^\\\n]|(\\.))*?\''
+
+
+    def t_comment(self, t):
+        r'/\*(.|\n)*?\*/'
+        t.lexer.lineno += t.value.count('\n')
+
+
+    def t_preprocessor(self, t):
+        r'\#(.)*?\n'
+        t.lexer.lineno += 1
+
+
+    def t_error(self, t):
+        print("Illegal character %s" % repr(t.value[0]))
+        t.lexer.skip(1)
+
+
+
+    def __init__(self):
+        # Lista de nombres de tokens
+        self.lexer = lex.lex(module=self)
+
+
+def getAST():
+    lexer = LexicalAnalyzer().lexer
+    file = 'ejemplos\ejemploArduino.txt'
+    stream = open(file)
+    contents = stream.read()
+    lex.runmain(lexer, contents)
+
+if __name__ == "__main__":
+    getAST()
