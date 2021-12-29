@@ -8,8 +8,11 @@ class LexicalAnalyzer:
 
     # Lista de nombres de tokens
     tokens = [
-        'NUMBER',   # numeros
         'ID',       # ids
+        'FCONST',   # numero float
+        'ICONST',   # numero int
+        'SCONST',   # string
+        'CCONST',   # char
 
         # --COMPUESTOS--
         'COPLUS',   # +=
@@ -59,7 +62,10 @@ class LexicalAnalyzer:
         'RBRACK',   # ]
         'LBRACE',   # {
         'RBRACE',   # }
+        'COMMA',    # ,
+        'PERIOD',   # .
         'SCOLON',   # ;
+        'COLON',    # :
     ]
 
     reserved = {
@@ -74,5 +80,40 @@ class LexicalAnalyzer:
         'if' : 'IF',
         'return' : 'RETURN',
         'switch' : 'SWITCH',
-        'case' : 'CASE'
+        'case' : 'CASE',
+        
+        # --DATA TYPES--
+        'array' : 'ARRAY',
+        'bool' : 'BOOL',
+        'boolean' : 'BOOLEAN',
+        'byte' : 'BYTE',
+        'char' : 'CHAR',
+        'double' : 'DOUBLE',
+        'float' : 'FLOAT',
+        'int' : 'INT',
+        'long' : 'LONG',
+        'short' : 'SHORT',
+        'size_t' : 'SIZE_T',
+        'string' : 'STRING',
+        'unsigned' : 'UNSIGNED',
+        'void' : 'VOID',
+        'word' : 'WORD',
+
+        # --QUALIFIERS--
+        'const' : 'CONST',
+        'scope' : 'SCOPE',
+        'static' : 'STATIC',
+        'volatile' : 'VOLATILE',
+
+        # --CONSTANTS--
+        'HIGH' : 'HIGH',
+        'LOW' : 'LOW',
+        'INPUT' : 'INPUT',
+        'OUTPUT' : 'OUTPUT',
+        'INPUT_PULLUP' : 'INPUT_PULLUP',
+        'LED_BUILTIN' : 'LED_BUILTIN',
+        'true' : 'TRUE',
+        'false' : 'FALSE'
     }
+
+    tokens += reserved.values()
