@@ -1,4 +1,4 @@
-lexer grammar lexicon;
+lexer grammar ArduinoLexicon;
 
 ID
     :  [A-Za-z_][A-Za-z0-9_]*
@@ -13,11 +13,11 @@ FLOAT_CONST
     ;
 
 CHAR_CONST
-    : '\'' ~[\n\\\'] '\''
+    : '\'' ~[\n'\\] '\''
     ;
 
 STRING_CONST
-    : '\"' ~[\"\\\n] '\"'
+    : '"' ~["\\\n] '"'
     ;
 
 LINE_COMMENT
