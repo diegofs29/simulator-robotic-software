@@ -7,14 +7,14 @@ start
        ;
 
 program 
-       : declaration* program_code
+       : declaration* program_code* setup loop program_code*
        ;
 
 program_code
-       : definition program_code?
-       | setup program_code?
-       | loop program_code?
-       | function program_code?
+       : definition
+       | setup
+       | loop
+       | function
        ;
 
 declaration 
