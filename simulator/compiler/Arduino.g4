@@ -2,8 +2,19 @@ grammar Arduino;
 
 import ArduinoLexicon;
 
+start
+       : program EOF
+       ;
+
 program 
-       : declaration* definition* setup loop function*
+       : declaration* program_code
+       ;
+
+program_code
+       : definition program_code?
+       | setup program_code?
+       | loop program_code?
+       | function program_code?
        ;
 
 declaration 
@@ -35,7 +46,7 @@ assignment
 
 constant 
        : 'const' var_type assignment ';'
-       | '#define' ID expression
+       | '#define' ID expression ('\n' | EOF)
        ;
 
 var_type 

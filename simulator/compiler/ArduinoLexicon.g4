@@ -1,9 +1,5 @@
 lexer grammar ArduinoLexicon;
 
-ID
-    :  [A-Za-z_][A-Za-z0-9_]*
-    ;
-
 INT_CONST
     : [0-9]+
     ;
@@ -18,6 +14,9 @@ CHAR_CONST
 
 STRING_CONST
     : '"' ~["\\\n] '"'
+    ;
+ID
+    :  [A-Za-z_][A-Za-z0-9_]*
     ;
 
 LINE_COMMENT
