@@ -1,20 +1,29 @@
 lexer grammar ArduinoLexicon;
 
 INT_CONST
-    : [0-9]+
+    : '-'? [0-9]+
     ;
 
 FLOAT_CONST
-    : [0-9]+ '.' [0-9]+
+    : '-'? [0-9]+ '.' [0-9]+
     ;
 
 CHAR_CONST
-    : '\'' ~[\n'\\] '\''
+    : UNTERMINATED_CHAR '\''
+    ;
+
+UNTERMINATED_CHAR
+    : '\'' ~[\n'\\]
     ;
 
 STRING_CONST
-    : '"' ~["\\\n] '"'
+    : UNTERMINATED_STRING '"'
     ;
+
+UNTERMINATED_STRING
+    : '"' (~["\\\n])*
+    ;
+
 ID
     :  [A-Za-z_][A-Za-z0-9_]*
     ;

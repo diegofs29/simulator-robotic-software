@@ -89,6 +89,15 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_definition.
+    def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#array_definition.
+    def exitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         pass

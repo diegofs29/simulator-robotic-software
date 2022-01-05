@@ -114,12 +114,21 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
+        # Enter a parse tree produced by ArduinoParser#array_definition.
+    def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+        self.print_enter("Array_definition")
+
+    # Exit a parse tree produced by ArduinoParser#array_definition.
+    def exitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+        self.print_exit()
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         ending = ctx.ID() == None
         self.print_enter("Constant", ending)
         if(not ending):
-            print(ctx.ID())
+            print(ctx.const_type.text, ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#constant.
     def exitConstant(self, ctx:ArduinoParser.ConstantContext):
@@ -175,7 +184,8 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#iteration_sentence.
     def enterIteration_sentence(self, ctx:ArduinoParser.Iteration_sentenceContext):
-        self.print_enter("Iteration_sentence")
+        self.print_enter("Iteration_sentence", False)
+        print(ctx.it_type.text)
 
     # Exit a parse tree produced by ArduinoParser#iteration_sentence.
     def exitIteration_sentence(self, ctx:ArduinoParser.Iteration_sentenceContext):
@@ -184,7 +194,8 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#conditional_sentence.
     def enterConditional_sentence(self, ctx:ArduinoParser.Conditional_sentenceContext):
-        self.print_enter("Conditional_sentence")
+        self.print_enter("Conditional_sentence", False)
+        print(ctx.cond_type.text)
 
     # Exit a parse tree produced by ArduinoParser#conditional_sentence.
     def exitConditional_sentence(self, ctx:ArduinoParser.Conditional_sentenceContext):
@@ -205,7 +216,10 @@ class ArduinoListenerImpl(ArduinoListener):
         ending = ctx.ID() == None
         self.print_enter("Sentence", ending)
         if not ending:
-            print("goto", ctx.ID())
+            if ctx.s_type != None:
+                print(ctx.s_type.text, ctx.ID())
+            else:
+                print(ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#sentence.
     def exitSentence(self, ctx:ArduinoParser.SentenceContext):
@@ -224,7 +238,10 @@ class ArduinoListenerImpl(ArduinoListener):
     # Enter a parse tree produced by ArduinoParser#expression.
     def enterExpression(self, ctx:ArduinoParser.ExpressionContext):
         self.print_enter("Expression", False)
-        print(ctx.getText())
+        if(ctx.operator != None):
+            print(ctx.operator.text)
+        else:
+            print(ctx.getText())
 
     # Exit a parse tree produced by ArduinoParser#expression.
     def exitExpression(self, ctx:ArduinoParser.ExpressionContext):
@@ -233,7 +250,8 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#incdec_expression.
     def enterIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        self.print_enter("Incdec_expression")
+        self.print_enter("Incdec_expression", False)
+        print(ctx.operator.text)
 
     # Exit a parse tree produced by ArduinoParser#incdec_expression.
     def exitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
@@ -242,7 +260,8 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#function_call.
     def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        self.print_enter("Function_call")
+        self.print_enter("Function_call", False)
+        print(ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#function_call.
     def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):

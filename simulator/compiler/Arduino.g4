@@ -7,7 +7,7 @@ start
        ;
 
 program 
-       : declaration* program_code* setup loop program_code*
+       : declarations+=declaration* code+=program_code* setup loop code+=program_code*
        ;
 
 program_code
@@ -18,8 +18,8 @@ program_code
        ;
 
 declaration 
-       : '#include' '<' h_file '>'
-       | '#include' '"' h_file '"'
+       : '#include' '"' h_file '"'
+       | '#include' '<' h_file '>'
        ;
 
 h_file 
@@ -28,6 +28,7 @@ h_file
 
 definition 
        : simple_definition ';'
+       | array_definition ';'
        | assignment_definition ';'
        | constant
        ;
@@ -42,11 +43,18 @@ assignment_definition
 
 assignment 
        : ID '=' expression
+       | ID '[' INT_CONST ']' '=' expression
+       ;
+
+array_definition
+       : var_type ID '[' INT_CONST ']'
+       | var_type ID '[' INT_CONST? ']' '=' '{' INT_CONST (',' INT_CONST)* '}'
+       | var_type ID '[' INT_CONST ']' '=' expression
        ;
 
 constant 
-       : 'const' var_type assignment ';'
-       | '#define' ID expression ('\n' | EOF)
+       : const_type='const' var_type assignment ';'
+       | const_type='#define' ID expression ('\n' | EOF)
        ;
 
 var_type 
@@ -78,29 +86,29 @@ loop
        ;
 
 function 
-       : var_type ID '(' function_args? ')' code_block
+       : var_type ID '(' function_args? ')' '{' sentences+=sentence* '}'
        ;
 
 function_args
-       : simple_definition (',' simple_definition)*
+       : f_args+=simple_definition (',' f_args+=simple_definition)*
        ;
 
 iteration_sentence 
-       : 'while' '(' expression ')' code_block
-       | 'do' code_block 'while' '(' expression ')'
-       | 'for' '(' assignment_definition ';' expression ';' expression ')' code_block
+       : it_type='while' '(' expression ')' code_block
+       | it_type='do' code_block 'while' '(' expression ')'
+       | it_type='for' '(' assignment_definition ';' expression ';' expression ')' code_block
        ;
 
 conditional_sentence 
-       : 'if' '(' expression ')' code_block
-       | 'if' '(' expression ')' code_block 'else' conditional_sentence
-       | 'if' '(' expression ')' code_block 'else' code_block
-       | 'switch' '(' expression ')' '{' case_sentence* '}'
+       : cond_type='if' '(' expression ')' code_block
+       | cond_type='if' '(' expression ')' code_block 'else' conditional_sentence
+       | cond_type='if' '(' expression ')' code_block 'else' code_block
+       | cond_type='switch' '(' expression ')' '{' case_sentence* '}'
        ;
 
 code_block
-       : '{' sentence* '}'
-       | sentence
+       : '{' sentences+=sentence* '}'
+       | sentences+=sentence
        ;
 
 sentence 
@@ -111,23 +119,25 @@ sentence
        | function_call ';'
        | iteration_sentence
        | conditional_sentence
-       | 'goto' ID ';'
-       | 'break' ';'
-       | 'continue' ';'
+       | s_type='return' expression? ';'
+       | s_type='goto' ID ';'
+       | s_type='break' ';'
+       | s_type='continue' ';'
+       | ID ':'
        ;
 
 case_sentence
-       : 'case' expression ':' sentence* 'break' ';'
-       | 'default' ':' sentence* 'break' ';'
+       : 'case' expression ':' sentences+=sentence* 'break' ';'
+       | 'default' ':' sentences+=sentence* 'break' ';'
        ;
 
 expression 
        : function_call
-       | expression ('*'|'/') expression
-       | expression ('+'|'-') expression
-       | expression ('!=' | '==' | '>' | '>=' | '<=' | '<') expression
-       | expression ('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') expression
-       | expression ('&&'|'||') expression
+       | expression operator=('*'|'/') expression
+       | expression operator=('+'|'-') expression
+       | expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') expression
+       | expression operator=('!=' | '==' | '>' | '>=' | '<=' | '<') expression
+       | expression operator=('&&'|'||') expression
        | '!' expression
        | '(' expression ')'
        | incdec_expression
@@ -142,18 +152,18 @@ expression
        ;
 
 incdec_expression 
-       : '++' ID
-       | ID '++'
-       | '--' ID
-       | ID '--'
+       : operator='++' ID
+       | ID operator='++'
+       | operator='--' ID
+       | ID operator='--'
        ;
 
 function_call 
-       : ID '(' parameter* ')'
+       : ID '(' parameter? ')'
        ;
 
 parameter 
-       : expression (',' expression)*
+       : parameters+=expression (',' parameters+=expression)*
        ;
 
 static_variable 

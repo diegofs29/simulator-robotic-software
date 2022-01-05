@@ -5,7 +5,7 @@ from ArduinoParser import ArduinoParser
 from ArduinoListenerImpl import ArduinoListenerImpl
 
 def main():
-    file = "ejemplos\ejemploArduino.txt"
+    file = "ejemplos\ejemploGoto.txt"
     input = FileStream(fileName=file, encoding="utf-8")
     lexer = ArduinoLexer(input)
     stream = CommonTokenStream(lexer)
