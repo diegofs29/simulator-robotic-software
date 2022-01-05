@@ -59,7 +59,10 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#declaration.
     def enterDeclaration(self, ctx:ArduinoParser.DeclarationContext):
-        self.print_enter("Declaration")
+        ending = ctx.STRING_CONST == None
+        self.print_enter("Declaration", ending)
+        if not ending:
+            print(ctx.STRING_CONST())
 
     # Exit a parse tree produced by ArduinoParser#declaration.
     def exitDeclaration(self, ctx:ArduinoParser.DeclarationContext):

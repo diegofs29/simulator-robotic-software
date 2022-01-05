@@ -18,7 +18,7 @@ program_code
        ;
 
 declaration 
-       : '#include' '"' h_file '"'
+       : '#include' STRING_CONST
        | '#include' '<' h_file '>'
        ;
 

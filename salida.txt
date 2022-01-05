@@ -1,6 +1,6 @@
 Program
- . Declaration
- . Declaration
+ . Declaration -> None
+ .  . H_file -> Nombre del archivo: inventado.h
  . Setup
  .  . Code_block
  . Loop
