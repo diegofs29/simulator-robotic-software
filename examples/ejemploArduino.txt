@@ -1,8 +1,9 @@
 //Estamos utilizando el robot número 3. Es el que tiene la batería pegada
 //con celo y velcro
+#include <Servo.h>
 
 //Entradas motor derecho
-const int inR1 = 2;
+const int inR1 = 2 + 3 * 4 / 5 + 10;
 const int inR2 = 3;
 const int enableR = 9;
 
