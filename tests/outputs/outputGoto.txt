@@ -1,0 +1,53 @@
+Program
+Declaration, "inventado.h"
+Program_code
+Setup
+Program_code
+Loop
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, byte
+Assignment, r = 0
+Expression, 0
+Expression, <
+Expression, r
+Expression, 255
+Expression, r++
+Incdec_expression, ++
+Code_block
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, byte
+Assignment, g = 255
+Expression, 255
+Expression, >
+Expression, g
+Expression, 0
+Expression, g--
+Incdec_expression, --
+Code_block
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, byte
+Assignment, b = 0
+Expression, 0
+Expression, <
+Expression, b
+Expression, 255
+Expression, b++
+Incdec_expression, ++
+Code_block
+Sentence
+Conditional_sentence, if
+Expression, >
+Expression, analogRead(0)
+Function_call, analogRead
+Parameter
+Expression, 0
+Expression, 250
+Code_block
+Sentence, gotobailout
+Sentence, bailout

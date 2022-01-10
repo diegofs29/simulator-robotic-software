@@ -7,7 +7,7 @@ start
        ;
 
 program 
-       : declarations+=declaration* code+=program_code* setup loop code+=program_code*
+       : declarations+=declaration* code+=program_code*
        ;
 
 program_code
@@ -78,11 +78,11 @@ var_type
        ;
 
 setup 
-       : 'void' 'setup' '(' ')' code_block 
+       : 'void' 'setup' '(' ')' '{' sentences+=sentence* '}' 
        ;
 
 loop 
-       : 'void' 'loop' '(' ')' code_block
+       : 'void' 'loop' '(' ')' '{' sentences+=sentence* '}'
        ;
 
 function 

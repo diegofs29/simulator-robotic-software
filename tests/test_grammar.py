@@ -5,6 +5,7 @@ from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoListenerTests import ArduinoListenerTests
 from simulator.compiler.ArduinoParser import ArduinoParser
 
+
 class TestBase(unittest.TestCase):
 
     def setUp(self):
@@ -21,66 +22,35 @@ class TestBase(unittest.TestCase):
     def tearDown(self):
         return super().tearDown()
 
+    def read_results(self, file_name):
+        file = open(file_name, "r")
+        self.lines = []
+        for line in file:
+            self.lines.append(line.rstrip('\n'))
+        file.close()
 
-class TestExample(TestBase):
+
+class TestGoto(TestBase):
 
     file = "examples/ejemploGoto.txt"
 
     def test_parsed(self):
-        self.assertEqual(
-            self.tokens,
-            ["Program",
-            "Declaration, \"inventado.h\"",
-            "Setup",
-            "Code_block",
-            "Loop",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, r = 0",
-            "Expression, 0",
-            "Expression, <",
-            "Expression, r",
-            "Expression, 255",
-            "Expression, r++",
-            "Incdec_expression, ++",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, g = 255",
-            "Expression, 255",
-            "Expression, >",
-            "Expression, g",
-            "Expression, 0",
-            "Expression, g--",
-            "Incdec_expression, --",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, b = 0",
-            "Expression, 0",
-            "Expression, <",
-            "Expression, b",
-            "Expression, 255",
-            "Expression, b++",
-            "Incdec_expression, ++",
-            "Code_block",
-            "Sentence",
-            "Conditional_sentence, if",
-            "Expression, >",
-            "Expression, analogRead(0)",
-            "Function_call, analogRead",
-            "Parameter",
-            "Expression, 0",
-            "Expression, 250",
-            "Code_block",
-            "Sentence, gotobailout",
-            "Sentence, bailout"
-            ]
-        )
+        self.read_results("tests/outputs/outputGoto.txt")
+        self.assertEqual(self.tokens, self.lines)
+
+
+class TestArray(TestBase):
+
+    file = "examples/ejemploArrays.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputArrays.txt")
+        self.assertEqual(self.tokens, self.lines)
+
+class TestFor(TestBase):
+
+    file = "examples/ejemploFor.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputFor.txt")
+        self.assertEqual(self.tokens, self.lines)

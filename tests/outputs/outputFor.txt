@@ -1,0 +1,80 @@
+Program
+Program_code
+Definition
+Assignment_definition
+Var_type, int
+Assignment, timer = 100
+Expression, 100
+Program_code
+Setup
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, int
+Assignment, thisPin = 2
+Expression, 2
+Expression, <
+Expression, thisPin
+Expression, 8
+Expression, thisPin++
+Incdec_expression, ++
+Code_block
+Sentence
+Function_call, pinMode
+Parameter
+Expression, thisPin
+Expression, OUTPUT
+Program_code
+Loop
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, int
+Assignment, thisPin = 2
+Expression, 2
+Expression, <
+Expression, thisPin
+Expression, 8
+Expression, thisPin++
+Incdec_expression, ++
+Code_block
+Sentence
+Function_call, digitalWrite
+Parameter
+Expression, thisPin
+Expression, HIGH
+Sentence
+Function_call, delay
+Parameter
+Expression, timer
+Sentence
+Function_call, digitalWrite
+Parameter
+Expression, thisPin
+Expression, LOW
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, int
+Assignment, thisPin = 7
+Expression, 7
+Expression, >=
+Expression, thisPin
+Expression, 2
+Expression, thisPin--
+Incdec_expression, --
+Code_block
+Sentence
+Function_call, digitalWrite
+Parameter
+Expression, thisPin
+Expression, HIGH
+Sentence
+Function_call, delay
+Parameter
+Expression, timer
+Sentence
+Function_call, digitalWrite
+Parameter
+Expression, thisPin
+Expression, LOW

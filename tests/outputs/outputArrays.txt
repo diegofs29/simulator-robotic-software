@@ -1,0 +1,28 @@
+Program
+Program_code
+Definition
+Assignment_definition
+Var_type, string
+Assignment, s = "hola"
+Expression, "hola"
+Program_code
+Definition
+Array_definition
+Var_type, int
+Program_code
+Definition
+Array_definition
+Var_type, int
+Program_code
+Definition
+Array_definition
+Var_type, int
+Program_code
+Definition
+Array_definition
+Var_type, char
+Expression, "hello"
+Program_code
+Setup
+Program_code
+Loop
