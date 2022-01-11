@@ -2,7 +2,7 @@ from compiler import parse_grammar
 
 
 def main():
-    parse_grammar.parse_grammar("examples/ejemploGoto.txt")
+    parse_grammar.parse_grammar("examples/ejemploDoWhile.txt")
 
 if __name__ == '__main__':
     main()

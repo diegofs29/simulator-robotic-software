@@ -116,24 +116,6 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#function.
     def enterFunction(self, ctx:ArduinoParser.FunctionContext):
         pass

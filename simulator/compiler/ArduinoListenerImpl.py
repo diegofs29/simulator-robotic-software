@@ -148,24 +148,6 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        self.print_enter("Setup")
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        self.print_exit()
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        self.print_enter("Loop")
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
-        self.print_exit()
-
-
     # Enter a parse tree produced by ArduinoParser#function.
     def enterFunction(self, ctx:ArduinoParser.FunctionContext):
         self.print_enter("Function", False)

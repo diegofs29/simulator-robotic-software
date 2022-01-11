@@ -79,7 +79,7 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#simple_definition.
     def enterSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
-        self.add_token("Simple_definition", str(ctx.var_type()) + ", " + str(ctx.ID()))
+        self.add_token("Simple_definition", str(ctx.ID()))
 
     # Exit a parse tree produced by ArduinoParser#simple_definition.
     def exitSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
@@ -132,24 +132,6 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Exit a parse tree produced by ArduinoParser#var_type.
     def exitVar_type(self, ctx:ArduinoParser.Var_typeContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        self.add_token("Setup")
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        self.add_token("Loop")
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
         pass
 
 

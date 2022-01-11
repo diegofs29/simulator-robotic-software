@@ -6,7 +6,8 @@ Var_type, int
 Assignment, timer = 100
 Expression, 100
 Program_code
-Setup
+Function, setup
+Var_type, void
 Sentence
 Iteration_sentence, for
 Assignment_definition
@@ -20,12 +21,14 @@ Expression, thisPin++
 Incdec_expression, ++
 Code_block
 Sentence
+Expression, pinMode(thisPin,OUTPUT)
 Function_call, pinMode
 Parameter
 Expression, thisPin
 Expression, OUTPUT
 Program_code
-Loop
+Function, loop
+Var_type, void
 Sentence
 Iteration_sentence, for
 Assignment_definition
@@ -39,15 +42,18 @@ Expression, thisPin++
 Incdec_expression, ++
 Code_block
 Sentence
+Expression, digitalWrite(thisPin,HIGH)
 Function_call, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
+Expression, delay(timer)
 Function_call, delay
 Parameter
 Expression, timer
 Sentence
+Expression, digitalWrite(thisPin,LOW)
 Function_call, digitalWrite
 Parameter
 Expression, thisPin
@@ -65,15 +71,18 @@ Expression, thisPin--
 Incdec_expression, --
 Code_block
 Sentence
+Expression, digitalWrite(thisPin,HIGH)
 Function_call, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
+Expression, delay(timer)
 Function_call, delay
 Parameter
 Expression, timer
 Sentence
+Expression, digitalWrite(thisPin,LOW)
 Function_call, digitalWrite
 Parameter
 Expression, thisPin

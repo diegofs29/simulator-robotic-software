@@ -23,6 +23,8 @@ Array_definition
 Var_type, char
 Expression, "hello"
 Program_code
-Setup
+Function, setup
+Var_type, void
 Program_code
-Loop
+Function, loop
+Var_type, void

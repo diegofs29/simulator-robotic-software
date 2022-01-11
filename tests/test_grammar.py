@@ -54,3 +54,21 @@ class TestFor(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputFor.txt")
         self.assertEqual(self.tokens, self.lines)
+
+
+class TestWhile(TestBase):
+
+    file = "examples/ejemploWhile.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputWhile.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestDoWhile(TestBase):
+
+    file = "examples/ejemploDoWhile.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputDoWhile.txt")
+        self.assertEqual(self.tokens, self.lines)

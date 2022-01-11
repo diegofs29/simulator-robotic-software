@@ -12,8 +12,6 @@ program
 
 program_code
        : definition
-       | setup
-       | loop
        | function
        ;
 
@@ -77,14 +75,6 @@ var_type
        | ID
        ;
 
-setup 
-       : 'void' 'setup' '(' ')' '{' sentences+=sentence* '}' 
-       ;
-
-loop 
-       : 'void' 'loop' '(' ')' '{' sentences+=sentence* '}'
-       ;
-
 function 
        : var_type ID '(' function_args? ')' '{' sentences+=sentence* '}'
        ;
@@ -95,7 +85,7 @@ function_args
 
 iteration_sentence 
        : it_type='while' '(' expression ')' code_block
-       | it_type='do' code_block 'while' '(' expression ')'
+       | it_type='do' code_block 'while' '(' expression ')' ';'
        | it_type='for' '(' assignment_definition ';' expression ';' expression ')' code_block
        ;
 
@@ -115,10 +105,9 @@ sentence
        : simple_definition
        | assignment_definition
        | static_variable
-       | assignment ';'
-       | function_call ';'
        | iteration_sentence
        | conditional_sentence
+       | expression ';'
        | s_type='return' expression? ';'
        | s_type='goto' ID ';'
        | s_type='break' ';'

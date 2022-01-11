@@ -1,0 +1,39 @@
+Program
+Program_code
+Definition
+Simple_definition, x
+Var_type, int
+Program_code
+Definition
+Simple_definition, d
+Var_type, double
+Program_code
+Function, setup
+Var_type, void
+Sentence
+Expression, x=0
+Assignment, x = 0
+Expression, 0
+Sentence
+Expression, d=2.1
+Assignment, d = 2.1
+Expression, 2.1
+Program_code
+Function, loop
+Var_type, void
+Sentence
+Iteration_sentence, do
+Code_block
+Sentence
+Expression, delay(50)
+Function_call, delay
+Parameter
+Expression, 50
+Sentence
+Expression, x=readSensors()
+Assignment, x = readSensors()
+Expression, readSensors()
+Function_call, readSensors
+Expression, <
+Expression, x
+Expression, 100
