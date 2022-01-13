@@ -125,7 +125,7 @@ expression
        | operator=('!'|'~') expression
        | expression operator=('*'|'/'|'%') expression
        | expression operator=('+'|'-') expression
-       | expression operator=('<<'|'>>')
+       | expression operator=(BIT_SHIFT_R|BIT_SHIFT_L) expression
        | expression operator=('>' | '>=' | '<=' | '<') expression
        | expression operator=('=='|'!=') expression
        | expression operator='&' expression

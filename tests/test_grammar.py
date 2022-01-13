@@ -126,3 +126,21 @@ class TestComparisonBool(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputComparisonBool.txt")
         self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestBitwise(TestBase):
+
+    file = "examples/ejemploBitwise.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputBitwise.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestCompound(TestBase):
+
+    file = "examples/ejemploCompound.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputCompound.txt")
+        self.assertEqual(self.tokens, self.lines)
