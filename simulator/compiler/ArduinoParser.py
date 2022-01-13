@@ -11,8 +11,8 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3Q")
-        buf.write("\u017a\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3W")
+        buf.write("\u018b\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
@@ -44,51 +44,53 @@ def serializedATN():
         buf.write("\n\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25")
         buf.write("\3\25\3\25\3\25\3\25\3\25\3\25\3\25\5\25\u013f\n\25\3")
         buf.write("\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25")
-        buf.write("\3\25\3\25\3\25\3\25\7\25\u0150\n\25\f\25\16\25\u0153")
-        buf.write("\13\25\3\26\3\26\3\26\3\26\3\26\3\26\3\26\3\26\5\26\u015d")
-        buf.write("\n\26\3\27\3\27\3\27\5\27\u0162\n\27\3\27\3\27\3\30\3")
-        buf.write("\30\3\30\7\30\u0169\n\30\f\30\16\30\u016c\13\30\3\31\3")
-        buf.write("\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\5\31\u0178")
-        buf.write("\n\31\3\31\2\3(\32\2\4\6\b\n\f\16\20\22\24\26\30\32\34")
-        buf.write("\36 \"$&(*,.\60\2\t\3\3\20\20\4\2\21 NN\3\2/\61\3\2\62")
-        buf.write("\63\3\2\64;\4\2\4\5<?\3\2@A\2\u019b\2\62\3\2\2\2\48\3")
-        buf.write("\2\2\2\6C\3\2\2\2\bL\3\2\2\2\nN\3\2\2\2\f\\\3\2\2\2\16")
-        buf.write("^\3\2\2\2\20a\3\2\2\2\22m\3\2\2\2\24\u0090\3\2\2\2\26")
-        buf.write("\u009c\3\2\2\2\30\u009e\3\2\2\2\32\u00a0\3\2\2\2\34\u00b0")
-        buf.write("\3\2\2\2\36\u00d0\3\2\2\2 \u00f5\3\2\2\2\"\u0100\3\2\2")
-        buf.write("\2$\u0113\3\2\2\2&\u012b\3\2\2\2(\u013e\3\2\2\2*\u015c")
-        buf.write("\3\2\2\2,\u015e\3\2\2\2.\u0165\3\2\2\2\60\u0177\3\2\2")
-        buf.write("\2\62\63\5\4\3\2\63\64\7\2\2\3\64\3\3\2\2\2\65\67\5\b")
-        buf.write("\5\2\66\65\3\2\2\2\67:\3\2\2\28\66\3\2\2\289\3\2\2\29")
-        buf.write(">\3\2\2\2:8\3\2\2\2;=\5\6\4\2<;\3\2\2\2=@\3\2\2\2><\3")
-        buf.write("\2\2\2>?\3\2\2\2?\5\3\2\2\2@>\3\2\2\2AD\5\f\7\2BD\5\32")
-        buf.write("\16\2CA\3\2\2\2CB\3\2\2\2D\7\3\2\2\2EF\7\3\2\2FM\7L\2")
-        buf.write("\2GH\7\3\2\2HI\7\4\2\2IJ\5\n\6\2JK\7\5\2\2KM\3\2\2\2L")
-        buf.write("E\3\2\2\2LG\3\2\2\2M\t\3\2\2\2NO\7N\2\2OP\7\6\2\2PQ\7")
-        buf.write("N\2\2Q\13\3\2\2\2RS\5\16\b\2ST\7\7\2\2T]\3\2\2\2UV\5\24")
-        buf.write("\13\2VW\7\7\2\2W]\3\2\2\2XY\5\20\t\2YZ\7\7\2\2Z]\3\2\2")
-        buf.write("\2[]\5\26\f\2\\R\3\2\2\2\\U\3\2\2\2\\X\3\2\2\2\\[\3\2")
-        buf.write("\2\2]\r\3\2\2\2^_\5\30\r\2_`\7N\2\2`\17\3\2\2\2ab\5\30")
-        buf.write("\r\2bc\5\22\n\2c\21\3\2\2\2de\7N\2\2ef\7\b\2\2fn\5(\25")
-        buf.write("\2gh\7N\2\2hi\7\t\2\2ij\7H\2\2jk\7\n\2\2kl\7\b\2\2ln\5")
-        buf.write("(\25\2md\3\2\2\2mg\3\2\2\2n\23\3\2\2\2op\5\30\r\2pq\7")
-        buf.write("N\2\2qr\7\t\2\2rs\7H\2\2st\7\n\2\2t\u0091\3\2\2\2uv\5")
-        buf.write("\30\r\2vw\7N\2\2wy\7\t\2\2xz\7H\2\2yx\3\2\2\2yz\3\2\2")
-        buf.write("\2z{\3\2\2\2{|\7\n\2\2|}\7\b\2\2}~\7\13\2\2~\u0083\7H")
-        buf.write("\2\2\177\u0080\7\f\2\2\u0080\u0082\7H\2\2\u0081\177\3")
-        buf.write("\2\2\2\u0082\u0085\3\2\2\2\u0083\u0081\3\2\2\2\u0083\u0084")
+        buf.write("\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25")
+        buf.write("\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\7\25")
+        buf.write("\u0161\n\25\f\25\16\25\u0164\13\25\3\26\3\26\3\26\3\26")
+        buf.write("\3\26\3\26\3\26\3\26\5\26\u016e\n\26\3\27\3\27\3\27\5")
+        buf.write("\27\u0173\n\27\3\27\3\27\3\30\3\30\3\30\7\30\u017a\n\30")
+        buf.write("\f\30\16\30\u017d\13\30\3\31\3\31\3\31\3\31\3\31\3\31")
+        buf.write("\3\31\3\31\3\31\3\31\5\31\u0189\n\31\3\31\2\3(\32\2\4")
+        buf.write("\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\2\13\3")
+        buf.write("\3\20\20\4\2\21 TT\3\2/\60\3\2\61\63\3\2\64\65\4\2\4\5")
+        buf.write("89\3\2:;\3\2AH\3\2\66\67\2\u01b2\2\62\3\2\2\2\48\3\2\2")
+        buf.write("\2\6C\3\2\2\2\bL\3\2\2\2\nN\3\2\2\2\f\\\3\2\2\2\16^\3")
+        buf.write("\2\2\2\20a\3\2\2\2\22m\3\2\2\2\24\u0090\3\2\2\2\26\u009c")
+        buf.write("\3\2\2\2\30\u009e\3\2\2\2\32\u00a0\3\2\2\2\34\u00b0\3")
+        buf.write("\2\2\2\36\u00d0\3\2\2\2 \u00f5\3\2\2\2\"\u0100\3\2\2\2")
+        buf.write("$\u0113\3\2\2\2&\u012b\3\2\2\2(\u013e\3\2\2\2*\u016d\3")
+        buf.write("\2\2\2,\u016f\3\2\2\2.\u0176\3\2\2\2\60\u0188\3\2\2\2")
+        buf.write("\62\63\5\4\3\2\63\64\7\2\2\3\64\3\3\2\2\2\65\67\5\b\5")
+        buf.write("\2\66\65\3\2\2\2\67:\3\2\2\28\66\3\2\2\289\3\2\2\29>\3")
+        buf.write("\2\2\2:8\3\2\2\2;=\5\6\4\2<;\3\2\2\2=@\3\2\2\2><\3\2\2")
+        buf.write("\2>?\3\2\2\2?\5\3\2\2\2@>\3\2\2\2AD\5\f\7\2BD\5\32\16")
+        buf.write("\2CA\3\2\2\2CB\3\2\2\2D\7\3\2\2\2EF\7\3\2\2FM\7R\2\2G")
+        buf.write("H\7\3\2\2HI\7\4\2\2IJ\5\n\6\2JK\7\5\2\2KM\3\2\2\2LE\3")
+        buf.write("\2\2\2LG\3\2\2\2M\t\3\2\2\2NO\7T\2\2OP\7\6\2\2PQ\7T\2")
+        buf.write("\2Q\13\3\2\2\2RS\5\16\b\2ST\7\7\2\2T]\3\2\2\2UV\5\24\13")
+        buf.write("\2VW\7\7\2\2W]\3\2\2\2XY\5\20\t\2YZ\7\7\2\2Z]\3\2\2\2")
+        buf.write("[]\5\26\f\2\\R\3\2\2\2\\U\3\2\2\2\\X\3\2\2\2\\[\3\2\2")
+        buf.write("\2]\r\3\2\2\2^_\5\30\r\2_`\7T\2\2`\17\3\2\2\2ab\5\30\r")
+        buf.write("\2bc\5\22\n\2c\21\3\2\2\2de\7T\2\2ef\7\b\2\2fn\5(\25\2")
+        buf.write("gh\7T\2\2hi\7\t\2\2ij\7N\2\2jk\7\n\2\2kl\7\b\2\2ln\5(")
+        buf.write("\25\2md\3\2\2\2mg\3\2\2\2n\23\3\2\2\2op\5\30\r\2pq\7T")
+        buf.write("\2\2qr\7\t\2\2rs\7N\2\2st\7\n\2\2t\u0091\3\2\2\2uv\5\30")
+        buf.write("\r\2vw\7T\2\2wy\7\t\2\2xz\7N\2\2yx\3\2\2\2yz\3\2\2\2z")
+        buf.write("{\3\2\2\2{|\7\n\2\2|}\7\b\2\2}~\7\13\2\2~\u0083\7N\2\2")
+        buf.write("\177\u0080\7\f\2\2\u0080\u0082\7N\2\2\u0081\177\3\2\2")
+        buf.write("\2\u0082\u0085\3\2\2\2\u0083\u0081\3\2\2\2\u0083\u0084")
         buf.write("\3\2\2\2\u0084\u0086\3\2\2\2\u0085\u0083\3\2\2\2\u0086")
         buf.write("\u0087\7\r\2\2\u0087\u0091\3\2\2\2\u0088\u0089\5\30\r")
-        buf.write("\2\u0089\u008a\7N\2\2\u008a\u008b\7\t\2\2\u008b\u008c")
-        buf.write("\7H\2\2\u008c\u008d\7\n\2\2\u008d\u008e\7\b\2\2\u008e")
+        buf.write("\2\u0089\u008a\7T\2\2\u008a\u008b\7\t\2\2\u008b\u008c")
+        buf.write("\7N\2\2\u008c\u008d\7\n\2\2\u008d\u008e\7\b\2\2\u008e")
         buf.write("\u008f\5(\25\2\u008f\u0091\3\2\2\2\u0090o\3\2\2\2\u0090")
         buf.write("u\3\2\2\2\u0090\u0088\3\2\2\2\u0091\25\3\2\2\2\u0092\u0093")
         buf.write("\7\16\2\2\u0093\u0094\5\30\r\2\u0094\u0095\5\22\n\2\u0095")
         buf.write("\u0096\7\7\2\2\u0096\u009d\3\2\2\2\u0097\u0098\7\17\2")
-        buf.write("\2\u0098\u0099\7N\2\2\u0099\u009a\5(\25\2\u009a\u009b")
+        buf.write("\2\u0098\u0099\7T\2\2\u0099\u009a\5(\25\2\u009a\u009b")
         buf.write("\t\2\2\2\u009b\u009d\3\2\2\2\u009c\u0092\3\2\2\2\u009c")
         buf.write("\u0097\3\2\2\2\u009d\27\3\2\2\2\u009e\u009f\t\3\2\2\u009f")
-        buf.write("\31\3\2\2\2\u00a0\u00a1\5\30\r\2\u00a1\u00a2\7N\2\2\u00a2")
+        buf.write("\31\3\2\2\2\u00a0\u00a1\5\30\r\2\u00a1\u00a2\7T\2\2\u00a2")
         buf.write("\u00a4\7!\2\2\u00a3\u00a5\5\34\17\2\u00a4\u00a3\3\2\2")
         buf.write("\2\u00a4\u00a5\3\2\2\2\u00a5\u00a6\3\2\2\2\u00a6\u00a7")
         buf.write("\7\"\2\2\u00a7\u00ab\7\13\2\2\u00a8\u00aa\5$\23\2\u00a9")
@@ -150,42 +152,51 @@ def serializedATN():
         buf.write("\7\2\2\u012b\u0115\3\2\2\2\u012b\u0121\3\2\2\2\u012c\'")
         buf.write("\3\2\2\2\u012d\u012e\b\25\1\2\u012e\u012f\7!\2\2\u012f")
         buf.write("\u0130\5(\25\2\u0130\u0131\7\"\2\2\u0131\u013f\3\2\2\2")
-        buf.write("\u0132\u013f\5,\27\2\u0133\u0134\7B\2\2\u0134\u013f\5")
-        buf.write("(\25\f\u0135\u013f\5*\26\2\u0136\u013f\5\22\n\2\u0137")
-        buf.write("\u013f\7C\2\2\u0138\u013f\7D\2\2\u0139\u013f\7H\2\2\u013a")
-        buf.write("\u013f\7I\2\2\u013b\u013f\7J\2\2\u013c\u013f\7L\2\2\u013d")
-        buf.write("\u013f\7N\2\2\u013e\u012d\3\2\2\2\u013e\u0132\3\2\2\2")
-        buf.write("\u013e\u0133\3\2\2\2\u013e\u0135\3\2\2\2\u013e\u0136\3")
+        buf.write("\u0132\u013f\5,\27\2\u0133\u013f\5*\26\2\u0134\u0135\t")
+        buf.write("\4\2\2\u0135\u013f\5(\25\26\u0136\u013f\5\22\n\2\u0137")
+        buf.write("\u013f\7I\2\2\u0138\u013f\7J\2\2\u0139\u013f\7N\2\2\u013a")
+        buf.write("\u013f\7O\2\2\u013b\u013f\7P\2\2\u013c\u013f\7R\2\2\u013d")
+        buf.write("\u013f\7T\2\2\u013e\u012d\3\2\2\2\u013e\u0132\3\2\2\2")
+        buf.write("\u013e\u0133\3\2\2\2\u013e\u0134\3\2\2\2\u013e\u0136\3")
         buf.write("\2\2\2\u013e\u0137\3\2\2\2\u013e\u0138\3\2\2\2\u013e\u0139")
         buf.write("\3\2\2\2\u013e\u013a\3\2\2\2\u013e\u013b\3\2\2\2\u013e")
-        buf.write("\u013c\3\2\2\2\u013e\u013d\3\2\2\2\u013f\u0151\3\2\2\2")
-        buf.write("\u0140\u0141\f\21\2\2\u0141\u0142\t\4\2\2\u0142\u0150")
-        buf.write("\5(\25\22\u0143\u0144\f\20\2\2\u0144\u0145\t\5\2\2\u0145")
-        buf.write("\u0150\5(\25\21\u0146\u0147\f\17\2\2\u0147\u0148\t\6\2")
-        buf.write("\2\u0148\u0150\5(\25\20\u0149\u014a\f\16\2\2\u014a\u014b")
-        buf.write("\t\7\2\2\u014b\u0150\5(\25\17\u014c\u014d\f\r\2\2\u014d")
-        buf.write("\u014e\t\b\2\2\u014e\u0150\5(\25\16\u014f\u0140\3\2\2")
-        buf.write("\2\u014f\u0143\3\2\2\2\u014f\u0146\3\2\2\2\u014f\u0149")
-        buf.write("\3\2\2\2\u014f\u014c\3\2\2\2\u0150\u0153\3\2\2\2\u0151")
-        buf.write("\u014f\3\2\2\2\u0151\u0152\3\2\2\2\u0152)\3\2\2\2\u0153")
-        buf.write("\u0151\3\2\2\2\u0154\u0155\7E\2\2\u0155\u015d\7N\2\2\u0156")
-        buf.write("\u0157\7N\2\2\u0157\u015d\7E\2\2\u0158\u0159\7F\2\2\u0159")
-        buf.write("\u015d\7N\2\2\u015a\u015b\7N\2\2\u015b\u015d\7F\2\2\u015c")
-        buf.write("\u0154\3\2\2\2\u015c\u0156\3\2\2\2\u015c\u0158\3\2\2\2")
-        buf.write("\u015c\u015a\3\2\2\2\u015d+\3\2\2\2\u015e\u015f\7N\2\2")
-        buf.write("\u015f\u0161\7!\2\2\u0160\u0162\5.\30\2\u0161\u0160\3")
-        buf.write("\2\2\2\u0161\u0162\3\2\2\2\u0162\u0163\3\2\2\2\u0163\u0164")
-        buf.write("\7\"\2\2\u0164-\3\2\2\2\u0165\u016a\5(\25\2\u0166\u0167")
-        buf.write("\7\f\2\2\u0167\u0169\5(\25\2\u0168\u0166\3\2\2\2\u0169")
-        buf.write("\u016c\3\2\2\2\u016a\u0168\3\2\2\2\u016a\u016b\3\2\2\2")
-        buf.write("\u016b/\3\2\2\2\u016c\u016a\3\2\2\2\u016d\u016e\7G\2\2")
-        buf.write("\u016e\u016f\5\30\r\2\u016f\u0170\7N\2\2\u0170\u0171\7")
-        buf.write("\7\2\2\u0171\u0178\3\2\2\2\u0172\u0173\7G\2\2\u0173\u0174")
-        buf.write("\5\30\r\2\u0174\u0175\5\22\n\2\u0175\u0176\7\7\2\2\u0176")
-        buf.write("\u0178\3\2\2\2\u0177\u016d\3\2\2\2\u0177\u0172\3\2\2\2")
-        buf.write("\u0178\61\3\2\2\2 8>CL\\my\u0083\u0090\u009c\u00a4\u00ab")
-        buf.write("\u00b5\u00d0\u00f0\u00f5\u00fb\u0100\u010c\u0113\u011b")
-        buf.write("\u0126\u012b\u013e\u014f\u0151\u015c\u0161\u016a\u0177")
+        buf.write("\u013c\3\2\2\2\u013e\u013d\3\2\2\2\u013f\u0162\3\2\2\2")
+        buf.write("\u0140\u0141\f\25\2\2\u0141\u0142\t\5\2\2\u0142\u0161")
+        buf.write("\5(\25\26\u0143\u0144\f\24\2\2\u0144\u0145\t\6\2\2\u0145")
+        buf.write("\u0161\5(\25\25\u0146\u0147\f\22\2\2\u0147\u0148\t\7\2")
+        buf.write("\2\u0148\u0161\5(\25\23\u0149\u014a\f\21\2\2\u014a\u014b")
+        buf.write("\t\b\2\2\u014b\u0161\5(\25\22\u014c\u014d\f\20\2\2\u014d")
+        buf.write("\u014e\7<\2\2\u014e\u0161\5(\25\21\u014f\u0150\f\17\2")
+        buf.write("\2\u0150\u0151\7=\2\2\u0151\u0161\5(\25\20\u0152\u0153")
+        buf.write("\f\16\2\2\u0153\u0154\7>\2\2\u0154\u0161\5(\25\17\u0155")
+        buf.write("\u0156\f\r\2\2\u0156\u0157\7?\2\2\u0157\u0161\5(\25\16")
+        buf.write("\u0158\u0159\f\f\2\2\u0159\u015a\7@\2\2\u015a\u0161\5")
+        buf.write("(\25\r\u015b\u015c\f\13\2\2\u015c\u015d\t\t\2\2\u015d")
+        buf.write("\u0161\5(\25\f\u015e\u015f\f\23\2\2\u015f\u0161\t\n\2")
+        buf.write("\2\u0160\u0140\3\2\2\2\u0160\u0143\3\2\2\2\u0160\u0146")
+        buf.write("\3\2\2\2\u0160\u0149\3\2\2\2\u0160\u014c\3\2\2\2\u0160")
+        buf.write("\u014f\3\2\2\2\u0160\u0152\3\2\2\2\u0160\u0155\3\2\2\2")
+        buf.write("\u0160\u0158\3\2\2\2\u0160\u015b\3\2\2\2\u0160\u015e\3")
+        buf.write("\2\2\2\u0161\u0164\3\2\2\2\u0162\u0160\3\2\2\2\u0162\u0163")
+        buf.write("\3\2\2\2\u0163)\3\2\2\2\u0164\u0162\3\2\2\2\u0165\u0166")
+        buf.write("\7K\2\2\u0166\u016e\7T\2\2\u0167\u0168\7T\2\2\u0168\u016e")
+        buf.write("\7K\2\2\u0169\u016a\7L\2\2\u016a\u016e\7T\2\2\u016b\u016c")
+        buf.write("\7T\2\2\u016c\u016e\7L\2\2\u016d\u0165\3\2\2\2\u016d\u0167")
+        buf.write("\3\2\2\2\u016d\u0169\3\2\2\2\u016d\u016b\3\2\2\2\u016e")
+        buf.write("+\3\2\2\2\u016f\u0170\7T\2\2\u0170\u0172\7!\2\2\u0171")
+        buf.write("\u0173\5.\30\2\u0172\u0171\3\2\2\2\u0172\u0173\3\2\2\2")
+        buf.write("\u0173\u0174\3\2\2\2\u0174\u0175\7\"\2\2\u0175-\3\2\2")
+        buf.write("\2\u0176\u017b\5(\25\2\u0177\u0178\7\f\2\2\u0178\u017a")
+        buf.write("\5(\25\2\u0179\u0177\3\2\2\2\u017a\u017d\3\2\2\2\u017b")
+        buf.write("\u0179\3\2\2\2\u017b\u017c\3\2\2\2\u017c/\3\2\2\2\u017d")
+        buf.write("\u017b\3\2\2\2\u017e\u017f\7M\2\2\u017f\u0180\5\30\r\2")
+        buf.write("\u0180\u0181\7T\2\2\u0181\u0182\7\7\2\2\u0182\u0189\3")
+        buf.write("\2\2\2\u0183\u0184\7M\2\2\u0184\u0185\5\30\r\2\u0185\u0186")
+        buf.write("\5\22\n\2\u0186\u0187\7\7\2\2\u0187\u0189\3\2\2\2\u0188")
+        buf.write("\u017e\3\2\2\2\u0188\u0183\3\2\2\2\u0189\61\3\2\2\2 8")
+        buf.write(">CL\\my\u0083\u0090\u009c\u00a4\u00ab\u00b5\u00d0\u00f0")
+        buf.write("\u00f5\u00fb\u0100\u010c\u0113\u011b\u0126\u012b\u013e")
+        buf.write("\u0160\u0162\u016d\u0172\u017b\u0188")
         return buf.getvalue()
 
 
@@ -207,10 +218,11 @@ class ArduinoParser ( Parser ):
                      "'unsigned char'", "'unsigned long'", "'void'", "'word'", 
                      "'('", "')'", "'while'", "'do'", "'for'", "'if'", "'else'", 
                      "'switch'", "'return'", "'break'", "'continue'", "'case'", 
-                     "':'", "'default'", "'*'", "'/'", "'%'", "'+'", "'-'", 
-                     "'%='", "'&='", "'*='", "'+='", "'-='", "'/='", "'^='", 
-                     "'|='", "'!='", "'=='", "'>='", "'<='", "'&&'", "'||'", 
-                     "'!'", "'true'", "'false'", "'++'", "'--'", "'static'" ]
+                     "':'", "'default'", "'!'", "'~'", "'*'", "'/'", "'%'", 
+                     "'+'", "'-'", "'<<'", "'>>'", "'>='", "'<='", "'=='", 
+                     "'!='", "'&'", "'^'", "'|'", "'&&'", "'||'", "'%='", 
+                     "'&='", "'*='", "'+='", "'-='", "'/='", "'^='", "'|='", 
+                     "'true'", "'false'", "'++'", "'--'", "'static'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -229,10 +241,11 @@ class ArduinoParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "INT_CONST", "FLOAT_CONST", 
-                      "CHAR_CONST", "UNTERMINATED_CHAR", "STRING_CONST", 
-                      "UNTERMINATED_STRING", "ID", "LINE_COMMENT", "MULTILINE_COMMENT", 
-                      "WHITESPACE" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "INT_CONST", "FLOAT_CONST", "CHAR_CONST", "UNTERMINATED_CHAR", 
+                      "STRING_CONST", "UNTERMINATED_STRING", "ID", "LINE_COMMENT", 
+                      "MULTILINE_COMMENT", "WHITESPACE" ]
 
     RULE_start = 0
     RULE_program = 1
@@ -336,16 +349,22 @@ class ArduinoParser ( Parser ):
     T__66=67
     T__67=68
     T__68=69
-    INT_CONST=70
-    FLOAT_CONST=71
-    CHAR_CONST=72
-    UNTERMINATED_CHAR=73
-    STRING_CONST=74
-    UNTERMINATED_STRING=75
-    ID=76
-    LINE_COMMENT=77
-    MULTILINE_COMMENT=78
-    WHITESPACE=79
+    T__69=70
+    T__70=71
+    T__71=72
+    T__72=73
+    T__73=74
+    T__74=75
+    INT_CONST=76
+    FLOAT_CONST=77
+    CHAR_CONST=78
+    UNTERMINATED_CHAR=79
+    STRING_CONST=80
+    UNTERMINATED_STRING=81
+    ID=82
+    LINE_COMMENT=83
+    MULTILINE_COMMENT=84
+    WHITESPACE=85
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -1158,7 +1177,7 @@ class ArduinoParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 156
             _la = self._input.LA(1)
-            if not(((((_la - 15)) & ~0x3f) == 0 and ((1 << (_la - 15)) & ((1 << (ArduinoParser.T__14 - 15)) | (1 << (ArduinoParser.T__15 - 15)) | (1 << (ArduinoParser.T__16 - 15)) | (1 << (ArduinoParser.T__17 - 15)) | (1 << (ArduinoParser.T__18 - 15)) | (1 << (ArduinoParser.T__19 - 15)) | (1 << (ArduinoParser.T__20 - 15)) | (1 << (ArduinoParser.T__21 - 15)) | (1 << (ArduinoParser.T__22 - 15)) | (1 << (ArduinoParser.T__23 - 15)) | (1 << (ArduinoParser.T__24 - 15)) | (1 << (ArduinoParser.T__25 - 15)) | (1 << (ArduinoParser.T__26 - 15)) | (1 << (ArduinoParser.T__27 - 15)) | (1 << (ArduinoParser.T__28 - 15)) | (1 << (ArduinoParser.T__29 - 15)) | (1 << (ArduinoParser.ID - 15)))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29))) != 0) or _la==ArduinoParser.ID):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1229,7 +1248,7 @@ class ArduinoParser ( Parser ):
             self.state = 162
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if ((((_la - 15)) & ~0x3f) == 0 and ((1 << (_la - 15)) & ((1 << (ArduinoParser.T__14 - 15)) | (1 << (ArduinoParser.T__15 - 15)) | (1 << (ArduinoParser.T__16 - 15)) | (1 << (ArduinoParser.T__17 - 15)) | (1 << (ArduinoParser.T__18 - 15)) | (1 << (ArduinoParser.T__19 - 15)) | (1 << (ArduinoParser.T__20 - 15)) | (1 << (ArduinoParser.T__21 - 15)) | (1 << (ArduinoParser.T__22 - 15)) | (1 << (ArduinoParser.T__23 - 15)) | (1 << (ArduinoParser.T__24 - 15)) | (1 << (ArduinoParser.T__25 - 15)) | (1 << (ArduinoParser.T__26 - 15)) | (1 << (ArduinoParser.T__27 - 15)) | (1 << (ArduinoParser.T__28 - 15)) | (1 << (ArduinoParser.T__29 - 15)) | (1 << (ArduinoParser.ID - 15)))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29))) != 0) or _la==ArduinoParser.ID:
                 self.state = 161
                 self.function_args()
 
@@ -1241,7 +1260,7 @@ class ArduinoParser ( Parser ):
             self.state = 169
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while ((((_la - 15)) & ~0x3f) == 0 and ((1 << (_la - 15)) & ((1 << (ArduinoParser.T__14 - 15)) | (1 << (ArduinoParser.T__15 - 15)) | (1 << (ArduinoParser.T__16 - 15)) | (1 << (ArduinoParser.T__17 - 15)) | (1 << (ArduinoParser.T__18 - 15)) | (1 << (ArduinoParser.T__19 - 15)) | (1 << (ArduinoParser.T__20 - 15)) | (1 << (ArduinoParser.T__21 - 15)) | (1 << (ArduinoParser.T__22 - 15)) | (1 << (ArduinoParser.T__23 - 15)) | (1 << (ArduinoParser.T__24 - 15)) | (1 << (ArduinoParser.T__25 - 15)) | (1 << (ArduinoParser.T__26 - 15)) | (1 << (ArduinoParser.T__27 - 15)) | (1 << (ArduinoParser.T__28 - 15)) | (1 << (ArduinoParser.T__29 - 15)) | (1 << (ArduinoParser.T__30 - 15)) | (1 << (ArduinoParser.T__32 - 15)) | (1 << (ArduinoParser.T__33 - 15)) | (1 << (ArduinoParser.T__34 - 15)) | (1 << (ArduinoParser.T__35 - 15)) | (1 << (ArduinoParser.T__37 - 15)) | (1 << (ArduinoParser.T__38 - 15)) | (1 << (ArduinoParser.T__39 - 15)) | (1 << (ArduinoParser.T__40 - 15)) | (1 << (ArduinoParser.T__63 - 15)) | (1 << (ArduinoParser.T__64 - 15)) | (1 << (ArduinoParser.T__65 - 15)) | (1 << (ArduinoParser.T__66 - 15)) | (1 << (ArduinoParser.T__67 - 15)) | (1 << (ArduinoParser.T__68 - 15)) | (1 << (ArduinoParser.INT_CONST - 15)) | (1 << (ArduinoParser.FLOAT_CONST - 15)) | (1 << (ArduinoParser.CHAR_CONST - 15)) | (1 << (ArduinoParser.STRING_CONST - 15)) | (1 << (ArduinoParser.ID - 15)))) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__30) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__35) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__40) | (1 << ArduinoParser.T__44) | (1 << ArduinoParser.T__45))) != 0) or ((((_la - 71)) & ~0x3f) == 0 and ((1 << (_la - 71)) & ((1 << (ArduinoParser.T__70 - 71)) | (1 << (ArduinoParser.T__71 - 71)) | (1 << (ArduinoParser.T__72 - 71)) | (1 << (ArduinoParser.T__73 - 71)) | (1 << (ArduinoParser.T__74 - 71)) | (1 << (ArduinoParser.INT_CONST - 71)) | (1 << (ArduinoParser.FLOAT_CONST - 71)) | (1 << (ArduinoParser.CHAR_CONST - 71)) | (1 << (ArduinoParser.STRING_CONST - 71)) | (1 << (ArduinoParser.ID - 71)))) != 0):
                 self.state = 166
                 localctx._sentence = self.sentence()
                 localctx.sentences.append(localctx._sentence)
@@ -1615,7 +1634,7 @@ class ArduinoParser ( Parser ):
                 self.state = 249
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while ((((_la - 15)) & ~0x3f) == 0 and ((1 << (_la - 15)) & ((1 << (ArduinoParser.T__14 - 15)) | (1 << (ArduinoParser.T__15 - 15)) | (1 << (ArduinoParser.T__16 - 15)) | (1 << (ArduinoParser.T__17 - 15)) | (1 << (ArduinoParser.T__18 - 15)) | (1 << (ArduinoParser.T__19 - 15)) | (1 << (ArduinoParser.T__20 - 15)) | (1 << (ArduinoParser.T__21 - 15)) | (1 << (ArduinoParser.T__22 - 15)) | (1 << (ArduinoParser.T__23 - 15)) | (1 << (ArduinoParser.T__24 - 15)) | (1 << (ArduinoParser.T__25 - 15)) | (1 << (ArduinoParser.T__26 - 15)) | (1 << (ArduinoParser.T__27 - 15)) | (1 << (ArduinoParser.T__28 - 15)) | (1 << (ArduinoParser.T__29 - 15)) | (1 << (ArduinoParser.T__30 - 15)) | (1 << (ArduinoParser.T__32 - 15)) | (1 << (ArduinoParser.T__33 - 15)) | (1 << (ArduinoParser.T__34 - 15)) | (1 << (ArduinoParser.T__35 - 15)) | (1 << (ArduinoParser.T__37 - 15)) | (1 << (ArduinoParser.T__38 - 15)) | (1 << (ArduinoParser.T__39 - 15)) | (1 << (ArduinoParser.T__40 - 15)) | (1 << (ArduinoParser.T__63 - 15)) | (1 << (ArduinoParser.T__64 - 15)) | (1 << (ArduinoParser.T__65 - 15)) | (1 << (ArduinoParser.T__66 - 15)) | (1 << (ArduinoParser.T__67 - 15)) | (1 << (ArduinoParser.T__68 - 15)) | (1 << (ArduinoParser.INT_CONST - 15)) | (1 << (ArduinoParser.FLOAT_CONST - 15)) | (1 << (ArduinoParser.CHAR_CONST - 15)) | (1 << (ArduinoParser.STRING_CONST - 15)) | (1 << (ArduinoParser.ID - 15)))) != 0):
+                while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__30) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__35) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__40) | (1 << ArduinoParser.T__44) | (1 << ArduinoParser.T__45))) != 0) or ((((_la - 71)) & ~0x3f) == 0 and ((1 << (_la - 71)) & ((1 << (ArduinoParser.T__70 - 71)) | (1 << (ArduinoParser.T__71 - 71)) | (1 << (ArduinoParser.T__72 - 71)) | (1 << (ArduinoParser.T__73 - 71)) | (1 << (ArduinoParser.T__74 - 71)) | (1 << (ArduinoParser.INT_CONST - 71)) | (1 << (ArduinoParser.FLOAT_CONST - 71)) | (1 << (ArduinoParser.CHAR_CONST - 71)) | (1 << (ArduinoParser.STRING_CONST - 71)) | (1 << (ArduinoParser.ID - 71)))) != 0):
                     self.state = 246
                     localctx._sentence = self.sentence()
                     localctx.sentences.append(localctx._sentence)
@@ -1626,7 +1645,7 @@ class ArduinoParser ( Parser ):
                 self.state = 252
                 self.match(ArduinoParser.T__10)
                 pass
-            elif token in [ArduinoParser.T__14, ArduinoParser.T__15, ArduinoParser.T__16, ArduinoParser.T__17, ArduinoParser.T__18, ArduinoParser.T__19, ArduinoParser.T__20, ArduinoParser.T__21, ArduinoParser.T__22, ArduinoParser.T__23, ArduinoParser.T__24, ArduinoParser.T__25, ArduinoParser.T__26, ArduinoParser.T__27, ArduinoParser.T__28, ArduinoParser.T__29, ArduinoParser.T__30, ArduinoParser.T__32, ArduinoParser.T__33, ArduinoParser.T__34, ArduinoParser.T__35, ArduinoParser.T__37, ArduinoParser.T__38, ArduinoParser.T__39, ArduinoParser.T__40, ArduinoParser.T__63, ArduinoParser.T__64, ArduinoParser.T__65, ArduinoParser.T__66, ArduinoParser.T__67, ArduinoParser.T__68, ArduinoParser.INT_CONST, ArduinoParser.FLOAT_CONST, ArduinoParser.CHAR_CONST, ArduinoParser.STRING_CONST, ArduinoParser.ID]:
+            elif token in [ArduinoParser.T__14, ArduinoParser.T__15, ArduinoParser.T__16, ArduinoParser.T__17, ArduinoParser.T__18, ArduinoParser.T__19, ArduinoParser.T__20, ArduinoParser.T__21, ArduinoParser.T__22, ArduinoParser.T__23, ArduinoParser.T__24, ArduinoParser.T__25, ArduinoParser.T__26, ArduinoParser.T__27, ArduinoParser.T__28, ArduinoParser.T__29, ArduinoParser.T__30, ArduinoParser.T__32, ArduinoParser.T__33, ArduinoParser.T__34, ArduinoParser.T__35, ArduinoParser.T__37, ArduinoParser.T__38, ArduinoParser.T__39, ArduinoParser.T__40, ArduinoParser.T__44, ArduinoParser.T__45, ArduinoParser.T__70, ArduinoParser.T__71, ArduinoParser.T__72, ArduinoParser.T__73, ArduinoParser.T__74, ArduinoParser.INT_CONST, ArduinoParser.FLOAT_CONST, ArduinoParser.CHAR_CONST, ArduinoParser.STRING_CONST, ArduinoParser.ID]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 253
                 localctx._sentence = self.sentence()
@@ -1744,7 +1763,7 @@ class ArduinoParser ( Parser ):
                 self.state = 266
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if ((((_la - 31)) & ~0x3f) == 0 and ((1 << (_la - 31)) & ((1 << (ArduinoParser.T__30 - 31)) | (1 << (ArduinoParser.T__63 - 31)) | (1 << (ArduinoParser.T__64 - 31)) | (1 << (ArduinoParser.T__65 - 31)) | (1 << (ArduinoParser.T__66 - 31)) | (1 << (ArduinoParser.T__67 - 31)) | (1 << (ArduinoParser.INT_CONST - 31)) | (1 << (ArduinoParser.FLOAT_CONST - 31)) | (1 << (ArduinoParser.CHAR_CONST - 31)) | (1 << (ArduinoParser.STRING_CONST - 31)) | (1 << (ArduinoParser.ID - 31)))) != 0):
+                if ((((_la - 31)) & ~0x3f) == 0 and ((1 << (_la - 31)) & ((1 << (ArduinoParser.T__30 - 31)) | (1 << (ArduinoParser.T__44 - 31)) | (1 << (ArduinoParser.T__45 - 31)) | (1 << (ArduinoParser.T__70 - 31)) | (1 << (ArduinoParser.T__71 - 31)) | (1 << (ArduinoParser.T__72 - 31)) | (1 << (ArduinoParser.T__73 - 31)) | (1 << (ArduinoParser.INT_CONST - 31)) | (1 << (ArduinoParser.FLOAT_CONST - 31)) | (1 << (ArduinoParser.CHAR_CONST - 31)) | (1 << (ArduinoParser.STRING_CONST - 31)) | (1 << (ArduinoParser.ID - 31)))) != 0):
                     self.state = 265
                     self.expression(0)
 
@@ -1965,14 +1984,20 @@ class ArduinoParser ( Parser ):
 
             elif la_ == 3:
                 self.state = 305
-                localctx.operator = self.match(ArduinoParser.T__63)
-                self.state = 306
-                self.expression(10)
+                self.incdec_expression()
                 pass
 
             elif la_ == 4:
+                self.state = 306
+                localctx.operator = self._input.LT(1)
+                _la = self._input.LA(1)
+                if not(_la==ArduinoParser.T__44 or _la==ArduinoParser.T__45):
+                    localctx.operator = self._errHandler.recoverInline(self)
+                else:
+                    self._errHandler.reportMatch(self)
+                    self.consume()
                 self.state = 307
-                self.incdec_expression()
+                self.expression(20)
                 pass
 
             elif la_ == 5:
@@ -1982,12 +2007,12 @@ class ArduinoParser ( Parser ):
 
             elif la_ == 6:
                 self.state = 309
-                self.match(ArduinoParser.T__64)
+                self.match(ArduinoParser.T__70)
                 pass
 
             elif la_ == 7:
                 self.state = 310
-                self.match(ArduinoParser.T__65)
+                self.match(ArduinoParser.T__71)
                 pass
 
             elif la_ == 8:
@@ -2017,7 +2042,7 @@ class ArduinoParser ( Parser ):
 
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 335
+            self.state = 352
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
@@ -2025,106 +2050,188 @@ class ArduinoParser ( Parser ):
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 333
+                    self.state = 350
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,24,self._ctx)
                     if la_ == 1:
                         localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 318
-                        if not self.precpred(self._ctx, 15):
+                        if not self.precpred(self._ctx, 19):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 15)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 19)")
                         self.state = 319
                         localctx.operator = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__44) | (1 << ArduinoParser.T__45) | (1 << ArduinoParser.T__46))) != 0)):
+                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__46) | (1 << ArduinoParser.T__47) | (1 << ArduinoParser.T__48))) != 0)):
                             localctx.operator = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 320
-                        self.expression(16)
+                        self.expression(20)
                         pass
 
                     elif la_ == 2:
                         localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 321
-                        if not self.precpred(self._ctx, 14):
+                        if not self.precpred(self._ctx, 18):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 18)")
                         self.state = 322
                         localctx.operator = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not(_la==ArduinoParser.T__47 or _la==ArduinoParser.T__48):
+                        if not(_la==ArduinoParser.T__49 or _la==ArduinoParser.T__50):
                             localctx.operator = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 323
-                        self.expression(15)
+                        self.expression(19)
                         pass
 
                     elif la_ == 3:
                         localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 324
-                        if not self.precpred(self._ctx, 13):
+                        if not self.precpred(self._ctx, 16):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 16)")
                         self.state = 325
                         localctx.operator = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__49) | (1 << ArduinoParser.T__50) | (1 << ArduinoParser.T__51) | (1 << ArduinoParser.T__52) | (1 << ArduinoParser.T__53) | (1 << ArduinoParser.T__54) | (1 << ArduinoParser.T__55) | (1 << ArduinoParser.T__56))) != 0)):
+                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__1) | (1 << ArduinoParser.T__2) | (1 << ArduinoParser.T__53) | (1 << ArduinoParser.T__54))) != 0)):
                             localctx.operator = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 326
-                        self.expression(14)
+                        self.expression(17)
                         pass
 
                     elif la_ == 4:
                         localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 327
-                        if not self.precpred(self._ctx, 12):
+                        if not self.precpred(self._ctx, 15):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 15)")
                         self.state = 328
                         localctx.operator = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__1) | (1 << ArduinoParser.T__2) | (1 << ArduinoParser.T__57) | (1 << ArduinoParser.T__58) | (1 << ArduinoParser.T__59) | (1 << ArduinoParser.T__60))) != 0)):
+                        if not(_la==ArduinoParser.T__55 or _la==ArduinoParser.T__56):
                             localctx.operator = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 329
-                        self.expression(13)
+                        self.expression(16)
                         pass
 
                     elif la_ == 5:
                         localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 330
+                        if not self.precpred(self._ctx, 14):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
+                        self.state = 331
+                        localctx.operator = self.match(ArduinoParser.T__57)
+                        self.state = 332
+                        self.expression(15)
+                        pass
+
+                    elif la_ == 6:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 333
+                        if not self.precpred(self._ctx, 13):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
+                        self.state = 334
+                        localctx.operator = self.match(ArduinoParser.T__58)
+                        self.state = 335
+                        self.expression(14)
+                        pass
+
+                    elif la_ == 7:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 336
+                        if not self.precpred(self._ctx, 12):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
+                        self.state = 337
+                        localctx.operator = self.match(ArduinoParser.T__59)
+                        self.state = 338
+                        self.expression(13)
+                        pass
+
+                    elif la_ == 8:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 339
                         if not self.precpred(self._ctx, 11):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
-                        self.state = 331
+                        self.state = 340
+                        localctx.operator = self.match(ArduinoParser.T__60)
+                        self.state = 341
+                        self.expression(12)
+                        pass
+
+                    elif la_ == 9:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 342
+                        if not self.precpred(self._ctx, 10):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
+                        self.state = 343
+                        localctx.operator = self.match(ArduinoParser.T__61)
+                        self.state = 344
+                        self.expression(11)
+                        pass
+
+                    elif la_ == 10:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 345
+                        if not self.precpred(self._ctx, 9):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
+                        self.state = 346
                         localctx.operator = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not(_la==ArduinoParser.T__61 or _la==ArduinoParser.T__62):
+                        if not(((((_la - 63)) & ~0x3f) == 0 and ((1 << (_la - 63)) & ((1 << (ArduinoParser.T__62 - 63)) | (1 << (ArduinoParser.T__63 - 63)) | (1 << (ArduinoParser.T__64 - 63)) | (1 << (ArduinoParser.T__65 - 63)) | (1 << (ArduinoParser.T__66 - 63)) | (1 << (ArduinoParser.T__67 - 63)) | (1 << (ArduinoParser.T__68 - 63)) | (1 << (ArduinoParser.T__69 - 63)))) != 0)):
                             localctx.operator = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 332
-                        self.expression(12)
+                        self.state = 347
+                        self.expression(10)
+                        pass
+
+                    elif la_ == 11:
+                        localctx = ArduinoParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 348
+                        if not self.precpred(self._ctx, 17):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 17)")
+                        self.state = 349
+                        localctx.operator = self._input.LT(1)
+                        _la = self._input.LA(1)
+                        if not(_la==ArduinoParser.T__51 or _la==ArduinoParser.T__52):
+                            localctx.operator = self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
                         pass
 
              
-                self.state = 337
+                self.state = 354
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
 
@@ -2167,39 +2274,39 @@ class ArduinoParser ( Parser ):
         localctx = ArduinoParser.Incdec_expressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 40, self.RULE_incdec_expression)
         try:
-            self.state = 346
+            self.state = 363
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,26,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 338
-                localctx.operator = self.match(ArduinoParser.T__66)
-                self.state = 339
+                self.state = 355
+                localctx.operator = self.match(ArduinoParser.T__72)
+                self.state = 356
                 self.match(ArduinoParser.ID)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 340
+                self.state = 357
                 self.match(ArduinoParser.ID)
-                self.state = 341
-                localctx.operator = self.match(ArduinoParser.T__66)
+                self.state = 358
+                localctx.operator = self.match(ArduinoParser.T__72)
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 342
-                localctx.operator = self.match(ArduinoParser.T__67)
-                self.state = 343
+                self.state = 359
+                localctx.operator = self.match(ArduinoParser.T__73)
+                self.state = 360
                 self.match(ArduinoParser.ID)
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 344
+                self.state = 361
                 self.match(ArduinoParser.ID)
-                self.state = 345
-                localctx.operator = self.match(ArduinoParser.T__67)
+                self.state = 362
+                localctx.operator = self.match(ArduinoParser.T__73)
                 pass
 
 
@@ -2247,19 +2354,19 @@ class ArduinoParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 348
+            self.state = 365
             self.match(ArduinoParser.ID)
-            self.state = 349
+            self.state = 366
             self.match(ArduinoParser.T__30)
-            self.state = 351
+            self.state = 368
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if ((((_la - 31)) & ~0x3f) == 0 and ((1 << (_la - 31)) & ((1 << (ArduinoParser.T__30 - 31)) | (1 << (ArduinoParser.T__63 - 31)) | (1 << (ArduinoParser.T__64 - 31)) | (1 << (ArduinoParser.T__65 - 31)) | (1 << (ArduinoParser.T__66 - 31)) | (1 << (ArduinoParser.T__67 - 31)) | (1 << (ArduinoParser.INT_CONST - 31)) | (1 << (ArduinoParser.FLOAT_CONST - 31)) | (1 << (ArduinoParser.CHAR_CONST - 31)) | (1 << (ArduinoParser.STRING_CONST - 31)) | (1 << (ArduinoParser.ID - 31)))) != 0):
-                self.state = 350
+            if ((((_la - 31)) & ~0x3f) == 0 and ((1 << (_la - 31)) & ((1 << (ArduinoParser.T__30 - 31)) | (1 << (ArduinoParser.T__44 - 31)) | (1 << (ArduinoParser.T__45 - 31)) | (1 << (ArduinoParser.T__70 - 31)) | (1 << (ArduinoParser.T__71 - 31)) | (1 << (ArduinoParser.T__72 - 31)) | (1 << (ArduinoParser.T__73 - 31)) | (1 << (ArduinoParser.INT_CONST - 31)) | (1 << (ArduinoParser.FLOAT_CONST - 31)) | (1 << (ArduinoParser.CHAR_CONST - 31)) | (1 << (ArduinoParser.STRING_CONST - 31)) | (1 << (ArduinoParser.ID - 31)))) != 0):
+                self.state = 367
                 self.parameter()
 
 
-            self.state = 353
+            self.state = 370
             self.match(ArduinoParser.T__31)
         except RecognitionException as re:
             localctx.exception = re
@@ -2307,19 +2414,19 @@ class ArduinoParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 355
+            self.state = 372
             localctx._expression = self.expression(0)
             localctx.parameters.append(localctx._expression)
-            self.state = 360
+            self.state = 377
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==ArduinoParser.T__9:
-                self.state = 356
+                self.state = 373
                 self.match(ArduinoParser.T__9)
-                self.state = 357
+                self.state = 374
                 localctx._expression = self.expression(0)
                 localctx.parameters.append(localctx._expression)
-                self.state = 362
+                self.state = 379
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -2369,30 +2476,30 @@ class ArduinoParser ( Parser ):
         localctx = ArduinoParser.Static_variableContext(self, self._ctx, self.state)
         self.enterRule(localctx, 46, self.RULE_static_variable)
         try:
-            self.state = 373
+            self.state = 390
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,29,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 363
-                self.match(ArduinoParser.T__68)
-                self.state = 364
+                self.state = 380
+                self.match(ArduinoParser.T__74)
+                self.state = 381
                 self.var_type()
-                self.state = 365
+                self.state = 382
                 self.match(ArduinoParser.ID)
-                self.state = 366
+                self.state = 383
                 self.match(ArduinoParser.T__4)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 368
-                self.match(ArduinoParser.T__68)
-                self.state = 369
+                self.state = 385
+                self.match(ArduinoParser.T__74)
+                self.state = 386
                 self.var_type()
-                self.state = 370
+                self.state = 387
                 self.assignment()
-                self.state = 371
+                self.state = 388
                 self.match(ArduinoParser.T__4)
                 pass
 
@@ -2419,23 +2526,47 @@ class ArduinoParser ( Parser ):
 
     def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 15)
+                return self.precpred(self._ctx, 19)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 14)
+                return self.precpred(self._ctx, 18)
          
 
             if predIndex == 2:
-                return self.precpred(self._ctx, 13)
+                return self.precpred(self._ctx, 16)
          
 
             if predIndex == 3:
-                return self.precpred(self._ctx, 12)
+                return self.precpred(self._ctx, 15)
          
 
             if predIndex == 4:
+                return self.precpred(self._ctx, 14)
+         
+
+            if predIndex == 5:
+                return self.precpred(self._ctx, 13)
+         
+
+            if predIndex == 6:
+                return self.precpred(self._ctx, 12)
+         
+
+            if predIndex == 7:
                 return self.precpred(self._ctx, 11)
+         
+
+            if predIndex == 8:
+                return self.precpred(self._ctx, 10)
+         
+
+            if predIndex == 9:
+                return self.precpred(self._ctx, 9)
+         
+
+            if predIndex == 10:
+                return self.precpred(self._ctx, 17)
          
 
 

@@ -121,13 +121,19 @@ case_sentence
 expression 
        : '(' expression ')'
        | function_call
+       | incdec_expression
+       | operator=('!'|'~') expression
        | expression operator=('*'|'/'|'%') expression
        | expression operator=('+'|'-') expression
+       | expression operator=('<<'|'>>')
+       | expression operator=('>' | '>=' | '<=' | '<') expression
+       | expression operator=('=='|'!=') expression
+       | expression operator='&' expression
+       | expression operator='^' expression
+       | expression operator='|' expression
+       | expression operator='&&' expression
+       | expression operator='||' expression
        | expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') expression
-       | expression operator=('!=' | '==' | '>' | '>=' | '<=' | '<') expression
-       | expression operator=('&&'|'||') expression
-       | operator='!' expression
-       | incdec_expression
        | assignment
        | 'true'
        | 'false'
