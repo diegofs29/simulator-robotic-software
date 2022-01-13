@@ -198,13 +198,7 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#sentence.
     def enterSentence(self, ctx:ArduinoParser.SentenceContext):
-        ending = ctx.ID() == None
-        self.print_enter("Sentence", ending)
-        if not ending:
-            if ctx.s_type != None:
-                print(ctx.s_type.text, ctx.ID())
-            else:
-                print(ctx.ID())
+        self.print_enter("Sentence")
 
     # Exit a parse tree produced by ArduinoParser#sentence.
     def exitSentence(self, ctx:ArduinoParser.SentenceContext):

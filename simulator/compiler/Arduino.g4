@@ -109,10 +109,8 @@ sentence
        | conditional_sentence
        | expression ';'
        | s_type='return' expression? ';'
-       | s_type='goto' ID ';'
        | s_type='break' ';'
        | s_type='continue' ';'
-       | ID ':'
        ;
 
 case_sentence

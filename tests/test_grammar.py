@@ -30,15 +30,6 @@ class TestBase(unittest.TestCase):
         file.close()
 
 
-class TestGoto(TestBase):
-
-    file = "examples/ejemploGoto.txt"
-
-    def test_parsed(self):
-        self.read_results("tests/outputs/outputGoto.txt")
-        self.assertEqual(self.tokens, self.lines)
-
-
 class TestArray(TestBase):
 
     file = "examples/ejemploArrays.txt"
