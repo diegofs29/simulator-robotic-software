@@ -108,3 +108,21 @@ class TestReturn(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputReturn.txt")
         self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestAritmetico(TestBase):
+
+    file = "examples/ejemploAritmetico.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputAritmetico.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestComparisonBool(TestBase):
+
+    file = "examples/ejemploComparisonBool.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputComparisonBool.txt")
+        self.assertEqual(self.tokens, self.lines)

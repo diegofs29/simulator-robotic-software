@@ -119,14 +119,14 @@ case_sentence
        ;
 
 expression 
-       : function_call
-       | expression operator=('*'|'/') expression
+       : '(' expression ')'
+       | function_call
+       | expression operator=('*'|'/'|'%') expression
        | expression operator=('+'|'-') expression
        | expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') expression
        | expression operator=('!=' | '==' | '>' | '>=' | '<=' | '<') expression
        | expression operator=('&&'|'||') expression
-       | '!' expression
-       | '(' expression ')'
+       | operator='!' expression
        | incdec_expression
        | assignment
        | 'true'
