@@ -1,0 +1,62 @@
+Program
+Program_code
+Definition
+Simple_definition, sens
+Var_type, int
+Program_code
+Function, setup
+Var_type, void
+Sentence
+Expression, sens=0
+Assignment, sens = 0
+Expression, 0
+Program_code
+Function, loop
+Var_type, void
+Sentence
+Assignment_definition
+Var_type, int
+Assignment, threshold = 40
+Expression, 40
+Sentence
+Iteration_sentence, for
+Assignment_definition
+Var_type, int
+Assignment, x = 0
+Expression, 0
+Expression, <
+Expression, x
+Expression, 255
+Expression, x++
+Incdec_expression, ++
+Code_block
+Sentence
+Expression, analogWrite(PWMpin,x)
+Function_call, analogWrite
+Parameter
+Expression, PWMpin
+Expression, x
+Sentence
+Expression, sens=analogRead(sensorPin)
+Assignment, sens = analogRead(sensorPin)
+Expression, analogRead(sensorPin)
+Function_call, analogRead
+Parameter
+Expression, sensorPin
+Sentence
+Conditional_sentence, if
+Expression, >
+Expression, sens
+Expression, threshold
+Code_block
+Sentence
+Expression, x=0
+Assignment, x = 0
+Expression, 0
+Sentence, break
+Sentence
+Expression, delay(50)
+Function_call, delay
+Parameter
+Expression, 50
+Sentence, continue

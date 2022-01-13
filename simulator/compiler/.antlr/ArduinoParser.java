@@ -1521,11 +1521,11 @@ public class ArduinoParser extends Parser {
 		public AssignmentContext assignment() {
 			return getRuleContext(AssignmentContext.class,0);
 		}
-		public TerminalNode ID() { return getToken(ArduinoParser.ID, 0); }
 		public TerminalNode INT_CONST() { return getToken(ArduinoParser.INT_CONST, 0); }
 		public TerminalNode FLOAT_CONST() { return getToken(ArduinoParser.FLOAT_CONST, 0); }
 		public TerminalNode CHAR_CONST() { return getToken(ArduinoParser.CHAR_CONST, 0); }
 		public TerminalNode STRING_CONST() { return getToken(ArduinoParser.STRING_CONST, 0); }
+		public TerminalNode ID() { return getToken(ArduinoParser.ID, 0); }
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1602,31 +1602,31 @@ public class ArduinoParser extends Parser {
 			case 8:
 				{
 				setState(311);
-				match(ID);
+				match(INT_CONST);
 				}
 				break;
 			case 9:
 				{
 				setState(312);
-				match(INT_CONST);
+				match(FLOAT_CONST);
 				}
 				break;
 			case 10:
 				{
 				setState(313);
-				match(FLOAT_CONST);
+				match(CHAR_CONST);
 				}
 				break;
 			case 11:
 				{
 				setState(314);
-				match(CHAR_CONST);
+				match(STRING_CONST);
 				}
 				break;
 			case 12:
 				{
 				setState(315);
-				match(STRING_CONST);
+				match(ID);
 				}
 				break;
 			}
@@ -2127,8 +2127,8 @@ public class ArduinoParser extends Parser {
 		"\5,\27\2\u012f\u0130\7A\2\2\u0130\u013f\5(\25\r\u0131\u0132\7!\2\2\u0132"+
 		"\u0133\5(\25\2\u0133\u0134\7\"\2\2\u0134\u013f\3\2\2\2\u0135\u013f\5*"+
 		"\26\2\u0136\u013f\5\22\n\2\u0137\u013f\7B\2\2\u0138\u013f\7C\2\2\u0139"+
-		"\u013f\7M\2\2\u013a\u013f\7G\2\2\u013b\u013f\7H\2\2\u013c\u013f\7I\2\2"+
-		"\u013d\u013f\7K\2\2\u013e\u012d\3\2\2\2\u013e\u012f\3\2\2\2\u013e\u0131"+
+		"\u013f\7G\2\2\u013a\u013f\7H\2\2\u013b\u013f\7I\2\2\u013c\u013f\7K\2\2"+
+		"\u013d\u013f\7M\2\2\u013e\u012d\3\2\2\2\u013e\u012f\3\2\2\2\u013e\u0131"+
 		"\3\2\2\2\u013e\u0135\3\2\2\2\u013e\u0136\3\2\2\2\u013e\u0137\3\2\2\2\u013e"+
 		"\u0138\3\2\2\2\u013e\u0139\3\2\2\2\u013e\u013a\3\2\2\2\u013e\u013b\3\2"+
 		"\2\2\u013e\u013c\3\2\2\2\u013e\u013d\3\2\2\2\u013f\u0151\3\2\2\2\u0140"+

@@ -182,7 +182,11 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#sentence.
     def enterSentence(self, ctx:ArduinoParser.SentenceContext):
-        self.add_token("Sentence")
+        if(ctx.s_type != None):
+            self.add_token("Sentence", ctx.s_type.text)
+        else:
+            self.add_token("Sentence")
+
 
     # Exit a parse tree produced by ArduinoParser#sentence.
     def exitSentence(self, ctx:ArduinoParser.SentenceContext):

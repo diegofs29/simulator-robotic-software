@@ -131,11 +131,11 @@ expression
        | assignment
        | 'true'
        | 'false'
-       | ID
        | INT_CONST
        | FLOAT_CONST
        | CHAR_CONST
        | STRING_CONST
+       | ID
        ;
 
 incdec_expression 

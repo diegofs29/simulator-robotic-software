@@ -63,3 +63,48 @@ class TestDoWhile(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputDoWhile.txt")
         self.assertEqual(self.tokens, self.lines)
+
+
+class TestIf(TestBase):
+
+    file = "examples/ejemploIf.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputIf.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestElse(TestBase):
+
+    file = "examples/ejemploElse.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputElse.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestSwitchCase(TestBase):
+
+    file = "examples/ejemploSwitchCase.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputSwitchCase.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestBreakContinue(TestBase):
+
+    file = "examples/ejemploBreakContinue.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputBreakContinue.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestReturn(TestBase):
+
+    file = "examples/ejemploReturn.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputReturn.txt")
+        self.assertEqual(self.tokens, self.lines)
