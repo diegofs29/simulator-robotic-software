@@ -1,0 +1,71 @@
+Program
+Program_code
+Definition
+Simple_definition, b
+Var_type, bool
+Program_code
+Definition
+Assignment_definition
+Var_type, boolean
+Assignment, bo = false
+Expression, false
+Program_code
+Definition
+Simple_definition, by
+Var_type, byte
+Program_code
+Definition
+Assignment_definition
+Var_type, char
+Assignment, c = 'a'
+Expression, 'a'
+Program_code
+Definition
+Assignment_definition
+Var_type, double
+Assignment, d = 2.69
+Expression, 2.69
+Program_code
+Definition
+Simple_definition, f
+Var_type, float
+Program_code
+Definition
+Assignment_definition
+Var_type, int
+Assignment, i = 73
+Expression, 73
+Program_code
+Definition
+Simple_definition, l
+Var_type, long
+Program_code
+Definition
+Simple_definition, s
+Var_type, short
+Program_code
+Definition
+Simple_definition, size
+Var_type, size_t
+Program_code
+Definition
+Assignment_definition
+Var_type, string
+Assignment, str = "hola"
+Expression, "hola"
+Program_code
+Definition
+Simple_definition, uc
+Var_type, unsigned char
+Program_code
+Definition
+Simple_definition, ui
+Var_type, unsigned int
+Program_code
+Definition
+Simple_definition, ul
+Var_type, unsigned long
+Program_code
+Definition
+Simple_definition, w
+Var_type, word

@@ -144,3 +144,21 @@ class TestCompound(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputCompound.txt")
         self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestVariablesAsignacion(TestBase):
+
+    file = "examples/testVariablesAsignacion.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputVariablesAsignacion.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestFurtherSyntax(TestBase):
+
+    file = "examples/testFurtherSyntax.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputFurtherSyntax.txt")
+        self.assertEqual(self.tokens, self.lines)

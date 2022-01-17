@@ -49,8 +49,8 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#declaration.
     def enterDeclaration(self, ctx:ArduinoParser.DeclarationContext):
-        if ctx.STRING_CONST == None:
-            self.add_token("Declaration", ctx.h_file())
+        if ctx.h_file() != None:
+            self.add_token("Declaration", ctx.h_file().getText())
         else:
             self.add_token("Declaration", ctx.STRING_CONST())
 
@@ -243,7 +243,10 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#static_variable.
     def enterStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
-        self.add_token("Static_variable")
+        if ctx.ID() == None:
+            self.add_token("Static_variable")
+        else:
+            self.add_token("Static_variable", ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#static_variable.
     def exitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
