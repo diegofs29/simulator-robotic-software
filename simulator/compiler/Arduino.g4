@@ -52,7 +52,7 @@ array_definition
 
 constant 
        : const_type='const' var_type assignment ';'
-       | const_type='#define' ID expression ('\n' | EOF)
+       | const_type='#define' ID expression
        ;
 
 var_type 
@@ -91,7 +91,6 @@ iteration_sentence
 
 conditional_sentence 
        : cond_type='if' '(' expression ')' code_block
-       | cond_type='if' '(' expression ')' code_block 'else' conditional_sentence
        | cond_type='if' '(' expression ')' code_block 'else' code_block
        | cond_type='switch' '(' expression ')' '{' case_sentence* '}'
        ;
@@ -102,8 +101,9 @@ code_block
        ;
 
 sentence 
-       : simple_definition
-       | assignment_definition
+       : assignment_definition ';'
+       | simple_definition ';'
+       | array_definition ';'
        | static_variable
        | iteration_sentence
        | conditional_sentence

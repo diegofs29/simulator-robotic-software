@@ -19,6 +19,8 @@ Expression, >=
 Expression, temperature
 Expression, 70
 Code_block
+Code_block
+Sentence
 Conditional_sentence, if
 Expression, >=
 Expression, temperature
