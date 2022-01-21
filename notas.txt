@@ -1,1 +1,0 @@
-Comprobar pin de los servos en el metodo attach
