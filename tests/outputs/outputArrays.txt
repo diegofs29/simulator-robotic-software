@@ -1,9 +1,8 @@
 Program
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, s
 Var_type, string
-Assignment, s = "hola"
 Expression, "hola"
 Program_code
 Definition

@@ -1,9 +1,8 @@
 Program
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, b
 Var_type, boolean
-Assignment, b = false
 Expression, false
 Program_code
 Function, setup

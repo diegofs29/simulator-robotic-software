@@ -36,7 +36,7 @@ simple_definition
        ;
 
 assignment_definition 
-       : v_type=var_type assign=assignment
+       : v_type=var_type ID '=' val=expression
        ;
 
 assignment 
@@ -55,7 +55,7 @@ array_index
        ;
 
 constant 
-       : const_type='const' v_type=var_type assign=assignment ';'
+       : const_type='const' v_type=var_type ID '=' val=expression ';'
        | const_type='#define' ID expr=expression
        ;
 
@@ -166,5 +166,5 @@ parameter
 
 static_variable 
        : 'static' v_type=var_type ID ';'
-       | 'static' v_type=var_type assign=assignment ';'
+       | 'static' v_type=var_type ID '=' val=expression ';'
        ;

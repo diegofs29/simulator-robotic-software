@@ -1,18 +1,16 @@
 Program
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, timer
 Var_type, int
-Assignment, timer = 100
 Expression, 100
 Program_code
 Function, setup
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition
+Assignment_definition, thisPin
 Var_type, int
-Assignment, thisPin = 2
 Expression, 2
 Expression, <
 Expression, thisPin
@@ -31,9 +29,8 @@ Function, loop
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition
+Assignment_definition, thisPin
 Var_type, int
-Assignment, thisPin = 2
 Expression, 2
 Expression, <
 Expression, thisPin
@@ -60,9 +57,8 @@ Expression, thisPin
 Expression, LOW
 Sentence
 Iteration_sentence, for
-Assignment_definition
+Assignment_definition, thisPin
 Var_type, int
-Assignment, thisPin = 7
 Expression, 7
 Expression, >=
 Expression, thisPin

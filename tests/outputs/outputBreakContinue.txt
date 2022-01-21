@@ -14,15 +14,13 @@ Program_code
 Function, loop
 Var_type, void
 Sentence
-Assignment_definition
+Assignment_definition, threshold
 Var_type, int
-Assignment, threshold = 40
 Expression, 40
 Sentence
 Iteration_sentence, for
-Assignment_definition
+Assignment_definition, x
 Var_type, int
-Assignment, x = 0
 Expression, 0
 Expression, <
 Expression, x

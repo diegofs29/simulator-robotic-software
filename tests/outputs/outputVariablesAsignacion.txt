@@ -5,9 +5,8 @@ Simple_definition, b
 Var_type, bool
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, bo
 Var_type, boolean
-Assignment, bo = false
 Expression, false
 Program_code
 Definition
@@ -15,15 +14,13 @@ Simple_definition, by
 Var_type, byte
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, c
 Var_type, char
-Assignment, c = 'a'
 Expression, 'a'
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, d
 Var_type, double
-Assignment, d = 2.69
 Expression, 2.69
 Program_code
 Definition
@@ -31,9 +28,8 @@ Simple_definition, f
 Var_type, float
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, i
 Var_type, int
-Assignment, i = 73
 Expression, 73
 Program_code
 Definition
@@ -49,9 +45,8 @@ Simple_definition, size
 Var_type, size_t
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, str
 Var_type, string
-Assignment, str = "hola"
 Expression, "hola"
 Program_code
 Definition

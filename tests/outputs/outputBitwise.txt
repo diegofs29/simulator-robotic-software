@@ -1,9 +1,8 @@
 Program
 Program_code
 Definition
-Assignment_definition
+Assignment_definition, i
 Var_type, int
-Assignment, i = 1
 Expression, 1
 Program_code
 Function, setup

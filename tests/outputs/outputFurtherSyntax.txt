@@ -7,9 +7,8 @@ Constant, ledPin
 Expression, 3
 Program_code
 Definition
-Constant
+Constant, pi
 Var_type, float
-Assignment, pi = 3.14
 Expression, 3.14
 Program_code
 Function, funcionPrueba
@@ -18,9 +17,8 @@ Sentence
 Static_variable, var
 Var_type, int
 Sentence
-Static_variable
+Static_variable, assigned
 Var_type, int
-Assignment, assigned = 29
 Expression, 29
 Sentence
 Expression, var=10

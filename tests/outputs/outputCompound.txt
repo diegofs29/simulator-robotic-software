@@ -3,9 +3,8 @@ Program_code
 Function, operacionUnica
 Var_type, void
 Sentence
-Assignment_definition
+Assignment_definition, x
 Var_type, int
-Assignment, x = 7
 Expression, 7
 Sentence
 Expression, %=
@@ -51,9 +50,8 @@ Assignment, y = x--
 Expression, x--
 Incdec_expression, --
 Sentence
-Assignment_definition
+Assignment_definition, myByte
 Var_type, byte
-Assignment, myByte = 10101010
 Expression, 10101010
 Sentence
 Expression, &=
