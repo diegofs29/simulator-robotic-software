@@ -585,15 +585,16 @@ public class ArduinoParser extends Parser {
 
 	public static class Array_definitionContext extends ParserRuleContext {
 		public Var_typeContext v_type;
+		public Array_indexContext a_index;
 		public ExpressionContext expression;
 		public List<ExpressionContext> elements = new ArrayList<ExpressionContext>();
 		public ExpressionContext expr;
 		public TerminalNode ID() { return getToken(ArduinoParser.ID, 0); }
-		public Array_indexContext array_index() {
-			return getRuleContext(Array_indexContext.class,0);
-		}
 		public Var_typeContext var_type() {
 			return getRuleContext(Var_typeContext.class,0);
+		}
+		public Array_indexContext array_index() {
+			return getRuleContext(Array_indexContext.class,0);
 		}
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
@@ -623,7 +624,7 @@ public class ArduinoParser extends Parser {
 				setState(112);
 				match(ID);
 				setState(113);
-				array_index();
+				((Array_definitionContext)_localctx).a_index = array_index();
 				}
 				break;
 			case 2:
@@ -634,7 +635,7 @@ public class ArduinoParser extends Parser {
 				setState(116);
 				match(ID);
 				setState(117);
-				array_index();
+				((Array_definitionContext)_localctx).a_index = array_index();
 				setState(118);
 				match(T__5);
 				setState(119);
@@ -671,7 +672,7 @@ public class ArduinoParser extends Parser {
 				setState(131);
 				match(ID);
 				setState(132);
-				array_index();
+				((Array_definitionContext)_localctx).a_index = array_index();
 				setState(133);
 				match(T__5);
 				setState(134);
@@ -692,6 +693,7 @@ public class ArduinoParser extends Parser {
 	}
 
 	public static class Array_indexContext extends ParserRuleContext {
+		public Array_indexContext a_index;
 		public TerminalNode INT_CONST() { return getToken(ArduinoParser.INT_CONST, 0); }
 		public Array_indexContext array_index() {
 			return getRuleContext(Array_indexContext.class,0);
@@ -729,7 +731,7 @@ public class ArduinoParser extends Parser {
 			if (_la==T__6) {
 				{
 				setState(143);
-				array_index();
+				((Array_indexContext)_localctx).a_index = array_index();
 				}
 			}
 

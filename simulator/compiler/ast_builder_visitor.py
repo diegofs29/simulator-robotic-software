@@ -107,7 +107,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#array_definition.
     def visitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         elements = []
-        v_type = var_name = size = expression = None
+        v_type = var_name = sizes = expression = None
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
@@ -115,13 +115,23 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.elements != None:
             for elem in ctx.elements:
                 elements.append(self.visit(elem))
-        if ctx.INT_CONST() != None:
-            size = ctx.INT_CONST
+        if ctx.a_index != None:
+            sizes = self.visit(ctx.a_index)
         else:
-            size = len(elements)
+            sizes = len(elements)
         if ctx.expr != None:
             expression = ctx.expr
-        return ArrayDefinitionNode(v_type, var_name, size, elements, expression)
+        return ArrayDefinitionNode(v_type, var_name, sizes, elements, expression)
+
+
+    # Visit a parse tree produced by ArduinoParser#array_index.
+    def visitArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        sizes = []
+        if ctx.INT_CONST() != None:
+            sizes.append(ctx.INT_CONST().getText())
+        if ctx.a_index != None:
+            sizes.extend(self.visit(ctx.a_index))
+        return sizes
 
 
     # Visit a parse tree produced by ArduinoParser#constant.

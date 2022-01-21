@@ -1002,6 +1002,7 @@ class ArduinoParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.v_type = None # Var_typeContext
+            self.a_index = None # Array_indexContext
             self._expression = None # ExpressionContext
             self.elements = list() # of ExpressionContexts
             self.expr = None # ExpressionContext
@@ -1009,12 +1010,12 @@ class ArduinoParser ( Parser ):
         def ID(self):
             return self.getToken(ArduinoParser.ID, 0)
 
-        def array_index(self):
-            return self.getTypedRuleContext(ArduinoParser.Array_indexContext,0)
-
-
         def var_type(self):
             return self.getTypedRuleContext(ArduinoParser.Var_typeContext,0)
+
+
+        def array_index(self):
+            return self.getTypedRuleContext(ArduinoParser.Array_indexContext,0)
 
 
         def expression(self, i:int=None):
@@ -1060,7 +1061,7 @@ class ArduinoParser ( Parser ):
                 self.state = 112
                 self.match(ArduinoParser.ID)
                 self.state = 113
-                self.array_index()
+                localctx.a_index = self.array_index()
                 pass
 
             elif la_ == 2:
@@ -1070,7 +1071,7 @@ class ArduinoParser ( Parser ):
                 self.state = 116
                 self.match(ArduinoParser.ID)
                 self.state = 117
-                self.array_index()
+                localctx.a_index = self.array_index()
                 self.state = 118
                 self.match(ArduinoParser.T__5)
                 self.state = 119
@@ -1102,7 +1103,7 @@ class ArduinoParser ( Parser ):
                 self.state = 131
                 self.match(ArduinoParser.ID)
                 self.state = 132
-                self.array_index()
+                localctx.a_index = self.array_index()
                 self.state = 133
                 self.match(ArduinoParser.T__5)
                 self.state = 134
@@ -1125,6 +1126,7 @@ class ArduinoParser ( Parser ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
+            self.a_index = None # Array_indexContext
 
         def INT_CONST(self):
             return self.getToken(ArduinoParser.INT_CONST, 0)
@@ -1177,7 +1179,7 @@ class ArduinoParser ( Parser ):
             _la = self._input.LA(1)
             if _la==ArduinoParser.T__6:
                 self.state = 143
-                self.array_index()
+                localctx.a_index = self.array_index()
 
 
         except RecognitionException as re:

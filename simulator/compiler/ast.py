@@ -30,10 +30,10 @@ class DefinitionNode():
 
 class ArrayDefinitionNode():
 
-    def __init__(self, type, var_name, size, elements=None, expression=None):
+    def __init__(self, type, var_name, sizes=None, elements=None, expression=None):
         self.type = type
         self.var_name = var_name
-        self.size = size
+        self.size = sizes
         self.elements = elements
         self.expression = expression
 

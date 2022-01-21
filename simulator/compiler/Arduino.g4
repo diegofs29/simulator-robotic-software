@@ -45,13 +45,13 @@ assignment
        ;
 
 array_definition
-       : v_type=var_type ID array_index
-       | v_type=var_type ID array_index '=' '{' elements+=expression (',' elements+=expression)* '}'
-       | v_type=var_type ID array_index '=' expr=expression
+       : v_type=var_type ID a_index=array_index
+       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}'
+       | v_type=var_type ID a_index=array_index '=' expr=expression
        ;
 
 array_index
-       : '[' INT_CONST? ']' array_index?
+       : '[' INT_CONST? ']' a_index=array_index?
        ;
 
 constant 
