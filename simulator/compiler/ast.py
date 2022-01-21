@@ -20,11 +20,12 @@ class ProgramCodeNode():
 
 class DefinitionNode():
 
-    def __init__(self, type, var_name, assignment=None, is_constant=False):
+    def __init__(self, type, var_name=None, assignment=None, is_constant=False, value=None):
         self.type = type
         self.var_name = var_name
         self.assignment = assignment
         self.is_constant = is_constant
+        self.value = value
 
 
 class ArrayDefinitionNode():
@@ -112,6 +113,12 @@ class UIntTypeNode():
 
 
 class UCharTypeNode():
+
+    def __init__(self):
+        pass
+    
+    
+class ULongTypeNode():
 
     def __init__(self):
         pass
@@ -204,6 +211,13 @@ class StaticVarDefinitionNode():
         self. assignment = assignment
 
 
+class ArrayAccessNode():
+
+    def __init__(self, var, index):
+        self.var = var
+        self.index = index
+
+
 class ArithmeticExpressionNode():
 
     def __init__(self, left, op, right):
@@ -213,6 +227,14 @@ class ArithmeticExpressionNode():
 
 
 class ComparisonExpressionNode():
+
+    def __init__(self, left, op, right):
+        self.left = left
+        self.op = op
+        self.right = right
+        
+        
+class BooleanExpressionNode():
 
     def __init__(self, left, op, right):
         self.left = left
@@ -243,13 +265,13 @@ class IncDecExpressionNode():
         self.op = op
 
 
-class BitwiseNotExpressionNode():
+class NotExpressionNode():
 
     def __init__(self, expression):
         self.expression = expression
 
 
-class NotExpressionNode():
+class BitNotExpressionNode():
 
     def __init__(self, expression):
         self.expression = expression
@@ -280,6 +302,12 @@ class StringNode():
 
 
 class BooleanNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
+class IDNode():
 
     def __init__(self, value):
         self.value = value

@@ -13,10 +13,20 @@ Program_code
 Definition
 Array_definition
 Var_type, int
+Expression, 2
+Expression, 4
+Expression, 8
+Expression, 3
+Expression, 6
 Program_code
 Definition
 Array_definition
 Var_type, int
+Expression, 2
+Expression, 4
+Expression, -8
+Expression, 3
+Expression, 2
 Program_code
 Definition
 Array_definition
