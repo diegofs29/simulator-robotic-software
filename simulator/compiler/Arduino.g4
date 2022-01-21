@@ -56,7 +56,7 @@ array_index
 
 constant 
        : const_type='const' v_type=var_type ID '=' val=expression ';'
-       | const_type='#define' ID expr=expression
+       | const_type='#define' ID val=expression
        ;
 
 var_type 

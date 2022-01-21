@@ -84,12 +84,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#assignment_definition.
     def visitAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        v_type = assignment = None
+        v_type = var_name = val = None
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
-        if ctx.assign != None:
-            assignment = self.visit(ctx.assign)
-        return DefinitionNode(v_type, assignment)
+        if ctx.ID() != None:
+            var_name = ctx.ID().getText()
+        if ctx.val != None:
+            val = self.visit(ctx.val)
+        return DefinitionNode(v_type, var_name, val)
 
 
     # Visit a parse tree produced by ArduinoParser#assignment.
@@ -136,16 +138,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#constant.
     def visitConstant(self, ctx:ArduinoParser.ConstantContext):
-        v_type = var_name = assignment = value = None
+        v_type = var_name = val = value = None
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
             var_name = ctx.ID().getText()
-        if ctx.assign != None:
-            assignment = self.visit(ctx.assign)
-        if ctx.expr != None:
-            value = self.visit(ctx.expr)
-        return DefinitionNode(v_type, var_name, assignment, True, value)
+        if ctx.val != None:
+            val = self.visit(ctx.val)
+        return DefinitionNode(v_type, var_name, val, True, value)
 
 
     # Visit a parse tree produced by ArduinoParser#var_type.
@@ -351,16 +351,20 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 node = NotExpressionNode(expr)
             if op == '~':
                 node = BitNotExpressionNode(expr)
-        if ctx.getText() == 'true' or ctx.getText() == 'false':
+        if ctx.getText() == "true" or ctx.getText() == "false":
             node = BooleanNode(ctx.getText())
         if ctx.INT_CONST() != None:
             node = IntNode(ctx.INT_CONST().getText())
         if ctx.FLOAT_CONST() != None:
             node = FloatNode(ctx.FLOAT_CONST().getText())
         if ctx.CHAR_CONST() != None:
-            node = CharNode(ctx.CHAR_CONST().getText())
+            char_const = ctx.CHAR_CONST().getText()
+            char_const = char_const.replace('\'', '')
+            node = CharNode(char_const)
         if ctx.STRING_CONST() != None:
-            node = StringNode(ctx.STRING_CONST().getText())
+            string_const = ctx.STRING_CONST().getText()
+            string_const = string_const.replace('"', '')
+            node = StringNode(string_const)
         if ctx.ID() != None:
             node = IDNode(ctx.ID().getText())
         return node
@@ -390,14 +394,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#static_variable.
     def visitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
-        v_type = var_name = assign = None
+        v_type = var_name = val = None
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
             var_name = ctx.ID().getText()
-        if ctx.assign != None:
-            assign = self.visit(ctx.assign)
-        return StaticVarDefinitionNode(v_type, var_name, assign)
+        if ctx.val != None:
+            assign = self.visit(ctx.val)
+        return StaticVarDefinitionNode(v_type, var_name, val)
 
 
 del ArduinoParser

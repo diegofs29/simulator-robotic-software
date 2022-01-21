@@ -757,7 +757,6 @@ public class ArduinoParser extends Parser {
 		public Token const_type;
 		public Var_typeContext v_type;
 		public ExpressionContext val;
-		public ExpressionContext expr;
 		public TerminalNode ID() { return getToken(ArduinoParser.ID, 0); }
 		public Var_typeContext var_type() {
 			return getRuleContext(Var_typeContext.class,0);
@@ -803,7 +802,7 @@ public class ArduinoParser extends Parser {
 				setState(156);
 				match(ID);
 				setState(157);
-				((ConstantContext)_localctx).expr = expression(0);
+				((ConstantContext)_localctx).val = expression(0);
 				}
 				break;
 			default:

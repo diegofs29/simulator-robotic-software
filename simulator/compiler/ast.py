@@ -20,10 +20,9 @@ class ProgramCodeNode():
 
 class DefinitionNode():
 
-    def __init__(self, type, var_name=None, assignment=None, is_constant=False, value=None):
+    def __init__(self, type, var_name=None, value=None, is_constant=False):
         self.type = type
         self.var_name = var_name
-        self.assignment = assignment
         self.is_constant = is_constant
         self.value = value
 
@@ -205,10 +204,10 @@ class CaseNode():
 
 class StaticVarDefinitionNode():
 
-    def __init__(self, type, var_name, assignment=None):
+    def __init__(self, type, var_name, val=None):
         self.type = type
         self.var_name = var_name
-        self. assignment = assignment
+        self.val = val
 
 
 class ArrayAccessNode():
