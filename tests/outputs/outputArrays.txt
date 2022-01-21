@@ -1,0 +1,43 @@
+Program
+Program_code
+Definition
+Assignment_definition, s
+Var_type, string
+Expression, "hola"
+Program_code
+Definition
+Array_definition
+Var_type, int
+Array_index, 6
+Program_code
+Definition
+Array_definition
+Var_type, int
+Array_index
+Expression, 2
+Expression, 4
+Expression, 8
+Expression, 3
+Expression, 6
+Program_code
+Definition
+Array_definition
+Var_type, int
+Array_index, 5
+Expression, 2
+Expression, 4
+Expression, -8
+Expression, 3
+Expression, 2
+Program_code
+Definition
+Array_definition
+Var_type, char
+Array_index, 6
+Expression, "hello"
+Program_code
+Function, setup
+Var_type, void
+Program_code
+Function, loop
+Var_type, void

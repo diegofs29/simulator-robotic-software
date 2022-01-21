@@ -5,6 +5,7 @@ from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoListenerTests import ArduinoListenerTests
 from simulator.compiler.ArduinoParser import ArduinoParser
 
+
 class TestBase(unittest.TestCase):
 
     def setUp(self):
@@ -21,66 +22,152 @@ class TestBase(unittest.TestCase):
     def tearDown(self):
         return super().tearDown()
 
+    def read_results(self, file_name):
+        file = open(file_name, "r")
+        self.lines = []
+        for line in file:
+            self.lines.append(line.rstrip('\n'))
+        file.close()
 
-class TestExample(TestBase):
 
-    file = "examples/ejemploGoto.txt"
+class TestArray(TestBase):
+
+    file = "examples/ejemploArrays.txt"
 
     def test_parsed(self):
-        self.assertEqual(
-            self.tokens,
-            ["Program",
-            "Declaration, \"inventado.h\"",
-            "Setup",
-            "Code_block",
-            "Loop",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, r = 0",
-            "Expression, 0",
-            "Expression, <",
-            "Expression, r",
-            "Expression, 255",
-            "Expression, r++",
-            "Incdec_expression, ++",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, g = 255",
-            "Expression, 255",
-            "Expression, >",
-            "Expression, g",
-            "Expression, 0",
-            "Expression, g--",
-            "Incdec_expression, --",
-            "Code_block",
-            "Sentence",
-            "Iteration_sentence, for",
-            "Assignment_definition",
-            "Var_type, byte",
-            "Assignment, b = 0",
-            "Expression, 0",
-            "Expression, <",
-            "Expression, b",
-            "Expression, 255",
-            "Expression, b++",
-            "Incdec_expression, ++",
-            "Code_block",
-            "Sentence",
-            "Conditional_sentence, if",
-            "Expression, >",
-            "Expression, analogRead(0)",
-            "Function_call, analogRead",
-            "Parameter",
-            "Expression, 0",
-            "Expression, 250",
-            "Code_block",
-            "Sentence, gotobailout",
-            "Sentence, bailout"
-            ]
-        )
+        self.read_results("tests/outputs/outputArrays.txt")
+        self.assertEqual(self.tokens, self.lines)
+
+class TestFor(TestBase):
+
+    file = "examples/ejemploFor.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputFor.txt")
+        self.assertEqual(self.tokens, self.lines)
+
+
+class TestWhile(TestBase):
+
+    file = "examples/ejemploWhile.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputWhile.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestDoWhile(TestBase):
+
+    file = "examples/ejemploDoWhile.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputDoWhile.txt")
+        self.assertEqual(self.tokens, self.lines)
+
+
+class TestIf(TestBase):
+
+    file = "examples/ejemploIf.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputIf.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestElse(TestBase):
+
+    file = "examples/ejemploElse.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputElse.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestSwitchCase(TestBase):
+
+    file = "examples/ejemploSwitchCase.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputSwitchCase.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestBreakContinue(TestBase):
+
+    file = "examples/ejemploBreakContinue.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputBreakContinue.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestReturn(TestBase):
+
+    file = "examples/ejemploReturn.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputReturn.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestAritmetico(TestBase):
+
+    file = "examples/ejemploAritmetico.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputAritmetico.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestComparisonBool(TestBase):
+
+    file = "examples/ejemploComparisonBool.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputComparisonBool.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestBitwise(TestBase):
+
+    file = "examples/ejemploBitwise.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputBitwise.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestCompound(TestBase):
+
+    file = "examples/ejemploCompound.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputCompound.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestVariablesAsignacion(TestBase):
+
+    file = "examples/testVariablesAsignacion.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputVariablesAsignacion.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestFurtherSyntax(TestBase):
+
+    file = "examples/testFurtherSyntax.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputFurtherSyntax.txt")
+        self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestArrayAccess(TestBase):
+
+    file = "examples/testArrays.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputTestArrays.txt")
+        self.assertEqual(self.tokens, self.lines)

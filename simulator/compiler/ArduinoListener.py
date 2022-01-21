@@ -98,6 +98,15 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_index.
+    def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#array_index.
+    def exitArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         pass
@@ -113,24 +122,6 @@ class ArduinoListener(ParseTreeListener):
 
     # Exit a parse tree produced by ArduinoParser#var_type.
     def exitVar_type(self, ctx:ArduinoParser.Var_typeContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
         pass
 
 
