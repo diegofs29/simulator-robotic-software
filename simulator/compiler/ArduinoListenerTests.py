@@ -113,6 +113,19 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_index.
+    def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        if ctx.INT_CONST() != None:
+            self.add_token("Array_index", ctx.INT_CONST())
+        else:
+            self.add_token("Array_index")
+
+    # Exit a parse tree produced by ArduinoParser#array_index.
+    def exitArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        pass
+
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         if(ctx.ID() == None):

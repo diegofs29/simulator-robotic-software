@@ -162,3 +162,12 @@ class TestFurtherSyntax(TestBase):
     def test_parsed(self):
         self.read_results("tests/outputs/outputFurtherSyntax.txt")
         self.assertEqual(self.tokens, self.lines)
+        
+        
+class TestArrayAccess(TestBase):
+
+    file = "examples/testArrays.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/outputs/outputTestArrays.txt")
+        self.assertEqual(self.tokens, self.lines)
