@@ -1,5 +1,13 @@
 lexer grammar ArduinoLexicon;
 
+BIT_SHIFT_L
+    : '<''<'
+    ;
+    
+BIT_SHIFT_R
+    : '>''>'
+    ;
+
 INT_CONST
     : '-'? [0-9]+
     ;

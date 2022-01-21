@@ -7,14 +7,12 @@ start
        ;
 
 program 
-       : declarations+=declaration* code+=program_code* setup loop code+=program_code*
+       : declarations+=declaration* code+=program_code*
        ;
 
 program_code
-       : definition
-       | setup
-       | loop
-       | function
+       : var_def=definition
+       | func_def=function
        ;
 
 declaration 
@@ -27,34 +25,38 @@ h_file
        ;
 
 definition 
-       : simple_definition ';'
-       | array_definition ';'
-       | assignment_definition ';'
-       | constant
+       : s_def=simple_definition ';'
+       | a_def=array_definition ';'
+       | assign_def=assignment_definition ';'
+       | cte_def=constant
        ;
 
 simple_definition 
-       : var_type ID
+       : v_type=var_type ID
        ;
 
 assignment_definition 
-       : var_type assignment
+       : v_type=var_type ID '=' val=expression
        ;
 
 assignment 
-       : ID '=' expression
-       | ID '[' INT_CONST ']' '=' expression
+       : ID '=' expr=expression
+       | ID '[' INT_CONST ']' '=' expr=expression
        ;
 
 array_definition
-       : var_type ID '[' INT_CONST ']'
-       | var_type ID '[' INT_CONST? ']' '=' '{' INT_CONST (',' INT_CONST)* '}'
-       | var_type ID '[' INT_CONST ']' '=' expression
+       : v_type=var_type ID a_index=array_index
+       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}'
+       | v_type=var_type ID a_index=array_index '=' expr=expression
+       ;
+
+array_index
+       : '[' INT_CONST? ']' a_index=array_index?
        ;
 
 constant 
-       : const_type='const' var_type assignment ';'
-       | const_type='#define' ID expression ('\n' | EOF)
+       : const_type='const' v_type=var_type ID '=' val=expression ';'
+       | const_type='#define' ID val=expression
        ;
 
 var_type 
@@ -77,16 +79,8 @@ var_type
        | ID
        ;
 
-setup 
-       : 'void' 'setup' '(' ')' code_block 
-       ;
-
-loop 
-       : 'void' 'loop' '(' ')' code_block
-       ;
-
 function 
-       : var_type ID '(' function_args? ')' '{' sentences+=sentence* '}'
+       : v_type=var_type ID '(' f_args=function_args? ')' '{' sentences+=sentence* '}'
        ;
 
 function_args
@@ -94,16 +88,15 @@ function_args
        ;
 
 iteration_sentence 
-       : it_type='while' '(' expression ')' code_block
-       | it_type='do' code_block 'while' '(' expression ')'
-       | it_type='for' '(' assignment_definition ';' expression ';' expression ')' code_block
+       : it_type='while' '(' expr=expression ')' code=code_block
+       | it_type='do' code=code_block 'while' '(' expr=expression ')' ';'
+       | it_type='for' '(' assign_def=assignment_definition ';' condition=expression ';' expr=expression ')' code=code_block
        ;
 
 conditional_sentence 
-       : cond_type='if' '(' expression ')' code_block
-       | cond_type='if' '(' expression ')' code_block 'else' conditional_sentence
-       | cond_type='if' '(' expression ')' code_block 'else' code_block
-       | cond_type='switch' '(' expression ')' '{' case_sentence* '}'
+       : cond_type='if' '(' expr=expression ')' if_code=code_block
+       | cond_type='if' '(' expr=expression ')' if_code=code_block 'else' else_code=code_block
+       | cond_type='switch' '(' expr=expression ')' '{' sentences+=case_sentence* '}'
        ;
 
 code_block
@@ -112,43 +105,48 @@ code_block
        ;
 
 sentence 
-       : simple_definition
-       | assignment_definition
-       | static_variable
-       | assignment ';'
-       | function_call ';'
-       | iteration_sentence
-       | conditional_sentence
-       | s_type='return' expression? ';'
-       | s_type='goto' ID ';'
+       : a_def=assignment_definition ';'
+       | s_def=simple_definition ';'
+       | arr_def=array_definition ';'
+       | s_var=static_variable
+       | it_sent=iteration_sentence
+       | cond_sent=conditional_sentence
+       | expr=expression ';'
+       | s_type='return' expr=expression? ';'
        | s_type='break' ';'
        | s_type='continue' ';'
-       | ID ':'
        ;
 
 case_sentence
-       : 'case' expression ':' sentences+=sentence* 'break' ';'
-       | 'default' ':' sentences+=sentence* 'break' ';'
+       : sent_type='case' expr=expression ':' sentences+=sentence* 'break' ';'
+       | sent_type='default' ':' sentences+=sentence* 'break' ';'
        ;
 
 expression 
-       : function_call
-       | expression operator=('*'|'/') expression
-       | expression operator=('+'|'-') expression
-       | expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') expression
-       | expression operator=('!=' | '==' | '>' | '>=' | '<=' | '<') expression
-       | expression operator=('&&'|'||') expression
-       | '!' expression
-       | '(' expression ')'
-       | incdec_expression
-       | assignment
+       : '(' r_expr=expression ')'
+       | f_call=function_call
+       | i_d_expr=incdec_expression
+       | array_name=expression '[' index=expression ']'
+       | operator=('!'|'~') expr=expression
+       | left=expression operator=('*'|'/'|'%') right=expression
+       | left=expression operator=('+'|'-') right=expression
+       | left=expression operator=(BIT_SHIFT_R|BIT_SHIFT_L) right=expression
+       | left=expression operator=('>' | '>=' | '<=' | '<') right=expression
+       | left=expression operator=('=='|'!=') right=expression
+       | left=expression operator='&' right=expression
+       | left=expression operator='^' right=expression
+       | left=expression operator='|' right=expression
+       | left=expression operator='&&' right=expression
+       | left=expression operator='||' right=expression
+       | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
+       | assign=assignment
        | 'true'
        | 'false'
-       | ID
        | INT_CONST
        | FLOAT_CONST
        | CHAR_CONST
        | STRING_CONST
+       | ID
        ;
 
 incdec_expression 
@@ -159,7 +157,7 @@ incdec_expression
        ;
 
 function_call 
-       : ID '(' parameter? ')'
+       : ID '(' args=parameter? ')'
        ;
 
 parameter 
@@ -167,6 +165,6 @@ parameter
        ;
 
 static_variable 
-       : 'static' var_type ID ';'
-       | 'static' var_type assignment ';'
+       : 'static' v_type=var_type ID ';'
+       | 'static' v_type=var_type ID '=' val=expression ';'
        ;

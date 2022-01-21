@@ -125,6 +125,18 @@ class ArduinoListenerImpl(ArduinoListener):
     def exitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         self.print_exit()
 
+    
+    # Enter a parse tree produced by ArduinoParser#array_index.
+    def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        finishes = ctx.INT_CONST() == None
+        self.print_enter("Array_index", finishes)
+        if not finishes:
+            print(ctx.INT_CONST().getText())
+
+    # Exit a parse tree produced by ArduinoParser#array_index.
+    def exitArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        self.print_exit()
+
 
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
@@ -145,24 +157,6 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Exit a parse tree produced by ArduinoParser#var_type.
     def exitVar_type(self, ctx:ArduinoParser.Var_typeContext):
-        self.print_exit()
-
-
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        self.print_enter("Setup")
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        self.print_exit()
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        self.print_enter("Loop")
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
         self.print_exit()
 
 
@@ -216,13 +210,7 @@ class ArduinoListenerImpl(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#sentence.
     def enterSentence(self, ctx:ArduinoParser.SentenceContext):
-        ending = ctx.ID() == None
-        self.print_enter("Sentence", ending)
-        if not ending:
-            if ctx.s_type != None:
-                print(ctx.s_type.text, ctx.ID())
-            else:
-                print(ctx.ID())
+        self.print_enter("Sentence")
 
     # Exit a parse tree produced by ArduinoParser#sentence.
     def exitSentence(self, ctx:ArduinoParser.SentenceContext):

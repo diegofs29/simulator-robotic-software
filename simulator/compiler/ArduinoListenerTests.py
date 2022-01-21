@@ -49,8 +49,8 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#declaration.
     def enterDeclaration(self, ctx:ArduinoParser.DeclarationContext):
-        if ctx.STRING_CONST == None:
-            self.add_token("Declaration", ctx.h_file())
+        if ctx.h_file() != None:
+            self.add_token("Declaration", ctx.h_file().getText())
         else:
             self.add_token("Declaration", ctx.STRING_CONST())
 
@@ -79,7 +79,7 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#simple_definition.
     def enterSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
-        self.add_token("Simple_definition", str(ctx.var_type()) + ", " + str(ctx.ID()))
+        self.add_token("Simple_definition", str(ctx.ID()))
 
     # Exit a parse tree produced by ArduinoParser#simple_definition.
     def exitSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
@@ -88,7 +88,7 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#assignment_definition.
     def enterAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        self.add_token("Assignment_definition")
+        self.add_token("Assignment_definition", ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#assignment_definition.
     def exitAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
@@ -113,6 +113,19 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_index.
+    def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        if ctx.INT_CONST() != None:
+            self.add_token("Array_index", ctx.INT_CONST())
+        else:
+            self.add_token("Array_index")
+
+    # Exit a parse tree produced by ArduinoParser#array_index.
+    def exitArray_index(self, ctx:ArduinoParser.Array_indexContext):
+        pass
+
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         if(ctx.ID() == None):
@@ -132,24 +145,6 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Exit a parse tree produced by ArduinoParser#var_type.
     def exitVar_type(self, ctx:ArduinoParser.Var_typeContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#setup.
-    def enterSetup(self, ctx:ArduinoParser.SetupContext):
-        self.add_token("Setup")
-
-    # Exit a parse tree produced by ArduinoParser#setup.
-    def exitSetup(self, ctx:ArduinoParser.SetupContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#loop.
-    def enterLoop(self, ctx:ArduinoParser.LoopContext):
-        self.add_token("Loop")
-
-    # Exit a parse tree produced by ArduinoParser#loop.
-    def exitLoop(self, ctx:ArduinoParser.LoopContext):
         pass
 
 
@@ -200,13 +195,11 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#sentence.
     def enterSentence(self, ctx:ArduinoParser.SentenceContext):
-        if ctx.ID() == None:
-            self.add_token("Sentence")
+        if(ctx.s_type != None):
+            self.add_token("Sentence", ctx.s_type.text)
         else:
-            if ctx.s_type != None:
-                self.add_token("Sentence", str(ctx.s_type.text) + str(ctx.ID()))
-            else:
-                self.add_token("Sentence", ctx.ID())
+            self.add_token("Sentence")
+
 
     # Exit a parse tree produced by ArduinoParser#sentence.
     def exitSentence(self, ctx:ArduinoParser.SentenceContext):
@@ -263,7 +256,10 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#static_variable.
     def enterStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
-        self.add_token("Static_variable")
+        if ctx.ID() == None:
+            self.add_token("Static_variable")
+        else:
+            self.add_token("Static_variable", ctx.ID())
 
     # Exit a parse tree produced by ArduinoParser#static_variable.
     def exitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
