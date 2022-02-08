@@ -225,12 +225,12 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#iteration_sentence.
     def visitIteration_sentence(self, ctx:ArduinoParser.Iteration_sentenceContext):
         node = expr = a_def = cond = None
-        it_type = ctx.it_type
+        it_type = ctx.it_type.text
         sents = []
         if ctx.code != None:
             sents = self.visit(ctx.code)
         if ctx.expr != None:
-            expr = self.visit(expr)
+            expr = self.visit(ctx.expr)
         if it_type == "while":
             node = WhileNode(expr, sents)
         if it_type == "do":
@@ -240,7 +240,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 a_def = self.visit(ctx.assign_def)
             if ctx.condition != None:
                 cond = self.visit(ctx.condition)
-            node = ForNode(a_def, cond, ctx.expr, sents)
+            node = ForNode(a_def, cond, expr, sents)
         return node
 
 

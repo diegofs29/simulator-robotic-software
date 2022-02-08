@@ -404,3 +404,71 @@ class TestConditionals(TestBaseAST):
         self.assertEqual(cases[2].type, "default")
         self.assertEqual(cases[2].expression, None)
         self.assertEqual(cases[2].sentences[0].name, "exit")
+
+
+class TestBucles(TestBaseAST):
+
+    file = "tests/file-tests/loops.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_while(self):
+        condition = self.code[0].function.sentences[0].expression
+        self.assertEqual(
+            str(condition.left.value) 
+            + condition.op 
+            + str(condition.right.value)
+            , "i<f"
+        )
+        self.assertEqual(
+            list(
+                map(
+                    lambda sent: sent.name,
+                    self.code[0].function.sentences[0].sentences
+                )
+            ), ["yada", "heeh"]
+        )
+         
+    def test_do_while(self):
+        condition = self.code[0].function.sentences[1].expression
+        self.assertEqual(
+            str(condition.left.value) 
+            + condition.op 
+            + str(condition.right.value)
+            , "b||c"
+        )
+        self.assertEqual(
+            list(
+                map(
+                    lambda sent: sent.name,
+                    self.code[0].function.sentences[1].sentences
+                )
+            ), ["print"]
+        )
+
+    def test_for(self):
+        self.assertEqual(self.code[0].function.sentences[2].assignment.var_name, "i")
+        condition = self.code[0].function.sentences[2].condition
+        self.assertEqual(
+            str(condition.left.value) 
+            + condition.op 
+            + str(condition.right.value)
+            , "i<100"
+        )
+        expression = self.code[0].function.sentences[2].expression
+        self.assertEqual(
+            str(expression.left.value) 
+            + expression.op 
+            + str(expression.right.value)
+            , "i*=2"
+        )
+        self.assertEqual(
+            list(
+                map(
+                    lambda sent: sent.name,
+                    self.code[0].function.sentences[2].sentences
+                )
+            ), ["println"]
+        )
