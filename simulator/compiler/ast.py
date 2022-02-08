@@ -29,12 +29,12 @@ class DefinitionNode():
 
 class ArrayDefinitionNode():
 
-    def __init__(self, type, var_name, sizes=None, elements=None, expression=None):
+    def __init__(self, type, var_name, size=None, elements=None, is_constant=False):
         self.type = type
         self.var_name = var_name
-        self.size = sizes
+        self.size = size
         self.elements = elements
-        self.expression = expression
+        self.is_constant = is_constant
 
 
 class AssignmentNode():

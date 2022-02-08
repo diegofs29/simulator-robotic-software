@@ -109,7 +109,12 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#array_definition.
     def visitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         elements = []
-        v_type = var_name = sizes = expression = None
+        v_type = var_name = sizes = None
+        is_constant = False
+        if ctx.c_array != None:
+            node = self.visit(ctx.c_array)
+            node.is_constant = True
+            return node
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
@@ -120,17 +125,22 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.a_index != None:
             sizes = self.visit(ctx.a_index)
         else:
-            sizes = len(elements)
+            sizes = []
         if ctx.expr != None:
-            expression = ctx.expr
-        return ArrayDefinitionNode(v_type, var_name, sizes, elements, expression)
+            expr = ctx.expr.getText().replace('"','')
+            for character in expr:
+                elements.append(character)
+        if ctx.const_type != None:
+            is_constant = True
+        
+        return ArrayDefinitionNode(v_type, var_name, sizes, elements, is_constant)
 
 
     # Visit a parse tree produced by ArduinoParser#array_index.
     def visitArray_index(self, ctx:ArduinoParser.Array_indexContext):
         sizes = []
         if ctx.INT_CONST() != None:
-            sizes.append(ctx.INT_CONST().getText())
+            sizes.append(int(ctx.INT_CONST().getText()))
         if ctx.a_index != None:
             sizes.extend(self.visit(ctx.a_index))
         return sizes
@@ -138,14 +148,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#constant.
     def visitConstant(self, ctx:ArduinoParser.ConstantContext):
-        v_type = var_name = val = value = None
+        v_type = var_name = val = None
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
             var_name = ctx.ID().getText()
         if ctx.val != None:
             val = self.visit(ctx.val)
-        return DefinitionNode(v_type, var_name, val, True, value)
+        return DefinitionNode(v_type, var_name, val, True)
 
 
     # Visit a parse tree produced by ArduinoParser#var_type.
@@ -351,12 +361,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 node = NotExpressionNode(expr)
             if op == '~':
                 node = BitNotExpressionNode(expr)
-        if ctx.getText() == "true" or ctx.getText() == "false":
-            node = BooleanNode(ctx.getText())
+        if ctx.getText() == "true":
+            node = BooleanNode(True)
+        elif ctx.getText() == "false":
+            node = BooleanNode(False)
         if ctx.INT_CONST() != None:
-            node = IntNode(ctx.INT_CONST().getText())
+            node = IntNode(int(ctx.INT_CONST().getText()))
         if ctx.FLOAT_CONST() != None:
-            node = FloatNode(ctx.FLOAT_CONST().getText())
+            node = FloatNode(float(ctx.FLOAT_CONST().getText()))
         if ctx.CHAR_CONST() != None:
             char_const = ctx.CHAR_CONST().getText()
             char_const = char_const.replace('\'', '')

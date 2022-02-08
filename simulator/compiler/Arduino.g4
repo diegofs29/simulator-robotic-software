@@ -26,7 +26,7 @@ h_file
 
 definition 
        : s_def=simple_definition ';'
-       | a_def=array_definition ';'
+       | a_def=array_definition
        | assign_def=assignment_definition ';'
        | cte_def=constant
        ;
@@ -45,9 +45,11 @@ assignment
        ;
 
 array_definition
-       : v_type=var_type ID a_index=array_index
-       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}'
-       | v_type=var_type ID a_index=array_index '=' expr=expression
+       : const_type='const' c_array=array_definition
+       | const_type='#define' ID '{' elements+=expression (',' elements+=expression)* '}'
+       | v_type=var_type ID a_index=array_index ';'
+       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}' ';'
+       | v_type=var_type ID a_index=array_index '=' expr=expression ';'
        ;
 
 array_index
