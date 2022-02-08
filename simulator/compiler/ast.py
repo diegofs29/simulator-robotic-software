@@ -196,10 +196,10 @@ class SwitchSentenceNode():
 
 class CaseNode():
 
-    def __init__(self, type="case", expression=None, sentence=None):
+    def __init__(self, type="case", expression=None, sentences=None):
         self.type = type
         self.expression = expression
-        self.sentence = sentence
+        self.sentences = sentences
 
 
 class StaticVarDefinitionNode():
@@ -314,9 +314,11 @@ class IDNode():
 
 class FunctionCallNode():
 
-    def __init__(self, name, parameters=None):
+    def __init__(self, name, parameters=None, clase=None, elems=None):
         self.name = name
         self.parameters = parameters
+        self.clase = clase
+        self.elems = elems
 
 
 class ReturnNode():

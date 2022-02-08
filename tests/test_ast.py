@@ -3,7 +3,7 @@ import unittest
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import BooleanTypeNode, CharTypeNode, DoubleTypeNode, IntTypeNode, StringTypeNode
+from simulator.compiler.ast import BooleanTypeNode, BreakNode, CharTypeNode, DefinitionNode, DoubleTypeNode, FunctionCallNode, IntTypeNode, ReturnNode, StringTypeNode, VoidTypeNode
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 
 
@@ -149,3 +149,258 @@ class TestGlobalDefinition(TestBaseAST):
                 )
             , [1, 3, 7, 10]
         )
+
+
+class TestFunctionDefinition(TestBaseAST):
+    
+    file = "tests/file-tests/f-def.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_type(self):
+        self.assertTrue(
+            isinstance(self.code[0].function.type, VoidTypeNode),
+            "El tipo no es void"
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.type, VoidTypeNode),
+            "El tipo no es void"
+        )
+        self.assertTrue(
+            isinstance(self.code[2].function.type, IntTypeNode),
+            "El tipo no es int"
+        )
+        self.assertTrue(
+            isinstance(self.code[3].function.type, StringTypeNode),
+            "El tipo no es string"
+        )
+
+    def test_name(self):
+        self.assertEqual(self.code[0].function.name, "setup")
+        self.assertEqual(self.code[1].function.name, "loop")
+        self.assertEqual(self.code[2].function.name, "factorial")
+        self.assertEqual(self.code[3].function.name, "outputPrint")
+
+    def test_args(self):
+        self.assertEqual(len(self.code[0].function.args), 0)
+        self.assertEqual(
+            list(
+                map(
+                    lambda arg: arg.var_name,
+                    self.code[0].function.args
+                )
+            ), []
+        )
+        self.assertEqual(len(self.code[1].function.args), 0)
+        self.assertEqual(
+            list(
+                map(
+                    lambda arg: arg.var_name,
+                    self.code[1].function.args
+                )
+            ), []
+        )
+        self.assertEqual(len(self.code[2].function.args), 1)
+        self.assertEqual(
+            list(
+                map(
+                    lambda arg: arg.var_name,
+                    self.code[2].function.args
+                )
+            ), ["n"]
+        )
+        self.assertEqual(len(self.code[3].function.args), 2)
+        self.assertEqual(
+            list(
+                map(
+                    lambda arg: arg.var_name,
+                    self.code[3].function.args
+                )
+            ), ["message", "b"]
+        )
+
+    def test_sentences(self):
+        self.assertEqual(len(self.code[0].function.sentences), 0)
+        self.assertEqual(len(self.code[1].function.sentences), 0)
+        self.assertEqual(len(self.code[2].function.sentences), 0)
+        self.assertEqual(len(self.code[3].function.sentences), 3)
+        self.assertTrue(
+            isinstance(
+                self.code[3].function.sentences[0], DefinitionNode
+            ), "No es una definicion"
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[3].function.sentences[1], FunctionCallNode
+            ), "No es una llamada"
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[3].function.sentences[2], ReturnNode
+            ), "No es un return"
+        )
+
+
+class TestTerminals(TestBaseAST):
+
+    file = "tests/file-tests/terminals.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_values(self):
+        self.assertEqual(self.code[0].definition.value.value, True)
+        self.assertEqual(self.code[1].definition.value.value, False)
+        self.assertEqual(self.code[2].definition.value.value, 10)
+        self.assertEqual(self.code[3].definition.value.value, 29.29)
+        self.assertEqual(self.code[4].definition.value.value, 'D')
+        self.assertEqual(self.code[5].definition.value.value, "Diego")
+        self.assertEqual(self.code[6].definition.value.value, "c")
+
+
+class TestFunctionCall(TestBaseAST):
+
+    file = "tests/file-tests/f-calls.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_name(self):
+        self.assertEqual(self.code[0].function.sentences[0].name, "f")
+        self.assertEqual(self.code[0].function.sentences[1].name, "print")
+        self.assertEqual(self.code[0].function.sentences[2].name, "toUpperCase")
+        self.assertEqual(self.code[0].function.sentences[3].name, "toLowerCase")
+        self.assertEqual(self.code[0].function.sentences[4].name, "params")
+
+    def test_parameters(self):
+        self.assertEqual(
+            len(
+                self.code[0].function.sentences[0].parameters
+            ), 0
+        )
+        self.assertEqual(
+            len(
+                self.code[0].function.sentences[1].parameters
+            ), 1
+        )
+        self.assertEqual(self.code[0].function.sentences[1].parameters[0].value, "hola")
+        self.assertEqual(
+            len(
+                self.code[0].function.sentences[2].parameters
+            ), 0
+        )
+        self.assertEqual(
+            len(
+                self.code[0].function.sentences[3].parameters
+            ), 0
+        )
+        self.assertEqual(
+            len(
+                self.code[0].function.sentences[4].parameters
+            ), 3
+        )
+        self.assertEqual(
+            list(
+                map(
+                    lambda param: param.value,
+                    self.code[0].function.sentences[4].parameters
+                )
+            ), [1, "hola", True]
+        )
+
+    def test_clase(self):
+        self.assertEqual(self.code[0].function.sentences[0].clase, None)
+        self.assertEqual(self.code[0].function.sentences[1].clase, None)
+        self.assertEqual(self.code[0].function.sentences[2].clase, "mensaje")
+        self.assertEqual(self.code[0].function.sentences[3].clase, "persona")
+        self.assertEqual(self.code[0].function.sentences[4].clase, None)
+
+    def test_elems(self):
+        self.assertEqual(self.code[0].function.sentences[0].elems, None)
+        self.assertEqual(self.code[0].function.sentences[1].elems, None)
+        self.assertEqual(self.code[0].function.sentences[2].elems, None)
+        self.assertEqual(self.code[0].function.sentences[3].elems[0], "nombre")
+        self.assertEqual(self.code[0].function.sentences[4].elems, None)
+
+
+class TestConditionals(TestBaseAST):
+
+    file = "tests/file-tests/conditionals.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_condition(self):
+        condition = self.code[0].function.sentences[0].condition
+        self.assertEqual(
+            str(condition.left.value) 
+            + condition.op 
+            + str(condition.right.value)
+            , "i>2"
+        )
+        condition = self.code[0].function.sentences[1].condition
+        self.assertEqual(
+            str(condition.left.value) 
+            + condition.op 
+            + str(condition.right.value)
+            , "d<29.69"
+        )
+        condition = self.code[0].function.sentences[2].condition
+        self.assertEqual(condition.value, True)
+        self.assertEqual(
+            self.code[0].function.sentences[2].else_expr[0].condition.value
+            , False
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[3].expression.value
+            , "var"
+        )
+
+    def test_if_expr(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].if_expr[0].name
+            , "doThis"
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[1].if_expr[0].name
+            , "doThat"
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[2].if_expr[0].name
+            , "doAlgo"
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0].name
+            , "print"
+        )
+
+    def test_else_expr(self):
+        self.assertEqual(
+            self.code[0].function.sentences[1].else_expr[0].name
+            , "print"
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None
+            , True
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[2].else_expr[0].else_expr[0].name
+            , "prueba"
+        )
+
+    def test_cases(self):
+        cases = self.code[0].function.sentences[3].cases
+        self.assertEqual(cases[0].type, "case")
+        self.assertEqual(cases[0].expression.value, 1)
+        self.assertEqual(cases[0].sentences[0].name, "print")
+        self.assertEqual(cases[1].type, "case")
+        self.assertEqual(cases[1].expression.value, 2)
+        self.assertEqual(cases[1].sentences[0].name, "println")
+        self.assertEqual(cases[2].type, "default")
+        self.assertEqual(cases[2].expression, None)
+        self.assertEqual(cases[2].sentences[0].name, "exit")

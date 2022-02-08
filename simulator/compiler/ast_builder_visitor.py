@@ -247,10 +247,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#conditional_sentence.
     def visitConditional_sentence(self, ctx:ArduinoParser.Conditional_sentenceContext):
         node = cond = None
-        cond_type = ctx.cond_type
         if ctx.expr != None:
             cond = self.visit(ctx.expr)
-        if cond_type == "if":
+        if ctx.cond_type.text == "if":
             if_sents = []
             else_sents = []
             if ctx.if_code != None:
@@ -258,7 +257,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             if ctx.else_code != None:
                 else_sents = self.visit(ctx.else_code)
             node = ConditionalSentenceNode(cond, if_sents, else_sents)
-        if cond_type == "switch":
+        if ctx.cond_type.text == "switch":
             cases = []
             if ctx.sentences != None:
                 for sent in ctx.sentences:
@@ -293,12 +292,13 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.cond_sent)
         if ctx.expr != None:
             node = self.visit(ctx.expr)
-        if ctx.s_type == "return":
-            node = ReturnNode(ctx.expr)
-        if ctx.s_type == "break":
-            node = BreakNode()
-        if ctx.s_type == "continue":
-            node = ContinueNode()
+        if ctx.s_type != None:
+            if ctx.s_type.text == "return":
+                node = ReturnNode(ctx.expr)
+            if ctx.s_type.text == "break":
+                node = BreakNode()
+            if ctx.s_type.text == "continue":
+                node = ContinueNode()
         return node
 
 
@@ -307,7 +307,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
         expr = s_type = None
         sents = []
         if ctx.sent_type != None:
-            s_type = ctx.sent_type
+            s_type = ctx.sent_type.text
         if ctx.expr != None:
             expr = self.visit(ctx.expr)
         if ctx.sentences != None:
@@ -347,20 +347,22 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 right = self.visit(ctx.right)
             if ctx.expr != None:
                 expr = self.visit(ctx.expr)
-            if op in arit_ops:
-                node = ArithmeticExpressionNode(left, op, right)
-            if op in bitwise_ops:
-                node = BitwiseExpressionNode(left, op, right)
-            if op in bool_ops:
-                node = BooleanExpressionNode(left, op, right)
-            if op in comp_ops:
-                node = ComparisonExpressionNode(left, op, right)
-            if op in comp_assign_ops:
-                node = CompoundAssignmentNode(left, op, right)
-            if op == '!':
-                node = NotExpressionNode(expr)
-            if op == '~':
-                node = BitNotExpressionNode(expr)
+            if op != None:
+                operator = op.text
+                if operator in arit_ops:
+                    node = ArithmeticExpressionNode(left, operator, right)
+                if operator in bitwise_ops:
+                    node = BitwiseExpressionNode(left, operator, right)
+                if operator in bool_ops:
+                    node = BooleanExpressionNode(left, operator, right)
+                if operator in comp_ops:
+                    node = ComparisonExpressionNode(left, operator, right)
+                if operator in comp_assign_ops:
+                    node = CompoundAssignmentNode(left, operator, right)
+                if operator == '!':
+                    node = NotExpressionNode(expr)
+                if operator == '~':
+                    node = BitNotExpressionNode(expr)
         if ctx.getText() == "true":
             node = BooleanNode(True)
         elif ctx.getText() == "false":
@@ -390,9 +392,20 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#function_call.
     def visitFunction_call(self, ctx:ArduinoParser.Function_callContext):
         params = []
+        name = None
+        if ctx.function_call() != None:
+            node = self.visit(ctx.f_call)
+            node.clase = ctx.obj.text
+            if len(ctx.elems) > 0:
+                node.elems = []
+                for elem in ctx.elems:
+                    node.elems.append(elem.text)
+            return node
+        else:
+            name = ctx.f_name.text
         if ctx.args != None:
             params = self.visit(ctx.args)
-        return FunctionCallNode(ctx.ID().getText(), params)
+        return FunctionCallNode(name, params)
 
 
     # Visit a parse tree produced by ArduinoParser#parameter.

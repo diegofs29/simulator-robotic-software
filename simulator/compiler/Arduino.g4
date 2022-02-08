@@ -159,7 +159,8 @@ incdec_expression
        ;
 
 function_call 
-       : ID '(' args=parameter? ')'
+       : obj=ID ('.' elems+=ID)*  '.' f_call=function_call
+       | f_name=ID '(' args=parameter? ')'
        ;
 
 parameter 

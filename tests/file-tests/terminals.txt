@@ -1,0 +1,7 @@
+boolean t = true;
+boolean f = false;
+int i = 10;
+float f = 29.29;
+char c = 'D';
+string s = "Diego";
+string a = c;
