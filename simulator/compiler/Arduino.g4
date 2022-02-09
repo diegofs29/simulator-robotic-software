@@ -109,7 +109,8 @@ code_block
 sentence 
        : a_def=assignment_definition ';'
        | s_def=simple_definition ';'
-       | arr_def=array_definition ';'
+       | arr_def=array_definition
+       | const_def=constant
        | s_var=static_variable
        | it_sent=iteration_sentence
        | cond_sent=conditional_sentence

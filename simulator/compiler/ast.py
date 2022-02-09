@@ -204,10 +204,10 @@ class CaseNode():
 
 class StaticVarDefinitionNode():
 
-    def __init__(self, type, var_name, val=None):
+    def __init__(self, type, var_name, value=None):
         self.type = type
         self.var_name = var_name
-        self.val = val
+        self.value = value
 
 
 class ArrayAccessNode():

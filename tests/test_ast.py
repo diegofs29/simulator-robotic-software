@@ -1,9 +1,10 @@
+from tokenize import Floatnumber
 import unittest
 
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import BooleanTypeNode, BreakNode, CharTypeNode, DefinitionNode, DoubleTypeNode, FunctionCallNode, IntTypeNode, ReturnNode, StringTypeNode, VoidTypeNode
+from simulator.compiler.ast import BinaryNode, BitwiseExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharNode, CharTypeNode, DefinitionNode, DoubleTypeNode, FloatNode, FloatTypeNode, FunctionCallNode, HexNode, IDNode, IntNode, IntTypeNode, LongTypeNode, OctalNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WordTypeNode
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 
 
@@ -251,6 +252,18 @@ class TestTerminals(TestBaseAST):
         super().setUp()
         self.code = self.ast.code
 
+    def test_class(self):
+        self.assertTrue(isinstance(self.code[0].definition.value, BooleanNode))
+        self.assertTrue(isinstance(self.code[1].definition.value, BooleanNode))
+        self.assertTrue(isinstance(self.code[2].definition.value, IntNode))
+        self.assertTrue(isinstance(self.code[3].definition.value, FloatNode))
+        self.assertTrue(isinstance(self.code[4].definition.value, CharNode))
+        self.assertTrue(isinstance(self.code[5].definition.value, StringNode))
+        self.assertTrue(isinstance(self.code[6].definition.value, IDNode))
+        self.assertTrue(isinstance(self.code[7].definition.value, HexNode))
+        self.assertTrue(isinstance(self.code[8].definition.value, BinaryNode))
+        self.assertTrue(isinstance(self.code[9].definition.value, OctalNode))
+
     def test_values(self):
         self.assertEqual(self.code[0].definition.value.value, True)
         self.assertEqual(self.code[1].definition.value.value, False)
@@ -262,6 +275,18 @@ class TestTerminals(TestBaseAST):
         self.assertEqual(hex(self.code[7].definition.value.value), "0xaf66")
         self.assertEqual(bin(self.code[8].definition.value.value), "0b1101")
         self.assertEqual(oct(self.code[9].definition.value.value), "0o767")
+
+    def test_type_class(self):
+        self.assertTrue(isinstance(self.code[0].definition.type, BooleanTypeNode))
+        self.assertTrue(isinstance(self.code[1].definition.type, BooleanTypeNode))
+        self.assertTrue(isinstance(self.code[2].definition.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[3].definition.type, FloatTypeNode))
+        self.assertTrue(isinstance(self.code[4].definition.type, CharTypeNode))
+        self.assertTrue(isinstance(self.code[5].definition.type, StringTypeNode))
+        self.assertTrue(isinstance(self.code[6].definition.type, StringTypeNode))
+        self.assertTrue(isinstance(self.code[7].definition.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[8].definition.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[9].definition.type, IntTypeNode))
 
 
 class TestFunctionCall(TestBaseAST):
@@ -495,7 +520,6 @@ class TestAsignations(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[1].expression.name, "analogRead")
         self.assertEqual(self.code[0].function.sentences[3].expression.value, 2000)
 
-
     def test_left(self):
         for i in range(4, len(self.code[0].function.sentences)):
             self.assertEqual(self.code[0].function.sentences[i].left.value, "x")
@@ -521,3 +545,239 @@ class TestAsignations(TestBaseAST):
         self.assertEqual(bin(self.code[0].function.sentences[11].right.value), "0b1001")
 
 
+class TestBitwise(TestBaseAST):
+
+    file = "tests/file-tests/bitwise.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_class(self):
+        for i in range(1, len(self.code[0].function.sentences) - 1):
+            self.assertTrue(isinstance(self.code[0].function.sentences[i], BitwiseExpressionNode))
+
+    def test_left(self):
+        self.assertEqual(self.code[0].function.sentences[1].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[2].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[3].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[4].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[5].left.value, "i")
+
+    def test_right(self):
+        self.assertEqual(self.code[0].function.sentences[1].op, "<<")
+        self.assertEqual(self.code[0].function.sentences[2].op, ">>")
+        self.assertEqual(self.code[0].function.sentences[3].op, "^")
+        self.assertEqual(self.code[0].function.sentences[4].op, "|")
+        self.assertEqual(self.code[0].function.sentences[5].op, "&")
+
+    def test_right(self):
+        self.assertEqual(self.code[0].function.sentences[1].right.value, 2)
+        self.assertEqual(self.code[0].function.sentences[2].right.value, 7)
+        self.assertEqual(self.code[0].function.sentences[3].right.value, 50)
+        self.assertEqual(self.code[0].function.sentences[4].right.value, 25)
+        self.assertEqual(self.code[0].function.sentences[5].right.value, 215)
+
+    def test_expression(self):
+        self.assertEqual(self.code[0].function.sentences[6].value.expression.value, "i")
+
+
+class TestLocalDefinition(TestBaseAST):
+
+    file = "tests/file-tests/local-def.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_types(self):
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[0].type,
+                BooleanTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[1].type,
+                BooleanTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[2].type,
+                ByteTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[3].type,
+                CharTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[4].type,
+                DoubleTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[5].type,
+                FloatTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[6].type,
+                IntTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[7].type,
+                LongTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[8].type,
+                ShortTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[9].type,
+                Size_tTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[10].type,
+                StringTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[11].type,
+                UCharTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[12].type,
+                UIntTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[13].type,
+                ULongTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[14].type,
+                WordTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[15].type,
+                DoubleTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[16].type,
+                StringTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[17].type,
+                CharTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[18].type,
+                IntTypeNode
+            )
+        )
+        self.assertTrue(
+            isinstance(
+                self.code[0].function.sentences[19].type,
+                IntTypeNode
+            )
+        )
+
+    def test_var_name(self):
+        self.assertEqual(self.code[0].function.sentences[0].var_name, "b")
+        self.assertEqual(self.code[0].function.sentences[1].var_name, "bo")
+        self.assertEqual(self.code[0].function.sentences[2].var_name, "by")
+        self.assertEqual(self.code[0].function.sentences[3].var_name, "c")
+        self.assertEqual(self.code[0].function.sentences[4].var_name, "d")
+        self.assertEqual(self.code[0].function.sentences[5].var_name, "f")
+        self.assertEqual(self.code[0].function.sentences[6].var_name, "i")
+        self.assertEqual(self.code[0].function.sentences[7].var_name, "l")
+        self.assertEqual(self.code[0].function.sentences[8].var_name, "s")
+        self.assertEqual(self.code[0].function.sentences[9].var_name, "size")
+        self.assertEqual(self.code[0].function.sentences[10].var_name, "str")
+        self.assertEqual(self.code[0].function.sentences[11].var_name, "uc")
+        self.assertEqual(self.code[0].function.sentences[12].var_name, "ui")
+        self.assertEqual(self.code[0].function.sentences[13].var_name, "ul")
+        self.assertEqual(self.code[0].function.sentences[14].var_name, "w")
+        self.assertEqual(self.code[0].function.sentences[15].var_name, "cIni")
+        self.assertEqual(self.code[0].function.sentences[16].var_name, "str")
+        self.assertEqual(self.code[0].function.sentences[17].var_name, "ch")
+        self.assertEqual(self.code[0].function.sentences[18].var_name, "arraySimple")
+        self.assertEqual(self.code[0].function.sentences[19].var_name, "arrayDoble")
+
+    def test_value(self):
+        self.assertEqual(self.code[0].function.sentences[1].value.value, True)
+        self.assertEqual(self.code[0].function.sentences[3].value.value, 'd')
+        self.assertEqual(self.code[0].function.sentences[4].value.value, 29.73)
+        self.assertEqual(self.code[0].function.sentences[6].value.value, 1615)
+        self.assertEqual(self.code[0].function.sentences[10].value.value, "Diegui")
+        self.assertEqual(self.code[0].function.sentences[15].value.value, 29.456)
+        self.assertEqual(self.code[0].function.sentences[17].value.value, 'c')
+
+    def test_elements(self):
+        self.assertEqual(
+            list(
+                map(
+                    lambda elem: elem.value,
+                    self.code[0].function.sentences[18].elements
+                )
+            ), [1, 2, 3, 4, 5]
+        )
+
+    def test_is_constant(self):
+        self.assertEqual(self.code[0].function.sentences[1].is_constant, False)
+        self.assertEqual(self.code[0].function.sentences[3].is_constant, False)
+        self.assertEqual(self.code[0].function.sentences[4].is_constant, False)
+        self.assertEqual(self.code[0].function.sentences[6].is_constant, False)
+        self.assertEqual(self.code[0].function.sentences[10].is_constant, False)
+        self.assertEqual(self.code[0].function.sentences[15].is_constant, True)
+
+
+class TestIncDec(TestBaseAST):
+
+    file = "tests/file-tests/incdec.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_var(self):
+        self.assertEqual(self.code[0].function.sentences[0].var, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var, "a")
+        self.assertEqual(self.code[0].function.sentences[2].var, "z")
+        self.assertEqual(self.code[0].function.sentences[3].var, "w")
+
+    def test_op(self):
+        self.assertEqual(self.code[0].function.sentences[0].op, "++")
+        self.assertEqual(self.code[0].function.sentences[1].op, "--")
+        self.assertEqual(self.code[0].function.sentences[2].op, "++")
+        self.assertEqual(self.code[0].function.sentences[3].op, "--")

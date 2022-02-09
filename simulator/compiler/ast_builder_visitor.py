@@ -284,6 +284,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.s_def)
         if ctx.arr_def != None:
             node = self.visit(ctx.arr_def)
+        if ctx.const_def != None:
+            node = self.visit(ctx.const_def)
         if ctx.s_var != None:
             node = self.visit(ctx.s_var)
         if ctx.it_sent != None:
@@ -392,7 +394,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#incdec_expression.
     def visitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        return IncDecExpressionNode(ctx.ID().getText(), ctx.operator)
+        return IncDecExpressionNode(ctx.ID().getText(), ctx.operator.text)
 
 
     # Visit a parse tree produced by ArduinoParser#function_call.
@@ -431,7 +433,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.ID() != None:
             var_name = ctx.ID().getText()
         if ctx.val != None:
-            assign = self.visit(ctx.val)
+            val = self.visit(ctx.val)
         return StaticVarDefinitionNode(v_type, var_name, val)
 
 
