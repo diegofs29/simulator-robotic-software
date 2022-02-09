@@ -472,3 +472,49 @@ class TestBucles(TestBaseAST):
                 )
             ), ["println"]
         )
+
+
+class TestAsignations(TestBaseAST):
+
+    file = "tests/file-tests/assignments.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_var_name(self):
+        self.assertEqual(self.code[0].function.sentences[0].var_name, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var_name, "i")
+        self.assertEqual(self.code[0].function.sentences[2].var_name, "x")
+        self.assertEqual(self.code[0].function.sentences[3].var_name, "x")
+
+    def test_expression(self):
+        self.assertEqual(self.code[0].function.sentences[1].expression.name, "analogRead")
+        self.assertEqual(self.code[0].function.sentences[3].expression.value, 2000)
+
+
+    def test_left(self):
+        for i in range(4, len(self.code[0].function.sentences)):
+            self.assertEqual(self.code[0].function.sentences[i].left.value, "x")
+
+    def test_op(self):
+        self.assertEqual(self.code[0].function.sentences[4].op, "%=")
+        self.assertEqual(self.code[0].function.sentences[5].op, "&=")
+        self.assertEqual(self.code[0].function.sentences[6].op, "*=")
+        self.assertEqual(self.code[0].function.sentences[7].op, "+=")
+        self.assertEqual(self.code[0].function.sentences[8].op, "-=")
+        self.assertEqual(self.code[0].function.sentences[9].op, "/=")
+        self.assertEqual(self.code[0].function.sentences[10].op, "^=")
+        self.assertEqual(self.code[0].function.sentences[11].op, "|=")
+
+    def test_right(self):
+        self.assertEqual(self.code[0].function.sentences[4].right.value, 10)
+        self.assertEqual(bin(self.code[0].function.sentences[5].right.value), "0b1100")
+        self.assertEqual(self.code[0].function.sentences[6].right.value, 5)
+        self.assertEqual(self.code[0].function.sentences[7].right.value, 200)
+        self.assertEqual(self.code[0].function.sentences[8].right.value, 100)
+        self.assertEqual(self.code[0].function.sentences[9].right.value, 25)
+        self.assertEqual(bin(self.code[0].function.sentences[10].right.value), "0b1010")
+        self.assertEqual(bin(self.code[0].function.sentences[11].right.value), "0b1001")
+
+

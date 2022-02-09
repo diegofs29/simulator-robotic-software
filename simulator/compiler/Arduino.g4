@@ -144,6 +144,9 @@ expression
        | assign=assignment
        | 'true'
        | 'false'
+       | HEX_CONST
+       | OCTAL_CONST
+       | BINARY_CONST
        | INT_CONST
        | FLOAT_CONST
        | CHAR_CONST

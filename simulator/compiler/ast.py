@@ -288,6 +288,24 @@ class FloatNode():
         self.value = value
 
 
+class HexNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
+class OctalNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
+class BinaryNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
 class CharNode():
 
     def __init__(self, value):
