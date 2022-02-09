@@ -296,7 +296,10 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.expr)
         if ctx.s_type != None:
             if ctx.s_type.text == "return":
-                node = ReturnNode(ctx.expr)
+                expr = None
+                if ctx.expr != None:
+                    expr = self.visit(ctx.expr)
+                node = ReturnNode(expr)
             if ctx.s_type.text == "break":
                 node = BreakNode()
             if ctx.s_type.text == "continue":

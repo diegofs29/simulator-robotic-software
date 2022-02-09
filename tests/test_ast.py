@@ -4,7 +4,7 @@ import unittest
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import BinaryNode, BitwiseExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharNode, CharTypeNode, DefinitionNode, DoubleTypeNode, FloatNode, FloatTypeNode, FunctionCallNode, HexNode, IDNode, IntNode, IntTypeNode, LongTypeNode, OctalNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WordTypeNode
+from simulator.compiler.ast import BinaryNode, BitwiseExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharNode, CharTypeNode, ContinueNode, DefinitionNode, DoubleTypeNode, FloatNode, FloatTypeNode, FunctionCallNode, HexNode, IDNode, IntNode, IntTypeNode, LongTypeNode, OctalNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WordTypeNode
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 
 
@@ -781,3 +781,55 @@ class TestIncDec(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[1].op, "--")
         self.assertEqual(self.code[0].function.sentences[2].op, "++")
         self.assertEqual(self.code[0].function.sentences[3].op, "--")
+
+
+class TestSpecials(TestBaseAST):
+
+    file = "tests/file-tests/specials.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_specials(self):
+        self.assertTrue(isinstance(self.code[0].function.sentences[0], BreakNode))
+        self.assertTrue(isinstance(self.code[0].function.sentences[1], ContinueNode))
+        self.assertTrue(isinstance(self.code[0].function.sentences[2], ReturnNode))
+        self.assertEqual(self.code[0].function.sentences[2].expression.value, 1)
+        self.assertTrue(isinstance(self.code[0].function.sentences[3], ReturnNode))
+        self.assertEqual(self.code[0].function.sentences[3].expression, None)
+
+
+class TestAritmetic(TestBaseAST):
+
+    file = "tests/file-tests/aritmetics.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_left(self):
+        self.assertEqual(self.code[0].function.sentences[0].left.value, 225)
+        self.assertEqual(self.code[0].function.sentences[1].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[2].left.value, "i")
+        self.assertEqual(self.code[0].function.sentences[3].left.value, 255)
+        self.assertEqual(self.code[0].function.sentences[4].left.value, "f")
+        self.assertEqual(self.code[0].function.sentences[5].left.value, "f")
+        self.assertEqual(self.code[0].function.sentences[5].right.left.value, "a")
+        
+    def test_op(self):
+        self.assertEqual(self.code[0].function.sentences[0].op, "%")
+        self.assertEqual(self.code[0].function.sentences[1].op, "*")
+        self.assertEqual(self.code[0].function.sentences[2].op, "+")
+        self.assertEqual(self.code[0].function.sentences[3].op, "-")
+        self.assertEqual(self.code[0].function.sentences[4].op, "/")
+        self.assertEqual(self.code[0].function.sentences[5].op, "+")
+        self.assertEqual(self.code[0].function.sentences[5].right.op, "/")
+        
+    def test_right(self):
+        self.assertEqual(self.code[0].function.sentences[0].right.value, 350)
+        self.assertEqual(self.code[0].function.sentences[1].right.value, "f")
+        self.assertEqual(self.code[0].function.sentences[2].right.value, "a")
+        self.assertEqual(self.code[0].function.sentences[3].right.value, "x")
+        self.assertEqual(self.code[0].function.sentences[4].right.value, 30)
+        self.assertEqual(self.code[0].function.sentences[5].right.right.value, 5)
