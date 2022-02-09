@@ -14,6 +14,7 @@ Definition
 Array_definition
 Var_type, int
 Array_index
+Array_elements
 Expression, 2
 Expression, 4
 Expression, 8
@@ -24,6 +25,7 @@ Definition
 Array_definition
 Var_type, int
 Array_index, 5
+Array_elements
 Expression, 2
 Expression, 4
 Expression, -8

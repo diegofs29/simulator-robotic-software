@@ -64,6 +64,11 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArduinoParser#array_elements.
+    def visitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArduinoParser#constant.
     def visitConstant(self, ctx:ArduinoParser.ConstantContext):
         return self.visitChildren(ctx)

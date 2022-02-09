@@ -138,6 +138,20 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
+    # Enter a parse tree produced by ArduinoParser#array_elements.
+    def enterArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        finishes = ctx.elements == []
+        self.print_enter("Array_elements", finishes)
+        if not finishes:
+            for elem in ctx.elements:
+                print(elem.getText(), end=" ")
+            print()
+
+    # Exit a parse tree produced by ArduinoParser#array_elements.
+    def exitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        self.print_exit()
+
+
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
         ending = ctx.ID() == None

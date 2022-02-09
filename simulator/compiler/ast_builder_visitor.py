@@ -119,9 +119,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             v_type = self.visit(ctx.v_type)
         if ctx.ID() != None:
             var_name = ctx.ID().getText()
-        if ctx.elements != None:
-            for elem in ctx.elements:
-                elements.append(self.visit(elem))
+        if ctx.elems != None:
+            elements = self.visit(ctx.elems)
         if ctx.a_index != None:
             sizes = self.visit(ctx.a_index)
         else:
@@ -144,6 +143,18 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.a_index != None:
             sizes.extend(self.visit(ctx.a_index))
         return sizes
+
+
+    # Visit a parse tree produced by ArduinoParser#array_elements.
+    def visitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        elements = []
+        if ctx.array_elements() != None:
+            for elem in ctx.array_elements():
+                elements.append(self.visit(elem))
+        if ctx.elements != None:
+            for elem in ctx.elements:
+                elements.append(self.visit(elem))
+        return elements
 
 
     # Visit a parse tree produced by ArduinoParser#constant.

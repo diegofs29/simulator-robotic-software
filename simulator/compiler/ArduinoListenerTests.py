@@ -125,6 +125,14 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_elements.
+    def enterArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        self.add_token("Array_elements")
+
+    # Exit a parse tree produced by ArduinoParser#array_elements.
+    def exitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        pass
+
 
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):

@@ -46,14 +46,19 @@ assignment
 
 array_definition
        : const_type='const' c_array=array_definition
-       | const_type='#define' ID '{' elements+=expression (',' elements+=expression)* '}'
+       | const_type='#define' ID elems=array_elements
        | v_type=var_type ID a_index=array_index ';'
-       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}' ';'
+       | v_type=var_type ID a_index=array_index '=' elems=array_elements ';'
        | v_type=var_type ID a_index=array_index '=' expr=expression ';'
        ;
 
 array_index
        : '[' INT_CONST? ']' a_index=array_index?
+       ;
+
+array_elements
+       : '{' array_elements (',' array_elements)+ '}'
+       | '{' elements+=expression (',' elements+=expression)* '}'
        ;
 
 constant 
