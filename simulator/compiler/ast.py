@@ -29,12 +29,12 @@ class DefinitionNode():
 
 class ArrayDefinitionNode():
 
-    def __init__(self, type, var_name, sizes=None, elements=None, expression=None):
+    def __init__(self, type, var_name, size=None, elements=None, is_constant=False):
         self.type = type
         self.var_name = var_name
-        self.size = sizes
+        self.size = size
         self.elements = elements
-        self.expression = expression
+        self.is_constant = is_constant
 
 
 class AssignmentNode():
@@ -196,18 +196,18 @@ class SwitchSentenceNode():
 
 class CaseNode():
 
-    def __init__(self, type="case", expression=None, sentence=None):
+    def __init__(self, type="case", expression=None, sentences=None):
         self.type = type
         self.expression = expression
-        self.sentence = sentence
+        self.sentences = sentences
 
 
 class StaticVarDefinitionNode():
 
-    def __init__(self, type, var_name, val=None):
+    def __init__(self, type, var_name, value=None):
         self.type = type
         self.var_name = var_name
-        self.val = val
+        self.value = value
 
 
 class ArrayAccessNode():
@@ -288,6 +288,24 @@ class FloatNode():
         self.value = value
 
 
+class HexNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
+class OctalNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
+class BinaryNode():
+
+    def __init__(self, value):
+        self.value = value
+
+
 class CharNode():
 
     def __init__(self, value):
@@ -314,9 +332,11 @@ class IDNode():
 
 class FunctionCallNode():
 
-    def __init__(self, name, parameters=None):
+    def __init__(self, name, parameters=None, clase=None, elems=None):
         self.name = name
         self.parameters = parameters
+        self.clase = clase
+        self.elems = elems
 
 
 class ReturnNode():

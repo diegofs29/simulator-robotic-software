@@ -26,7 +26,7 @@ h_file
 
 definition 
        : s_def=simple_definition ';'
-       | a_def=array_definition ';'
+       | a_def=array_definition
        | assign_def=assignment_definition ';'
        | cte_def=constant
        ;
@@ -45,13 +45,20 @@ assignment
        ;
 
 array_definition
-       : v_type=var_type ID a_index=array_index
-       | v_type=var_type ID a_index=array_index '=' '{' elements+=expression (',' elements+=expression)* '}'
-       | v_type=var_type ID a_index=array_index '=' expr=expression
+       : const_type='const' c_array=array_definition
+       | const_type='#define' ID elems=array_elements
+       | v_type=var_type ID a_index=array_index ';'
+       | v_type=var_type ID a_index=array_index '=' elems=array_elements ';'
+       | v_type=var_type ID a_index=array_index '=' expr=expression ';'
        ;
 
 array_index
        : '[' INT_CONST? ']' a_index=array_index?
+       ;
+
+array_elements
+       : '{' array_elements (',' array_elements)+ '}'
+       | '{' elements+=expression (',' elements+=expression)* '}'
        ;
 
 constant 
@@ -107,7 +114,8 @@ code_block
 sentence 
        : a_def=assignment_definition ';'
        | s_def=simple_definition ';'
-       | arr_def=array_definition ';'
+       | arr_def=array_definition
+       | const_def=constant
        | s_var=static_variable
        | it_sent=iteration_sentence
        | cond_sent=conditional_sentence
@@ -142,6 +150,9 @@ expression
        | assign=assignment
        | 'true'
        | 'false'
+       | HEX_CONST
+       | OCTAL_CONST
+       | BINARY_CONST
        | INT_CONST
        | FLOAT_CONST
        | CHAR_CONST
@@ -157,7 +168,8 @@ incdec_expression
        ;
 
 function_call 
-       : ID '(' args=parameter? ')'
+       : obj=ID ('.' elems+=ID)*  '.' f_call=function_call
+       | f_name=ID '(' args=parameter? ')'
        ;
 
 parameter 

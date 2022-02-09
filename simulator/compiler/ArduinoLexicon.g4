@@ -8,6 +8,18 @@ BIT_SHIFT_R
     : '>''>'
     ;
 
+BINARY_CONST
+    : '0' 'b' [0-1]+
+    ;
+
+OCTAL_CONST
+    : '0' [0-7]+
+    ;
+
+HEX_CONST
+    : '0' 'x' [0-9A-Fa-f]+
+    ;
+
 INT_CONST
     : '-'? [0-9]+
     ;

@@ -125,6 +125,14 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#array_elements.
+    def enterArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        self.add_token("Array_elements")
+
+    # Exit a parse tree produced by ArduinoParser#array_elements.
+    def exitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
+        pass
+
 
     # Enter a parse tree produced by ArduinoParser#constant.
     def enterConstant(self, ctx:ArduinoParser.ConstantContext):
@@ -238,7 +246,13 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#function_call.
     def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        self.add_token("Function_call", ctx.ID())
+        if ctx.f_name != None:
+            self.add_token("Function_call", ctx.f_name.text)
+        else:
+            obj_str = ctx.obj.text
+            for elem in ctx.elems:
+                obj_str += "." + elem.text
+            self.add_token("Function_call", obj_str)
 
     # Exit a parse tree produced by ArduinoParser#function_call.
     def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):
