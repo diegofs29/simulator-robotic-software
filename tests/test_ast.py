@@ -833,3 +833,56 @@ class TestAritmetic(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[3].right.value, "x")
         self.assertEqual(self.code[0].function.sentences[4].right.value, 30)
         self.assertEqual(self.code[0].function.sentences[5].right.right.value, 5)
+
+
+class TestBoolean(TestBaseAST):
+
+    file = "tests/file-tests/boolean.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_left(self):
+        self.assertEqual(self.code[0].function.sentences[0].left.value, "x")
+        self.assertEqual(self.code[0].function.sentences[1].left.value, "z")
+        self.assertEqual(self.code[0].function.sentences[2].left.value, "x")
+        self.assertEqual(self.code[0].function.sentences[3].left.value, 200)
+        self.assertEqual(self.code[0].function.sentences[4].left.value, 0)
+        self.assertEqual(self.code[0].function.sentences[5].left.value, 199)
+        self.assertEqual(self.code[0].function.sentences[6].left.value, True)
+        sent = self.code[0].function.sentences[7].left
+        self.assertEqual(
+            str(sent.left.value)
+            + sent.op
+            + str(sent.right.value),
+            "x>29"
+        )
+        self.assertEqual(self.code[0].function.sentences[8].expression.value, "var")
+
+    def test_op(self):
+        self.assertEqual(self.code[0].function.sentences[0].op, ">")
+        self.assertEqual(self.code[0].function.sentences[1].op, "<")
+        self.assertEqual(self.code[0].function.sentences[2].op, ">=")
+        self.assertEqual(self.code[0].function.sentences[3].op, "<=")
+        self.assertEqual(self.code[0].function.sentences[4].op, "==")
+        self.assertEqual(self.code[0].function.sentences[5].op, "!=")
+        self.assertEqual(self.code[0].function.sentences[6].op, "&&")
+        self.assertEqual(self.code[0].function.sentences[7].op, "||")
+        self.assertEqual(self.code[0].function.sentences[7].right.op, "&&")
+
+    def test_right(self):
+        self.assertEqual(self.code[0].function.sentences[0].right.value, "y")
+        self.assertEqual(self.code[0].function.sentences[1].right.value, "w")
+        self.assertEqual(self.code[0].function.sentences[2].right.value, 200)
+        self.assertEqual(self.code[0].function.sentences[3].right.value, "y")
+        self.assertEqual(self.code[0].function.sentences[4].right.value, 1)
+        self.assertEqual(self.code[0].function.sentences[5].right.value, 200)
+        self.assertEqual(self.code[0].function.sentences[6].right.value, False)
+        sent = self.code[0].function.sentences[7].right
+        self.assertEqual(
+            str(sent.left.left.value) + sent.left.op + str(sent.left.right.value)
+            + sent.op
+            + str(sent.right.left.value) + sent.right.op + str(sent.right.right.value),
+            "y!=0&&z<w"
+        )
