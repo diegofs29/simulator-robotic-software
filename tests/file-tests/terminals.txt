@@ -5,3 +5,6 @@ float f = 29.29;
 char c = 'D';
 string s = "Diego";
 string a = c;
+int h = 0xaF66;
+int b = 0b1101;
+int o = 0767;

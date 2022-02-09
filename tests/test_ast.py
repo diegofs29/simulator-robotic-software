@@ -259,6 +259,9 @@ class TestTerminals(TestBaseAST):
         self.assertEqual(self.code[4].definition.value.value, 'D')
         self.assertEqual(self.code[5].definition.value.value, "Diego")
         self.assertEqual(self.code[6].definition.value.value, "c")
+        self.assertEqual(hex(self.code[7].definition.value.value), "0xaf66")
+        self.assertEqual(bin(self.code[8].definition.value.value), "0b1101")
+        self.assertEqual(oct(self.code[9].definition.value.value), "0o767")
 
 
 class TestFunctionCall(TestBaseAST):

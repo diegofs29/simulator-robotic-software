@@ -76,7 +76,7 @@ def serializedATN():
         buf.write("]\5\30\r\2\\T\3\2\2\2\\W\3\2\2\2\\X\3\2\2\2\\[\3\2\2\2")
         buf.write("]\r\3\2\2\2^_\5\32\16\2_`\7V\2\2`\17\3\2\2\2ab\5\32\16")
         buf.write("\2bc\7V\2\2cd\7\b\2\2de\5*\26\2e\21\3\2\2\2fg\7V\2\2g")
-        buf.write("h\7\b\2\2hp\5*\26\2ij\7V\2\2jk\7\t\2\2kl\7M\2\2lm\7\n")
+        buf.write("h\7\b\2\2hp\5*\26\2ij\7V\2\2jk\7\t\2\2kl\7P\2\2lm\7\n")
         buf.write("\2\2mn\7\b\2\2np\5*\26\2of\3\2\2\2oi\3\2\2\2p\23\3\2\2")
         buf.write("\2qr\7\13\2\2r\u009d\5\24\13\2st\7\f\2\2tu\7V\2\2uv\7")
         buf.write("\r\2\2v{\5*\26\2wx\7\16\2\2xz\5*\26\2yw\3\2\2\2z}\3\2")
@@ -94,7 +94,7 @@ def serializedATN():
         buf.write("\7\b\2\2\u0099\u009a\5*\26\2\u009a\u009b\7\7\2\2\u009b")
         buf.write("\u009d\3\2\2\2\u009cq\3\2\2\2\u009cs\3\2\2\2\u009c\u0080")
         buf.write("\3\2\2\2\u009c\u0085\3\2\2\2\u009c\u0095\3\2\2\2\u009d")
-        buf.write("\25\3\2\2\2\u009e\u00a0\7\t\2\2\u009f\u00a1\7M\2\2\u00a0")
+        buf.write("\25\3\2\2\2\u009e\u00a0\7\t\2\2\u009f\u00a1\7P\2\2\u00a0")
         buf.write("\u009f\3\2\2\2\u00a0\u00a1\3\2\2\2\u00a1\u00a2\3\2\2\2")
         buf.write("\u00a2\u00a4\7\n\2\2\u00a3\u00a5\5\26\f\2\u00a4\u00a3")
         buf.write("\3\2\2\2\u00a4\u00a5\3\2\2\2\u00a5\27\3\2\2\2\u00a6\u00a7")
@@ -166,9 +166,9 @@ def serializedATN():
         buf.write("\u0143\5*\26\2\u0143\u0144\7!\2\2\u0144\u0155\3\2\2\2")
         buf.write("\u0145\u0155\5.\30\2\u0146\u0155\5,\27\2\u0147\u0148\t")
         buf.write("\3\2\2\u0148\u0155\5*\26\31\u0149\u0155\5\22\n\2\u014a")
-        buf.write("\u0155\7F\2\2\u014b\u0155\7G\2\2\u014c\u0155\7Q\2\2\u014d")
-        buf.write("\u0155\7P\2\2\u014e\u0155\7O\2\2\u014f\u0155\7M\2\2\u0150")
-        buf.write("\u0155\7N\2\2\u0151\u0155\7R\2\2\u0152\u0155\7T\2\2\u0153")
+        buf.write("\u0155\7F\2\2\u014b\u0155\7G\2\2\u014c\u0155\7O\2\2\u014d")
+        buf.write("\u0155\7N\2\2\u014e\u0155\7M\2\2\u014f\u0155\7P\2\2\u0150")
+        buf.write("\u0155\7Q\2\2\u0151\u0155\7R\2\2\u0152\u0155\7T\2\2\u0153")
         buf.write("\u0155\7V\2\2\u0154\u0140\3\2\2\2\u0154\u0145\3\2\2\2")
         buf.write("\u0154\u0146\3\2\2\2\u0154\u0147\3\2\2\2\u0154\u0149\3")
         buf.write("\2\2\2\u0154\u014a\3\2\2\2\u0154\u014b\3\2\2\2\u0154\u014c")
@@ -265,8 +265,8 @@ class ArduinoParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "BIT_SHIFT_L", "BIT_SHIFT_R", "INT_CONST", 
-                      "FLOAT_CONST", "BINARY_CONST", "OCTAL_CONST", "HEX_CONST", 
+                      "<INVALID>", "BIT_SHIFT_L", "BIT_SHIFT_R", "BINARY_CONST", 
+                      "OCTAL_CONST", "HEX_CONST", "INT_CONST", "FLOAT_CONST", 
                       "CHAR_CONST", "UNTERMINATED_CHAR", "STRING_CONST", 
                       "UNTERMINATED_STRING", "ID", "LINE_COMMENT", "MULTILINE_COMMENT", 
                       "WHITESPACE" ]
@@ -380,11 +380,11 @@ class ArduinoParser ( Parser ):
     T__71=72
     BIT_SHIFT_L=73
     BIT_SHIFT_R=74
-    INT_CONST=75
-    FLOAT_CONST=76
-    BINARY_CONST=77
-    OCTAL_CONST=78
-    HEX_CONST=79
+    BINARY_CONST=75
+    OCTAL_CONST=76
+    HEX_CONST=77
+    INT_CONST=78
+    FLOAT_CONST=79
     CHAR_CONST=80
     UNTERMINATED_CHAR=81
     STRING_CONST=82
@@ -1483,7 +1483,7 @@ class ArduinoParser ( Parser ):
             self.state = 189
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__8) | (1 << ArduinoParser.T__9) | (1 << ArduinoParser.T__13) | (1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__31) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__36) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__43) | (1 << ArduinoParser.T__44))) != 0) or ((((_la - 68)) & ~0x3f) == 0 and ((1 << (_la - 68)) & ((1 << (ArduinoParser.T__67 - 68)) | (1 << (ArduinoParser.T__68 - 68)) | (1 << (ArduinoParser.T__69 - 68)) | (1 << (ArduinoParser.T__70 - 68)) | (1 << (ArduinoParser.T__71 - 68)) | (1 << (ArduinoParser.INT_CONST - 68)) | (1 << (ArduinoParser.FLOAT_CONST - 68)) | (1 << (ArduinoParser.BINARY_CONST - 68)) | (1 << (ArduinoParser.OCTAL_CONST - 68)) | (1 << (ArduinoParser.HEX_CONST - 68)) | (1 << (ArduinoParser.CHAR_CONST - 68)) | (1 << (ArduinoParser.STRING_CONST - 68)) | (1 << (ArduinoParser.ID - 68)))) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__8) | (1 << ArduinoParser.T__9) | (1 << ArduinoParser.T__13) | (1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__31) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__36) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__43) | (1 << ArduinoParser.T__44))) != 0) or ((((_la - 68)) & ~0x3f) == 0 and ((1 << (_la - 68)) & ((1 << (ArduinoParser.T__67 - 68)) | (1 << (ArduinoParser.T__68 - 68)) | (1 << (ArduinoParser.T__69 - 68)) | (1 << (ArduinoParser.T__70 - 68)) | (1 << (ArduinoParser.T__71 - 68)) | (1 << (ArduinoParser.BINARY_CONST - 68)) | (1 << (ArduinoParser.OCTAL_CONST - 68)) | (1 << (ArduinoParser.HEX_CONST - 68)) | (1 << (ArduinoParser.INT_CONST - 68)) | (1 << (ArduinoParser.FLOAT_CONST - 68)) | (1 << (ArduinoParser.CHAR_CONST - 68)) | (1 << (ArduinoParser.STRING_CONST - 68)) | (1 << (ArduinoParser.ID - 68)))) != 0):
                 self.state = 186
                 localctx._sentence = self.sentence()
                 localctx.sentences.append(localctx._sentence)
@@ -1869,7 +1869,7 @@ class ArduinoParser ( Parser ):
                 self.state = 261
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__8) | (1 << ArduinoParser.T__9) | (1 << ArduinoParser.T__13) | (1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__31) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__36) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__43) | (1 << ArduinoParser.T__44))) != 0) or ((((_la - 68)) & ~0x3f) == 0 and ((1 << (_la - 68)) & ((1 << (ArduinoParser.T__67 - 68)) | (1 << (ArduinoParser.T__68 - 68)) | (1 << (ArduinoParser.T__69 - 68)) | (1 << (ArduinoParser.T__70 - 68)) | (1 << (ArduinoParser.T__71 - 68)) | (1 << (ArduinoParser.INT_CONST - 68)) | (1 << (ArduinoParser.FLOAT_CONST - 68)) | (1 << (ArduinoParser.BINARY_CONST - 68)) | (1 << (ArduinoParser.OCTAL_CONST - 68)) | (1 << (ArduinoParser.HEX_CONST - 68)) | (1 << (ArduinoParser.CHAR_CONST - 68)) | (1 << (ArduinoParser.STRING_CONST - 68)) | (1 << (ArduinoParser.ID - 68)))) != 0):
+                while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ArduinoParser.T__8) | (1 << ArduinoParser.T__9) | (1 << ArduinoParser.T__13) | (1 << ArduinoParser.T__14) | (1 << ArduinoParser.T__15) | (1 << ArduinoParser.T__16) | (1 << ArduinoParser.T__17) | (1 << ArduinoParser.T__18) | (1 << ArduinoParser.T__19) | (1 << ArduinoParser.T__20) | (1 << ArduinoParser.T__21) | (1 << ArduinoParser.T__22) | (1 << ArduinoParser.T__23) | (1 << ArduinoParser.T__24) | (1 << ArduinoParser.T__25) | (1 << ArduinoParser.T__26) | (1 << ArduinoParser.T__27) | (1 << ArduinoParser.T__28) | (1 << ArduinoParser.T__29) | (1 << ArduinoParser.T__31) | (1 << ArduinoParser.T__32) | (1 << ArduinoParser.T__33) | (1 << ArduinoParser.T__34) | (1 << ArduinoParser.T__36) | (1 << ArduinoParser.T__37) | (1 << ArduinoParser.T__38) | (1 << ArduinoParser.T__39) | (1 << ArduinoParser.T__43) | (1 << ArduinoParser.T__44))) != 0) or ((((_la - 68)) & ~0x3f) == 0 and ((1 << (_la - 68)) & ((1 << (ArduinoParser.T__67 - 68)) | (1 << (ArduinoParser.T__68 - 68)) | (1 << (ArduinoParser.T__69 - 68)) | (1 << (ArduinoParser.T__70 - 68)) | (1 << (ArduinoParser.T__71 - 68)) | (1 << (ArduinoParser.BINARY_CONST - 68)) | (1 << (ArduinoParser.OCTAL_CONST - 68)) | (1 << (ArduinoParser.HEX_CONST - 68)) | (1 << (ArduinoParser.INT_CONST - 68)) | (1 << (ArduinoParser.FLOAT_CONST - 68)) | (1 << (ArduinoParser.CHAR_CONST - 68)) | (1 << (ArduinoParser.STRING_CONST - 68)) | (1 << (ArduinoParser.ID - 68)))) != 0):
                     self.state = 258
                     localctx._sentence = self.sentence()
                     localctx.sentences.append(localctx._sentence)
@@ -1880,7 +1880,7 @@ class ArduinoParser ( Parser ):
                 self.state = 264
                 self.match(ArduinoParser.T__12)
                 pass
-            elif token in [ArduinoParser.T__8, ArduinoParser.T__9, ArduinoParser.T__13, ArduinoParser.T__14, ArduinoParser.T__15, ArduinoParser.T__16, ArduinoParser.T__17, ArduinoParser.T__18, ArduinoParser.T__19, ArduinoParser.T__20, ArduinoParser.T__21, ArduinoParser.T__22, ArduinoParser.T__23, ArduinoParser.T__24, ArduinoParser.T__25, ArduinoParser.T__26, ArduinoParser.T__27, ArduinoParser.T__28, ArduinoParser.T__29, ArduinoParser.T__31, ArduinoParser.T__32, ArduinoParser.T__33, ArduinoParser.T__34, ArduinoParser.T__36, ArduinoParser.T__37, ArduinoParser.T__38, ArduinoParser.T__39, ArduinoParser.T__43, ArduinoParser.T__44, ArduinoParser.T__67, ArduinoParser.T__68, ArduinoParser.T__69, ArduinoParser.T__70, ArduinoParser.T__71, ArduinoParser.INT_CONST, ArduinoParser.FLOAT_CONST, ArduinoParser.BINARY_CONST, ArduinoParser.OCTAL_CONST, ArduinoParser.HEX_CONST, ArduinoParser.CHAR_CONST, ArduinoParser.STRING_CONST, ArduinoParser.ID]:
+            elif token in [ArduinoParser.T__8, ArduinoParser.T__9, ArduinoParser.T__13, ArduinoParser.T__14, ArduinoParser.T__15, ArduinoParser.T__16, ArduinoParser.T__17, ArduinoParser.T__18, ArduinoParser.T__19, ArduinoParser.T__20, ArduinoParser.T__21, ArduinoParser.T__22, ArduinoParser.T__23, ArduinoParser.T__24, ArduinoParser.T__25, ArduinoParser.T__26, ArduinoParser.T__27, ArduinoParser.T__28, ArduinoParser.T__29, ArduinoParser.T__31, ArduinoParser.T__32, ArduinoParser.T__33, ArduinoParser.T__34, ArduinoParser.T__36, ArduinoParser.T__37, ArduinoParser.T__38, ArduinoParser.T__39, ArduinoParser.T__43, ArduinoParser.T__44, ArduinoParser.T__67, ArduinoParser.T__68, ArduinoParser.T__69, ArduinoParser.T__70, ArduinoParser.T__71, ArduinoParser.BINARY_CONST, ArduinoParser.OCTAL_CONST, ArduinoParser.HEX_CONST, ArduinoParser.INT_CONST, ArduinoParser.FLOAT_CONST, ArduinoParser.CHAR_CONST, ArduinoParser.STRING_CONST, ArduinoParser.ID]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 265
                 localctx._sentence = self.sentence()
@@ -2027,7 +2027,7 @@ class ArduinoParser ( Parser ):
                 self.state = 285
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if ((((_la - 30)) & ~0x3f) == 0 and ((1 << (_la - 30)) & ((1 << (ArduinoParser.T__29 - 30)) | (1 << (ArduinoParser.T__43 - 30)) | (1 << (ArduinoParser.T__44 - 30)) | (1 << (ArduinoParser.T__67 - 30)) | (1 << (ArduinoParser.T__68 - 30)) | (1 << (ArduinoParser.T__69 - 30)) | (1 << (ArduinoParser.T__70 - 30)) | (1 << (ArduinoParser.INT_CONST - 30)) | (1 << (ArduinoParser.FLOAT_CONST - 30)) | (1 << (ArduinoParser.BINARY_CONST - 30)) | (1 << (ArduinoParser.OCTAL_CONST - 30)) | (1 << (ArduinoParser.HEX_CONST - 30)) | (1 << (ArduinoParser.CHAR_CONST - 30)) | (1 << (ArduinoParser.STRING_CONST - 30)) | (1 << (ArduinoParser.ID - 30)))) != 0):
+                if ((((_la - 30)) & ~0x3f) == 0 and ((1 << (_la - 30)) & ((1 << (ArduinoParser.T__29 - 30)) | (1 << (ArduinoParser.T__43 - 30)) | (1 << (ArduinoParser.T__44 - 30)) | (1 << (ArduinoParser.T__67 - 30)) | (1 << (ArduinoParser.T__68 - 30)) | (1 << (ArduinoParser.T__69 - 30)) | (1 << (ArduinoParser.T__70 - 30)) | (1 << (ArduinoParser.BINARY_CONST - 30)) | (1 << (ArduinoParser.OCTAL_CONST - 30)) | (1 << (ArduinoParser.HEX_CONST - 30)) | (1 << (ArduinoParser.INT_CONST - 30)) | (1 << (ArduinoParser.FLOAT_CONST - 30)) | (1 << (ArduinoParser.CHAR_CONST - 30)) | (1 << (ArduinoParser.STRING_CONST - 30)) | (1 << (ArduinoParser.ID - 30)))) != 0):
                     self.state = 284
                     localctx.expr = self.expression(0)
 
@@ -2760,7 +2760,7 @@ class ArduinoParser ( Parser ):
                 self.state = 406
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if ((((_la - 30)) & ~0x3f) == 0 and ((1 << (_la - 30)) & ((1 << (ArduinoParser.T__29 - 30)) | (1 << (ArduinoParser.T__43 - 30)) | (1 << (ArduinoParser.T__44 - 30)) | (1 << (ArduinoParser.T__67 - 30)) | (1 << (ArduinoParser.T__68 - 30)) | (1 << (ArduinoParser.T__69 - 30)) | (1 << (ArduinoParser.T__70 - 30)) | (1 << (ArduinoParser.INT_CONST - 30)) | (1 << (ArduinoParser.FLOAT_CONST - 30)) | (1 << (ArduinoParser.BINARY_CONST - 30)) | (1 << (ArduinoParser.OCTAL_CONST - 30)) | (1 << (ArduinoParser.HEX_CONST - 30)) | (1 << (ArduinoParser.CHAR_CONST - 30)) | (1 << (ArduinoParser.STRING_CONST - 30)) | (1 << (ArduinoParser.ID - 30)))) != 0):
+                if ((((_la - 30)) & ~0x3f) == 0 and ((1 << (_la - 30)) & ((1 << (ArduinoParser.T__29 - 30)) | (1 << (ArduinoParser.T__43 - 30)) | (1 << (ArduinoParser.T__44 - 30)) | (1 << (ArduinoParser.T__67 - 30)) | (1 << (ArduinoParser.T__68 - 30)) | (1 << (ArduinoParser.T__69 - 30)) | (1 << (ArduinoParser.T__70 - 30)) | (1 << (ArduinoParser.BINARY_CONST - 30)) | (1 << (ArduinoParser.OCTAL_CONST - 30)) | (1 << (ArduinoParser.HEX_CONST - 30)) | (1 << (ArduinoParser.INT_CONST - 30)) | (1 << (ArduinoParser.FLOAT_CONST - 30)) | (1 << (ArduinoParser.CHAR_CONST - 30)) | (1 << (ArduinoParser.STRING_CONST - 30)) | (1 << (ArduinoParser.ID - 30)))) != 0):
                     self.state = 405
                     localctx.args = self.parameter()
 
