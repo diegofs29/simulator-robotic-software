@@ -1,157 +1,232 @@
 class ASTVisitor:
 
     def visit_program(self, program, param):
-        pass
+        self.visit_children(program.declarations)
+        self.visit_children(program.code)
+        return None
 
     def visit_declaration(self, program, param):
-        pass
+        return None
 
     def visit_program_code(self, program_code, param):
-        pass
+        if program_code.definition != None:
+            program_code.definition.accept(self, param)
+        if program_code.function != None:
+            program_code.function.accept(self, param)
+        return None
 
     def visit_definition(self, definition, param):
-        pass
+        if definition.type != None:
+            definition.type.accept(self, param)
+        if definition.value != None:
+            definition.value.accept(self, param)
+        return None
 
     def visit_array_definition(self, array_definition, param):
-        pass
+        if array_definition.type != None:
+            array_definition.type.accept(self, param)
+        return None
 
     def visit_assignment(self, assignment, param):
-        pass
+        if assignment.expression != None:
+            assignment.expression.accept(self, param)
+        return None
 
     def visit_boolean_type(self, boolean_type, param):
-        pass
+        return None
 
     def visit_byte_type(self, byte_type, param):
-        pass
+        return None
 
     def visit_char_type(self, char_type, param):
-        pass
+        return None
 
     def visit_double_type(self, double_type, param):
-        pass
+        return None
 
     def visit_float_type(self, float_type, param):
-        pass
+        return None
 
     def visit_int_type(self, int_type, param):
-        pass
+        return None
 
     def visit_long_type(self, long_type, param):
-        pass
+        return None
 
     def visit_short_type(self, short_type, param):
-        pass
+        return None
 
     def visit_size_t_type(self, size_t_type, param):
-        pass
+        return None
 
     def visit_string_type(self, string, param):
-        pass
+        return None
 
     def visit_u_int_type(self, u_int_type, param):
-        pass
+        return None
 
     def visit_u_char_type(self, u_char_type, param):
-        pass
+        return None
 
     def visit_u_long_type(self, u_long_type, param):
-        pass
+        return None
 
     def visit_void_type(self, void_type, param):
-        pass
+        return None
 
     def visit_word_type(self, word_type, param):
-        pass
+        return None
 
     def visit_id_type(self, id_type, param):
-        pass
+        return None
 
     def visit_function(self, function, param):
-        pass
+        if function.type != None:
+            function.type.accept(self, param)
+        self.visit_children(function.args, param)
+        self.visit_children(function.sentences, param)
+        return None
 
     def visit_while(self, while_p, param):
-        pass
+        if while_p.expression != None:
+            while_p.expression.accept(self, param)
+        self.visit_children(while_p.sentences, param)
+        return None
 
     def visit_do_while(self, do_while, param):
-        pass
+        if do_while.expression != None:
+            do_while.expression.accept(self, param)
+        self.visit_children(do_while.sentences, param)
+        return None
 
     def visit_for(self, for_p, param):
-        pass
+        if for_p.assignment != None:
+            for_p.assignment.accept(self, param)
+        if for_p.conditon != None:
+            for_p.conditon.accept(self, param)
+        if for_p.expression != None:
+            for_p.expression.accept(self, param)
+        self.visit_children(for_p.sentences)
+        return None
 
     def visit_conditional_sentence(self, conditional_sentence, param):
-        pass
+        if conditional_sentence.condition != None:
+            conditional_sentence.condition.accept(self, param)
+        self.visit_children(conditional_sentence.if_expr)
+        self.visit_children(conditional_sentence.else_expr)
+        return None
 
     def visit_switch_sentence(self, switch_sentence, param):
-        pass
+        if switch_sentence.expression != None:
+            switch_sentence.expression.accept(self, param)
+        self.visit_children(switch_sentence.cases)
+        return None
 
     def visit_case(self, case, param):
-        pass
+        if case.expression != None:
+            case.expression.accept(self, param)
+        self.visit_children(case.sentences, param)
+        return None
 
     def visit_static_var_definition(self, static_var_definition, param):
-        pass
+        if static_var_definition.type != None:
+            static_var_definition.type.accept(self, param)
+        if static_var_definition.value != None:
+            static_var_definition.value.accept(self, param)
+        return None
 
     def visit_array_access(self, array_access, param):
-        pass
+        return None
 
     def visit_arithmetic_expression(self, arithmetic_expression, param):
-        pass
+        if arithmetic_expression.left != None:
+            arithmetic_expression.left.visit(self, param)
+        if arithmetic_expression.right != None:
+            arithmetic_expression.right.visit(self, param)
+        return None
 
     def visit_comparision_expression(self, comparison_expression, param):
-        pass
+        if comparison_expression.left != None:
+            comparison_expression.left.accept(self, param)
+        if comparison_expression.right != None:
+            comparison_expression.right.accept(self, param)
+        return None
 
     def visit_boolean_expresssion(self, boolean_expression, param):
-        pass
+        if boolean_expression.left != None:
+            boolean_expression.left.accept(self, param)
+        if boolean_expression.right != None:
+            boolean_expression.right.accept(self, param)
+        return None
 
     def visit_bitwise_expression(self, bitwise_expression, param):
-        pass
+        if bitwise_expression.left != None:
+            bitwise_expression.left.accept(self, param)
+        if bitwise_expression.right != None:
+            bitwise_expression.right.accept(self, param)
+        return None
 
     def visit_compound_assigment(self, compound_asigment, param):
-        pass
+        if compound_asigment.left != None:
+            compound_asigment.left.accept(self, param)
+        if compound_asigment.right != None:
+            compound_asigment.right.accept(self, param)
+        return None
 
     def visit_inc_dec_expression(self, inc_dec_expression, param):
-        pass
+        return None
 
     def visit_not_expression(self, not_expression, param):
-        pass
+        if not_expression.expression != None:
+            not_expression.expression.accept(self, param)
+        return None
 
     def visit_bit_not_expression(self, bit_not_expression, param):
-        pass
+        if bit_not_expression.expression != None:
+            bit_not_expression.expression.accept(self, param)
 
     def visit_int(self, int, param):
-        pass
+        return None
 
     def visit_float(self, float, param):
-        pass
+        return None
 
     def visit_hex(self, hex, param):
-        pass
+        return None
 
     def visit_octal(self, oct, param):
-        pass
+        return None
 
     def visit_binary(self, binary, param):
-        pass
+        return None
 
     def visit_char(self, char, param):
-        pass
+        return None
 
     def visit_string(self, string, param):
-        pass
+        return None
 
     def visit_boolean(self, boolean, param):
-        pass
+        return None
 
     def visit_id(self, id, param):
-        pass
+        return None
 
     def visit_function_call(self, function_call, param):
-        pass
+        self.visit_children(function_call.parameters)
+        return None
 
     def visit_return(self, return_p, param):
-        pass
+        if return_p.expression != None:
+            return_p.expression.accept(self, param)
 
     def visit_break(self, break_p, param):
-        pass
+        return None
 
     def visit_continue(self, continue_p, param):
-        pass
+        return None
+
+    def visit_children(self, children, param):
+        if children != None:
+            for child in children:
+                children.accept(self, param)
