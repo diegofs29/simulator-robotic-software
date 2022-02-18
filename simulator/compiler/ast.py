@@ -1,24 +1,38 @@
-class ProgramNode():
+class ASTNode():
+
+    def accept(self, visitor, param):
+        pass
+
+class ProgramNode(ASTNode):
 
     def __init__(self, declarations=None, code=None):
         self.declarations = declarations
         self.code = code
 
+    def accept(self, visitor, param):
+        return visitor.visit_program(self, param)
 
-class DeclarationNode():
+
+class DeclarationNode(ASTNode):
 
     def __init__(self, file_name):
         self.file_name = file_name
 
+    def accept(self, visitor, param):
+        return visitor.visit_declaration(self, param)
 
-class ProgramCodeNode():
+
+class ProgramCodeNode(ASTNode):
 
     def __init__(self, definition=None, function=None):
         self.definition = definition
         self.function = function
 
+    def accept(self, visitor, param):
+        return visitor.visit_program_code(self, param)
 
-class DefinitionNode():
+
+class DefinitionNode(ASTNode):
 
     def __init__(self, type, var_name=None, value=None, is_constant=False):
         self.type = type
@@ -26,8 +40,11 @@ class DefinitionNode():
         self.is_constant = is_constant
         self.value = value
 
+    def accept(self, visitor, param):
+        return visitor.visit_definition(self, param)
 
-class ArrayDefinitionNode():
+
+class ArrayDefinitionNode(ASTNode):
 
     def __init__(self, type, var_name, size=None, elements=None, is_constant=False):
         self.type = type
@@ -36,25 +53,37 @@ class ArrayDefinitionNode():
         self.elements = elements
         self.is_constant = is_constant
 
+    def accept(self, visitor, param):
+        return visitor.visit_array_definition(self, param)
 
-class AssignmentNode():
+
+class AssignmentNode(ASTNode):
 
     def __init__(self, var_name, expression, index=None):
         self.var_name = var_name
         self.expression = expression
         self.index = index
 
+    def accept(self, visitor, param):
+        return visitor.visit_assignment(self, param)
 
-class BooleanTypeNode():
 
-    def __init__(self):
-        pass
-    
-    
-class ByteTypeNode():
+class BooleanTypeNode(ASTNode):
 
     def __init__(self):
         pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_boolean_type(self, param)
+    
+    
+class ByteTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_byte_type(self, param)
 
 
 class CharTypeNode():
