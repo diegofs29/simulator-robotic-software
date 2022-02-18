@@ -86,97 +86,133 @@ class ByteTypeNode(ASTNode):
         return visitor.visit_byte_type(self, param)
 
 
-class CharTypeNode():
+class CharTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class DoubleTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_char_type(self, param)
 
 
-class FloatTypeNode():
+class DoubleTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class IntTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_double_type(self, param)
 
 
-class LongTypeNode():
+class FloatTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class ShortTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_float_type(self, param)
 
 
-class Size_tTypeNode():
+class IntTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class StringTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_int_type(self, param)
 
 
-class UIntTypeNode():
+class LongTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
+    def accept(self, visitor, param):
+        return visitor.visit_long_type(self, param)
 
-class UCharTypeNode():
+
+class ShortTypeNode(ASTNode):
 
     def __init__(self):
         pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_short_type(self, param)
+
+
+class Size_tTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_size_t_type(self, param)
+
+
+class StringTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_string_type(self, param)
+
+
+class UIntTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_u_int_type(self, param)
+
+
+class UCharTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_u_char_type(self, param)
     
     
-class ULongTypeNode():
+class ULongTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class VoidTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_u_long_type(self, param)
 
 
-class WordTypeNode():
+class VoidTypeNode(ASTNode):
 
     def __init__(self):
         pass
 
+    def accept(self, visitor, param):
+        return visitor.visit_void_type(self, param)
 
-class IDTypeNode():
+
+class WordTypeNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_word_type(self, param)
+
+
+class IDTypeNode(ASTNode):
 
     def __init__(self, type_name):
         self.type_name = type_name
 
-
-class DoubleTypeNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_id_type(self, param)
 
 
-class FunctionNode():
+class FunctionNode(ASTNode):
 
     def __init__(self, type, name, args=None, sentences=None):
         self.type = type
@@ -184,22 +220,31 @@ class FunctionNode():
         self.args = args
         self.sentences = sentences
 
-
-class WhileNode():
-
-    def __init__(self, expression, sentences=None):
-        self.expression = expression
-        self.sentences = sentences
+    def accept(self, visitor, param):
+        return visitor.visit_function(self, param)
 
 
-class DoWhileNode():
+class WhileNode(ASTNode):
 
     def __init__(self, expression, sentences=None):
         self.expression = expression
         self.sentences = sentences
 
+    def accept(self, visitor, param):
+        return visitor.visit_while(self, param)
 
-class ForNode():
+
+class DoWhileNode(ASTNode):
+
+    def __init__(self, expression, sentences=None):
+        self.expression = expression
+        self.sentences = sentences
+
+    def accept(self, visitor, param):
+        return visitor.visit_do_while(self, param)
+
+
+class ForNode(ASTNode):
 
     def __init__(self, assignment, condition, expression, sentences=None):
         self.assignment = assignment
@@ -207,159 +252,228 @@ class ForNode():
         self.expression = expression
         self.sentences = sentences
 
+    def accept(self, visitor, param):
+        return visitor.visit_for(self, param)
 
-class ConditionalSentenceNode():
+
+class ConditionalSentenceNode(ASTNode):
 
     def __init__(self, condition, if_expr=None, else_expr=None):
         self.condition = condition
         self.if_expr = if_expr
         self.else_expr = else_expr
 
+    def accept(self, visitor, param):
+        return visitor.visit_conditional_sentence(self, param)
 
-class SwitchSentenceNode():
+
+class SwitchSentenceNode(ASTNode):
 
     def __init__(self, expression, cases=None):
         self.expression = expression
         self.cases = cases
 
+    def accept(self, visitor, param):
+        return visitor.visit_switch_sentence(self, param)
 
-class CaseNode():
+
+class CaseNode(ASTNode):
 
     def __init__(self, type="case", expression=None, sentences=None):
         self.type = type
         self.expression = expression
         self.sentences = sentences
 
+    def accept(self, visitor, param):
+        return visitor.visit_case(self, param)
 
-class StaticVarDefinitionNode():
+
+class StaticVarDefinitionNode(ASTNode):
 
     def __init__(self, type, var_name, value=None):
         self.type = type
         self.var_name = var_name
         self.value = value
 
+    def accept(self, visitor, param):
+        return visitor.visit_static_var_definition(self, param)
 
-class ArrayAccessNode():
+
+class ArrayAccessNode(ASTNode):
 
     def __init__(self, var, index):
         self.var = var
         self.index = index
 
+    def accept(self, visitor, param):
+        return visitor.visit_array_access(self, param)
 
-class ArithmeticExpressionNode():
+
+class ArithmeticExpressionNode(ASTNode):
+
+    def __init__(self, left, op, right):
+        self.left = left
+        self.op = op
+        self.right = right
+
+    def accept(self, visitor, param):
+        return visitor.visit_arithmetic_expression(self, param)
+
+
+class ComparisonExpressionNode(ASTNode):
 
     def __init__(self, left, op, right):
         self.left = left
         self.op = op
         self.right = right
 
-
-class ComparisonExpressionNode():
-
-    def __init__(self, left, op, right):
-        self.left = left
-        self.op = op
-        self.right = right
+    def accept(self, visitor, param):
+        return visitor.visit_comparision_expression(self, param)
         
         
-class BooleanExpressionNode():
+class BooleanExpressionNode(ASTNode):
 
     def __init__(self, left, op, right):
         self.left = left
         self.op = op
         self.right = right
 
+    def accept(self, visitor, param):
+        return visitor.visit_boolean_expression(self, param)
 
-class BitwiseExpressionNode():
+
+class BitwiseExpressionNode(ASTNode):
+
+    def __init__(self, left, op, right):
+        self.left = left
+        self.op = op
+        self.right = right
+
+    def accept(self, visitor, param):
+        return visitor.visit_bitwise_expression(self, param)
+
+
+class CompoundAssignmentNode(ASTNode):
 
     def __init__(self, left, op, right):
         self.left = left
         self.op = op
         self.right = right
 
-
-class CompoundAssignmentNode():
-
-    def __init__(self, left, op, right):
-        self.left = left
-        self.op = op
-        self.right = right
+    def accept(self, visitor, param):
+        return visitor.visit_compound_assigment(self, param)
 
     
-class IncDecExpressionNode():
+class IncDecExpressionNode(ASTNode):
 
     def __init__(self, var, op):
         self.var = var
         self.op = op
 
-
-class NotExpressionNode():
-
-    def __init__(self, expression):
-        self.expression = expression
+    def accept(self, visitor, param):
+        return visitor.visit_inc_dec_expression(self, param)
 
 
-class BitNotExpressionNode():
+class NotExpressionNode(ASTNode):
 
     def __init__(self, expression):
         self.expression = expression
 
-
-class IntNode():
-
-    def __init__(self, value):
-        self.value = value
+    def accept(self, visitor, param):
+        return visitor.visit_not_expression(self, param)
 
 
-class FloatNode():
+class BitNotExpressionNode(ASTNode):
 
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, expression):
+        self.expression = expression
 
-
-class HexNode():
-
-    def __init__(self, value):
-        self.value = value
+    def accept(self, visitor, param):
+        return visitor.visit_bit_not_expression(self, param)
 
 
-class OctalNode():
+class IntNode(ASTNode):
 
     def __init__(self, value):
         self.value = value
 
-
-class BinaryNode():
-
-    def __init__(self, value):
-        self.value = value
+    def accept(self, visitor, param):
+        return visitor.visit_int(self, param)
 
 
-class CharNode():
+class FloatNode(ASTNode):
 
     def __init__(self, value):
         self.value = value
 
-
-class StringNode():
-
-    def __init__(self, value):
-        self.value = value
+    def accept(self, visitor, param):
+        return visitor.visit_float(self, param)
 
 
-class BooleanNode():
+class HexNode(ASTNode):
 
     def __init__(self, value):
         self.value = value
 
+    def accept(self, visitor, param):
+        return visitor.visit_hex(self, param)
 
-class IDNode():
+
+class OctalNode(ASTNode):
 
     def __init__(self, value):
         self.value = value
 
+    def accept(self, visitor, param):
+        return visitor.visit_octal(self, param)
 
-class FunctionCallNode():
+
+class BinaryNode(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, visitor, param):
+        return visitor.visit_binary(self, param)
+
+
+class CharNode(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, visitor, param):
+        return visitor.visit_char(self, param)
+
+
+class StringNode(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, visitor, param):
+        return visitor.visit_string(self, param)
+
+
+class BooleanNode(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, visitor, param):
+        return visitor.visit_boolean(self, param)
+
+
+class IDNode(ASTNode):
+
+    def __init__(self, value):
+        self.value = value
+
+    def accept(self, visitor, param):
+        return visitor.visit_id(self, param)
+
+
+class FunctionCallNode(ASTNode):
 
     def __init__(self, name, parameters=None, clase=None, elems=None):
         self.name = name
@@ -367,20 +481,32 @@ class FunctionCallNode():
         self.clase = clase
         self.elems = elems
 
+    def accept(self, visitor, param):
+        return visitor.visit_function_call(self, param)
 
-class ReturnNode():
+
+class ReturnNode(ASTNode):
 
     def __init__(self, expression=None):
         self.expression = expression
 
+    def accept(self, visitor, param):
+        return visitor.visit_return(self, param)
 
-class BreakNode():
+
+class BreakNode(ASTNode):
+
+    def __init__(self):
+        pass
+
+    def accept(self, visitor, param):
+        return visitor.visit_break(self, param)
+
+
+class ContinueNode(ASTNode):
 
     def __init__(self):
         pass
 
-
-class ContinueNode():
-
-    def __init__(self):
-        pass
+    def accept(self, visitor, param):
+        return visitor.visit_continue(self, param)
