@@ -31,22 +31,22 @@ Simple_definition, y
 Var_type, int
 Sentence
 Expression, y=++x
-Assignment, y = ++x
+Expression, y
 Expression, ++x
 Incdec_expression, ++
 Sentence
 Expression, y=x++
-Assignment, y = x++
+Expression, y
 Expression, x++
 Incdec_expression, ++
 Sentence
 Expression, y=--x
-Assignment, y = --x
+Expression, y
 Expression, --x
 Incdec_expression, --
 Sentence
 Expression, y=x--
-Assignment, y = x--
+Expression, y
 Expression, x--
 Incdec_expression, --
 Sentence

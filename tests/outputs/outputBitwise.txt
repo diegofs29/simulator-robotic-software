@@ -9,37 +9,37 @@ Function, setup
 Var_type, void
 Sentence
 Expression, i=1&27
-Assignment, i = 1&27
+Expression, i
 Expression, &
 Expression, 1
 Expression, 27
 Sentence
 Expression, i=1<<3
-Assignment, i = 1<<3
+Expression, i
 Expression, <<
 Expression, 1
 Expression, 3
 Sentence
 Expression, i=27>>4
-Assignment, i = 27>>4
+Expression, i
 Expression, >>
 Expression, 27
 Expression, 4
 Sentence
 Expression, i=2^3
-Assignment, i = 2^3
+Expression, i
 Expression, ^
 Expression, 2
 Expression, 3
 Sentence
 Expression, i=1|2
-Assignment, i = 1|2
+Expression, i
 Expression, |
 Expression, 1
 Expression, 2
 Sentence
 Expression, i=~1
-Assignment, i = ~1
+Expression, i
 Expression, ~
 Expression, 1
 Program_code

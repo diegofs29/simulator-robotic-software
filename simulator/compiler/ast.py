@@ -34,11 +34,11 @@ class ProgramCodeNode(ASTNode):
 
 class DefinitionNode(ASTNode):
 
-    def __init__(self, type, var_name=None, value=None, is_constant=False):
+    def __init__(self, type, var_name=None, expr=None, is_constant=False):
         self.type = type
         self.var_name = var_name
         self.is_constant = is_constant
-        self.value = value
+        self.expr = expr
 
     def accept(self, visitor, param):
         return visitor.visit_definition(self, param)
@@ -59,9 +59,9 @@ class ArrayDefinitionNode(ASTNode):
 
 class AssignmentNode(ASTNode):
 
-    def __init__(self, var_name, expression, index=None):
-        self.var_name = var_name
-        self.expression = expression
+    def __init__(self, var, expr, index=None):
+        self.var = var
+        self.expr = expr
         self.index = index
 
     def accept(self, visitor, param):
@@ -290,10 +290,10 @@ class CaseNode(ASTNode):
 
 class StaticVarDefinitionNode(ASTNode):
 
-    def __init__(self, type, var_name, value=None):
+    def __init__(self, type, var_name, expr=None):
         self.type = type
         self.var_name = var_name
-        self.value = value
+        self.expr = expr
 
     def accept(self, visitor, param):
         return visitor.visit_static_var_definition(self, param)

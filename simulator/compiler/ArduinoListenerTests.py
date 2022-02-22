@@ -95,15 +95,6 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#assignment.
-    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        self.add_token("Assignment", str(ctx.ID()) + " = " + str(ctx.expression().getText()))
-
-    # Exit a parse tree produced by ArduinoParser#assignment.
-    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#array_definition.
     def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         self.add_token("Array_definition")

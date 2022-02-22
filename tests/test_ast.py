@@ -105,10 +105,10 @@ class TestGlobalDefinition(TestBaseAST):
         self.assertEqual(self.code[9].definition.is_constant, True)
 
     def test_value(self):
-        self.assertEqual(self.code[0].definition.value, None)
-        self.assertEqual(self.code[1].definition.value.value, "hola")
-        self.assertEqual(self.code[6].definition.value.value, 4)
-        self.assertEqual(self.code[7].definition.value.value, 9.8)
+        self.assertEqual(self.code[0].definition.expr, None)
+        self.assertEqual(self.code[1].definition.expr.value, "hola")
+        self.assertEqual(self.code[6].definition.expr.value, 4)
+        self.assertEqual(self.code[7].definition.expr.value, 9.8)
 
     def test_array_index(self):
         self.assertEqual(self.code[2].definition.size[0], 25)
@@ -253,28 +253,28 @@ class TestTerminals(TestBaseAST):
         self.code = self.ast.code
 
     def test_class(self):
-        self.assertTrue(isinstance(self.code[0].definition.value, BooleanNode))
-        self.assertTrue(isinstance(self.code[1].definition.value, BooleanNode))
-        self.assertTrue(isinstance(self.code[2].definition.value, IntNode))
-        self.assertTrue(isinstance(self.code[3].definition.value, FloatNode))
-        self.assertTrue(isinstance(self.code[4].definition.value, CharNode))
-        self.assertTrue(isinstance(self.code[5].definition.value, StringNode))
-        self.assertTrue(isinstance(self.code[6].definition.value, IDNode))
-        self.assertTrue(isinstance(self.code[7].definition.value, HexNode))
-        self.assertTrue(isinstance(self.code[8].definition.value, BinaryNode))
-        self.assertTrue(isinstance(self.code[9].definition.value, OctalNode))
+        self.assertTrue(isinstance(self.code[0].definition.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[1].definition.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[2].definition.expr, IntNode))
+        self.assertTrue(isinstance(self.code[3].definition.expr, FloatNode))
+        self.assertTrue(isinstance(self.code[4].definition.expr, CharNode))
+        self.assertTrue(isinstance(self.code[5].definition.expr, StringNode))
+        self.assertTrue(isinstance(self.code[6].definition.expr, IDNode))
+        self.assertTrue(isinstance(self.code[7].definition.expr, HexNode))
+        self.assertTrue(isinstance(self.code[8].definition.expr, BinaryNode))
+        self.assertTrue(isinstance(self.code[9].definition.expr, OctalNode))
 
     def test_values(self):
-        self.assertEqual(self.code[0].definition.value.value, True)
-        self.assertEqual(self.code[1].definition.value.value, False)
-        self.assertEqual(self.code[2].definition.value.value, 10)
-        self.assertEqual(self.code[3].definition.value.value, 29.29)
-        self.assertEqual(self.code[4].definition.value.value, 'D')
-        self.assertEqual(self.code[5].definition.value.value, "Diego")
-        self.assertEqual(self.code[6].definition.value.value, "c")
-        self.assertEqual(hex(self.code[7].definition.value.value), "0xaf66")
-        self.assertEqual(bin(self.code[8].definition.value.value), "0b1101")
-        self.assertEqual(oct(self.code[9].definition.value.value), "0o767")
+        self.assertEqual(self.code[0].definition.expr.value, True)
+        self.assertEqual(self.code[1].definition.expr.value, False)
+        self.assertEqual(self.code[2].definition.expr.value, 10)
+        self.assertEqual(self.code[3].definition.expr.value, 29.29)
+        self.assertEqual(self.code[4].definition.expr.value, 'D')
+        self.assertEqual(self.code[5].definition.expr.value, "Diego")
+        self.assertEqual(self.code[6].definition.expr.value, "c")
+        self.assertEqual(hex(self.code[7].definition.expr.value), "0xaf66")
+        self.assertEqual(bin(self.code[8].definition.expr.value), "0b1101")
+        self.assertEqual(oct(self.code[9].definition.expr.value), "0o767")
 
     def test_type_class(self):
         self.assertTrue(isinstance(self.code[0].definition.type, BooleanTypeNode))
@@ -512,13 +512,13 @@ class TestAsignations(TestBaseAST):
 
     def test_var_name(self):
         self.assertEqual(self.code[0].function.sentences[0].var_name, "i")
-        self.assertEqual(self.code[0].function.sentences[1].var_name, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var.value, "i")
         self.assertEqual(self.code[0].function.sentences[2].var_name, "x")
-        self.assertEqual(self.code[0].function.sentences[3].var_name, "x")
+        self.assertEqual(self.code[0].function.sentences[3].var.value, "x")
 
     def test_expression(self):
-        self.assertEqual(self.code[0].function.sentences[1].expression.name, "analogRead")
-        self.assertEqual(self.code[0].function.sentences[3].expression.value, 2000)
+        self.assertEqual(self.code[0].function.sentences[1].expr.name, "analogRead")
+        self.assertEqual(self.code[0].function.sentences[3].expr.value, 2000)
 
     def test_left(self):
         for i in range(4, len(self.code[0].function.sentences)):
@@ -579,7 +579,7 @@ class TestBitwise(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[5].right.value, 215)
 
     def test_expression(self):
-        self.assertEqual(self.code[0].function.sentences[6].value.expression.value, "i")
+        self.assertEqual(self.code[0].function.sentences[6].expr.expression.value, "i")
 
 
 class TestLocalDefinition(TestBaseAST):
@@ -735,13 +735,13 @@ class TestLocalDefinition(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[19].var_name, "arrayDoble")
 
     def test_value(self):
-        self.assertEqual(self.code[0].function.sentences[1].value.value, True)
-        self.assertEqual(self.code[0].function.sentences[3].value.value, 'd')
-        self.assertEqual(self.code[0].function.sentences[4].value.value, 29.73)
-        self.assertEqual(self.code[0].function.sentences[6].value.value, 1615)
-        self.assertEqual(self.code[0].function.sentences[10].value.value, "Diegui")
-        self.assertEqual(self.code[0].function.sentences[15].value.value, 29.456)
-        self.assertEqual(self.code[0].function.sentences[17].value.value, 'c')
+        self.assertEqual(self.code[0].function.sentences[1].expr.value, True)
+        self.assertEqual(self.code[0].function.sentences[3].expr.value, 'd')
+        self.assertEqual(self.code[0].function.sentences[4].expr.value, 29.73)
+        self.assertEqual(self.code[0].function.sentences[6].expr.value, 1615)
+        self.assertEqual(self.code[0].function.sentences[10].expr.value, "Diegui")
+        self.assertEqual(self.code[0].function.sentences[15].expr.value, 29.456)
+        self.assertEqual(self.code[0].function.sentences[17].expr.value, 'c')
 
     def test_elements(self):
         self.assertEqual(

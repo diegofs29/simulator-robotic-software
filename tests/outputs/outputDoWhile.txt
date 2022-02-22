@@ -12,11 +12,11 @@ Function, setup
 Var_type, void
 Sentence
 Expression, x=0
-Assignment, x = 0
+Expression, x
 Expression, 0
 Sentence
 Expression, d=2.1
-Assignment, d = 2.1
+Expression, d
 Expression, 2.1
 Program_code
 Function, loop
@@ -31,7 +31,7 @@ Parameter
 Expression, 50
 Sentence
 Expression, x=readSensors()
-Assignment, x = readSensors()
+Expression, x
 Expression, readSensors()
 Function_call, readSensors
 Expression, <

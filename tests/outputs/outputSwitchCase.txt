@@ -8,7 +8,7 @@ Function, setup
 Var_type, void
 Sentence
 Expression, var=1
-Assignment, var = 1
+Expression, var
 Expression, 1
 Program_code
 Function, loop

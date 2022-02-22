@@ -49,11 +49,6 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#assignment.
-    def visitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ArduinoParser#array_definition.
     def visitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         return self.visitChildren(ctx)

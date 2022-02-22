@@ -94,18 +94,6 @@ class ASTBuilderVisitor(ArduinoVisitor):
         return DefinitionNode(v_type, var_name, val)
 
 
-    # Visit a parse tree produced by ArduinoParser#assignment.
-    def visitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        var_name = expression = index = None
-        if ctx.ID() != None:
-            var_name = ctx.ID().getText()
-        if ctx.expr != None:
-            expression = self.visit(ctx.expr)
-        if ctx.INT_CONST() != None:
-            index = int(ctx.INT_CONST.getText())
-        return AssignmentNode(var_name, expression, index)
-
-
     # Visit a parse tree produced by ArduinoParser#array_definition.
     def visitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         elements = []
@@ -379,6 +367,10 @@ class ASTBuilderVisitor(ArduinoVisitor):
                     node = NotExpressionNode(expr)
                 if operator == '~':
                     node = BitNotExpressionNode(expr)
+        if ctx.assign != None:
+            var = self.visit(ctx.assign)
+            value = self.visit(ctx.value)
+            node = AssignmentNode(var, value)
         if ctx.getText() == "true":
             node = BooleanNode(True)
         elif ctx.getText() == "false":

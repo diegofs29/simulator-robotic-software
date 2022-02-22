@@ -22,5 +22,5 @@ Var_type, int
 Expression, 29
 Sentence
 Expression, var=10
-Assignment, var = 10
+Expression, var
 Expression, 10

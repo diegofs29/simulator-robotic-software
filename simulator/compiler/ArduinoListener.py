@@ -80,15 +80,6 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#assignment.
-    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#assignment.
-    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#array_definition.
     def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         pass

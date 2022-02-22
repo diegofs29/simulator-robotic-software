@@ -39,11 +39,6 @@ assignment_definition
        : v_type=var_type ID '=' val=expression
        ;
 
-assignment 
-       : ID '=' expr=expression
-       | ID '[' INT_CONST ']' '=' expr=expression
-       ;
-
 array_definition
        : const_type='const' c_array=array_definition
        | const_type='#define' ID elems=array_elements
@@ -147,7 +142,7 @@ expression
        | left=expression operator='&&' right=expression
        | left=expression operator='||' right=expression
        | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
-       | assign=assignment
+       | assign=expression '=' value=expression
        | 'true'
        | 'false'
        | HEX_CONST

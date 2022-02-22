@@ -107,16 +107,6 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
-    # Enter a parse tree produced by ArduinoParser#assignment.
-    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        self.print_enter("Assignment", False)
-        print(ctx.ID(), "=", ctx.expression().getText())
-
-    # Exit a parse tree produced by ArduinoParser#assignment.
-    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        self.print_exit()
-
-
         # Enter a parse tree produced by ArduinoParser#array_definition.
     def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
         self.print_enter("Array_definition")

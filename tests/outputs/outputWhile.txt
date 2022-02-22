@@ -11,7 +11,7 @@ Function, loop
 Var_type, void
 Sentence
 Expression, var=0
-Assignment, var = 0
+Expression, var
 Expression, 0
 Sentence
 Iteration_sentence, while

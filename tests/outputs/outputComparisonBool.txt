@@ -9,43 +9,43 @@ Function, setup
 Var_type, void
 Sentence
 Expression, b=5!=3
-Assignment, b = 5!=3
+Expression, b
 Expression, !=
 Expression, 5
 Expression, 3
 Sentence
 Expression, b=3<4
-Assignment, b = 3<4
+Expression, b
 Expression, <
 Expression, 3
 Expression, 4
 Sentence
 Expression, b=4<=3
-Assignment, b = 4<=3
+Expression, b
 Expression, <=
 Expression, 4
 Expression, 3
 Sentence
 Expression, b=4==9
-Assignment, b = 4==9
+Expression, b
 Expression, ==
 Expression, 4
 Expression, 9
 Sentence
 Expression, b=4>2
-Assignment, b = 4>2
+Expression, b
 Expression, >
 Expression, 4
 Expression, 2
 Sentence
 Expression, b=4>=5
-Assignment, b = 4>=5
+Expression, b
 Expression, >=
 Expression, 4
 Expression, 5
 Sentence
 Expression, b=4>5||5<6
-Assignment, b = 4>5||5<6
+Expression, b
 Expression, ||
 Expression, >
 Expression, 4
@@ -55,7 +55,7 @@ Expression, 5
 Expression, 6
 Sentence
 Expression, b=4!=0&&5>7
-Assignment, b = 4!=0&&5>7
+Expression, b
 Expression, &&
 Expression, !=
 Expression, 4
@@ -65,7 +65,7 @@ Expression, 5
 Expression, 7
 Sentence
 Expression, b=!false
-Assignment, b = !false
+Expression, b
 Expression, !
 Expression, false
 Program_code
