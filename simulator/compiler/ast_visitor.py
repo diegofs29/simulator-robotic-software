@@ -1,36 +1,35 @@
 class ASTVisitor:
 
     def visit_program(self, program, param):
-        self.visit_children(program.declarations)
+        self.visit_children(program.includes)
         self.visit_children(program.code)
         return None
 
-    def visit_declaration(self, program, param):
+    def visit_include(self, program, param):
         return None
 
     def visit_program_code(self, program_code, param):
-        if program_code.definition != None:
-            program_code.definition.accept(self, param)
+        if program_code.declaration != None:
+            program_code.declaration.accept(self, param)
         if program_code.function != None:
             program_code.function.accept(self, param)
         return None
 
-    def visit_definition(self, definition, param):
-        if definition.type != None:
-            definition.type.accept(self, param)
-        if definition.value != None:
-            definition.value.accept(self, param)
+    def visit_declaration(self, declaration, param):
+        if declaration.type != None:
+            declaration.type.accept(self, param)
+        if declaration.value != None:
+            declaration.value.accept(self, param)
         return None
 
-    def visit_array_definition(self, array_definition, param):
-        if array_definition.type != None:
-            array_definition.type.accept(self, param)
+    def visit_array_declaration(self, array_declaration, param):
+        if array_declaration.type != None:
+            array_declaration.type.accept(self, param)
         return None
 
-    def visit_assignment(self, assignment, param):
-        if assignment.expression != None:
-            assignment.expression.accept(self, param)
-        return None
+    def visit_define_declaration(self, define_declaration, param): #implementar
+        pass
+
 
     def visit_boolean_type(self, boolean_type, param):
         return None
@@ -121,18 +120,18 @@ class ASTVisitor:
             switch_sentence.expression.accept(self, param)
         self.visit_children(switch_sentence.cases)
         return None
+    
+    def visit_assignment(self, assignment, param):
+        if assignment.var != None:
+            assignment.var.accept(self, param)
+        if assignment.expr != None:
+            assignment.expr.accept(self, param)
+        return None
 
     def visit_case(self, case, param):
         if case.expression != None:
             case.expression.accept(self, param)
         self.visit_children(case.sentences, param)
-        return None
-
-    def visit_static_var_definition(self, static_var_definition, param):
-        if static_var_definition.type != None:
-            static_var_definition.type.accept(self, param)
-        if static_var_definition.value != None:
-            static_var_definition.value.accept(self, param)
         return None
 
     def visit_array_access(self, array_access, param):

@@ -1,7 +1,7 @@
 Program
 Program_code
-Definition
-Assignment_definition, timer
+Declaration
+Simple_declaration, timer
 Var_type, int
 Expression, 100
 Program_code
@@ -9,7 +9,7 @@ Function, setup
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 2
 Expression, <
@@ -29,7 +29,7 @@ Function, loop
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 2
 Expression, <
@@ -57,7 +57,7 @@ Expression, thisPin
 Expression, LOW
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 7
 Expression, >=

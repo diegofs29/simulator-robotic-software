@@ -1,13 +1,13 @@
 Program
 Program_code
-Definition
-Simple_definition, x
+Declaration
+Simple_declaration, x
 Var_type, int
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, x=100
+Assignment
 Expression, x
 Expression, 100
 Program_code

@@ -1,17 +1,17 @@
 Program
 Program_code
-Definition
-Assignment_definition, s
+Declaration
+Simple_declaration, s
 Var_type, string
 Expression, "hola"
 Program_code
-Definition
-Array_definition
+Declaration
+Array_declaration, myInts
 Var_type, int
 Array_index, 6
 Program_code
-Definition
-Array_definition
+Declaration
+Array_declaration, myPins
 Var_type, int
 Array_index
 Array_elements
@@ -21,8 +21,8 @@ Expression, 8
 Expression, 3
 Expression, 6
 Program_code
-Definition
-Array_definition
+Declaration
+Array_declaration, mySensVals
 Var_type, int
 Array_index, 5
 Array_elements
@@ -32,8 +32,8 @@ Expression, -8
 Expression, 3
 Expression, 2
 Program_code
-Definition
-Array_definition
+Declaration
+Array_declaration, message
 Var_type, char
 Array_index, 6
 Expression, "hello"

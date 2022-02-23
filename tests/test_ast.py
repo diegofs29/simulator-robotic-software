@@ -4,7 +4,7 @@ import unittest
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import BinaryNode, BitwiseExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharNode, CharTypeNode, ContinueNode, DefinitionNode, DoubleTypeNode, FloatNode, FloatTypeNode, FunctionCallNode, HexNode, IDNode, IntNode, IntTypeNode, LongTypeNode, OctalNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WordTypeNode
+from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 
 
@@ -28,11 +28,11 @@ class TestInclude(TestBaseAST):
     file = "tests/file-tests/include.txt"
 
     def test_file_name(self):
-        declarations = self.ast.declarations
-        self.assertEqual(declarations[0].file_name, "LibreriaDelIDE.h")
-        self.assertEqual(declarations[1].file_name, "ArchivoRandom.h")
-        self.assertEqual(declarations[2].file_name, "EstoEsUnaLibreria.h")
-        self.assertEqual(declarations[3].file_name, "iostream.h")
+        includes = self.ast.includes
+        self.assertEqual(includes[0].file_name, "LibreriaDelIDE.h")
+        self.assertEqual(includes[1].file_name, "ArchivoRandom.h")
+        self.assertEqual(includes[2].file_name, "EstoEsUnaLibreria.h")
+        self.assertEqual(includes[3].file_name, "iostream.h")
 
 
 class TestGlobalDefinition(TestBaseAST):
@@ -45,83 +45,81 @@ class TestGlobalDefinition(TestBaseAST):
 
     def test_type(self):
         self.assertTrue(
-            isinstance(self.code[0].definition.type, IntTypeNode)
+            isinstance(self.code[0].declaration.type, IntTypeNode)
             , "No es del tipo int"
         )
         self.assertTrue(
-            isinstance(self.code[1].definition.type, StringTypeNode)
+            isinstance(self.code[1].declaration.type, StringTypeNode)
             , "No es del tipo string"
         )
         self.assertTrue(
-            isinstance(self.code[2].definition.type, DoubleTypeNode)
+            isinstance(self.code[2].declaration.type, DoubleTypeNode)
             , "No es del tipo double"
         )
         self.assertTrue(
-            isinstance(self.code[3].definition.type, BooleanTypeNode)
+            isinstance(self.code[3].declaration.type, BooleanTypeNode)
             , "No es del tipo Boolean"
         )
         self.assertTrue(
-            isinstance(self.code[4].definition.type, CharTypeNode)
+            isinstance(self.code[4].declaration.type, CharTypeNode)
             , "No es del tipo char"
         )
         self.assertTrue(
-            isinstance(self.code[5].definition.type, CharTypeNode)
+            isinstance(self.code[5].declaration.type, CharTypeNode)
             , "No es del tipo char"
         )
         #define no prueba el tipo porque no tiene
         self.assertTrue(
-            isinstance(self.code[7].definition.type, DoubleTypeNode)
+            isinstance(self.code[7].declaration.type, DoubleTypeNode)
             , "No es del tipo double"
         )
         #define no prueba el tipo porque no tiene
         self.assertTrue(
-            isinstance(self.code[9].definition.type, StringTypeNode)
+            isinstance(self.code[9].declaration.type, StringTypeNode)
             , "No es del tipo string"
         )
 
     def test_var_name(self):
-        self.assertEqual(self.code[0].definition.var_name, "num")
-        self.assertEqual(self.code[1].definition.var_name, "saludo")
-        self.assertEqual(self.code[2].definition.var_name, "notas")
-        self.assertEqual(self.code[3].definition.var_name, "interruptores")
-        self.assertEqual(self.code[4].definition.var_name, "iniciales")
-        self.assertEqual(self.code[5].definition.var_name, "mensaje")
-        self.assertEqual(self.code[6].definition.var_name, "ledPin")
-        self.assertEqual(self.code[7].definition.var_name, "gravity")
-        self.assertEqual(self.code[8].definition.var_name, "arrayPins")
-        self.assertEqual(self.code[9].definition.var_name, "nombres")
+        self.assertEqual(self.code[0].declaration.var_name, "num")
+        self.assertEqual(self.code[1].declaration.var_name, "saludo")
+        self.assertEqual(self.code[2].declaration.var_name, "notas")
+        self.assertEqual(self.code[3].declaration.var_name, "interruptores")
+        self.assertEqual(self.code[4].declaration.var_name, "iniciales")
+        self.assertEqual(self.code[5].declaration.var_name, "mensaje")
+        self.assertEqual(self.code[6].declaration.macro_name, "ledPin")
+        self.assertEqual(self.code[7].declaration.var_name, "gravity")
+        self.assertEqual(self.code[8].declaration.macro_name, "arrayPins")
+        self.assertEqual(self.code[9].declaration.var_name, "nombres")
 
 
     def test_is_constant(self):
-        self.assertEqual(self.code[0].definition.is_constant, False)
-        self.assertEqual(self.code[1].definition.is_constant, False)
-        self.assertEqual(self.code[2].definition.is_constant, False)
-        self.assertEqual(self.code[3].definition.is_constant, False)
-        self.assertEqual(self.code[4].definition.is_constant, False)
-        self.assertEqual(self.code[5].definition.is_constant, False)
-        self.assertEqual(self.code[6].definition.is_constant, True)
-        self.assertEqual(self.code[7].definition.is_constant, True)
-        self.assertEqual(self.code[8].definition.is_constant, True)
-        self.assertEqual(self.code[9].definition.is_constant, True)
+        self.assertEqual(self.code[0].declaration.is_const, False)
+        self.assertEqual(self.code[1].declaration.is_const, False)
+        self.assertEqual(self.code[2].declaration.is_const, False)
+        self.assertEqual(self.code[3].declaration.is_const, False)
+        self.assertEqual(self.code[4].declaration.is_const, False)
+        self.assertEqual(self.code[5].declaration.is_const, False)
+        self.assertEqual(self.code[7].declaration.is_const, True)
+        self.assertEqual(self.code[9].declaration.is_const, True)
 
     def test_value(self):
-        self.assertEqual(self.code[0].definition.expr, None)
-        self.assertEqual(self.code[1].definition.expr.value, "hola")
-        self.assertEqual(self.code[6].definition.expr.value, 4)
-        self.assertEqual(self.code[7].definition.expr.value, 9.8)
+        self.assertEqual(self.code[0].declaration.expr, None)
+        self.assertEqual(self.code[1].declaration.expr.value, "hola")
+        self.assertEqual(self.code[6].declaration.expr.value, 4)
+        self.assertEqual(self.code[7].declaration.expr.value, 9.8)
 
     def test_array_index(self):
-        self.assertEqual(self.code[2].definition.size[0], 25)
-        self.assertEqual(self.code[3].definition.size, [])
-        self.assertEqual(self.code[4].definition.size[0], 5)
-        self.assertEqual(self.code[5].definition.size[0], 10)
-        self.assertEqual(self.code[8].definition.size, [])
-        self.assertEqual(self.code[9].definition.size[0], 3)
+        self.assertEqual(self.code[2].declaration.size[0], 25)
+        self.assertEqual(self.code[3].declaration.size[0], 5)
+        self.assertEqual(self.code[4].declaration.size[0], 5)
+        self.assertEqual(self.code[5].declaration.size[0], 10)
+        self.assertEqual(self.code[8].declaration.size[0], 4)
+        self.assertEqual(self.code[9].declaration.size[0], 3)
 
     def test_array_expression(self):
-        self.assertEqual(self.code[2].definition.elements, [])
+        self.assertEqual(self.code[2].declaration.elements, [])
         self.assertEqual(
-            self.code[5].definition.elements, 
+            self.code[5].declaration.elements, 
             ['T', 'r', 'a', 'e', ' ', 's', 'o', 'p', 'a']
         )
 
@@ -130,7 +128,7 @@ class TestGlobalDefinition(TestBaseAST):
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[3].definition.elements)
+                    self.code[3].declaration.elements)
                 )
             , [True, False, False, True, False]
         )
@@ -138,7 +136,7 @@ class TestGlobalDefinition(TestBaseAST):
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[4].definition.elements)
+                    self.code[4].declaration.elements)
                 )
             , ['E', 'A', 'M', 'A', 'P']
         )
@@ -146,7 +144,7 @@ class TestGlobalDefinition(TestBaseAST):
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[8].definition.elements)
+                    self.code[8].declaration.elements)
                 )
             , [1, 3, 7, 10]
         )
@@ -229,7 +227,7 @@ class TestFunctionDefinition(TestBaseAST):
         self.assertEqual(len(self.code[3].function.sentences), 3)
         self.assertTrue(
             isinstance(
-                self.code[3].function.sentences[0], DefinitionNode
+                self.code[3].function.sentences[0], DeclarationNode
             ), "No es una definicion"
         )
         self.assertTrue(
@@ -253,40 +251,40 @@ class TestTerminals(TestBaseAST):
         self.code = self.ast.code
 
     def test_class(self):
-        self.assertTrue(isinstance(self.code[0].definition.expr, BooleanNode))
-        self.assertTrue(isinstance(self.code[1].definition.expr, BooleanNode))
-        self.assertTrue(isinstance(self.code[2].definition.expr, IntNode))
-        self.assertTrue(isinstance(self.code[3].definition.expr, FloatNode))
-        self.assertTrue(isinstance(self.code[4].definition.expr, CharNode))
-        self.assertTrue(isinstance(self.code[5].definition.expr, StringNode))
-        self.assertTrue(isinstance(self.code[6].definition.expr, IDNode))
-        self.assertTrue(isinstance(self.code[7].definition.expr, HexNode))
-        self.assertTrue(isinstance(self.code[8].definition.expr, BinaryNode))
-        self.assertTrue(isinstance(self.code[9].definition.expr, OctalNode))
+        self.assertTrue(isinstance(self.code[0].declaration.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[1].declaration.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[2].declaration.expr, IntNode))
+        self.assertTrue(isinstance(self.code[3].declaration.expr, FloatNode))
+        self.assertTrue(isinstance(self.code[4].declaration.expr, CharNode))
+        self.assertTrue(isinstance(self.code[5].declaration.expr, StringNode))
+        self.assertTrue(isinstance(self.code[6].declaration.expr, IDNode))
+        self.assertTrue(isinstance(self.code[7].declaration.expr, HexNode))
+        self.assertTrue(isinstance(self.code[8].declaration.expr, BinaryNode))
+        self.assertTrue(isinstance(self.code[9].declaration.expr, OctalNode))
 
     def test_values(self):
-        self.assertEqual(self.code[0].definition.expr.value, True)
-        self.assertEqual(self.code[1].definition.expr.value, False)
-        self.assertEqual(self.code[2].definition.expr.value, 10)
-        self.assertEqual(self.code[3].definition.expr.value, 29.29)
-        self.assertEqual(self.code[4].definition.expr.value, 'D')
-        self.assertEqual(self.code[5].definition.expr.value, "Diego")
-        self.assertEqual(self.code[6].definition.expr.value, "c")
-        self.assertEqual(hex(self.code[7].definition.expr.value), "0xaf66")
-        self.assertEqual(bin(self.code[8].definition.expr.value), "0b1101")
-        self.assertEqual(oct(self.code[9].definition.expr.value), "0o767")
+        self.assertEqual(self.code[0].declaration.expr.value, True)
+        self.assertEqual(self.code[1].declaration.expr.value, False)
+        self.assertEqual(self.code[2].declaration.expr.value, 10)
+        self.assertEqual(self.code[3].declaration.expr.value, 29.29)
+        self.assertEqual(self.code[4].declaration.expr.value, 'D')
+        self.assertEqual(self.code[5].declaration.expr.value, "Diego")
+        self.assertEqual(self.code[6].declaration.expr.value, "c")
+        self.assertEqual(hex(self.code[7].declaration.expr.value), "0xaf66")
+        self.assertEqual(bin(self.code[8].declaration.expr.value), "0b1101")
+        self.assertEqual(oct(self.code[9].declaration.expr.value), "0o767")
 
     def test_type_class(self):
-        self.assertTrue(isinstance(self.code[0].definition.type, BooleanTypeNode))
-        self.assertTrue(isinstance(self.code[1].definition.type, BooleanTypeNode))
-        self.assertTrue(isinstance(self.code[2].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[3].definition.type, FloatTypeNode))
-        self.assertTrue(isinstance(self.code[4].definition.type, CharTypeNode))
-        self.assertTrue(isinstance(self.code[5].definition.type, StringTypeNode))
-        self.assertTrue(isinstance(self.code[6].definition.type, StringTypeNode))
-        self.assertTrue(isinstance(self.code[7].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[8].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[9].definition.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[0].declaration.type, BooleanTypeNode))
+        self.assertTrue(isinstance(self.code[1].declaration.type, BooleanTypeNode))
+        self.assertTrue(isinstance(self.code[2].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[3].declaration.type, FloatTypeNode))
+        self.assertTrue(isinstance(self.code[4].declaration.type, CharTypeNode))
+        self.assertTrue(isinstance(self.code[5].declaration.type, StringTypeNode))
+        self.assertTrue(isinstance(self.code[6].declaration.type, StringTypeNode))
+        self.assertTrue(isinstance(self.code[7].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[8].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[9].declaration.type, IntTypeNode))
 
 
 class TestFunctionCall(TestBaseAST):
@@ -754,12 +752,12 @@ class TestLocalDefinition(TestBaseAST):
         )
 
     def test_is_constant(self):
-        self.assertEqual(self.code[0].function.sentences[1].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[3].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[4].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[6].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[10].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[15].is_constant, True)
+        self.assertEqual(self.code[0].function.sentences[1].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[3].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[4].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[6].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[10].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[15].is_const, True)
 
 
 class TestIncDec(TestBaseAST):

@@ -3,58 +3,107 @@ class ASTNode():
     def accept(self, visitor, param):
         pass
 
+
 class ProgramNode(ASTNode):
 
-    def __init__(self, declarations=None, code=None):
-        self.declarations = declarations
+    def __init__(self, includes=None, code=None):
+        self.includes = includes
         self.code = code
 
     def accept(self, visitor, param):
         return visitor.visit_program(self, param)
 
 
-class DeclarationNode(ASTNode):
+class IncludeNode(ASTNode):
 
     def __init__(self, file_name):
         self.file_name = file_name
 
     def accept(self, visitor, param):
-        return visitor.visit_declaration(self, param)
+        return visitor.visit_include(self, param)
 
 
 class ProgramCodeNode(ASTNode):
 
-    def __init__(self, definition=None, function=None):
-        self.definition = definition
+    def __init__(self, declaration=None, function=None):
+        self.declaration = declaration
         self.function = function
 
     def accept(self, visitor, param):
         return visitor.visit_program_code(self, param)
 
 
-class DefinitionNode(ASTNode):
+class DeclarationNode(ASTNode):
 
-    def __init__(self, type, var_name=None, expr=None, is_constant=False):
+    def __init__(self, type, var_name=None, expr=None, is_const=False, is_static=False):
         self.type = type
         self.var_name = var_name
-        self.is_constant = is_constant
         self.expr = expr
+        self.is_const = is_const
+        self.is_static = is_static
 
     def accept(self, visitor, param):
         return visitor.visit_definition(self, param)
 
 
-class ArrayDefinitionNode(ASTNode):
+class ArrayDeclarationNode(ASTNode):
 
-    def __init__(self, type, var_name, size=None, elements=None, is_constant=False):
+    def __init__(self, type, var_name, size=None, elements=None, is_const=False, is_static=False):
         self.type = type
         self.var_name = var_name
         self.size = size
+        if self.size == []:
+            self.size = self.__recursive_len(elements, [])
         self.elements = elements
-        self.is_constant = is_constant
+        self.is_const = is_const
+        self.is_static = is_static
 
     def accept(self, visitor, param):
         return visitor.visit_array_definition(self, param)
+
+    def __recursive_len(self, elems, final_sizes):
+        sizes = final_sizes
+        sub_sizes = []
+        for e in elems:
+            if isinstance(e, list):
+                sub_sizes.append(self.__recursive_len(e, sizes))
+            else:
+                sub_sizes.append(1)
+        sizes.append(len(sub_sizes))
+        max_sub = max(sub_sizes)
+        if max_sub > 1:
+            sizes.append(max_sub)
+        sizes.reverse()
+        return sizes
+
+
+class DefineDeclarationNode(ASTNode):
+
+    def __init__(self, macro_name, expr=None, elements=[]):
+        self.macro_name = macro_name
+        self.expr = expr
+        self.elements = elements
+        self.size = []
+        if elements != []:
+            self.size = self.__recursive_len(elements, [])
+
+    def accept(self, visitor, param):
+        return visitor.visit_define(self, param)
+
+    def __recursive_len(self, elems, final_sizes):
+        sizes = final_sizes
+        sub_sizes = []
+        for e in elems:
+            if isinstance(e, list):
+                sub_sizes.append(self.__recursive_len(e, sizes))
+            else:
+                sub_sizes.append(1)
+        sizes.append(len(sub_sizes))
+        max_sub = max(sub_sizes)
+        if max_sub > 1:
+            sizes.append(max_sub)
+        sizes.reverse()
+        return sizes
 
 
 class AssignmentNode(ASTNode):
@@ -288,18 +337,16 @@ class CaseNode(ASTNode):
         return visitor.visit_case(self, param)
 
 
-class StaticVarDefinitionNode(ASTNode):
+class Expression(ASTNode):
 
-    def __init__(self, type, var_name, expr=None):
+    def set_type(self, type):
         self.type = type
-        self.var_name = var_name
-        self.expr = expr
 
-    def accept(self, visitor, param):
-        return visitor.visit_static_var_definition(self, param)
+    def set_modifiable(self, modifiable):
+        self.modifiable = modifiable
 
 
-class ArrayAccessNode(ASTNode):
+class ArrayAccessNode(Expression):
 
     def __init__(self, var, index):
         self.var = var
@@ -309,7 +356,7 @@ class ArrayAccessNode(ASTNode):
         return visitor.visit_array_access(self, param)
 
 
-class ArithmeticExpressionNode(ASTNode):
+class ArithmeticExpressionNode(Expression):
 
     def __init__(self, left, op, right):
         self.left = left
@@ -320,7 +367,7 @@ class ArithmeticExpressionNode(ASTNode):
         return visitor.visit_arithmetic_expression(self, param)
 
 
-class ComparisonExpressionNode(ASTNode):
+class ComparisonExpressionNode(Expression):
 
     def __init__(self, left, op, right):
         self.left = left
@@ -331,7 +378,7 @@ class ComparisonExpressionNode(ASTNode):
         return visitor.visit_comparision_expression(self, param)
         
         
-class BooleanExpressionNode(ASTNode):
+class BooleanExpressionNode(Expression):
 
     def __init__(self, left, op, right):
         self.left = left
@@ -342,7 +389,7 @@ class BooleanExpressionNode(ASTNode):
         return visitor.visit_boolean_expression(self, param)
 
 
-class BitwiseExpressionNode(ASTNode):
+class BitwiseExpressionNode(Expression):
 
     def __init__(self, left, op, right):
         self.left = left
@@ -353,7 +400,7 @@ class BitwiseExpressionNode(ASTNode):
         return visitor.visit_bitwise_expression(self, param)
 
 
-class CompoundAssignmentNode(ASTNode):
+class CompoundAssignmentNode(Expression):
 
     def __init__(self, left, op, right):
         self.left = left
@@ -364,7 +411,7 @@ class CompoundAssignmentNode(ASTNode):
         return visitor.visit_compound_assigment(self, param)
 
     
-class IncDecExpressionNode(ASTNode):
+class IncDecExpressionNode(Expression):
 
     def __init__(self, var, op):
         self.var = var
@@ -374,7 +421,7 @@ class IncDecExpressionNode(ASTNode):
         return visitor.visit_inc_dec_expression(self, param)
 
 
-class NotExpressionNode(ASTNode):
+class NotExpressionNode(Expression):
 
     def __init__(self, expression):
         self.expression = expression
@@ -383,7 +430,7 @@ class NotExpressionNode(ASTNode):
         return visitor.visit_not_expression(self, param)
 
 
-class BitNotExpressionNode(ASTNode):
+class BitNotExpressionNode(Expression):
 
     def __init__(self, expression):
         self.expression = expression
@@ -392,7 +439,7 @@ class BitNotExpressionNode(ASTNode):
         return visitor.visit_bit_not_expression(self, param)
 
 
-class IntNode(ASTNode):
+class IntNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -401,7 +448,7 @@ class IntNode(ASTNode):
         return visitor.visit_int(self, param)
 
 
-class FloatNode(ASTNode):
+class FloatNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -410,7 +457,7 @@ class FloatNode(ASTNode):
         return visitor.visit_float(self, param)
 
 
-class HexNode(ASTNode):
+class HexNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -419,7 +466,7 @@ class HexNode(ASTNode):
         return visitor.visit_hex(self, param)
 
 
-class OctalNode(ASTNode):
+class OctalNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -428,7 +475,7 @@ class OctalNode(ASTNode):
         return visitor.visit_octal(self, param)
 
 
-class BinaryNode(ASTNode):
+class BinaryNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -437,7 +484,7 @@ class BinaryNode(ASTNode):
         return visitor.visit_binary(self, param)
 
 
-class CharNode(ASTNode):
+class CharNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -446,7 +493,7 @@ class CharNode(ASTNode):
         return visitor.visit_char(self, param)
 
 
-class StringNode(ASTNode):
+class StringNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -455,7 +502,7 @@ class StringNode(ASTNode):
         return visitor.visit_string(self, param)
 
 
-class BooleanNode(ASTNode):
+class BooleanNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -464,7 +511,7 @@ class BooleanNode(ASTNode):
         return visitor.visit_boolean(self, param)
 
 
-class IDNode(ASTNode):
+class IDNode(Expression):
 
     def __init__(self, value):
         self.value = value
@@ -473,7 +520,7 @@ class IDNode(ASTNode):
         return visitor.visit_id(self, param)
 
 
-class FunctionCallNode(ASTNode):
+class FunctionCallNode(Expression):
 
     def __init__(self, name, parameters=None, clase=None, elems=None):
         self.name = name

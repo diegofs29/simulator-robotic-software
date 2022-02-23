@@ -1,44 +1,44 @@
 Program
 Program_code
-Definition
-Assignment_definition, i
+Declaration
+Simple_declaration, i
 Var_type, int
 Expression, 1
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, i=1&27
+Assignment
 Expression, i
 Expression, &
 Expression, 1
 Expression, 27
 Sentence
-Expression, i=1<<3
+Assignment
 Expression, i
 Expression, <<
 Expression, 1
 Expression, 3
 Sentence
-Expression, i=27>>4
+Assignment
 Expression, i
 Expression, >>
 Expression, 27
 Expression, 4
 Sentence
-Expression, i=2^3
+Assignment
 Expression, i
 Expression, ^
 Expression, 2
 Expression, 3
 Sentence
-Expression, i=1|2
+Assignment
 Expression, i
 Expression, |
 Expression, 1
 Expression, 2
 Sentence
-Expression, i=~1
+Assignment
 Expression, i
 Expression, ~
 Expression, 1
