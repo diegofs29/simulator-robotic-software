@@ -1023,3 +1023,34 @@ class TestArrays(TestBaseAST):
             else:
                 array_to_test.append(e.value)
         return array_to_test
+
+
+class TestArrayAccess(TestBaseAST):
+
+    file = "tests/file-tests/array-access.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_var(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].var.value, "acceso_a_array")
+        self.assertEqual(
+            self.code[0].function.sentences[1].var.var.value, "acc_arr_2")
+        self.assertEqual(
+            self.code[0].function.sentences[2].var.var.var.value, "random")
+
+    def test_index(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].index.value, 1)
+        self.assertEqual(
+            self.code[0].function.sentences[1].index.value, 5)
+        self.assertEqual(
+            self.code[0].function.sentences[1].var.index.value, 2)
+        self.assertEqual(
+            self.code[0].function.sentences[2].index.value, 3)
+        self.assertEqual(
+            self.code[0].function.sentences[2].var.index.value, 0)
+        self.assertEqual(
+            self.code[0].function.sentences[2].var.var.index.value, 1)

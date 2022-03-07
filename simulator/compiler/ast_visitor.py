@@ -25,11 +25,13 @@ class ASTVisitor:
     def visit_array_declaration(self, array_declaration, param):
         if array_declaration.type != None:
             array_declaration.type.accept(self, param)
+        self.visit_array_elements(array_declaration.elements)
         return None
 
-    def visit_define_declaration(self, define_declaration, param): #implementar
-        pass
-
+    def visit_define_declaration(self, define_declaration, param):  # implementar
+        if define_declaration.expr != None:
+            define_declaration.expr.accept(self, param)
+        return None
 
     def visit_boolean_type(self, boolean_type, param):
         return None
@@ -120,7 +122,7 @@ class ASTVisitor:
             switch_sentence.expression.accept(self, param)
         self.visit_children(switch_sentence.cases)
         return None
-    
+
     def visit_assignment(self, assignment, param):
         if assignment.var != None:
             assignment.var.accept(self, param)
@@ -135,6 +137,10 @@ class ASTVisitor:
         return None
 
     def visit_array_access(self, array_access, param):
+        if array_access.var != None:
+            array_access.var.accept(self, param)
+        if array_access.index != None:
+            array_access.index.accept(self.param)
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression, param):
@@ -184,31 +190,31 @@ class ASTVisitor:
         if bit_not_expression.expression != None:
             bit_not_expression.expression.accept(self, param)
 
-    def visit_int(self, int, param):
+    def visit_int(self, int_node, param):
         return None
 
-    def visit_float(self, float, param):
+    def visit_float(self, float_node, param):
         return None
 
-    def visit_hex(self, hex, param):
+    def visit_hex(self, hex_node, param):
         return None
 
-    def visit_octal(self, oct, param):
+    def visit_octal(self, oct_node, param):
         return None
 
-    def visit_binary(self, binary, param):
+    def visit_binary(self, binary_node, param):
         return None
 
-    def visit_char(self, char, param):
+    def visit_char(self, char_node, param):
         return None
 
-    def visit_string(self, string, param):
+    def visit_string(self, string_node, param):
         return None
 
-    def visit_boolean(self, boolean, param):
+    def visit_boolean(self, boolean_node, param):
         return None
 
-    def visit_id(self, id, param):
+    def visit_id(self, id_node, param):
         return None
 
     def visit_function_call(self, function_call, param):
@@ -228,4 +234,13 @@ class ASTVisitor:
     def visit_children(self, children, param):
         if children != None:
             for child in children:
-                children.accept(self, param)
+                child.accept(self, param)
+
+    def visit_array_elements(self, elements, param):
+        if elements != None:
+            for elem in elements:
+                if isinstance(elem, list):
+                    self.visit_array_elements(elem)
+                else:
+                    elem.accept(self, param)
+        return None

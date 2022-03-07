@@ -1,12 +1,16 @@
 from functools import reduce
-from re import A
-from tokenize import Intnumber
 
 
 class ASTNode():
 
     def accept(self, visitor, param):
         pass
+
+    def set_position(self, position):
+        self.position = position
+
+    def set_line(self, line):
+        self.line = line
 
 
 class ProgramNode(ASTNode):
@@ -101,10 +105,12 @@ class ArrayDeclarationNode(ASTNode):
         for i in range(0, self.size[array_level]):
             if array_level < self.dimensions-1:
                 sub_elems = current_elems[i]
-                if not isinstance(current_elems[i], list): #implies its 2d but declared as 1d
+                # implies its 2d but declared as 1d
+                if not isinstance(current_elems[i], list):
                     total = reduce(lambda n, e: n*e, self.size[array_level+1:])
                     sub_elems = current_elems[i*total:(i+1)*total]
-                elems.append(self.__organize_array_elements(sub_elems, array_level+1))
+                elems.append(self.__organize_array_elements(
+                    sub_elems, array_level+1))
             else:
                 if i < len(current_elems):
                     elems.append(current_elems[i])
@@ -590,6 +596,9 @@ class IDNode(Expression):
 
     def accept(self, visitor, param):
         return visitor.visit_id(self, param)
+
+    def set_definition(self, definition):
+        self.definition = definition
 
 
 class FunctionCallNode(Expression):

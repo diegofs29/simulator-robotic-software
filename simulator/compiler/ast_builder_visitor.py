@@ -31,7 +31,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.code != None:
             for sent in ctx.code:
                 code.append(self.visit(sent))
-        return ProgramNode(decs, code)
+        node = ProgramNode(decs, code)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#include.
@@ -42,7 +44,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.STRING_CONST() != None:
             file = ctx.STRING_CONST().getText()
             file = file.replace('"', '')
-        return IncludeNode(file)
+        node = IncludeNode(file)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#program_code.
@@ -52,7 +56,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
             declaration = self.visit(ctx.var_dec)
         if ctx.func_def != None:
             function = self.visit(ctx.func_def)
-        return ProgramCodeNode(declaration, function)
+        node = ProgramCodeNode(declaration, function)
+        self.__add_line_info(node, ctx)
+        return node
     
 
     # Visit a parse tree produced by ArduinoParser#declaration.
@@ -71,6 +77,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 node.is_const = True
             if ctx.qual.text == "static":
                 node.is_static = True
+        self.__add_line_info(node, ctx)
         return node
 
 
@@ -83,7 +90,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
             var_name = ctx.ID().getText()
         if ctx.val != None:
             expr = self.visit(ctx.val)
-        return DeclarationNode(v_type, var_name, expr)
+        node = DeclarationNode(v_type, var_name, expr)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#array_declaration.
@@ -107,7 +116,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 elements.append(CharNode(character))
         if ctx.expr == None and ctx.elems == None:
             elements = None
-        return ArrayDeclarationNode(v_type, var_name, dimensions, sizes, elements, is_constant)
+        node = ArrayDeclarationNode(v_type, var_name, dimensions, sizes, elements, is_constant)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#define_declaration.
@@ -120,7 +131,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
             value = self.visit(ctx.val)
         if ctx.elems != None:
             elems = self.visit(ctx.elems)
-        return DefineDeclarationNode(name, value, elems)
+        node = DefineDeclarationNode(name, value, elems)
+        self.__add_line_info(node, ctx)
+        return node
 
     
     # Visit a parse tree produced by ArduinoParser#array_index.
@@ -182,6 +195,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = VoidTypeNode()
         if ctx.getText() == "word":
             node = WordTypeNode()
+        self.__add_line_info(node, ctx)
         return node
 
 
@@ -199,7 +213,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.sentences != None:
             for sent in ctx.sentences:
                 sentences.append(self.visit(sent))
-        return FunctionNode(v_type, f_name, args, sentences)
+        node = FunctionNode(v_type, f_name, args, sentences)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#function_args.
@@ -230,6 +246,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             if ctx.condition != None:
                 cond = self.visit(ctx.condition)
             node = ForNode(a_def, cond, expr, sents)
+        self.__add_line_info(node, ctx)
         return node
 
 
@@ -252,6 +269,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 for sent in ctx.sentences:
                     cases.append(self.visit(sent))
             node = SwitchSentenceNode(cond, cases)
+        self.__add_line_info(node, ctx)
         return node
 
 
@@ -287,6 +305,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 node = BreakNode()
             if ctx.s_type.text == "continue":
                 node = ContinueNode()
+        self.__add_line_info(node, ctx)
         return node
 
 
@@ -297,7 +316,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
             assign = self.visit(ctx.assign)
         if ctx.value != None:
             value = self.visit(ctx.value)
-        return AssignmentNode(assign, value)
+        node = AssignmentNode(assign, value)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#case_sentence.
@@ -311,7 +332,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.sentences != None:
             for sent in ctx.sentences:
                 sents.append(self.visit(sent))
-        return CaseNode(s_type, expr, sents)
+        node = CaseNode(s_type, expr, sents)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#expression.
@@ -383,12 +406,15 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = StringNode(string_const)
         if ctx.ID() != None:
             node = IDNode(ctx.ID().getText())
+        self.__add_line_info(node, ctx)
         return node
 
 
     # Visit a parse tree produced by ArduinoParser#incdec_expression.
     def visitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        return IncDecExpressionNode(ctx.ID().getText(), ctx.operator.text)
+        node = IncDecExpressionNode(ctx.ID().getText(), ctx.operator.text)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#function_call.
@@ -407,7 +433,9 @@ class ASTBuilderVisitor(ArduinoVisitor):
             name = ctx.f_name.text
         if ctx.args != None:
             params = self.visit(ctx.args)
-        return FunctionCallNode(name, params)
+        node = FunctionCallNode(name, params)
+        self.__add_line_info(node, ctx)
+        return node
 
 
     # Visit a parse tree produced by ArduinoParser#parameter.
@@ -417,6 +445,11 @@ class ASTBuilderVisitor(ArduinoVisitor):
             for param in ctx.parameters:
                 params.append(self.visit(param))
         return params
+
+
+    def __add_line_info(self, node, ctx):
+        node.set_line(ctx.start.line)
+        node.set_position(ctx.start.column)
 
 
 del ArduinoParser
