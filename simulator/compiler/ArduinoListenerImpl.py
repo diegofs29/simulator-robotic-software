@@ -104,10 +104,12 @@ class ArduinoListenerImpl(ArduinoListener):
     
     # Enter a parse tree produced by ArduinoParser#array_index.
     def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
-        finishes = ctx.INT_CONST() == None
+        finishes = ctx.sizes == []
         self.print_enter("Array_index", finishes)
         if not finishes:
-            print(ctx.INT_CONST().getText())
+            for i_const in ctx.sizes:
+                print(i_const.text, end=" ")
+            print()
 
     # Exit a parse tree produced by ArduinoParser#array_index.
     def exitArray_index(self, ctx:ArduinoParser.Array_indexContext):

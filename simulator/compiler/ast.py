@@ -1,3 +1,8 @@
+from functools import reduce
+from re import A
+from tokenize import Intnumber
+
+
 class ASTNode():
 
     def accept(self, visitor, param):
@@ -48,33 +53,64 @@ class DeclarationNode(ASTNode):
 
 class ArrayDeclarationNode(ASTNode):
 
-    def __init__(self, type, var_name, size=None, elements=None, is_const=False, is_static=False):
+    def __init__(self, type, var_name, dimensions, size=[], elements=[], is_const=False, is_static=False):
         self.type = type
         self.var_name = var_name
+        self.dimensions = dimensions
         self.size = size
-        if self.size == []:
-            self.size = self.__recursive_len(elements, [])
         self.elements = elements
         self.is_const = is_const
         self.is_static = is_static
+        self.__fix_array()
 
     def accept(self, visitor, param):
         return visitor.visit_array_definition(self, param)
 
-    def __recursive_len(self, elems, final_sizes):
-        sizes = final_sizes
-        sub_sizes = []
-        for e in elems:
-            if isinstance(e, list):
-                sub_sizes.append(self.__recursive_len(e, sizes))
+    def __fix_array(self):
+        if len(self.size) < self.dimensions:
+            self.__fix_size()
+        if self.elements != None:
+            self.elements = self.__organize_array_elements(self.elements)
+
+    def __fix_size(self):
+        n = len(self.elements)
+        if len(self.size) > 0:
+            n = self.size[0]
+        for i in range(1, len(self.size)):
+            n *= self.size[i]
+        if self.elements != []:
+            n_elements = self.__total_elements(self.elements)
+        size_of_rows = n
+        if n < n_elements:
+            size_of_rows = int(n_elements / n)
+            if n_elements % n != 0:
+                size_of_rows += 1
+        self.size.insert(0, size_of_rows)
+
+    def __total_elements(self, elements):
+        count = 0
+        for elem in elements:
+            if isinstance(elem, list):
+                count += self.__total_elements(elem)
             else:
-                sub_sizes.append(1)
-        sizes.append(len(sub_sizes))
-        max_sub = max(sub_sizes)
-        if max_sub > 1:
-            sizes.append(max_sub)
-        sizes.reverse()
-        return sizes
+                count += 1
+        return count
+
+    def __organize_array_elements(self, current_elems, array_level=0):
+        elems = []
+        for i in range(0, self.size[array_level]):
+            if array_level < self.dimensions-1:
+                sub_elems = current_elems[i]
+                if not isinstance(current_elems[i], list): #implies its 2d but declared as 1d
+                    total = reduce(lambda n, e: n*e, self.size[array_level+1:])
+                    sub_elems = current_elems[i*total:(i+1)*total]
+                elems.append(self.__organize_array_elements(sub_elems, array_level+1))
+            else:
+                if i < len(current_elems):
+                    elems.append(current_elems[i])
+                else:
+                    elems.append(self.type.default_array_value())
+        return elems
 
 
 class DefineDeclarationNode(ASTNode):
@@ -83,27 +119,9 @@ class DefineDeclarationNode(ASTNode):
         self.macro_name = macro_name
         self.expr = expr
         self.elements = elements
-        self.size = []
-        if elements != []:
-            self.size = self.__recursive_len(elements, [])
 
     def accept(self, visitor, param):
         return visitor.visit_define(self, param)
-
-    def __recursive_len(self, elems, final_sizes):
-        sizes = final_sizes
-        sub_sizes = []
-        for e in elems:
-            if isinstance(e, list):
-                sub_sizes.append(self.__recursive_len(e, sizes))
-            else:
-                sub_sizes.append(1)
-        sizes.append(len(sub_sizes))
-        max_sub = max(sub_sizes)
-        if max_sub > 1:
-            sizes.append(max_sub)
-        sizes.reverse()
-        return sizes
 
 
 class AssignmentNode(ASTNode):
@@ -117,16 +135,25 @@ class AssignmentNode(ASTNode):
         return visitor.visit_assignment(self, param)
 
 
-class BooleanTypeNode(ASTNode):
+class TypeNode(ASTNode):
+
+    def default_array_value(self):
+        pass
+
+
+class BooleanTypeNode(TypeNode):
 
     def __init__(self):
         pass
 
     def accept(self, visitor, param):
         return visitor.visit_boolean_type(self, param)
-    
-    
-class ByteTypeNode(ASTNode):
+
+    def default_array_value(self):
+        return BooleanNode(False)
+
+
+class ByteTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -134,8 +161,11 @@ class ByteTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_byte_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class CharTypeNode(ASTNode):
+
+class CharTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -143,8 +173,11 @@ class CharTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_char_type(self, param)
 
+    def default_array_value(self):
+        return CharNode('\0')
 
-class DoubleTypeNode(ASTNode):
+
+class DoubleTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -152,8 +185,11 @@ class DoubleTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_double_type(self, param)
 
+    def default_array_value(self):
+        return FloatNode(0.0)
 
-class FloatTypeNode(ASTNode):
+
+class FloatTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -161,8 +197,11 @@ class FloatTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_float_type(self, param)
 
+    def default_array_value(self):
+        return FloatNode(0.0)
 
-class IntTypeNode(ASTNode):
+
+class IntTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -170,8 +209,11 @@ class IntTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_int_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class LongTypeNode(ASTNode):
+
+class LongTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -179,17 +221,23 @@ class LongTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_long_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class ShortTypeNode(ASTNode):
+
+class ShortTypeNode(TypeNode):
 
     def __init__(self):
         pass
 
     def accept(self, visitor, param):
-        return visitor.visit_short_type(self, param)
+        return IntNode(0)
+
+    def default_array_value(self):
+        return IntNode(0)
 
 
-class Size_tTypeNode(ASTNode):
+class Size_tTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -197,8 +245,11 @@ class Size_tTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_size_t_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class StringTypeNode(ASTNode):
+
+class StringTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -206,8 +257,11 @@ class StringTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_string_type(self, param)
 
+    def default_array_value(self):
+        return StringNode("")
 
-class UIntTypeNode(ASTNode):
+
+class UIntTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -215,17 +269,23 @@ class UIntTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_u_int_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class UCharTypeNode(ASTNode):
+
+class UCharTypeNode(TypeNode):
 
     def __init__(self):
         pass
 
     def accept(self, visitor, param):
         return visitor.visit_u_char_type(self, param)
-    
-    
-class ULongTypeNode(ASTNode):
+
+    def default_array_value(self):
+        return CharNode('\0')
+
+
+class ULongTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -233,8 +293,11 @@ class ULongTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_u_long_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class VoidTypeNode(ASTNode):
+
+class VoidTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -242,8 +305,11 @@ class VoidTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_void_type(self, param)
 
+    def default_array_value(self):
+        return None
 
-class WordTypeNode(ASTNode):
+
+class WordTypeNode(TypeNode):
 
     def __init__(self):
         pass
@@ -251,14 +317,20 @@ class WordTypeNode(ASTNode):
     def accept(self, visitor, param):
         return visitor.visit_word_type(self, param)
 
+    def default_array_value(self):
+        return IntNode(0)
 
-class IDTypeNode(ASTNode):
+
+class IDTypeNode(TypeNode):
 
     def __init__(self, type_name):
         self.type_name = type_name
 
     def accept(self, visitor, param):
         return visitor.visit_id_type(self, param)
+
+    def default_array_value(self):
+        return None
 
 
 class FunctionNode(ASTNode):
@@ -376,8 +448,8 @@ class ComparisonExpressionNode(Expression):
 
     def accept(self, visitor, param):
         return visitor.visit_comparision_expression(self, param)
-        
-        
+
+
 class BooleanExpressionNode(Expression):
 
     def __init__(self, left, op, right):
@@ -410,7 +482,7 @@ class CompoundAssignmentNode(Expression):
     def accept(self, visitor, param):
         return visitor.visit_compound_assigment(self, param)
 
-    
+
 class IncDecExpressionNode(Expression):
 
     def __init__(self, var, op):

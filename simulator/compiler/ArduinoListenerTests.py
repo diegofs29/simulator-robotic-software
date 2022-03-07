@@ -97,8 +97,8 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#array_index.
     def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
-        if ctx.INT_CONST() != None:
-            self.add_token("Array_index", ctx.INT_CONST())
+        if ctx.sizes != []:
+            self.add_token("Array_index", " ".join(map(str, map(lambda size: size.text, ctx.sizes))))
         else:
             self.add_token("Array_index")
 

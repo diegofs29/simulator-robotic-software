@@ -41,7 +41,7 @@ define_declaration
        ;
 
 array_index
-       : '[' INT_CONST? ']' a_index=array_index?
+       : dimensions+='[' sizes+=INT_CONST? ']' (dimensions+='[' sizes+=INT_CONST ']')*
        ;
 
 array_elements

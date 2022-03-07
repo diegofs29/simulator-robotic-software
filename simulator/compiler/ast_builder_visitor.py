@@ -1,5 +1,6 @@
 from ast import operator
 from cmath import exp
+from functools import reduce
 from operator import le
 from typing import List
 from antlr4 import *
@@ -87,8 +88,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#array_declaration.
     def visitArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
-        elements = []
-        v_type = var_name = sizes = None
+        elements = sizes = []
+        v_type = var_name = dimensions = None
         is_constant = False
         if ctx.v_type != None:
             v_type = self.visit(ctx.v_type)
@@ -97,15 +98,16 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.elems != None:
             elements = self.visit(ctx.elems)
         if ctx.a_index != None:
-            sizes = self.visit(ctx.a_index)
-        else:
-            sizes = self.__recursive_len(elements)
+            arr_tuple = self.visit(ctx.a_index)
+            sizes = arr_tuple[0]
+            dimensions = arr_tuple[1]
         if ctx.expr != None:
             expr = ctx.expr.getText().replace('"','')
             for character in expr:
-                elements.append(character)
-        
-        return ArrayDeclarationNode(v_type, var_name, sizes, elements, is_constant)
+                elements.append(CharNode(character))
+        if ctx.expr == None and ctx.elems == None:
+            elements = None
+        return ArrayDeclarationNode(v_type, var_name, dimensions, sizes, elements, is_constant)
 
 
     # Visit a parse tree produced by ArduinoParser#define_declaration.
@@ -124,11 +126,13 @@ class ASTBuilderVisitor(ArduinoVisitor):
     # Visit a parse tree produced by ArduinoParser#array_index.
     def visitArray_index(self, ctx:ArduinoParser.Array_indexContext):
         sizes = []
-        if ctx.INT_CONST() != None:
-            sizes.append(int(ctx.INT_CONST().getText()))
-        if ctx.a_index != None:
-            sizes.extend(self.visit(ctx.a_index))
-        return sizes
+        dimension = 1
+        if ctx.sizes != None:
+            for size in ctx.sizes:
+                sizes.append(int(size.text))
+        if ctx.dimensions != None:
+            dimension = len(ctx.dimensions)
+        return sizes, dimension
 
 
     # Visit a parse tree produced by ArduinoParser#array_elements.

@@ -8,8 +8,7 @@ Program_code
 Declaration
 Array_declaration, myFloats
 Var_type, float
-Array_index, 6
-Array_index, 3
+Array_index, 6 3
 Program_code
 Declaration
 Array_declaration, myPins
