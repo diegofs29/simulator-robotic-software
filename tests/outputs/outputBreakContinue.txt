@@ -26,8 +26,8 @@ Expression, 0
 Expression, <
 Expression, x
 Expression, 255
-Expression, x++
-Incdec_expression, ++
+Expression, ++
+Expression, x
 Code_block
 Sentence
 Expression, analogWrite(PWMpin,x)

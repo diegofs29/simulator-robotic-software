@@ -15,8 +15,8 @@ Expression, 2
 Expression, <
 Expression, thisPin
 Expression, 8
-Expression, thisPin++
-Incdec_expression, ++
+Expression, ++
+Expression, thisPin
 Code_block
 Sentence
 Expression, pinMode(thisPin,OUTPUT)
@@ -35,8 +35,8 @@ Expression, 2
 Expression, <
 Expression, thisPin
 Expression, 8
-Expression, thisPin++
-Incdec_expression, ++
+Expression, ++
+Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)
@@ -63,8 +63,8 @@ Expression, 7
 Expression, >=
 Expression, thisPin
 Expression, 2
-Expression, thisPin--
-Incdec_expression, --
+Expression, --
+Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)

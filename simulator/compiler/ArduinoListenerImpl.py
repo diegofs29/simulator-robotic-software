@@ -228,16 +228,6 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
-    # Enter a parse tree produced by ArduinoParser#incdec_expression.
-    def enterIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        self.print_enter("Incdec_expression", False)
-        print(ctx.operator.text)
-
-    # Exit a parse tree produced by ArduinoParser#incdec_expression.
-    def exitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        self.print_exit()
-
-
     # Enter a parse tree produced by ArduinoParser#function_call.
     def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
         if ctx.f_name != None:

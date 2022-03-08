@@ -771,10 +771,10 @@ class TestIncDec(TestBaseAST):
         self.code = self.ast.code
 
     def test_var(self):
-        self.assertEqual(self.code[0].function.sentences[0].var, "i")
-        self.assertEqual(self.code[0].function.sentences[1].var, "a")
-        self.assertEqual(self.code[0].function.sentences[2].var, "z")
-        self.assertEqual(self.code[0].function.sentences[3].var, "w")
+        self.assertEqual(self.code[0].function.sentences[0].var.value, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var.value, "a")
+        self.assertEqual(self.code[0].function.sentences[2].var.value, "z")
+        self.assertEqual(self.code[0].function.sentences[3].var.value, "w")
 
     def test_op(self):
         self.assertEqual(self.code[0].function.sentences[0].op, "++")

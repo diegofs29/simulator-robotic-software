@@ -34,23 +34,23 @@ Var_type, int
 Sentence
 Assignment
 Expression, y
-Expression, ++x
-Incdec_expression, ++
+Expression, ++
+Expression, x
 Sentence
 Assignment
 Expression, y
-Expression, x++
-Incdec_expression, ++
+Expression, ++
+Expression, x
 Sentence
 Assignment
 Expression, y
-Expression, --x
-Incdec_expression, --
+Expression, --
+Expression, x
 Sentence
 Assignment
 Expression, y
-Expression, x--
-Incdec_expression, --
+Expression, --
+Expression, x
 Sentence
 Declaration
 Simple_declaration, myByte

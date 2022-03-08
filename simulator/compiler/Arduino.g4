@@ -80,12 +80,11 @@ function_args
 iteration_sentence 
        : it_type='while' '(' expr=expression ')' code=code_block
        | it_type='do' code=code_block 'while' '(' expr=expression ')' ';'
-       | it_type='for' '(' assign_def=simple_declaration ';' condition=expression ';' expr=expression ')' code=code_block
+       | it_type='for' '(' assign_def=simple_declaration? ';' condition=expression? ';' expr=expression? ')' code=code_block
        ;
 
 conditional_sentence 
-       : cond_type='if' '(' expr=expression ')' if_code=code_block
-       | cond_type='if' '(' expr=expression ')' if_code=code_block 'else' else_code=code_block
+       : cond_type='if' '(' expr=expression ')' if_code=code_block ('else' else_code=code_block)?
        | cond_type='switch' '(' expr=expression ')' '{' sentences+=case_sentence* '}'
        ;
 
@@ -117,7 +116,8 @@ case_sentence
 expression 
        : '(' r_expr=expression ')'
        | f_call=function_call
-       | i_d_expr=incdec_expression
+       | expr=expression operator=('++'|'--')
+       | operator=('++'|'--') expr=expression
        | array_name=expression '[' index=expression ']'
        | operator=('!'|'~') expr=expression
        | left=expression operator=('*'|'/'|'%') right=expression
@@ -141,13 +141,6 @@ expression
        | CHAR_CONST
        | STRING_CONST
        | ID
-       ;
-
-incdec_expression 
-       : operator='++' ID
-       | ID operator='++'
-       | operator='--' ID
-       | ID operator='--'
        ;
 
 function_call 

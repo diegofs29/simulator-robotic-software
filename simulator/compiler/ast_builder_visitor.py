@@ -349,8 +349,6 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.r_expr)
         if ctx.f_call != None:
             node = self.visit(ctx.f_call)
-        if ctx.i_d_expr != None:
-            node = self.visit(ctx.i_d_expr)
         if ctx.array_name != None:
             expr = self.visit(ctx.array_name)
             index = None
@@ -368,6 +366,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 expr = self.visit(ctx.expr)
             if op != None:
                 operator = op.text
+                if operator == '++' or operator == '--':
+                    node = IncDecExpressionNode(expr, operator)
                 if operator in arit_ops:
                     node = ArithmeticExpressionNode(left, operator, right)
                 if operator in bitwise_ops:
@@ -406,13 +406,6 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = StringNode(string_const)
         if ctx.ID() != None:
             node = IDNode(ctx.ID().getText())
-        self.__add_line_info(node, ctx)
-        return node
-
-
-    # Visit a parse tree produced by ArduinoParser#incdec_expression.
-    def visitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        node = IncDecExpressionNode(ctx.ID().getText(), ctx.operator.text)
         self.__add_line_info(node, ctx)
         return node
 
