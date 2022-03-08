@@ -13,6 +13,27 @@ class ASTNode():
         self.line = line
 
 
+class TypeNode(ASTNode):
+
+    def default_array_value(self):
+        pass
+
+
+class Sentence(ASTNode):
+
+    def set_function(self, function):
+        self.function = function
+
+
+class Expression(Sentence):
+
+    def set_type(self, type):
+        self.type = type
+
+    def set_modifiable(self, modifiable):
+        self.modifiable = modifiable
+
+
 class ProgramNode(ASTNode):
 
     def __init__(self, includes=None, code=None):
@@ -42,7 +63,7 @@ class ProgramCodeNode(ASTNode):
         return visitor.visit_program_code(self, param)
 
 
-class DeclarationNode(ASTNode):
+class DeclarationNode(Sentence):
 
     def __init__(self, type, var_name=None, expr=None, is_const=False, is_static=False):
         self.type = type
@@ -55,7 +76,7 @@ class DeclarationNode(ASTNode):
         return visitor.visit_definition(self, param)
 
 
-class ArrayDeclarationNode(ASTNode):
+class ArrayDeclarationNode(Sentence):
 
     def __init__(self, type, var_name, dimensions, size=[], elements=[], is_const=False, is_static=False):
         self.type = type
@@ -119,7 +140,7 @@ class ArrayDeclarationNode(ASTNode):
         return elems
 
 
-class DefineDeclarationNode(ASTNode):
+class DefineDeclarationNode(Sentence):
 
     def __init__(self, macro_name, expr=None, elements=[]):
         self.macro_name = macro_name
@@ -130,7 +151,7 @@ class DefineDeclarationNode(ASTNode):
         return visitor.visit_define(self, param)
 
 
-class AssignmentNode(ASTNode):
+class AssignmentNode(Sentence):
 
     def __init__(self, var, expr, index=None):
         self.var = var
@@ -139,12 +160,6 @@ class AssignmentNode(ASTNode):
 
     def accept(self, visitor, param):
         return visitor.visit_assignment(self, param)
-
-
-class TypeNode(ASTNode):
-
-    def default_array_value(self):
-        pass
 
 
 class BooleanTypeNode(TypeNode):
@@ -351,7 +366,7 @@ class FunctionNode(ASTNode):
         return visitor.visit_function(self, param)
 
 
-class WhileNode(ASTNode):
+class WhileNode(Sentence):
 
     def __init__(self, expression, sentences=None):
         self.expression = expression
@@ -361,7 +376,7 @@ class WhileNode(ASTNode):
         return visitor.visit_while(self, param)
 
 
-class DoWhileNode(ASTNode):
+class DoWhileNode(Sentence):
 
     def __init__(self, expression, sentences=None):
         self.expression = expression
@@ -371,7 +386,7 @@ class DoWhileNode(ASTNode):
         return visitor.visit_do_while(self, param)
 
 
-class ForNode(ASTNode):
+class ForNode(Sentence):
 
     def __init__(self, assignment, condition, expression, sentences=None):
         self.assignment = assignment
@@ -383,7 +398,7 @@ class ForNode(ASTNode):
         return visitor.visit_for(self, param)
 
 
-class ConditionalSentenceNode(ASTNode):
+class ConditionalSentenceNode(Sentence):
 
     def __init__(self, condition, if_expr=None, else_expr=None):
         self.condition = condition
@@ -394,7 +409,7 @@ class ConditionalSentenceNode(ASTNode):
         return visitor.visit_conditional_sentence(self, param)
 
 
-class SwitchSentenceNode(ASTNode):
+class SwitchSentenceNode(Sentence):
 
     def __init__(self, expression, cases=None):
         self.expression = expression
@@ -413,15 +428,6 @@ class CaseNode(ASTNode):
 
     def accept(self, visitor, param):
         return visitor.visit_case(self, param)
-
-
-class Expression(ASTNode):
-
-    def set_type(self, type):
-        self.type = type
-
-    def set_modifiable(self, modifiable):
-        self.modifiable = modifiable
 
 
 class ArrayAccessNode(Expression):
@@ -613,7 +619,7 @@ class FunctionCallNode(Expression):
         return visitor.visit_function_call(self, param)
 
 
-class ReturnNode(ASTNode):
+class ReturnNode(Sentence):
 
     def __init__(self, expression=None):
         self.expression = expression
@@ -622,7 +628,7 @@ class ReturnNode(ASTNode):
         return visitor.visit_return(self, param)
 
 
-class BreakNode(ASTNode):
+class BreakNode(Sentence):
 
     def __init__(self):
         pass
@@ -631,7 +637,7 @@ class BreakNode(ASTNode):
         return visitor.visit_break(self, param)
 
 
-class ContinueNode(ASTNode):
+class ContinueNode(Sentence):
 
     def __init__(self):
         pass

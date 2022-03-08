@@ -18,8 +18,8 @@ class ASTVisitor:
     def visit_declaration(self, declaration, param):
         if declaration.type != None:
             declaration.type.accept(self, param)
-        if declaration.value != None:
-            declaration.value.accept(self, param)
+        if declaration.expr != None:
+            declaration.expr.accept(self, param)
         return None
 
     def visit_array_declaration(self, array_declaration, param):
@@ -86,6 +86,9 @@ class ASTVisitor:
             function.type.accept(self, param)
         self.visit_children(function.args, param)
         self.visit_children(function.sentences, param)
+        if function.sentences != None:
+            for sent in function.sentences:
+                sent.set_function(function)
         return None
 
     def visit_while(self, while_p, param):
