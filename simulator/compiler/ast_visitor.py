@@ -86,9 +86,6 @@ class ASTVisitor:
             function.type.accept(self, param)
         self.visit_children(function.args, param)
         self.visit_children(function.sentences, param)
-        if function.sentences != None:
-            for sent in function.sentences:
-                sent.set_function(function)
         return None
 
     def visit_while(self, while_p, param):
@@ -182,6 +179,8 @@ class ASTVisitor:
         return None
 
     def visit_inc_dec_expression(self, inc_dec_expression, param):
+        if inc_dec_expression.var != None:
+            inc_dec_expression.var.accept(self, param)
         return None
 
     def visit_not_expression(self, not_expression, param):
@@ -192,6 +191,7 @@ class ASTVisitor:
     def visit_bit_not_expression(self, bit_not_expression, param):
         if bit_not_expression.expression != None:
             bit_not_expression.expression.accept(self, param)
+        return None
 
     def visit_int(self, int_node, param):
         return None

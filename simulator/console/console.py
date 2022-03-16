@@ -31,4 +31,4 @@ class Error:
         self.message = message
 
     def to_string(self):
-        return "Error (" + self.error_type + "): [l=" + self.line + ", col=" + self.column + "] -> " + self.message
+        return "Error ({}): [l={}, col={}] -> {}".format(self.error_type, self.line, self.column, self.message)

@@ -419,7 +419,7 @@ class SwitchSentenceNode(Sentence):
         return visitor.visit_switch_sentence(self, param)
 
 
-class CaseNode(ASTNode):
+class CaseNode(Sentence):
 
     def __init__(self, type="case", expression=None, sentences=None):
         self.type = type
