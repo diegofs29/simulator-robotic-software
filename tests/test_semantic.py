@@ -4,6 +4,7 @@ from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
 from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
+from simulator.compiler.error_listener import CompilerErrorListener
 from simulator.compiler.semantical_errors import SemanticAnalyzer
 
 
@@ -12,8 +13,12 @@ class TestBaseAST(unittest.TestCase):
     def setUp(self):
         input = FileStream(fileName=self.file, encoding="utf-8")
         lexer = ArduinoLexer(input)
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(CompilerErrorListener())
         stream = CommonTokenStream(lexer)
         parser = ArduinoParser(stream)
+        parser.removeErrorListeners()
+        parser.addErrorListener(CompilerErrorListener())
         visitor = ASTBuilderVisitor()
         semantic = SemanticAnalyzer()
         tree = parser.program()
