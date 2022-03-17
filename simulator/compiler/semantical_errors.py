@@ -1,13 +1,13 @@
 from cmath import exp
 from .ast import ArrayAccessNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharTypeNode, ContinueNode, DoubleTypeNode, FloatTypeNode, IntTypeNode, LongTypeNode, ReturnNode, ShortTypeNode, StringTypeNode, VoidTypeNode
 from .ast_visitor import ASTVisitor
-from console.console import Error
+from ..console.console import Error
 
 
-class SyntacticAnalyzer(ASTVisitor):
+class SemanticAnalyzer(ASTVisitor):
 
     def __init__(self):
-        self.errors = {}
+        self.errors = []
         self.globals = {}
         self.locals = {}
         self.global_macros = {}
@@ -89,11 +89,11 @@ class SyntacticAnalyzer(ASTVisitor):
     def visit_declaration(self, declaration, param):
         if declaration.type != None:
             declaration.type.accept(self, param)
-        if declaration.value != None:
-            declaration.value.accept(self, param)
-        if self.check_type(declaration.type, declaration.expr):
-            self.add_error("Tipos", declaration,
-                           "El tipo de la variable y de la expresión no coincide")
+        if declaration.expr != None:
+            declaration.expr.accept(self, param)
+            if self.check_type(declaration.type, declaration.expr.type):
+                self.add_error("Tipos", declaration,
+                            "El tipo de la variable y de la expresión no coincide")
         # Modifiability not checked, it should be always modifiable
         if self.is_global(declaration):
             self.globals[declaration.var_name] = declaration
@@ -104,13 +104,12 @@ class SyntacticAnalyzer(ASTVisitor):
     def visit_array_declaration(self, array_declaration, param):
         if array_declaration.type != None:
             array_declaration.type.accept(self, param)
-        self.visit_array_elements(array_declaration.elements)
-        if self.check_type(array_declaration.type, array_declaration.elements):
-            self.add_error("Tipos", array_declaration,
-                           "El tipo del array y de al menos uno de sus elementos no coincide")
-        if self.check_modifiable(array_declaration):
-            self.add_error("No modificable", array_declaration,
-                           "El array no es modificable. Puede que sea una constante")
+        self.visit_array_elements(array_declaration.elements, param)
+        if array_declaration.elements != None and array_declaration.elements != []:
+            if self.check_type(array_declaration.type, array_declaration.elements):
+                self.add_error("Tipos", array_declaration,
+                            "El tipo del array y de al menos uno de sus elementos no coincide")
+        # Modifiablity not checked, it should always be modifiable
         if self.is_global(array_declaration):
             self.globals[array_declaration.var_name] = array_declaration
         else:
@@ -121,7 +120,7 @@ class SyntacticAnalyzer(ASTVisitor):
         if define_declaration.expr != None:
             define_declaration.expr.accept(self, param)
         if self.is_global(define_declaration):
-            self.global_macros[define_declaration.var_name] = define_declaration
+            self.global_macros[define_declaration.macro_name] = define_declaration
         else:
             self.local_macros[define_declaration.function][define_declaration.var_name] = define_declaration
         return None
@@ -360,14 +359,16 @@ class SyntacticAnalyzer(ASTVisitor):
         if not_expression.expression != None:
             not_expression.expression.accept(self, param)
         if self.check_type(not_expression.expression.type, BooleanTypeNode) or self.check_in_types(not_expression.expression.type, self.numerical_types):
-            self.add_error("Tipos", not_expression, "La expresion debe ser tipo int o boolean")
+            self.add_error("Tipos", not_expression,
+                           "La expresion debe ser tipo int o boolean")
         return None
 
     def visit_bit_not_expression(self, bit_not_expression, param):
         if bit_not_expression.expression != None:
             bit_not_expression.expression.accept(self, param)
         if self.check_in_types(bit_not_expression.expression.type, self.numerical_types):
-            self.add_error("Tipos", bit_not_expression, "La expresion debe ser tipo int")
+            self.add_error("Tipos", bit_not_expression,
+                           "La expresion debe ser tipo int")
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression, param):
@@ -376,9 +377,11 @@ class SyntacticAnalyzer(ASTVisitor):
         if arithmetic_expression.right != None:
             arithmetic_expression.right.visit(self, param)
         if self.check_in_types(arithmetic_expression.left.type, self.numerical_types):
-            self.add_error("Tipos", arithmetic_expression, "Las operaciones artiméticas deben ser entre números")
+            self.add_error("Tipos", arithmetic_expression,
+                           "Las operaciones artiméticas deben ser entre números")
         if self.check_in_types(arithmetic_expression.right.type, self.numerical_types):
-            self.add_error("Tipos", arithmetic_expression, "Las operaciones artiméticas deben ser entre números")
+            self.add_error("Tipos", arithmetic_expression,
+                           "Las operaciones artiméticas deben ser entre números")
         return None
 
     def visit_comparision_expression(self, comparison_expression, param):
@@ -387,7 +390,8 @@ class SyntacticAnalyzer(ASTVisitor):
         if comparison_expression.right != None:
             comparison_expression.right.accept(self, param)
         if self.check_type(comparison_expression.left.type, comparison_expression.right.type):
-            self.add_error("Tipos", comparison_expression, "Los tipos de ambas expresiones deben coincidir")
+            self.add_error("Tipos", comparison_expression,
+                           "Los tipos de ambas expresiones deben coincidir")
         return None
 
     def visit_boolean_expresssion(self, boolean_expression, param):
@@ -396,11 +400,14 @@ class SyntacticAnalyzer(ASTVisitor):
         if boolean_expression.right != None:
             boolean_expression.right.accept(self, param)
         if self.check_type(boolean_expression.left.type, boolean_expression.right.type):
-            self.add_error("Tipos", boolean_expression, "Los tipos de ambas expresiones deben coincidir")
+            self.add_error("Tipos", boolean_expression,
+                           "Los tipos de ambas expresiones deben coincidir")
         if self.check_type(boolean_expression.left.type, IntTypeNode) or self.check_type(boolean_expression.left.type, BooleanTypeNode):
-            self.add_error("Tipos", boolean_expression, "La expresión izquierda debe ser int o boolean")
+            self.add_error("Tipos", boolean_expression,
+                           "La expresión izquierda debe ser int o boolean")
         if self.check_type(boolean_expression.right.type, IntTypeNode) or self.check_type(boolean_expression.right.type, BooleanTypeNode):
-            self.add_error("Tipos", boolean_expression, "La expresión derecha debe ser int o boolean")
+            self.add_error("Tipos", boolean_expression,
+                           "La expresión derecha debe ser int o boolean")
         return None
 
     def visit_bitwise_expression(self, bitwise_expression, param):
@@ -409,9 +416,11 @@ class SyntacticAnalyzer(ASTVisitor):
         if bitwise_expression.right != None:
             bitwise_expression.right.accept(self, param)
         if self.check_type(bitwise_expression.left.type, bitwise_expression.right.type):
-            self.add_error("Tipos", bitwise_expression, "Los tipos de ambas expresiones deben coincidir")
+            self.add_error("Tipos", bitwise_expression,
+                           "Los tipos de ambas expresiones deben coincidir")
         if self.check_in_types(bitwise_expression.left.type, self.numerical_types) or self.check_in_types(bitwise_expression.right.type, self.numerical_types):
-            self.add_error("Tipos", bitwise_expression, "El tipo de las expresiones debe ser numérico")
+            self.add_error("Tipos", bitwise_expression,
+                           "El tipo de las expresiones debe ser numérico")
         return None
 
     def visit_compound_assigment(self, compound_asigment, param):
@@ -420,9 +429,11 @@ class SyntacticAnalyzer(ASTVisitor):
         if compound_asigment.right != None:
             compound_asigment.right.accept(self, param)
         if self.check_type(compound_asigment.left.type, compound_asigment.right.type):
-            self.add_error("Tipos", compound_asigment, "Los tipos de ambas expresiones deben coincidir")
+            self.add_error("Tipos", compound_asigment,
+                           "Los tipos de ambas expresiones deben coincidir")
         if self.variable_defined(compound_asigment.left.value):
-            self.add_error("Declaración", compound_asigment, "La variable no está declarada")
+            self.add_error("Declaración", compound_asigment,
+                           "La variable no está declarada")
         return None
 
     def check_type(self, var_type, value_type):
@@ -430,8 +441,12 @@ class SyntacticAnalyzer(ASTVisitor):
             list_types = self.__list_types(value_type)
             if len(list_types) > 1:
                 return False
-            return not type(var_type) is type(value_type[0])
-        return not type(var_type) is type(value_type)
+            if type(var_type) in self.numerical_types:
+                return not list_types[0] in self.numerical_types
+            return not type(var_type) is list_types[0]
+        if type(var_type) in self.numerical_types:
+            return not value_type in self.numerical_types
+        return not type(var_type) is value_type
 
     def check_in_types(self, var, types):
         return not var in types
@@ -439,7 +454,7 @@ class SyntacticAnalyzer(ASTVisitor):
     def __list_types(self, elems):
         types = []
         for elem in elems:
-            elem_type = type(elem)
+            elem_type = elem.type
             if not elem_type in types:
                 types.append(elem_type)
         return types
@@ -449,10 +464,13 @@ class SyntacticAnalyzer(ASTVisitor):
 
     def add_error(self, e_type, element, message):
         self.errors.append(
-            Error(e_type, element.line, element.column, message))
+            Error(e_type, element.line, element.position, message))
 
     def is_global(self, elem):
-        return elem.function != None
+        try:
+            return elem.function != None
+        except AttributeError:
+            return True
 
     def variable_defined(self, elem):
         return not elem in globals or elem in locals

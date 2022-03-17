@@ -1,8 +1,8 @@
 class ASTVisitor:
 
     def visit_program(self, program, param):
-        self.visit_children(program.includes)
-        self.visit_children(program.code)
+        self.visit_children(program.includes, param)
+        self.visit_children(program.code, param)
         return None
 
     def visit_include(self, program, param):
@@ -25,7 +25,7 @@ class ASTVisitor:
     def visit_array_declaration(self, array_declaration, param):
         if array_declaration.type != None:
             array_declaration.type.accept(self, param)
-        self.visit_array_elements(array_declaration.elements)
+        self.visit_array_elements(array_declaration.elements, param)
         return None
 
     def visit_define_declaration(self, define_declaration, param):  # implementar
@@ -84,20 +84,20 @@ class ASTVisitor:
     def visit_function(self, function, param):
         if function.type != None:
             function.type.accept(self, param)
-        self.visit_children(function.args, param)
-        self.visit_children(function.sentences, param)
+        self.visit_children(function.args, param, param)
+        self.visit_children(function.sentences, param, param)
         return None
 
     def visit_while(self, while_p, param):
         if while_p.expression != None:
             while_p.expression.accept(self, param)
-        self.visit_children(while_p.sentences, param)
+        self.visit_children(while_p.sentences, param, param)
         return None
 
     def visit_do_while(self, do_while, param):
         if do_while.expression != None:
             do_while.expression.accept(self, param)
-        self.visit_children(do_while.sentences, param)
+        self.visit_children(do_while.sentences, param, param)
         return None
 
     def visit_for(self, for_p, param):
@@ -107,20 +107,20 @@ class ASTVisitor:
             for_p.conditon.accept(self, param)
         if for_p.expression != None:
             for_p.expression.accept(self, param)
-        self.visit_children(for_p.sentences)
+        self.visit_children(for_p.sentences, param)
         return None
 
     def visit_conditional_sentence(self, conditional_sentence, param):
         if conditional_sentence.condition != None:
             conditional_sentence.condition.accept(self, param)
-        self.visit_children(conditional_sentence.if_expr)
-        self.visit_children(conditional_sentence.else_expr)
+        self.visit_children(conditional_sentence.if_expr, param)
+        self.visit_children(conditional_sentence.else_expr, param)
         return None
 
     def visit_switch_sentence(self, switch_sentence, param):
         if switch_sentence.expression != None:
             switch_sentence.expression.accept(self, param)
-        self.visit_children(switch_sentence.cases)
+        self.visit_children(switch_sentence.cases, param)
         return None
 
     def visit_assignment(self, assignment, param):
@@ -133,7 +133,7 @@ class ASTVisitor:
     def visit_case(self, case, param):
         if case.expression != None:
             case.expression.accept(self, param)
-        self.visit_children(case.sentences, param)
+        self.visit_children(case.sentences, param, param)
         return None
 
     def visit_array_access(self, array_access, param):
@@ -221,7 +221,7 @@ class ASTVisitor:
         return None
 
     def visit_function_call(self, function_call, param):
-        self.visit_children(function_call.parameters)
+        self.visit_children(function_call.parameters, param)
         return None
 
     def visit_return(self, return_p, param):

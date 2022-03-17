@@ -73,7 +73,7 @@ class DeclarationNode(Sentence):
         self.is_static = is_static
 
     def accept(self, visitor, param):
-        return visitor.visit_definition(self, param)
+        return visitor.visit_declaration(self, param)
 
 
 class ArrayDeclarationNode(Sentence):
@@ -89,7 +89,7 @@ class ArrayDeclarationNode(Sentence):
         self.__fix_array()
 
     def accept(self, visitor, param):
-        return visitor.visit_array_definition(self, param)
+        return visitor.visit_array_declaration(self, param)
 
     def __fix_array(self):
         if len(self.size) < self.dimensions:
@@ -148,7 +148,7 @@ class DefineDeclarationNode(Sentence):
         self.elements = elements
 
     def accept(self, visitor, param):
-        return visitor.visit_define(self, param)
+        return visitor.visit_define_declaration(self, param)
 
 
 class AssignmentNode(Sentence):
