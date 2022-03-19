@@ -87,11 +87,11 @@ class ArduinoListenerTests(ArduinoListener):
 
 
     # Enter a parse tree produced by ArduinoParser#define_declaration.
-    def enterDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
-        self.add_token("Define_declaration", str(ctx.ID()))
+    def enterDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
+        self.add_token("Define_macro", str(ctx.ID()))
 
     # Exit a parse tree produced by ArduinoParser#define_declaration.
-    def exitDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    def exitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
 

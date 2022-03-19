@@ -5,6 +5,7 @@ from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
 from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
+from simulator.compiler.error_listener import CompilerErrorListener
 
 
 class TestBaseAST(unittest.TestCase):
@@ -85,9 +86,9 @@ class TestGlobalDefinition(TestBaseAST):
         self.assertEqual(self.code[3].declaration.var_name, "interruptores")
         self.assertEqual(self.code[4].declaration.var_name, "iniciales")
         self.assertEqual(self.code[5].declaration.var_name, "mensaje")
-        self.assertEqual(self.code[6].declaration.macro_name, "ledPin")
+        self.assertEqual(self.code[6].macro.macro_name, "ledPin")
         self.assertEqual(self.code[7].declaration.var_name, "gravity")
-        self.assertEqual(self.code[8].declaration.macro_name, "arrayPins")
+        self.assertEqual(self.code[8].macro.macro_name, "arrayPins")
         self.assertEqual(self.code[9].declaration.var_name, "nombres")
 
     def test_is_constant(self):
@@ -103,7 +104,7 @@ class TestGlobalDefinition(TestBaseAST):
     def test_value(self):
         self.assertEqual(self.code[0].declaration.expr, None)
         self.assertEqual(self.code[1].declaration.expr.value, "hola")
-        self.assertEqual(self.code[6].declaration.expr.value, 4)
+        self.assertEqual(self.code[6].macro.expr.value, 4)
         self.assertEqual(self.code[7].declaration.expr.value, 9.8)
 
     def test_array_index(self):
@@ -140,7 +141,7 @@ class TestGlobalDefinition(TestBaseAST):
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[8].declaration.elements)
+                    self.code[8].macro.elements)
             ), [1, 3, 7, 10]
         )
 

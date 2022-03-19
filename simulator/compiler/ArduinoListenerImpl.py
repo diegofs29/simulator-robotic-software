@@ -94,11 +94,11 @@ class ArduinoListenerImpl(ArduinoListener):
 
 
     # Enter a parse tree produced by ArduinoParser#define_declaration.
-    def enterDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
-        self.print_enter("Define_declaration")
+    def enterDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
+        self.print_enter("Define_macro")
 
     # Exit a parse tree produced by ArduinoParser#define_declaration.
-    def exitDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    def exitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         self.print_exit()
 
     

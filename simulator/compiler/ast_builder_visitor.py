@@ -51,12 +51,14 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
     # Visit a parse tree produced by ArduinoParser#program_code.
     def visitProgram_code(self, ctx:ArduinoParser.Program_codeContext):
-        declaration = function = None
+        declaration = function = macro = None
         if ctx.var_dec != None:
             declaration = self.visit(ctx.var_dec)
         if ctx.func_def != None:
             function = self.visit(ctx.func_def)
-        node = ProgramCodeNode(declaration, function)
+        if ctx.def_mac != None:
+            macro = self.visit(ctx.def_mac)
+        node = ProgramCodeNode(declaration, function, macro)
         self.__add_line_info(node, ctx)
         return node
     
@@ -70,8 +72,6 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.s_def)
         if ctx.a_def != None:
             node = self.visit(ctx.a_def)
-        if ctx.def_dec != None:
-            node = self.visit(ctx.def_dec)
         if ctx.qual != None:
             if ctx.qual.text == "const":
                 node.is_const = True
@@ -122,7 +122,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
 
 
     # Visit a parse tree produced by ArduinoParser#define_declaration.
-    def visitDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    def visitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         name = value = None
         elems = []
         if ctx.ID() != None:
@@ -131,7 +131,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             value = self.visit(ctx.val)
         if ctx.elems != None:
             elems = self.visit(ctx.elems)
-        node = DefineDeclarationNode(name, value, elems)
+        node = DefineMacroNode(name, value, elems)
         self.__add_line_info(node, ctx)
         return node
 

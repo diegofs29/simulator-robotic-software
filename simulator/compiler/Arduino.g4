@@ -16,14 +16,14 @@ include
        ;
 
 program_code
-       : var_dec=declaration
+       : var_dec=declaration ';'
        | func_def=function
+       | def_mac=define_macro
        ;
 
 declaration 
-       : s_def=simple_declaration ';'
-       | a_def=array_declaration ';'
-       | def_dec=define_declaration
+       : s_def=simple_declaration 
+       | a_def=array_declaration 
        | qual=('const' | 'static') declaration
        ;
 
@@ -35,7 +35,7 @@ array_declaration
        : v_type=var_type ID a_index=array_index ('=' (expr=expression | elems=array_elements))? 
        ;
 
-define_declaration
+define_macro
        : '#define' ID val=expression
        | '#define' ID elems=array_elements
        ;
@@ -74,7 +74,7 @@ function
        ;
 
 function_args
-       : f_args+=simple_declaration (',' f_args+=simple_declaration)*
+       : f_args+=declaration (',' f_args+=declaration)*
        ;
 
 iteration_sentence 
@@ -94,7 +94,7 @@ code_block
        ;
 
 sentence 
-       : dec=declaration
+       : dec=declaration ';'
        | it_sent=iteration_sentence
        | cond_sent=conditional_sentence
        | assign=assignment ';'
@@ -114,7 +114,17 @@ case_sentence
        ;
 
 expression 
-       : '(' r_expr=expression ')'
+       : 'true'
+       | 'false'
+       | HEX_CONST
+       | OCTAL_CONST
+       | BINARY_CONST
+       | INT_CONST
+       | FLOAT_CONST
+       | CHAR_CONST
+       | STRING_CONST
+       | ID
+       | '(' r_expr=expression ')'
        | f_call=function_call
        | expr=expression operator=('++'|'--')
        | operator=('++'|'--') expr=expression
@@ -131,16 +141,6 @@ expression
        | left=expression operator='&&' right=expression
        | left=expression operator='||' right=expression
        | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
-       | 'true'
-       | 'false'
-       | HEX_CONST
-       | OCTAL_CONST
-       | BINARY_CONST
-       | INT_CONST
-       | FLOAT_CONST
-       | CHAR_CONST
-       | STRING_CONST
-       | ID
        ;
 
 function_call 

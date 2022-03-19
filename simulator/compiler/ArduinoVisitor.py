@@ -44,8 +44,8 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#define_declaration.
-    def visitDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    # Visit a parse tree produced by ArduinoParser#define_macro.
+    def visitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         return self.visitChildren(ctx)
 
 

@@ -55,9 +55,10 @@ class IncludeNode(ASTNode):
 
 class ProgramCodeNode(ASTNode):
 
-    def __init__(self, declaration=None, function=None):
+    def __init__(self, declaration, function, macro):
         self.declaration = declaration
         self.function = function
+        self.macro = macro
 
     def accept(self, visitor, param):
         return visitor.visit_program_code(self, param)
@@ -140,7 +141,7 @@ class ArrayDeclarationNode(Sentence):
         return elems
 
 
-class DefineDeclarationNode(Sentence):
+class DefineMacroNode(Sentence):
 
     def __init__(self, macro_name, expr=None, elements=[]):
         self.macro_name = macro_name
@@ -156,7 +157,6 @@ class AssignmentNode(Sentence):
     def __init__(self, var, expr, index=None):
         self.var = var
         self.expr = expr
-        self.index = index
 
     def accept(self, visitor, param):
         return visitor.visit_assignment(self, param)

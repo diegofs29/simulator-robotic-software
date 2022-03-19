@@ -2,8 +2,7 @@ Program
 Include, LibraryFile.h
 Include, "LocalFile.h"
 Program_code
-Declaration
-Define_declaration, ledPin
+Define_macro, ledPin
 Expression, 3
 Program_code
 Declaration

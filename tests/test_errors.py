@@ -13,26 +13,29 @@ class TestBaseAST(unittest.TestCase):
     def setUp(self):
         input = FileStream(fileName=self.file, encoding="utf-8")
         lexer = ArduinoLexer(input)
+        error_listener = CompilerErrorListener()
         lexer.removeErrorListeners()
-        lexer.addErrorListener(CompilerErrorListener())
+        lexer.addErrorListener(error_listener)
         stream = CommonTokenStream(lexer)
         parser = ArduinoParser(stream)
         parser.removeErrorListeners()
-        parser.addErrorListener(CompilerErrorListener())
+        parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
         semantic = SemanticAnalyzer()
         tree = parser.program()
-        self.ast = visitor.visit(tree)
-        semantic.visit_program(self.ast, None)
+        self.syntax_errors = error_listener.errors
+        if len(self.syntax_errors)<1:
+            self.ast = visitor.visit(tree)
+            semantic.visit_program(self.ast, None)
         self.semantic_errors = semantic.errors
 
     def tearDown(self):
         return super().tearDown()
 
 
-class TestFunction(TestBaseAST):
+class TestOtherErrors(TestBaseAST):
 
-    file = "tests/file-tests/g-def.txt"
+    file = "tests/error-tests/lex-syn.txt"
 
-    def test_definition(self):
-        self.assertTrue(True)
+    def test_syntax_errors(self):
+        self.assertEqual(len(self.syntax_errors), 3)

@@ -71,12 +71,12 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#define_declaration.
-    def enterDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    # Enter a parse tree produced by ArduinoParser#define_macro.
+    def enterDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
-    # Exit a parse tree produced by ArduinoParser#define_declaration.
-    def exitDefine_declaration(self, ctx:ArduinoParser.Define_declarationContext):
+    # Exit a parse tree produced by ArduinoParser#define_macro.
+    def exitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
 

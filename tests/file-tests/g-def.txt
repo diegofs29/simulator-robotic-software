@@ -1,4 +1,4 @@
-int num ~; //simple_def
+int num; //simple_def
 string saludo = "hola"; //assignment_def
 double notas[25]; //array_def simple
 boolean interruptores[] = {true, false, false, true, false}; //array_def sin index
