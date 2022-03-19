@@ -32,7 +32,7 @@ class TestBase(unittest.TestCase):
 
 class TestArray(TestBase):
 
-    file = "examples/ejemploArrays.txt"
+    file = "tests/grammar-tests/ejemploArrays.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputArrays.txt")
@@ -40,7 +40,7 @@ class TestArray(TestBase):
 
 class TestFor(TestBase):
 
-    file = "examples/ejemploFor.txt"
+    file = "tests/grammar-tests/ejemploFor.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputFor.txt")
@@ -49,7 +49,7 @@ class TestFor(TestBase):
 
 class TestWhile(TestBase):
 
-    file = "examples/ejemploWhile.txt"
+    file = "tests/grammar-tests/ejemploWhile.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputWhile.txt")
@@ -58,7 +58,7 @@ class TestWhile(TestBase):
         
 class TestDoWhile(TestBase):
 
-    file = "examples/ejemploDoWhile.txt"
+    file = "tests/grammar-tests/ejemploDoWhile.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputDoWhile.txt")
@@ -67,7 +67,7 @@ class TestDoWhile(TestBase):
 
 class TestIf(TestBase):
 
-    file = "examples/ejemploIf.txt"
+    file = "tests/grammar-tests/ejemploIf.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputIf.txt")
@@ -76,7 +76,7 @@ class TestIf(TestBase):
         
 class TestElse(TestBase):
 
-    file = "examples/ejemploElse.txt"
+    file = "tests/grammar-tests/ejemploElse.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputElse.txt")
@@ -85,7 +85,7 @@ class TestElse(TestBase):
         
 class TestSwitchCase(TestBase):
 
-    file = "examples/ejemploSwitchCase.txt"
+    file = "tests/grammar-tests/ejemploSwitchCase.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputSwitchCase.txt")
@@ -94,7 +94,7 @@ class TestSwitchCase(TestBase):
         
 class TestBreakContinue(TestBase):
 
-    file = "examples/ejemploBreakContinue.txt"
+    file = "tests/grammar-tests/ejemploBreakContinue.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputBreakContinue.txt")
@@ -103,7 +103,7 @@ class TestBreakContinue(TestBase):
         
 class TestReturn(TestBase):
 
-    file = "examples/ejemploReturn.txt"
+    file = "tests/grammar-tests/ejemploReturn.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputReturn.txt")
@@ -112,7 +112,7 @@ class TestReturn(TestBase):
         
 class TestAritmetico(TestBase):
 
-    file = "examples/ejemploAritmetico.txt"
+    file = "tests/grammar-tests/ejemploAritmetico.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputAritmetico.txt")
@@ -121,7 +121,7 @@ class TestAritmetico(TestBase):
         
 class TestComparisonBool(TestBase):
 
-    file = "examples/ejemploComparisonBool.txt"
+    file = "tests/grammar-tests/ejemploComparisonBool.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputComparisonBool.txt")
@@ -130,7 +130,7 @@ class TestComparisonBool(TestBase):
         
 class TestBitwise(TestBase):
 
-    file = "examples/ejemploBitwise.txt"
+    file = "tests/grammar-tests/ejemploBitwise.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputBitwise.txt")
@@ -139,7 +139,7 @@ class TestBitwise(TestBase):
         
 class TestCompound(TestBase):
 
-    file = "examples/ejemploCompound.txt"
+    file = "tests/grammar-tests/ejemploCompound.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputCompound.txt")
@@ -148,7 +148,7 @@ class TestCompound(TestBase):
         
 class TestVariablesAsignacion(TestBase):
 
-    file = "examples/testVariablesAsignacion.txt"
+    file = "tests/grammar-tests/testVariablesAsignacion.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputVariablesAsignacion.txt")
@@ -157,7 +157,7 @@ class TestVariablesAsignacion(TestBase):
         
 class TestFurtherSyntax(TestBase):
 
-    file = "examples/testFurtherSyntax.txt"
+    file = "tests/grammar-tests/testFurtherSyntax.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputFurtherSyntax.txt")
@@ -166,7 +166,7 @@ class TestFurtherSyntax(TestBase):
         
 class TestArrayAccess(TestBase):
 
-    file = "examples/testArrays.txt"
+    file = "tests/grammar-tests/testArrays.txt"
 
     def test_parsed(self):
         self.read_results("tests/outputs/outputTestArrays.txt")
