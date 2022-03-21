@@ -60,7 +60,7 @@ var_type
        | 'long'
        | 'short'
        | 'size_t'
-       | 'string'
+       | 'String'
        | 'unsigned int'
        | 'unsigned char'
        | 'unsigned long'

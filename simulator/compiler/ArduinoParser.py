@@ -210,7 +210,7 @@ class ArduinoParser ( Parser ):
                      "'const'", "'static'", "'='", "'#define'", "'['", "']'", 
                      "'{'", "','", "'}'", "'bool'", "'boolean'", "'byte'", 
                      "'char'", "'double'", "'float'", "'int'", "'long'", 
-                     "'short'", "'size_t'", "'string'", "'unsigned int'", 
+                     "'short'", "'size_t'", "'String'", "'unsigned int'", 
                      "'unsigned char'", "'unsigned long'", "'void'", "'word'", 
                      "'('", "')'", "'while'", "'do'", "'for'", "'if'", "'else'", 
                      "'switch'", "'return'", "'break'", "'continue'", "'case'", 

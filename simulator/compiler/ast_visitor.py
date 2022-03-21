@@ -96,20 +96,20 @@ class ASTVisitor:
     def visit_while(self, while_p: WhileNode, param):
         if while_p.expression != None:
             while_p.expression.accept(self, param)
-        self.visit_children(while_p.sentences, param, param)
+        self.visit_children(while_p.sentences, param)
         return None
 
     def visit_do_while(self, do_while: DoWhileNode, param):
         if do_while.expression != None:
             do_while.expression.accept(self, param)
-        self.visit_children(do_while.sentences, param, param)
+        self.visit_children(do_while.sentences, param)
         return None
 
     def visit_for(self, for_p: ForNode, param):
         if for_p.assignment != None:
             for_p.assignment.accept(self, param)
-        if for_p.conditon != None:
-            for_p.conditon.accept(self, param)
+        if for_p.condition != None:
+            for_p.condition.accept(self, param)
         if for_p.expression != None:
             for_p.expression.accept(self, param)
         self.visit_children(for_p.sentences, param)
@@ -138,21 +138,21 @@ class ASTVisitor:
     def visit_case(self, case: CaseNode, param):
         if case.expression != None:
             case.expression.accept(self, param)
-        self.visit_children(case.sentences, param, param)
+        self.visit_children(case.sentences, param)
         return None
 
     def visit_array_access(self, array_access: ArrayAccessNode, param):
         if array_access.var != None:
             array_access.var.accept(self, param)
         if array_access.index != None:
-            array_access.index.accept(self.param)
+            array_access.index.accept(self, param)
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression: ArithmeticExpressionNode, param):
         if arithmetic_expression.left != None:
-            arithmetic_expression.left.visit(self, param)
+            arithmetic_expression.left.accept(self, param)
         if arithmetic_expression.right != None:
-            arithmetic_expression.right.visit(self, param)
+            arithmetic_expression.right.accept(self, param)
         return None
 
     def visit_comparision_expression(self, comparison_expression: ComparisonExpressionNode, param):
@@ -162,7 +162,7 @@ class ASTVisitor:
             comparison_expression.right.accept(self, param)
         return None
 
-    def visit_boolean_expresssion(self, boolean_expression: BooleanExpressionNode, param):
+    def visit_boolean_expression(self, boolean_expression: BooleanExpressionNode, param):
         if boolean_expression.left != None:
             boolean_expression.left.accept(self, param)
         if boolean_expression.right != None:

@@ -183,7 +183,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = ShortTypeNode()
         if ctx.getText() == "size_t":
             node = Size_tTypeNode()
-        if ctx.getText() == "string":
+        if ctx.getText() == "String":
             node = StringTypeNode()
         if ctx.getText() == "unsigned int":
             node = UIntTypeNode()

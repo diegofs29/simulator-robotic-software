@@ -150,7 +150,7 @@ def serializedATN():
         buf.write("\7t\2\2\u0114\u0115\7v\2\2\u0115\60\3\2\2\2\u0116\u0117")
         buf.write("\7u\2\2\u0117\u0118\7k\2\2\u0118\u0119\7|\2\2\u0119\u011a")
         buf.write("\7g\2\2\u011a\u011b\7a\2\2\u011b\u011c\7v\2\2\u011c\62")
-        buf.write("\3\2\2\2\u011d\u011e\7u\2\2\u011e\u011f\7v\2\2\u011f\u0120")
+        buf.write("\3\2\2\2\u011d\u011e\7U\2\2\u011e\u011f\7v\2\2\u011f\u0120")
         buf.write("\7t\2\2\u0120\u0121\7k\2\2\u0121\u0122\7p\2\2\u0122\u0123")
         buf.write("\7i\2\2\u0123\64\3\2\2\2\u0124\u0125\7w\2\2\u0125\u0126")
         buf.write("\7p\2\2\u0126\u0127\7u\2\2\u0127\u0128\7k\2\2\u0128\u0129")
@@ -370,7 +370,7 @@ class ArduinoLexer(Lexer):
             "'#include'", "'<'", "'.'", "'>'", "';'", "'const'", "'static'", 
             "'='", "'#define'", "'['", "']'", "'{'", "','", "'}'", "'bool'", 
             "'boolean'", "'byte'", "'char'", "'double'", "'float'", "'int'", 
-            "'long'", "'short'", "'size_t'", "'string'", "'unsigned int'", 
+            "'long'", "'short'", "'size_t'", "'String'", "'unsigned int'", 
             "'unsigned char'", "'unsigned long'", "'void'", "'word'", "'('", 
             "')'", "'while'", "'do'", "'for'", "'if'", "'else'", "'switch'", 
             "'return'", "'break'", "'continue'", "'case'", "':'", "'default'", 

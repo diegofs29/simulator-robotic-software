@@ -54,7 +54,7 @@ public class ArduinoParser extends Parser {
 			null, "'#include'", "'<'", "'.'", "'>'", "';'", "'const'", "'static'", 
 			"'='", "'#define'", "'['", "']'", "'{'", "','", "'}'", "'bool'", "'boolean'", 
 			"'byte'", "'char'", "'double'", "'float'", "'int'", "'long'", "'short'", 
-			"'size_t'", "'string'", "'unsigned int'", "'unsigned char'", "'unsigned long'", 
+			"'size_t'", "'String'", "'unsigned int'", "'unsigned char'", "'unsigned long'", 
 			"'void'", "'word'", "'('", "')'", "'while'", "'do'", "'for'", "'if'", 
 			"'else'", "'switch'", "'return'", "'break'", "'continue'", "'case'", 
 			"':'", "'default'", "'true'", "'false'", "'++'", "'--'", "'!'", "'~'", 

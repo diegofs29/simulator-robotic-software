@@ -61,7 +61,7 @@ public class ArduinoLexer extends Lexer {
 			null, "'#include'", "'<'", "'.'", "'>'", "';'", "'const'", "'static'", 
 			"'='", "'#define'", "'['", "']'", "'{'", "','", "'}'", "'bool'", "'boolean'", 
 			"'byte'", "'char'", "'double'", "'float'", "'int'", "'long'", "'short'", 
-			"'size_t'", "'string'", "'unsigned int'", "'unsigned char'", "'unsigned long'", 
+			"'size_t'", "'String'", "'unsigned int'", "'unsigned char'", "'unsigned long'", 
 			"'void'", "'word'", "'('", "')'", "'while'", "'do'", "'for'", "'if'", 
 			"'else'", "'switch'", "'return'", "'break'", "'continue'", "'case'", 
 			"':'", "'default'", "'true'", "'false'", "'++'", "'--'", "'!'", "'~'", 
@@ -251,7 +251,7 @@ public class ArduinoLexer extends Lexer {
 		"\7j\2\2\u0112\u0113\7q\2\2\u0113\u0114\7t\2\2\u0114\u0115\7v\2\2\u0115"+
 		"\60\3\2\2\2\u0116\u0117\7u\2\2\u0117\u0118\7k\2\2\u0118\u0119\7|\2\2\u0119"+
 		"\u011a\7g\2\2\u011a\u011b\7a\2\2\u011b\u011c\7v\2\2\u011c\62\3\2\2\2\u011d"+
-		"\u011e\7u\2\2\u011e\u011f\7v\2\2\u011f\u0120\7t\2\2\u0120\u0121\7k\2\2"+
+		"\u011e\7U\2\2\u011e\u011f\7v\2\2\u011f\u0120\7t\2\2\u0120\u0121\7k\2\2"+
 		"\u0121\u0122\7p\2\2\u0122\u0123\7i\2\2\u0123\64\3\2\2\2\u0124\u0125\7"+
 		"w\2\2\u0125\u0126\7p\2\2\u0126\u0127\7u\2\2\u0127\u0128\7k\2\2\u0128\u0129"+
 		"\7i\2\2\u0129\u012a\7p\2\2\u012a\u012b\7g\2\2\u012b\u012c\7f\2\2\u012c"+
