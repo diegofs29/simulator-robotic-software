@@ -44,7 +44,7 @@ class DeclarationAnalyzer(ASTVisitor):
             self.functions[function.name] = function
         else:
             self.add_error("Declaración", function,
-                           "La función ya está declarada")
+                           "La función ya ha sido declarada")
         return None
 
     def visit_declaration(self, declaration: DeclarationNode, param):
@@ -392,7 +392,7 @@ class SemanticAnalyzer(ASTVisitor):
             assignment.expr.accept(self, param)
         if self.variable_defined(assignment.var.value):
             self.add_error("Declaración", assignment.var,
-                           "La variable no está definida")
+                           "La variable no está declarada")
         else:
             if self.check_modifiable(assignment.var):
                 self.add_error("No modificable", assignment,

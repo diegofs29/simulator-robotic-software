@@ -72,8 +72,6 @@ class TestSetupLoopErrors(TestBaseErrors):
     file = "tests/error-tests/setup-loop.txt"
 
     def test_number_of_errors(self):
-        for error in self.semantic_errors:
-            print(error.to_string())
         self.assertEqual(len(self.semantic_errors), 2)
 
     def test_error_type(self):
@@ -138,5 +136,22 @@ class TestDeclarationErrors(TestBaseErrors):
     file = "tests/error-tests/declarations.txt"
 
     def test_number_of_errors(self):
-        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 12)
+
+    def test_error_type(self):
+        for err in self.semantic_errors:
+            self.assertEqual(err.error_type, "Declaración")
+
+    def test_error_message(self):
+        self.assertEqual(self.semantic_errors[0].message, "La variable ya ha sido declarada")
+        self.assertEqual(self.semantic_errors[1].message, "El array ya ha sido declarado")
+        self.assertEqual(self.semantic_errors[2].message, "La macro ya ha sido declarada")
+        self.assertEqual(self.semantic_errors[3].message, "La variable ya ha sido declarada")
+        self.assertEqual(self.semantic_errors[4].message, "El array ya ha sido declarado")
+        self.assertEqual(self.semantic_errors[5].message, "La macro ya ha sido declarada")
+        self.assertEqual(self.semantic_errors[6].message, "La función ya ha sido declarada")
+        self.assertEqual(self.semantic_errors[7].message, "La función no se ha declarado")
+        self.assertEqual(self.semantic_errors[8].message, "La variable no está declarada")
+        self.assertEqual(self.semantic_errors[9].message, "La variable no está declarada")
+        self.assertEqual(self.semantic_errors[10].message, "El array no está declarado")
+        self.assertEqual(self.semantic_errors[11].message, "La variable no está declarada")
