@@ -27,7 +27,10 @@ class TestBaseErrors(unittest.TestCase):
         if len(self.syntax_errors) < 1:
             self.ast = visitor.visit(tree)
             semantic.execute(self.ast)
-        self.semantic_errors = semantic.errors
+        try:
+            self.semantic_errors = semantic.errors
+        except AttributeError:
+            pass
 
     def tearDown(self):
         return super().tearDown()
@@ -87,16 +90,15 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
-        self.assertEqual(len(self.semantic_errors), 31)
+        self.assertEqual(len(self.semantic_errors), 32)
 
     def test_error_type(self):
         for err in self.semantic_errors[:-2]:
             self.assertEqual(err.error_type, "Tipos")
-        self.assertEqual(self.semantic_errors[29].error_type, "Tipo de función setup")
-        self.assertEqual(self.semantic_errors[30].error_type, "Tipo de función loop")
+        self.assertEqual(self.semantic_errors[30].error_type, "Tipo de función setup")
+        self.assertEqual(self.semantic_errors[31].error_type, "Tipo de función loop")
 
     def test_error_message(self):
-        self.print_errors()
         self.assertEqual(self.semantic_errors[0].message, "El tipo de la variable es numérico, pero su valor no")
         self.assertEqual(self.semantic_errors[1].message, "El tipo de la variable es numérico, pero su valor no")
         self.assertEqual(self.semantic_errors[2].message, "El tipo de la variable es char, pero su valor no es char o int")
@@ -129,3 +131,12 @@ class TestTypeErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[29].message, "Las funciones de tipo no void deben retornar valor")
         self.assertEqual(self.semantic_errors[30].message, "La función setup debe ser de tipo void")
         self.assertEqual(self.semantic_errors[31].message, "La función loop debe ser de tipo void")
+
+
+class TestDeclarationErrors(TestBaseErrors):
+
+    file = "tests/error-tests/declarations.txt"
+
+    def test_number_of_errors(self):
+        self.print_errors()
+        self.assertEqual(len(self.semantic_errors), 12)

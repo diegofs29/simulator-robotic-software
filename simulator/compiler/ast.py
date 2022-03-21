@@ -21,11 +21,20 @@ class TypeNode(ASTNode):
 
 class Sentence(ASTNode):
 
+    def __init__(self):
+        super().__init__()
+        self.function = None
+
     def set_function(self, function):
         self.function = function
 
 
 class Expression(Sentence):
+
+    def __init__(self):
+        super().__init__()
+        self.type = None
+        self.modifiable = False
 
     def set_type(self, type):
         self.type = type
@@ -37,6 +46,7 @@ class Expression(Sentence):
 class ProgramNode(ASTNode):
 
     def __init__(self, includes=None, code=None):
+        super().__init__()
         self.includes = includes
         self.code = code
 
@@ -47,6 +57,7 @@ class ProgramNode(ASTNode):
 class IncludeNode(ASTNode):
 
     def __init__(self, file_name):
+        super().__init__()
         self.file_name = file_name
 
     def accept(self, visitor, param):
@@ -56,6 +67,7 @@ class IncludeNode(ASTNode):
 class ProgramCodeNode(ASTNode):
 
     def __init__(self, declaration, function, macro):
+        super().__init__()
         self.declaration = declaration
         self.function = function
         self.macro = macro
@@ -67,6 +79,7 @@ class ProgramCodeNode(ASTNode):
 class DeclarationNode(Sentence):
 
     def __init__(self, type, var_name=None, expr=None, is_const=False, is_static=False):
+        super().__init__()
         self.type = type
         self.var_name = var_name
         self.expr = expr
@@ -80,6 +93,7 @@ class DeclarationNode(Sentence):
 class ArrayDeclarationNode(Sentence):
 
     def __init__(self, type, var_name, dimensions, size=[], elements=[], is_const=False, is_static=False):
+        super().__init__()
         self.type = type
         self.var_name = var_name
         self.dimensions = dimensions
@@ -144,17 +158,19 @@ class ArrayDeclarationNode(Sentence):
 class DefineMacroNode(Sentence):
 
     def __init__(self, macro_name, expr=None, elements=[]):
+        super().__init__()
         self.macro_name = macro_name
         self.expr = expr
         self.elements = elements
 
     def accept(self, visitor, param):
-        return visitor.visit_define_declaration(self, param)
+        return visitor.visit_define_macro(self, param)
 
 
 class AssignmentNode(Sentence):
 
     def __init__(self, var, expr, index=None):
+        super().__init__()
         self.var = var
         self.expr = expr
 
@@ -165,7 +181,7 @@ class AssignmentNode(Sentence):
 class BooleanTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_boolean_type(self, param)
@@ -177,7 +193,7 @@ class BooleanTypeNode(TypeNode):
 class ByteTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_byte_type(self, param)
@@ -189,7 +205,7 @@ class ByteTypeNode(TypeNode):
 class CharTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_char_type(self, param)
@@ -201,7 +217,7 @@ class CharTypeNode(TypeNode):
 class DoubleTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_double_type(self, param)
@@ -213,7 +229,7 @@ class DoubleTypeNode(TypeNode):
 class FloatTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_float_type(self, param)
@@ -225,7 +241,7 @@ class FloatTypeNode(TypeNode):
 class IntTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_int_type(self, param)
@@ -237,7 +253,7 @@ class IntTypeNode(TypeNode):
 class LongTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_long_type(self, param)
@@ -249,7 +265,7 @@ class LongTypeNode(TypeNode):
 class ShortTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return IntNode(0)
@@ -261,7 +277,7 @@ class ShortTypeNode(TypeNode):
 class Size_tTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_size_t_type(self, param)
@@ -273,7 +289,7 @@ class Size_tTypeNode(TypeNode):
 class StringTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_string_type(self, param)
@@ -285,7 +301,7 @@ class StringTypeNode(TypeNode):
 class UIntTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_u_int_type(self, param)
@@ -297,7 +313,7 @@ class UIntTypeNode(TypeNode):
 class UCharTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_u_char_type(self, param)
@@ -309,7 +325,7 @@ class UCharTypeNode(TypeNode):
 class ULongTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_u_long_type(self, param)
@@ -321,7 +337,7 @@ class ULongTypeNode(TypeNode):
 class VoidTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_void_type(self, param)
@@ -333,7 +349,7 @@ class VoidTypeNode(TypeNode):
 class WordTypeNode(TypeNode):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_word_type(self, param)
@@ -345,6 +361,7 @@ class WordTypeNode(TypeNode):
 class IDTypeNode(TypeNode):
 
     def __init__(self, type_name):
+        super().__init__()
         self.type_name = type_name
 
     def accept(self, visitor, param):
@@ -357,6 +374,7 @@ class IDTypeNode(TypeNode):
 class FunctionNode(ASTNode):
 
     def __init__(self, type, name, args=None, sentences=None):
+        super().__init__()
         self.type = type
         self.name = name
         self.args = args
@@ -369,6 +387,7 @@ class FunctionNode(ASTNode):
 class WhileNode(Sentence):
 
     def __init__(self, expression, sentences=None):
+        super().__init__()
         self.expression = expression
         self.sentences = sentences
 
@@ -379,6 +398,7 @@ class WhileNode(Sentence):
 class DoWhileNode(Sentence):
 
     def __init__(self, expression, sentences=None):
+        super().__init__()
         self.expression = expression
         self.sentences = sentences
 
@@ -389,6 +409,7 @@ class DoWhileNode(Sentence):
 class ForNode(Sentence):
 
     def __init__(self, assignment, condition, expression, sentences=None):
+        super().__init__()
         self.assignment = assignment
         self.condition = condition
         self.expression = expression
@@ -401,6 +422,7 @@ class ForNode(Sentence):
 class ConditionalSentenceNode(Sentence):
 
     def __init__(self, condition, if_expr=None, else_expr=None):
+        super().__init__()
         self.condition = condition
         self.if_expr = if_expr
         self.else_expr = else_expr
@@ -412,6 +434,7 @@ class ConditionalSentenceNode(Sentence):
 class SwitchSentenceNode(Sentence):
 
     def __init__(self, expression, cases=None):
+        super().__init__()
         self.expression = expression
         self.cases = cases
 
@@ -422,6 +445,7 @@ class SwitchSentenceNode(Sentence):
 class CaseNode(Sentence):
 
     def __init__(self, type="case", expression=None, sentences=None):
+        super().__init__()
         self.type = type
         self.expression = expression
         self.sentences = sentences
@@ -433,6 +457,7 @@ class CaseNode(Sentence):
 class ArrayAccessNode(Expression):
 
     def __init__(self, var, index):
+        super().__init__()
         self.var = var
         self.index = index
 
@@ -443,6 +468,7 @@ class ArrayAccessNode(Expression):
 class ArithmeticExpressionNode(Expression):
 
     def __init__(self, left, op, right):
+        super().__init__()
         self.left = left
         self.op = op
         self.right = right
@@ -454,6 +480,7 @@ class ArithmeticExpressionNode(Expression):
 class ComparisonExpressionNode(Expression):
 
     def __init__(self, left, op, right):
+        super().__init__()
         self.left = left
         self.op = op
         self.right = right
@@ -465,6 +492,7 @@ class ComparisonExpressionNode(Expression):
 class BooleanExpressionNode(Expression):
 
     def __init__(self, left, op, right):
+        super().__init__()
         self.left = left
         self.op = op
         self.right = right
@@ -476,6 +504,7 @@ class BooleanExpressionNode(Expression):
 class BitwiseExpressionNode(Expression):
 
     def __init__(self, left, op, right):
+        super().__init__()
         self.left = left
         self.op = op
         self.right = right
@@ -487,6 +516,7 @@ class BitwiseExpressionNode(Expression):
 class CompoundAssignmentNode(Expression):
 
     def __init__(self, left, op, right):
+        super().__init__()
         self.left = left
         self.op = op
         self.right = right
@@ -498,6 +528,7 @@ class CompoundAssignmentNode(Expression):
 class IncDecExpressionNode(Expression):
 
     def __init__(self, var, op):
+        super().__init__()
         self.var = var
         self.op = op
 
@@ -508,6 +539,7 @@ class IncDecExpressionNode(Expression):
 class NotExpressionNode(Expression):
 
     def __init__(self, expression):
+        super().__init__()
         self.expression = expression
 
     def accept(self, visitor, param):
@@ -517,6 +549,7 @@ class NotExpressionNode(Expression):
 class BitNotExpressionNode(Expression):
 
     def __init__(self, expression):
+        super().__init__()
         self.expression = expression
 
     def accept(self, visitor, param):
@@ -526,6 +559,7 @@ class BitNotExpressionNode(Expression):
 class IntNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -535,6 +569,7 @@ class IntNode(Expression):
 class FloatNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -544,6 +579,7 @@ class FloatNode(Expression):
 class HexNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -553,6 +589,7 @@ class HexNode(Expression):
 class OctalNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -562,6 +599,7 @@ class OctalNode(Expression):
 class BinaryNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -571,6 +609,7 @@ class BinaryNode(Expression):
 class CharNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -580,6 +619,7 @@ class CharNode(Expression):
 class StringNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -589,6 +629,7 @@ class StringNode(Expression):
 class BooleanNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -598,6 +639,7 @@ class BooleanNode(Expression):
 class IDNode(Expression):
 
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def accept(self, visitor, param):
@@ -610,6 +652,7 @@ class IDNode(Expression):
 class FunctionCallNode(Expression):
 
     def __init__(self, name, parameters=None, clase=None, elems=None):
+        super().__init__()
         self.name = name
         self.parameters = parameters
         self.clase = clase
@@ -622,6 +665,7 @@ class FunctionCallNode(Expression):
 class ReturnNode(Sentence):
 
     def __init__(self, expression=None):
+        super().__init__()
         self.expression = expression
 
     def accept(self, visitor, param):
@@ -631,7 +675,7 @@ class ReturnNode(Sentence):
 class BreakNode(Sentence):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_break(self, param)
@@ -640,7 +684,7 @@ class BreakNode(Sentence):
 class ContinueNode(Sentence):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def accept(self, visitor, param):
         return visitor.visit_continue(self, param)

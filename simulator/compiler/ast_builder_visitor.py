@@ -295,6 +295,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = self.visit(ctx.assign)
         if ctx.expr != None:
             node = self.visit(ctx.expr)
+        if ctx.def_mac != None:
+            node = self.visit(ctx.def_mac)
         if ctx.s_type != None:
             if ctx.s_type.text == "return":
                 expr = None

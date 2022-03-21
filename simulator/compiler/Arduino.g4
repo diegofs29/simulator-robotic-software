@@ -99,6 +99,7 @@ sentence
        | cond_sent=conditional_sentence
        | assign=assignment ';'
        | expr=expression ';'
+       | def_mac=define_macro
        | s_type='return' expr=expression? ';'
        | s_type='break' ';'
        | s_type='continue' ';'
