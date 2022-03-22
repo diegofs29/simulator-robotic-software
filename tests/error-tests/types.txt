@@ -22,7 +22,6 @@ int setup(){
 
 String loop(){
     s++;
-    arr["flanders"];
     !"Deigo";
     ~2.25;
     "ferrari" + "gana en bahrein";

@@ -461,9 +461,9 @@ class CaseNode(Sentence):
 
 class ArrayAccessNode(Expression):
 
-    def __init__(self, var, indexes):
+    def __init__(self, value, indexes):
         super().__init__()
-        self.var = var
+        self.value = value
         self.indexes = indexes
 
     def accept(self, visitor, param):

@@ -142,6 +142,7 @@ class ASTVisitor:
         return None
 
     def visit_array_access(self, array_access: ArrayAccessNode, param):
+        self.visit_children(array_access.indexes, param)
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression: ArithmeticExpressionNode, param):

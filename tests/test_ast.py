@@ -1035,22 +1035,22 @@ class TestArrayAccess(TestBaseAST):
 
     def test_var(self):
         self.assertEqual(
-            self.code[0].function.sentences[0].var, "acceso_a_array")
+            self.code[0].function.sentences[0].value, "acceso_a_array")
         self.assertEqual(
-            self.code[0].function.sentences[1].var, "acc_arr_2")
+            self.code[0].function.sentences[1].value, "acc_arr_2")
         self.assertEqual(
-            self.code[0].function.sentences[2].var, "random")
+            self.code[0].function.sentences[2].value, "random")
 
     def test_index(self):
         self.assertEqual(
-            self.code[0].function.sentences[0].indexes[0], 1)
+            self.code[0].function.sentences[0].indexes[0].value, 1)
         self.assertEqual(
-            self.code[0].function.sentences[1].indexes[0], 2)
+            self.code[0].function.sentences[1].indexes[0].value, 2)
         self.assertEqual(
-            self.code[0].function.sentences[1].indexes[1], 5)
+            self.code[0].function.sentences[1].indexes[1].value, 5)
         self.assertEqual(
-            self.code[0].function.sentences[2].indexes[0], 1)
+            self.code[0].function.sentences[2].indexes[0].value, 1)
         self.assertEqual(
-            self.code[0].function.sentences[2].indexes[1], 0)
+            self.code[0].function.sentences[2].indexes[1].value, 0)
         self.assertEqual(
-            self.code[0].function.sentences[2].indexes[2], 3)
+            self.code[0].function.sentences[2].indexes[2].value, 3)

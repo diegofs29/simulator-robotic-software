@@ -42,13 +42,17 @@ Function, setup
 Var_type, void
 Sentence
 Expression, myPins[1]
+Expression, 1
 Sentence
 Expression, myFloats[0][2]
+Expression, 0
+Expression, 2
 Sentence
 Expression, print(message[0])
 Function_call, print
 Parameter
 Expression, message[0]
+Expression, 0
 Program_code
 Function, loop
 Var_type, void

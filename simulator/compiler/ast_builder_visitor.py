@@ -356,7 +356,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
             indexes = []
             if ctx.indexes != None:
                 for i in ctx.indexes:
-                    indexes.append(int(i.text))
+                    indexes.append(self.visit(i))
             node = ArrayAccessNode(name, indexes)
         if ctx.operator != None:
             left = right = expr = None
@@ -395,8 +395,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = OctalNode(int(ctx.OCTAL_CONST().getText(), 8))
         if ctx.BINARY_CONST() != None:
             node = BinaryNode(int(ctx.BINARY_CONST().getText(), 2))
-        if ctx.INT_CONST() != [] and ctx.array_name == None:
-            node = IntNode(int(ctx.INT_CONST(0).getText()))
+        if ctx.INT_CONST() != None:
+            node = IntNode(int(ctx.INT_CONST().getText()))
         if ctx.FLOAT_CONST() != None:
             node = FloatNode(float(ctx.FLOAT_CONST().getText()))
         if ctx.CHAR_CONST() != None:

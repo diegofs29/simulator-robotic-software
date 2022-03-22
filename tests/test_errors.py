@@ -88,13 +88,14 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
-        self.assertEqual(len(self.semantic_errors), 32)
+        self.print_errors()
+        self.assertEqual(len(self.semantic_errors), 31)
 
     def test_error_type(self):
         for err in self.semantic_errors[:-2]:
             self.assertEqual(err.error_type, "Tipos")
-        self.assertEqual(self.semantic_errors[30].error_type, "Tipo de función setup")
-        self.assertEqual(self.semantic_errors[31].error_type, "Tipo de función loop")
+        self.assertEqual(self.semantic_errors[29].error_type, "Tipo de función setup")
+        self.assertEqual(self.semantic_errors[30].error_type, "Tipo de función loop")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "El tipo de la variable es numérico, pero su valor no")
@@ -112,23 +113,22 @@ class TestTypeErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[12].message, "El incremento del for debe ser int")
         self.assertEqual(self.semantic_errors[13].message, "La sentencia case debe de tener una expresión del tipo marcado en switch")
         self.assertEqual(self.semantic_errors[14].message, "El resultado de la condición debe ser int o boolean")
-        self.assertEqual(self.semantic_errors[15].message, "El tipo del parámetro y del valor no coincide")
-        self.assertEqual(self.semantic_errors[16].message, "El tipo de retorno es numérico, pero su valor no")
+        self.assertEqual(self.semantic_errors[15].message, "El tipo del parámetro y del valor no coincide") 
+        self.assertEqual(self.semantic_errors[16].message, "El tipo de retorno es numérico, pero su valor no") 
         self.assertEqual(self.semantic_errors[17].message, "La expresión no es de tipo numérico")
-        self.assertEqual(self.semantic_errors[18].message, "El índice debe ser int")
-        self.assertEqual(self.semantic_errors[19].message, "La expresión debe ser tipo int o boolean")
-        self.assertEqual(self.semantic_errors[20].message, "La expresión debe ser tipo int")
-        self.assertEqual(self.semantic_errors[21].message, "Las operaciones artiméticas deben ser entre números")
-        self.assertEqual(self.semantic_errors[22].message, "La expresión izquierda debe ser int o boolean")
-        self.assertEqual(self.semantic_errors[23].message, "La expresión derecha debe ser int o boolean")
-        self.assertEqual(self.semantic_errors[24].message, "El tipo de la izquierda debe ser numérico")
-        self.assertEqual(self.semantic_errors[25].message, "El tipo de la derecha debe ser numérico")
-        self.assertEqual(self.semantic_errors[26].message, "El tipo de la variable es numérico, pero su valor no")
-        self.assertEqual(self.semantic_errors[27].message, "El tipo de retorno y del valor no coincide")
-        self.assertEqual(self.semantic_errors[28].message, "Las funciones de tipo void no deben retornar valor")
-        self.assertEqual(self.semantic_errors[29].message, "Las funciones de tipo no void deben retornar valor")
-        self.assertEqual(self.semantic_errors[30].message, "La función setup debe ser de tipo void")
-        self.assertEqual(self.semantic_errors[31].message, "La función loop debe ser de tipo void")
+        self.assertEqual(self.semantic_errors[18].message, "La expresión debe ser tipo int o boolean")
+        self.assertEqual(self.semantic_errors[19].message, "La expresión debe ser tipo int")
+        self.assertEqual(self.semantic_errors[20].message, "Las operaciones artiméticas deben ser entre números")
+        self.assertEqual(self.semantic_errors[21].message, "La expresión izquierda debe ser int o boolean")
+        self.assertEqual(self.semantic_errors[22].message, "La expresión derecha debe ser int o boolean")
+        self.assertEqual(self.semantic_errors[23].message, "El tipo de la izquierda debe ser numérico")
+        self.assertEqual(self.semantic_errors[24].message, "El tipo de la derecha debe ser numérico")
+        self.assertEqual(self.semantic_errors[25].message, "El tipo de la variable es numérico, pero su valor no")
+        self.assertEqual(self.semantic_errors[26].message, "El tipo de retorno y del valor no coincide")
+        self.assertEqual(self.semantic_errors[27].message, "Las funciones de tipo void no deben retornar valor")
+        self.assertEqual(self.semantic_errors[28].message, "Las funciones de tipo no void deben retornar valor")
+        self.assertEqual(self.semantic_errors[29].message, "La función setup debe ser de tipo void")
+        self.assertEqual(self.semantic_errors[30].message, "La función loop debe ser de tipo void")
 
 
 class TestDeclarationErrors(TestBaseErrors):
@@ -181,7 +181,7 @@ class TestFlowErrors(TestBaseErrors):
 
 class TestArrayAccessErrors(TestBaseErrors):
 
-    file = "tests/error-tests/errors.txt"
+    file = "tests/error-tests/arrays.txt"
 
     def test_number_of_errors(self):
         self.print_errors()

@@ -406,39 +406,39 @@ class SemanticAnalyzer(ASTVisitor):
 
     def visit_inc_dec_expression(self, inc_dec_expression: IncDecExpressionNode, param):
         if inc_dec_expression.var != None:
-            inc_dec_expression.set_type(inc_dec_expression.var.type)
             inc_dec_expression.var.set_function(inc_dec_expression.function)
             inc_dec_expression.var.accept(self, param)
-        if self.variable_defined(inc_dec_expression.var.value):
-            self.add_error("Declaración", inc_dec_expression,
-                           "La variable no está declarada")
-        elif self.check_in_types(inc_dec_expression.var.type, self.numerical_types):
-            self.add_error("Tipos", inc_dec_expression,
-                           "La expresión no es de tipo numérico")
+        inc_dec_expression.set_type(inc_dec_expression.var.type)
+        if self.variable_defined(inc_dec_expression.var.value, inc_dec_expression.function):
+            if self.check_in_types(inc_dec_expression.var.type, self.numerical_types):
+                self.add_error("Tipos", inc_dec_expression,
+                            "La expresión no es de tipo numérico")
         return None
 
     def visit_array_access(self, array_access: ArrayAccessNode, param):
+        if array_access.indexes != None:
+            for i in array_access.indexes:
+                i.accept(self, param)
         definition = None
-        if not isinstance(array_access.var, ArrayAccessNode):
-            if array_access.var.value in self.globals:
-                definition = self.globals[array_access.var.value]
+        array_access.set_modifiable(True)
+        if not isinstance(array_access.value, ArrayAccessNode):
+            if array_access.value in self.globals:
+                definition = self.globals[array_access.value]
             elif array_access.function.name in self.locals:
-                if array_access.var.value in self.locals[array_access.function.name]:
-                    definition = self.locals[array_access.function.name][array_access.var.value]
+                if array_access.value in self.locals[array_access.function.name]:
+                    definition = self.locals[array_access.function.name][array_access.value]
         if definition != None:
-            if not type(array_access.indexes.type) in self.integer_types:
-                self.add_error("Tipos", array_access.indexes,
-                               "El índice debe ser int")
+            array_access.set_type(definition.type)
+            if len(definition.size) == len(array_access.indexes):
+                for i in range(0, len(array_access.indexes)):
+                    if self.check_in_types(array_access.indexes[i].type, self.integer_types):
+                        self.add_error("Índice", array_access.indexes[i], "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+                    elif array_access.indexes[i].value >= definition.size[i]:
+                        self.add_error("Tamaños", array_access, "El índice sobrepasa el tamaño del array")
             else:
-                n = 0
-                elem = array_access.var
-                while isinstance(elem, ArrayAccessNode):
-                    n += 1
-                    elem = elem.var
-                if len(definition.size) > 0:
-                    if array_access.indexes.value >= definition.size[n]:
-                        self.add_error("Tamaños", array_access.indexes,
-                                       "El indice es mayor al tamaño del array")
+                self.add_error("Dimensiones del array", array_access, "Las dimensiones del array no coinciden")
+        else:
+            self.add_error("Declaración", array_access, "El array no está declarado")
         return None
 
     def visit_not_expression(self, not_expression: NotExpressionNode, param):
@@ -529,13 +529,11 @@ class SemanticAnalyzer(ASTVisitor):
         if compound_asigment.right != None:
             compound_asigment.right.set_function(compound_asigment.function)
             compound_asigment.right.accept(self, param)
-        if self.variable_defined(compound_asigment.left.value):
-            self.add_error("Declaración", compound_asigment,
-                           "La variable no está declarada")
-        elif self.check_type(compound_asigment.left.type, type(compound_asigment.right.type)):
-            self.manage_types(compound_asigment.left.type, compound_asigment.right.type,
-                              compound_asigment, "El tipo de la variable")
         compound_asigment.set_type(compound_asigment.left.type)
+        if self.variable_defined(compound_asigment.left.value, compound_asigment.function):
+            if self.check_type(compound_asigment.left.type, type(compound_asigment.right.type)):
+                self.manage_types(compound_asigment.left.type, compound_asigment.right.type,
+                                compound_asigment, "El tipo de la variable")
         return None
 
     def manage_types(self, type_1, type_2, node, encabezado):
@@ -581,10 +579,11 @@ class SemanticAnalyzer(ASTVisitor):
             return True
 
     def variable_defined(self, name, function):
+        if name in self.globals:
+            return True
         if function != None:
-            return not name in self.locals[function.name]
-        else:
-            return not name in self.globals
+            if function.name in self.locals:
+                return name in self.locals[function.name]
 
     def __get_declaration(self, node):
         definition = None
