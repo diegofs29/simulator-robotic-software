@@ -282,13 +282,13 @@ class SemanticAnalyzer(ASTVisitor):
                 sent.set_is_loop_sent(True)
                 sent.set_function(for_p.function)
                 sent.accept(self, param)
-        if self.check_in_types(type(for_p.assignment.type), self.integer_types):
+        if self.check_in_types(for_p.assignment.type, self.integer_types):
             self.add_error(
                 "Tipos", for_p, "La variable del for debe ser int (en Arduino realmente no)")
-        if self.check_in_types(type(for_p.condition.type), self.integer_types):
+        if self.check_in_types(for_p.condition.type, self.integer_types):
             self.add_error(
                 "Tipos", for_p, "El resultado de la condición debe ser int o boolean")
-        if self.check_in_types(type(for_p.expression.type), self.integer_types):
+        if self.check_in_types(for_p.expression.type, self.integer_types):
             self.add_error(
                 "Tipos", for_p, "El incremento del for debe ser int")
         return None
@@ -400,7 +400,7 @@ class SemanticAnalyzer(ASTVisitor):
         if self.variable_defined(inc_dec_expression.var.value):
             self.add_error("Declaración", inc_dec_expression,
                            "La variable no está declarada")
-        elif self.check_in_types(type(inc_dec_expression.var.type), self.numerical_types):
+        elif self.check_in_types(inc_dec_expression.var.type, self.numerical_types):
             self.add_error("Tipos", inc_dec_expression,
                            "La expresión no es de tipo numérico")
         return None
@@ -423,7 +423,7 @@ class SemanticAnalyzer(ASTVisitor):
             self.add_error("Declaración", array_access,
                            "El array no está declarado")
         else:
-            if not array_access.index.type in self.integer_types:
+            if not type(array_access.index.type) in self.integer_types:
                 self.add_error("Tipos", array_access, "El índice debe ser int")
             elif definition != None:
                 n = 0
@@ -541,7 +541,7 @@ class SemanticAnalyzer(ASTVisitor):
     def check_in_types(self, var, types):
         if isinstance(var, list):
             return self.__check_elements_in_types(var, types)
-        return not var in types
+        return not type(var) in types
 
     def check_modifiable(self, element):
         return not element.modifiable
@@ -586,7 +586,7 @@ class SemanticAnalyzer(ASTVisitor):
     def __list_types(self, elems):
         types = []
         for elem in elems:
-            elem_type = elem.type
+            elem_type = type(elem.type)
             if not elem_type in types:
                 types.append(elem_type)
         return types

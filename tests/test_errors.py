@@ -88,7 +88,6 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
-        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 32)
 
     def test_error_type(self):
