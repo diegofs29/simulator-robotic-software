@@ -157,12 +157,11 @@ class TestDeclarationErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[11].message, "La variable no está declarada")
 
 
-class TestFlow(TestBaseErrors):
+class TestFlowErrors(TestBaseErrors):
 
     file = "tests/error-tests/flow.txt"
 
     def test_number_of_errors(self):
-        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 8)
 
     def test_error_types(self):
@@ -178,3 +177,12 @@ class TestFlow(TestBaseErrors):
         self.assertEqual(self.semantic_errors[5].message, "Break debe usarse en bucles o en case switch")
         self.assertEqual(self.semantic_errors[6].message, "Continue debe usarse en bucles")
         self.assertEqual(self.semantic_errors[7].message, "La sentencia return debe de estar al final de la función")
+
+
+class TestArrayAccessErrors(TestBaseErrors):
+
+    file = "tests/error-tests/errors.txt"
+
+    def test_number_of_errors(self):
+        self.print_errors()
+        self.assertEqual(len(self.semantic_errors), 24)

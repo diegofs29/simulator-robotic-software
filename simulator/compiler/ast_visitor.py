@@ -142,10 +142,6 @@ class ASTVisitor:
         return None
 
     def visit_array_access(self, array_access: ArrayAccessNode, param):
-        if array_access.var != None:
-            array_access.var.accept(self, param)
-        if array_access.index != None:
-            array_access.index.accept(self, param)
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression: ArithmeticExpressionNode, param):
@@ -248,7 +244,7 @@ class ASTVisitor:
         if elements != None:
             for elem in elements:
                 if isinstance(elem, list):
-                    self.visit_array_elements(elem)
+                    self.visit_array_elements(elem, param)
                 else:
                     elem.accept(self, param)
         return None

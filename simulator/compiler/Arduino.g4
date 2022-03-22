@@ -129,7 +129,7 @@ expression
        | f_call=function_call
        | expr=expression operator=('++'|'--')
        | operator=('++'|'--') expr=expression
-       | array_name=expression '[' index=expression ']'
+       | array_name=ID ('[' indexes+=INT_CONST ']')+
        | operator=('!'|'~') expr=expression
        | left=expression operator=('*'|'/'|'%') right=expression
        | left=expression operator=('+'|'-') right=expression

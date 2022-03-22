@@ -105,7 +105,8 @@ class ArrayDeclarationNode(Sentence):
         self.elements = elements
         self.is_const = is_const
         self.is_static = is_static
-        self.__fix_array()
+        if not (len(self.size) < 1 and (self.elements == [] or self.elements == None)):
+            self.__fix_array()
 
     def accept(self, visitor, param):
         return visitor.visit_array_declaration(self, param)
@@ -460,10 +461,10 @@ class CaseNode(Sentence):
 
 class ArrayAccessNode(Expression):
 
-    def __init__(self, var, index):
+    def __init__(self, var, indexes):
         super().__init__()
         self.var = var
-        self.index = index
+        self.indexes = indexes
 
     def accept(self, visitor, param):
         return visitor.visit_array_access(self, param)
