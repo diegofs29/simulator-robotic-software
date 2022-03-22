@@ -88,6 +88,7 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
+        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 32)
 
     def test_error_type(self):
@@ -155,3 +156,12 @@ class TestDeclarationErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[9].message, "La variable no está declarada")
         self.assertEqual(self.semantic_errors[10].message, "El array no está declarado")
         self.assertEqual(self.semantic_errors[11].message, "La variable no está declarada")
+
+
+class TestFlow(TestBaseErrors):
+
+    file = "tests/error-tests/flow.txt"
+
+    def test_number_of_errors(self):
+        self.print_errors()
+        self.assertEqual(len(self.semantic_errors), 8)

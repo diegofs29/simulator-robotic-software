@@ -88,6 +88,11 @@ conditional_sentence
        | cond_type='switch' '(' expr=expression ')' '{' sentences+=case_sentence* '}'
        ;
 
+case_sentence
+       : sent_type='case' expr=expression ':' sentences+=sentence*
+       | sent_type='default' ':' sentences+=sentence*
+       ;
+
 code_block
        : '{' sentences+=sentence* '}'
        | sentences+=sentence
@@ -107,11 +112,6 @@ sentence
 
 assignment
        : assign=expression '=' value=expression
-       ;
-
-case_sentence
-       : sent_type='case' expr=expression ':' sentences+=sentence* 'break' ';'
-       | sent_type='default' ':' sentences+=sentence* 'break' ';'
        ;
 
 expression 

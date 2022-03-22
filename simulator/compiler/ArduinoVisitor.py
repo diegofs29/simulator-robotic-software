@@ -84,6 +84,11 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArduinoParser#case_sentence.
+    def visitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArduinoParser#code_block.
     def visitCode_block(self, ctx:ArduinoParser.Code_blockContext):
         return self.visitChildren(ctx)
@@ -96,11 +101,6 @@ class ArduinoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ArduinoParser#assignment.
     def visitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#case_sentence.
-    def visitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
         return self.visitChildren(ctx)
 
 

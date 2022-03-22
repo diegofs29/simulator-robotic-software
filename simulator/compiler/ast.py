@@ -24,9 +24,13 @@ class Sentence(ASTNode):
     def __init__(self):
         super().__init__()
         self.function = None
+        self.is_loop_sent = False
 
     def set_function(self, function):
         self.function = function
+
+    def set_is_loop_sent(self, is_loop_sent):
+        self.is_loop_sent = is_loop_sent
 
 
 class Expression(Sentence):

@@ -18,11 +18,14 @@ Conditional_sentence, switch
 Expression, var
 Case_sentence
 Expression, 1
+Sentence, break
 Case_sentence
 Expression, 2
+Sentence, break
 Case_sentence
 Sentence
 Expression, println("hola")
 Function_call, println
 Parameter
 Expression, "hola"
+Sentence, break

@@ -35,7 +35,7 @@ class TestArray(TestBase):
     file = "tests/grammar-tests/ejemploArrays.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputArrays.txt")
+        self.read_results("tests/grammar-tests/outputs/outputArrays.txt")
         self.assertEqual(self.tokens, self.lines)
 
 class TestFor(TestBase):
@@ -43,7 +43,7 @@ class TestFor(TestBase):
     file = "tests/grammar-tests/ejemploFor.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputFor.txt")
+        self.read_results("tests/grammar-tests/outputs/outputFor.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
@@ -52,7 +52,7 @@ class TestWhile(TestBase):
     file = "tests/grammar-tests/ejemploWhile.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputWhile.txt")
+        self.read_results("tests/grammar-tests/outputs/outputWhile.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -61,7 +61,7 @@ class TestDoWhile(TestBase):
     file = "tests/grammar-tests/ejemploDoWhile.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputDoWhile.txt")
+        self.read_results("tests/grammar-tests/outputs/outputDoWhile.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
@@ -70,7 +70,7 @@ class TestIf(TestBase):
     file = "tests/grammar-tests/ejemploIf.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputIf.txt")
+        self.read_results("tests/grammar-tests/outputs/outputIf.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -79,7 +79,7 @@ class TestElse(TestBase):
     file = "tests/grammar-tests/ejemploElse.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputElse.txt")
+        self.read_results("tests/grammar-tests/outputs/outputElse.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -88,7 +88,7 @@ class TestSwitchCase(TestBase):
     file = "tests/grammar-tests/ejemploSwitchCase.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputSwitchCase.txt")
+        self.read_results("tests/grammar-tests/outputs/outputSwitchCase.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -97,7 +97,7 @@ class TestBreakContinue(TestBase):
     file = "tests/grammar-tests/ejemploBreakContinue.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputBreakContinue.txt")
+        self.read_results("tests/grammar-tests/outputs/outputBreakContinue.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -106,7 +106,7 @@ class TestReturn(TestBase):
     file = "tests/grammar-tests/ejemploReturn.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputReturn.txt")
+        self.read_results("tests/grammar-tests/outputs/outputReturn.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -115,7 +115,7 @@ class TestAritmetico(TestBase):
     file = "tests/grammar-tests/ejemploAritmetico.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputAritmetico.txt")
+        self.read_results("tests/grammar-tests/outputs/outputAritmetico.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -124,7 +124,7 @@ class TestComparisonBool(TestBase):
     file = "tests/grammar-tests/ejemploComparisonBool.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputComparisonBool.txt")
+        self.read_results("tests/grammar-tests/outputs/outputComparisonBool.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -133,7 +133,7 @@ class TestBitwise(TestBase):
     file = "tests/grammar-tests/ejemploBitwise.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputBitwise.txt")
+        self.read_results("tests/grammar-tests/outputs/outputBitwise.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -142,7 +142,7 @@ class TestCompound(TestBase):
     file = "tests/grammar-tests/ejemploCompound.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputCompound.txt")
+        self.read_results("tests/grammar-tests/outputs/outputCompound.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -151,7 +151,7 @@ class TestVariablesAsignacion(TestBase):
     file = "tests/grammar-tests/testVariablesAsignacion.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputVariablesAsignacion.txt")
+        self.read_results("tests/grammar-tests/outputs/outputVariablesAsignacion.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -160,7 +160,7 @@ class TestFurtherSyntax(TestBase):
     file = "tests/grammar-tests/testFurtherSyntax.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputFurtherSyntax.txt")
+        self.read_results("tests/grammar-tests/outputs/outputFurtherSyntax.txt")
         self.assertEqual(self.tokens, self.lines)
         
         
@@ -169,5 +169,5 @@ class TestArrayAccess(TestBase):
     file = "tests/grammar-tests/testArrays.txt"
 
     def test_parsed(self):
-        self.read_results("tests/outputs/outputTestArrays.txt")
+        self.read_results("tests/grammar-tests/outputs/outputTestArrays.txt")
         self.assertEqual(self.tokens, self.lines)

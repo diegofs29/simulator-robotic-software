@@ -143,6 +143,15 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#case_sentence.
+    def enterCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#case_sentence.
+    def exitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#code_block.
     def enterCode_block(self, ctx:ArduinoParser.Code_blockContext):
         pass
@@ -167,15 +176,6 @@ class ArduinoListener(ParseTreeListener):
 
     # Exit a parse tree produced by ArduinoParser#assignment.
     def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#case_sentence.
-    def enterCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#case_sentence.
-    def exitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
         pass
 
 
