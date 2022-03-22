@@ -164,3 +164,17 @@ class TestFlow(TestBaseErrors):
     def test_number_of_errors(self):
         self.print_errors()
         self.assertEqual(len(self.semantic_errors), 8)
+
+    def test_error_types(self):
+        for error in self.semantic_errors:
+            self.assertEqual(error.error_type, "Mal uso de identificador")
+
+    def test_error_messages(self):
+        self.assertEqual(self.semantic_errors[0].message, "Continue debe ser usado dentro de un bucle")
+        self.assertEqual(self.semantic_errors[1].message, "Break debe ser usado dentro de un bucle o en case switch")
+        self.assertEqual(self.semantic_errors[2].message, "Continue debe usarse en bucles")
+        self.assertEqual(self.semantic_errors[3].message, "Break debe usarse en bucles o en case switch")
+        self.assertEqual(self.semantic_errors[4].message, "Continue debe usarse en bucles")
+        self.assertEqual(self.semantic_errors[5].message, "Break debe usarse en bucles o en case switch")
+        self.assertEqual(self.semantic_errors[6].message, "Continue debe usarse en bucles")
+        self.assertEqual(self.semantic_errors[7].message, "La sentencia return debe de estar al final de la función")
