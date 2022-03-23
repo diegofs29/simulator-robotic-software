@@ -26,14 +26,14 @@ Iteration_sentence, do
 Code_block
 Sentence
 Expression, delay(50)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, 50
 Sentence
 Assignment
 Expression, x
 Expression, readSensors()
-Function_call, readSensors
+Expression, readSensors
 Expression, <
 Expression, x
 Expression, 100

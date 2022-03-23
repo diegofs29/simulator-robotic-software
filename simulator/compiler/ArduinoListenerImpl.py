@@ -228,23 +228,6 @@ class ArduinoListenerImpl(ArduinoListener):
         self.print_exit()
 
 
-    # Enter a parse tree produced by ArduinoParser#function_call.
-    def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        if ctx.f_name != None:
-            self.print_enter("Function_call", False)
-            print(ctx.f_name.text)
-        else:
-            obj_str = ctx.obj.text
-            for elem in ctx.elems:
-                obj_str += "." + elem.text
-            self.print_enter("Function_call", False)
-            print(obj_str)
-
-    # Exit a parse tree produced by ArduinoParser#function_call.
-    def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        self.print_exit()
-
-
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx:ArduinoParser.ParameterContext):
         self.print_enter("Parameter")

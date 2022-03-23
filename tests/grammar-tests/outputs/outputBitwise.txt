@@ -47,7 +47,7 @@ Function, loop
 Var_type, void
 Sentence
 Expression, print(1&2<<3>>4^5|6)
-Function_call, print
+Expression, print
 Parameter
 Expression, |
 Expression, ^
@@ -62,7 +62,7 @@ Expression, 5
 Expression, 6
 Sentence
 Expression, print(1&2<<3>>4^(5|6))
-Function_call, print
+Expression, print
 Parameter
 Expression, ^
 Expression, &

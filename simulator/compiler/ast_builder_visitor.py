@@ -349,8 +349,10 @@ class ASTBuilderVisitor(ArduinoVisitor):
         comp_assign_ops = {'%=', '&=', '*=', '+=', '-=', '/=', '^=', '|='}
         if ctx.r_expr != None:
             node = self.visit(ctx.r_expr)
-        if ctx.f_call != None:
-            node = self.visit(ctx.f_call)
+        if ctx.member_acc != None:
+            element = self.visit(ctx.member_acc)
+            member = IDNode(ctx.id_acc.text)
+            node = MemberAccessNode(element, member)
         if ctx.array_name != None:
             name = ctx.array_name.text
             indexes = []
@@ -358,6 +360,12 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 for i in ctx.indexes:
                     indexes.append(self.visit(i))
             node = ArrayAccessNode(name, indexes)
+        if ctx.f_call != None:
+            args = []
+            name = self.visit(ctx.f_call)
+            if ctx.args != None:
+                args = self.visit(ctx.args)
+            node = FunctionCallNode(name, args)
         if ctx.operator != None:
             left = right = expr = None
             op = ctx.operator
@@ -407,29 +415,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             string_const = ctx.STRING_CONST().getText()
             string_const = string_const.replace('"', '')
             node = StringNode(string_const)
-        if ctx.ID() != None and ctx.array_name == None:
+        if ctx.ID() != None and ctx.array_name == None and ctx.id_acc == None:
             node = IDNode(ctx.ID().getText())
-        self.__add_line_info(node, ctx)
-        return node
-
-
-    # Visit a parse tree produced by ArduinoParser#function_call.
-    def visitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        params = []
-        name = None
-        if ctx.function_call() != None:
-            node = self.visit(ctx.f_call)
-            node.clase = ctx.obj.text
-            if len(ctx.elems) > 0:
-                node.elems = []
-                for elem in ctx.elems:
-                    node.elems.append(elem.text)
-            return node
-        else:
-            name = ctx.f_name.text
-        if ctx.args != None:
-            params = self.visit(ctx.args)
-        node = FunctionCallNode(name, params)
         self.__add_line_info(node, ctx)
         return node
 

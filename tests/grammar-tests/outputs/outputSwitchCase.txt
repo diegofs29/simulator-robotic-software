@@ -25,7 +25,7 @@ Sentence, break
 Case_sentence
 Sentence
 Expression, println("hola")
-Function_call, println
+Expression, println
 Parameter
 Expression, "hola"
 Sentence, break

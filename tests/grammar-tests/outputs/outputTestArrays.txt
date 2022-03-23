@@ -49,7 +49,7 @@ Expression, 0
 Expression, 2
 Sentence
 Expression, print(message[0])
-Function_call, print
+Expression, print
 Parameter
 Expression, message[0]
 Expression, 0

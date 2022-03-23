@@ -654,14 +654,23 @@ class IDNode(Expression):
         self.definition = definition
 
 
+class MemberAccessNode(Expression):
+
+    def __init__(self, element, member):
+        super().__init__()
+        self.element = element
+        self.member = member
+
+    def accept(self, visitor, param):
+        return visitor.visit_member_access(self, param)
+
+
 class FunctionCallNode(Expression):
 
-    def __init__(self, name, parameters=None, clase=None, elems=None):
+    def __init__(self, name, parameters=None):
         super().__init__()
         self.name = name
         self.parameters = parameters
-        self.clase = clase
-        self.elems = elems
 
     def accept(self, visitor, param):
         return visitor.visit_function_call(self, param)

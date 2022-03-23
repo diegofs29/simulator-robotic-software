@@ -20,7 +20,7 @@ Expression, thisPin
 Code_block
 Sentence
 Expression, pinMode(thisPin,OUTPUT)
-Function_call, pinMode
+Expression, pinMode
 Parameter
 Expression, thisPin
 Expression, OUTPUT
@@ -40,18 +40,18 @@ Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
 Expression, delay(timer)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, timer
 Sentence
 Expression, digitalWrite(thisPin,LOW)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, LOW
@@ -68,18 +68,18 @@ Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
 Expression, delay(timer)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, timer
 Sentence
 Expression, digitalWrite(thisPin,LOW)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, LOW

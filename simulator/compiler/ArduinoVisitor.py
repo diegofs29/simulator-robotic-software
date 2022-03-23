@@ -109,11 +109,6 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#function_call.
-    def visitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ArduinoParser#parameter.
     def visitParameter(self, ctx:ArduinoParser.ParameterContext):
         return self.visitChildren(ctx)

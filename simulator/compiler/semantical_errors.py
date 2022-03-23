@@ -386,8 +386,8 @@ class SemanticAnalyzer(ASTVisitor):
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
         definition = None
-        if function_call.name in self.functions:
-            definition = self.functions[function_call.name]
+        if function_call.name.value in self.functions:
+            definition = self.functions[function_call.name.value]
         else:
             self.add_error("Declaración", function_call,
                            "La función no se ha declarado")

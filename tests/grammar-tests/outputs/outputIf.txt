@@ -21,7 +21,7 @@ Expression, 120
 Code_block
 Sentence
 Expression, digitalWrite(LEDpin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, LEDpin
 Expression, HIGH
@@ -33,7 +33,7 @@ Expression, 120
 Code_block
 Sentence
 Expression, digitalWrite(LEDpin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, LEDpin
 Expression, HIGH
@@ -45,7 +45,7 @@ Expression, 120
 Code_block
 Sentence
 Expression, digitalWrite(LEDpin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, LEDpin
 Expression, HIGH
@@ -57,13 +57,13 @@ Expression, 120
 Code_block
 Sentence
 Expression, digitalWrite(LEDpin1,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, LEDpin1
 Expression, HIGH
 Sentence
 Expression, digitalWrite(LEDpin2,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, LEDpin2
 Expression, HIGH

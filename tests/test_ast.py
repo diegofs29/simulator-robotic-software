@@ -298,13 +298,13 @@ class TestFunctionCall(TestBaseAST):
         self.code = self.ast.code
 
     def test_name(self):
-        self.assertEqual(self.code[0].function.sentences[0].name, "f")
-        self.assertEqual(self.code[0].function.sentences[1].name, "print")
+        self.assertEqual(self.code[0].function.sentences[0].name.value, "f")
+        self.assertEqual(self.code[0].function.sentences[1].name.value, "print")
         self.assertEqual(
-            self.code[0].function.sentences[2].name, "toUpperCase")
+            self.code[0].function.sentences[2].name.member.value, "toUpperCase")
         self.assertEqual(
-            self.code[0].function.sentences[3].name, "toLowerCase")
-        self.assertEqual(self.code[0].function.sentences[4].name, "params")
+            self.code[0].function.sentences[3].name.member.value, "toLowerCase")
+        self.assertEqual(self.code[0].function.sentences[4].name.value, "params")
 
     def test_parameters(self):
         self.assertEqual(
@@ -344,18 +344,12 @@ class TestFunctionCall(TestBaseAST):
         )
 
     def test_clase(self):
-        self.assertEqual(self.code[0].function.sentences[0].clase, None)
-        self.assertEqual(self.code[0].function.sentences[1].clase, None)
-        self.assertEqual(self.code[0].function.sentences[2].clase, "mensaje")
-        self.assertEqual(self.code[0].function.sentences[3].clase, "persona")
-        self.assertEqual(self.code[0].function.sentences[4].clase, None)
-
-    def test_elems(self):
-        self.assertEqual(self.code[0].function.sentences[0].elems, None)
-        self.assertEqual(self.code[0].function.sentences[1].elems, None)
-        self.assertEqual(self.code[0].function.sentences[2].elems, None)
-        self.assertEqual(self.code[0].function.sentences[3].elems[0], "nombre")
-        self.assertEqual(self.code[0].function.sentences[4].elems, None)
+        self.assertEqual(type(self.code[0].function.sentences[0]), FunctionCallNode)
+        self.assertEqual(type(self.code[0].function.sentences[1]), FunctionCallNode)
+        self.assertEqual(self.code[0].function.sentences[2].name.element.value, "mensaje")
+        self.assertEqual(self.code[0].function.sentences[3].name.element.element.value, "persona")
+        self.assertEqual(self.code[0].function.sentences[3].name.element.member.value, "nombre")
+        self.assertEqual(type(self.code[0].function.sentences[4]), FunctionCallNode)
 
 
 class TestConditionals(TestBaseAST):
@@ -390,40 +384,40 @@ class TestConditionals(TestBaseAST):
 
     def test_if_expr(self):
         self.assertEqual(
-            self.code[0].function.sentences[0].if_expr[0].name, "doThis"
+            self.code[0].function.sentences[0].if_expr[0].name.value, "doThis"
         )
         self.assertEqual(
-            self.code[0].function.sentences[1].if_expr[0].name, "doThat"
+            self.code[0].function.sentences[1].if_expr[0].name.value, "doThat"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].if_expr[0].name, "doAlgo"
+            self.code[0].function.sentences[2].if_expr[0].name.value, "doAlgo"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].if_expr[0].name, "print"
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0].name.value, "print"
         )
 
     def test_else_expr(self):
         self.assertEqual(
-            self.code[0].function.sentences[1].else_expr[0].name, "print"
+            self.code[0].function.sentences[1].else_expr[0].name.value, "print"
         )
         self.assertEqual(
             self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None, True
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].else_expr[0].name, "prueba"
+            self.code[0].function.sentences[2].else_expr[0].else_expr[0].name.value, "prueba"
         )
 
     def test_cases(self):
         cases = self.code[0].function.sentences[3].cases
         self.assertEqual(cases[0].type, "case")
         self.assertEqual(cases[0].expression.value, 1)
-        self.assertEqual(cases[0].sentences[0].name, "print")
+        self.assertEqual(cases[0].sentences[0].name.value, "print")
         self.assertEqual(cases[1].type, "case")
         self.assertEqual(cases[1].expression.value, 2)
-        self.assertEqual(cases[1].sentences[0].name, "println")
+        self.assertEqual(cases[1].sentences[0].name.value, "println")
         self.assertEqual(cases[2].type, "default")
         self.assertEqual(cases[2].expression, None)
-        self.assertEqual(cases[2].sentences[0].name, "exit")
+        self.assertEqual(cases[2].sentences[0].name.value, "exit")
 
 
 class TestBucles(TestBaseAST):
@@ -444,7 +438,7 @@ class TestBucles(TestBaseAST):
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[0].sentences
                 )
             ), ["yada", "heeh"]
@@ -460,7 +454,7 @@ class TestBucles(TestBaseAST):
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[1].sentences
                 )
             ), ["print"]
@@ -484,7 +478,7 @@ class TestBucles(TestBaseAST):
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[2].sentences
                 )
             ), ["println"]
@@ -507,7 +501,7 @@ class TestAsignations(TestBaseAST):
 
     def test_expression(self):
         self.assertEqual(
-            self.code[0].function.sentences[1].expr.name, "analogRead")
+            self.code[0].function.sentences[1].expr.name.value, "analogRead")
         self.assertEqual(self.code[0].function.sentences[3].expr.value, 2000)
 
     def test_left(self):

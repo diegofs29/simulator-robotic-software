@@ -188,15 +188,6 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#function_call.
-    def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#function_call.
-    def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx:ArduinoParser.ParameterContext):
         pass

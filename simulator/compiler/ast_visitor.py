@@ -1,4 +1,4 @@
-from simulator.compiler.ast import ArithmeticExpressionNode, ArrayAccessNode, ArrayDeclarationNode, AssignmentNode, BinaryNode, BitNotExpressionNode, BitwiseExpressionNode, BooleanExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CaseNode, CharNode, CharTypeNode, ComparisonExpressionNode, CompoundAssignmentNode, ConditionalSentenceNode, ContinueNode, DeclarationNode, DefineMacroNode, DoWhileNode, DoubleTypeNode, FloatNode, FloatTypeNode, ForNode, FunctionCallNode, FunctionNode, HexNode, IDNode, IDTypeNode, IncDecExpressionNode, IncludeNode, IntNode, IntTypeNode, LongTypeNode, NotExpressionNode, OctalNode, ProgramCodeNode, ProgramNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, SwitchSentenceNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WhileNode, WordTypeNode
+from simulator.compiler.ast import ArithmeticExpressionNode, ArrayAccessNode, ArrayDeclarationNode, AssignmentNode, BinaryNode, BitNotExpressionNode, BitwiseExpressionNode, BooleanExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CaseNode, CharNode, CharTypeNode, ComparisonExpressionNode, CompoundAssignmentNode, ConditionalSentenceNode, ContinueNode, DeclarationNode, DefineMacroNode, DoWhileNode, DoubleTypeNode, FloatNode, FloatTypeNode, ForNode, FunctionCallNode, FunctionNode, HexNode, IDNode, IDTypeNode, IncDecExpressionNode, IncludeNode, IntNode, IntTypeNode, LongTypeNode, MemberAccessNode, NotExpressionNode, OctalNode, ProgramCodeNode, ProgramNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, SwitchSentenceNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WhileNode, WordTypeNode
 
 
 class ASTVisitor:
@@ -225,6 +225,10 @@ class ASTVisitor:
     def visit_function_call(self, function_call: FunctionCallNode, param):
         self.visit_children(function_call.parameters, param)
         return None
+
+    def visit_member_access(self, member_access: MemberAccessNode, param):
+        if member_access.element != None:
+            member_access.element.accept(self, param)
 
     def visit_return(self, return_p: ReturnNode, param):
         if return_p.expression != None:

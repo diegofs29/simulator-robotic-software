@@ -126,10 +126,11 @@ expression
        | STRING_CONST
        | ID
        | '(' r_expr=expression ')'
-       | f_call=function_call
+       | member_acc=expression '.' id_acc=ID
+       | array_name=ID ('[' indexes+=expression ']')+
+       | f_call=expression '(' args=parameter? ')'
        | expr=expression operator=('++'|'--')
        | operator=('++'|'--') expr=expression
-       | array_name=ID ('[' indexes+=expression ']')+
        | operator=('!'|'~') expr=expression
        | left=expression operator=('*'|'/'|'%') right=expression
        | left=expression operator=('+'|'-') right=expression
@@ -142,11 +143,6 @@ expression
        | left=expression operator='&&' right=expression
        | left=expression operator='||' right=expression
        | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
-       ;
-
-function_call 
-       : obj=ID ('.' elems+=ID)*  '.' f_call=function_call
-       | f_name=ID '(' args=parameter? ')'
        ;
 
 parameter 

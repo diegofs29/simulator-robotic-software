@@ -51,14 +51,14 @@ Function, loop
 Var_type, void
 Sentence
 Expression, print(1--3)
-Function_call, print
+Expression, print
 Parameter
 Expression, -
 Expression, 1
 Expression, -3
 Sentence
 Expression, print(1+2/3*-4)
-Function_call, print
+Expression, print
 Parameter
 Expression, +
 Expression, 1
