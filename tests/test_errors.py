@@ -88,7 +88,6 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
-        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 31)
 
     def test_error_type(self):
@@ -184,5 +183,61 @@ class TestArrayAccessErrors(TestBaseErrors):
     file = "tests/error-tests/arrays.txt"
 
     def test_number_of_errors(self):
-        self.print_errors()
         self.assertEqual(len(self.semantic_errors), 24)
+
+    def test_error_type(self):
+        self.assertEqual(self.semantic_errors[0].error_type, "Declaración")
+        self.assertEqual(self.semantic_errors[1].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[2].error_type, "Declaración")
+        self.assertEqual(self.semantic_errors[3].error_type, "Tipos")
+        self.assertEqual(self.semantic_errors[4].error_type, "Declaración")
+        self.assertEqual(self.semantic_errors[5].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[6].error_type, "Tipos")
+        self.assertEqual(self.semantic_errors[7].error_type, "Declaración")
+        self.assertEqual(self.semantic_errors[8].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[9].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[10].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[11].error_type, "Declaración")
+        self.assertEqual(self.semantic_errors[12].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[13].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[14].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[15].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[16].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[17].error_type, "Índice")
+        self.assertEqual(self.semantic_errors[18].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[19].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[20].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[21].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[22].error_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[23].error_type, "Tamaños")
+
+    def test_error_message(self):
+        self.assertEqual(self.semantic_errors[0].message, "El array ya ha sido declarado")
+        self.assertEqual(self.semantic_errors[1].message, "No se ha introducido el tamaño del array")
+        self.assertEqual(self.semantic_errors[2].message, "El array ya ha sido declarado")
+        self.assertEqual(self.semantic_errors[3].message, "El tipo del array es char, pero su valor no es char o int")
+        self.assertEqual(self.semantic_errors[4].message, "El array no está declarado")
+        self.assertEqual(self.semantic_errors[5].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[6].message, "El tipo de la variable y del valor no coincide")
+        self.assertEqual(self.semantic_errors[7].message, "El array no está declarado")
+        self.assertEqual(self.semantic_errors[8].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[9].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[10].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[11].message, "El array no está declarado")
+        self.assertEqual(self.semantic_errors[12].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[13].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[14].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[15].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[16].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[17].message, "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+        self.assertEqual(self.semantic_errors[18].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[19].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[20].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[21].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[22].message, "El índice sobrepasa el tamaño del array")
+        self.assertEqual(self.semantic_errors[23].message, "El índice sobrepasa el tamaño del array")
+
+
+class TestPositiveCases(TestBaseErrors):
+
+    pass

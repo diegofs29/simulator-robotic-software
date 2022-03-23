@@ -431,12 +431,10 @@ class SemanticAnalyzer(ASTVisitor):
             array_access.set_type(definition.type)
             if len(definition.size) == len(array_access.indexes):
                 for i in range(0, len(array_access.indexes)):
-                    if self.check_in_types(array_access.indexes[i].type, self.integer_types):
+                    if self.check_in_types(array_access.indexes[i].type, self.integer_types) and self.check_type(array_access.indexes[i].type, IDTypeNode):
                         self.add_error("Índice", array_access.indexes[i], "El tipo del índice debe ser int (o cualquiera que sea compatible)")
                     elif array_access.indexes[i].value >= definition.size[i]:
-                        self.add_error("Tamaños", array_access, "El índice sobrepasa el tamaño del array")
-            else:
-                self.add_error("Dimensiones del array", array_access, "Las dimensiones del array no coinciden")
+                        self.add_error("Tamaños", array_access.indexes[i], "El índice sobrepasa el tamaño del array")
         else:
             self.add_error("Declaración", array_access, "El array no está declarado")
         return None
