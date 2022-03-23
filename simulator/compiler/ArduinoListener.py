@@ -26,6 +26,15 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#include.
+    def enterInclude(self, ctx:ArduinoParser.IncludeContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#include.
+    def exitInclude(self, ctx:ArduinoParser.IncludeContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#program_code.
     def enterProgram_code(self, ctx:ArduinoParser.Program_codeContext):
         pass
@@ -44,57 +53,30 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#h_file.
-    def enterH_file(self, ctx:ArduinoParser.H_fileContext):
+    # Enter a parse tree produced by ArduinoParser#simple_declaration.
+    def enterSimple_declaration(self, ctx:ArduinoParser.Simple_declarationContext):
         pass
 
-    # Exit a parse tree produced by ArduinoParser#h_file.
-    def exitH_file(self, ctx:ArduinoParser.H_fileContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#definition.
-    def enterDefinition(self, ctx:ArduinoParser.DefinitionContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#definition.
-    def exitDefinition(self, ctx:ArduinoParser.DefinitionContext):
+    # Exit a parse tree produced by ArduinoParser#simple_declaration.
+    def exitSimple_declaration(self, ctx:ArduinoParser.Simple_declarationContext):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#simple_definition.
-    def enterSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
+    # Enter a parse tree produced by ArduinoParser#array_declaration.
+    def enterArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
         pass
 
-    # Exit a parse tree produced by ArduinoParser#simple_definition.
-    def exitSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#assignment_definition.
-    def enterAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#assignment_definition.
-    def exitAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
+    # Exit a parse tree produced by ArduinoParser#array_declaration.
+    def exitArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#assignment.
-    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
+    # Enter a parse tree produced by ArduinoParser#define_macro.
+    def enterDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
-    # Exit a parse tree produced by ArduinoParser#assignment.
-    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#array_definition.
-    def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#array_definition.
-    def exitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+    # Exit a parse tree produced by ArduinoParser#define_macro.
+    def exitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
 
@@ -113,15 +95,6 @@ class ArduinoListener(ParseTreeListener):
 
     # Exit a parse tree produced by ArduinoParser#array_elements.
     def exitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#constant.
-    def enterConstant(self, ctx:ArduinoParser.ConstantContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#constant.
-    def exitConstant(self, ctx:ArduinoParser.ConstantContext):
         pass
 
 
@@ -170,6 +143,15 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#case_sentence.
+    def enterCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#case_sentence.
+    def exitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#code_block.
     def enterCode_block(self, ctx:ArduinoParser.Code_blockContext):
         pass
@@ -188,12 +170,12 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#case_sentence.
-    def enterCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+    # Enter a parse tree produced by ArduinoParser#assignment.
+    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
         pass
 
-    # Exit a parse tree produced by ArduinoParser#case_sentence.
-    def exitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+    # Exit a parse tree produced by ArduinoParser#assignment.
+    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
         pass
 
 
@@ -206,39 +188,12 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#incdec_expression.
-    def enterIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#incdec_expression.
-    def exitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#function_call.
-    def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#function_call.
-    def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx:ArduinoParser.ParameterContext):
         pass
 
     # Exit a parse tree produced by ArduinoParser#parameter.
     def exitParameter(self, ctx:ArduinoParser.ParameterContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#static_variable.
-    def enterStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
-        pass
-
-    # Exit a parse tree produced by ArduinoParser#static_variable.
-    def exitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
         pass
 
 

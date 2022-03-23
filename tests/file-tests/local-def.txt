@@ -9,7 +9,7 @@ void metodo() {
     long l;
     short s;
     size_t size;
-    string str = "Diegui";
+    String str = "Diegui";
     unsigned char uc;
     unsigned int ui;
     unsigned long ul;
@@ -17,7 +17,7 @@ void metodo() {
 
     const double cIni = 29.456;
 
-    static string str;
+    static String str;
     static char ch = 'c';
 
     int arraySimple[5] = {1, 2, 3, 4, 5};

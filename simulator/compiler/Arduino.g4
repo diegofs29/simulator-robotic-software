@@ -7,63 +7,46 @@ start
        ;
 
 program 
-       : declarations+=declaration* code+=program_code*
+       : include_directives+=include* code+=program_code*
+       ;
+
+include 
+       : '#include' STRING_CONST
+       | '#include' '<' ID '.' ID '>'
        ;
 
 program_code
-       : var_def=definition
+       : var_dec=declaration ';'
        | func_def=function
+       | def_mac=define_macro
        ;
 
 declaration 
-       : '#include' STRING_CONST
-       | '#include' '<' h_file '>'
+       : s_def=simple_declaration 
+       | a_def=array_declaration 
+       | qual=('const' | 'static') declaration
        ;
 
-h_file 
-       : ID '.' ID
+simple_declaration 
+       : v_type=var_type ID ('=' val=expression)? 
        ;
 
-definition 
-       : s_def=simple_definition ';'
-       | a_def=array_definition
-       | assign_def=assignment_definition ';'
-       | cte_def=constant
+array_declaration
+       : v_type=var_type ID a_index=array_index ('=' (expr=expression | elems=array_elements))? 
        ;
 
-simple_definition 
-       : v_type=var_type ID
-       ;
-
-assignment_definition 
-       : v_type=var_type ID '=' val=expression
-       ;
-
-assignment 
-       : ID '=' expr=expression
-       | ID '[' INT_CONST ']' '=' expr=expression
-       ;
-
-array_definition
-       : const_type='const' c_array=array_definition
-       | const_type='#define' ID elems=array_elements
-       | v_type=var_type ID a_index=array_index ';'
-       | v_type=var_type ID a_index=array_index '=' elems=array_elements ';'
-       | v_type=var_type ID a_index=array_index '=' expr=expression ';'
+define_macro
+       : '#define' ID val=expression
+       | '#define' ID elems=array_elements
        ;
 
 array_index
-       : '[' INT_CONST? ']' a_index=array_index?
+       : dimensions+='[' sizes+=INT_CONST? ']' (dimensions+='[' sizes+=INT_CONST ']')*
        ;
 
 array_elements
        : '{' array_elements (',' array_elements)+ '}'
        | '{' elements+=expression (',' elements+=expression)* '}'
-       ;
-
-constant 
-       : const_type='const' v_type=var_type ID '=' val=expression ';'
-       | const_type='#define' ID val=expression
        ;
 
 var_type 
@@ -77,7 +60,7 @@ var_type
        | 'long'
        | 'short'
        | 'size_t'
-       | 'string'
+       | 'String'
        | 'unsigned int'
        | 'unsigned char'
        | 'unsigned long'
@@ -91,19 +74,23 @@ function
        ;
 
 function_args
-       : f_args+=simple_definition (',' f_args+=simple_definition)*
+       : f_args+=declaration (',' f_args+=declaration)*
        ;
 
 iteration_sentence 
        : it_type='while' '(' expr=expression ')' code=code_block
        | it_type='do' code=code_block 'while' '(' expr=expression ')' ';'
-       | it_type='for' '(' assign_def=assignment_definition ';' condition=expression ';' expr=expression ')' code=code_block
+       | it_type='for' '(' assign_def=simple_declaration? ';' condition=expression? ';' expr=expression? ')' code=code_block
        ;
 
 conditional_sentence 
-       : cond_type='if' '(' expr=expression ')' if_code=code_block
-       | cond_type='if' '(' expr=expression ')' if_code=code_block 'else' else_code=code_block
+       : cond_type='if' '(' expr=expression ')' if_code=code_block ('else' else_code=code_block)?
        | cond_type='switch' '(' expr=expression ')' '{' sentences+=case_sentence* '}'
+       ;
+
+case_sentence
+       : sent_type='case' expr=expression ':' sentences+=sentence*
+       | sent_type='default' ':' sentences+=sentence*
        ;
 
 code_block
@@ -112,29 +99,38 @@ code_block
        ;
 
 sentence 
-       : a_def=assignment_definition ';'
-       | s_def=simple_definition ';'
-       | arr_def=array_definition
-       | const_def=constant
-       | s_var=static_variable
+       : dec=declaration ';'
        | it_sent=iteration_sentence
        | cond_sent=conditional_sentence
+       | assign=assignment ';'
        | expr=expression ';'
+       | def_mac=define_macro
        | s_type='return' expr=expression? ';'
        | s_type='break' ';'
        | s_type='continue' ';'
        ;
 
-case_sentence
-       : sent_type='case' expr=expression ':' sentences+=sentence* 'break' ';'
-       | sent_type='default' ':' sentences+=sentence* 'break' ';'
+assignment
+       : assign=expression '=' value=expression
        ;
 
 expression 
-       : '(' r_expr=expression ')'
-       | f_call=function_call
-       | i_d_expr=incdec_expression
-       | array_name=expression '[' index=expression ']'
+       : 'true'
+       | 'false'
+       | HEX_CONST
+       | OCTAL_CONST
+       | BINARY_CONST
+       | INT_CONST
+       | FLOAT_CONST
+       | CHAR_CONST
+       | STRING_CONST
+       | ID
+       | '(' r_expr=expression ')'
+       | member_acc=expression '.' id_acc=ID
+       | array_name=ID ('[' indexes+=expression ']')+
+       | f_call=expression '(' args=parameter? ')'
+       | expr=expression operator=('++'|'--')
+       | operator=('++'|'--') expr=expression
        | operator=('!'|'~') expr=expression
        | left=expression operator=('*'|'/'|'%') right=expression
        | left=expression operator=('+'|'-') right=expression
@@ -147,36 +143,8 @@ expression
        | left=expression operator='&&' right=expression
        | left=expression operator='||' right=expression
        | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
-       | assign=assignment
-       | 'true'
-       | 'false'
-       | HEX_CONST
-       | OCTAL_CONST
-       | BINARY_CONST
-       | INT_CONST
-       | FLOAT_CONST
-       | CHAR_CONST
-       | STRING_CONST
-       | ID
-       ;
-
-incdec_expression 
-       : operator='++' ID
-       | ID operator='++'
-       | operator='--' ID
-       | ID operator='--'
-       ;
-
-function_call 
-       : obj=ID ('.' elems+=ID)*  '.' f_call=function_call
-       | f_name=ID '(' args=parameter? ')'
        ;
 
 parameter 
        : parameters+=expression (',' parameters+=expression)*
-       ;
-
-static_variable 
-       : 'static' v_type=var_type ID ';'
-       | 'static' v_type=var_type ID '=' val=expression ';'
        ;

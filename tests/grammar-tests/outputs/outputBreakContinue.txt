@@ -1,44 +1,45 @@
 Program
 Program_code
-Definition
-Simple_definition, sens
+Declaration
+Simple_declaration, sens
 Var_type, int
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, sens=0
-Assignment, sens = 0
+Assignment
+Expression, sens
 Expression, 0
 Program_code
 Function, loop
 Var_type, void
 Sentence
-Assignment_definition, threshold
+Declaration
+Simple_declaration, threshold
 Var_type, int
 Expression, 40
 Sentence
 Iteration_sentence, for
-Assignment_definition, x
+Simple_declaration, x
 Var_type, int
 Expression, 0
 Expression, <
 Expression, x
 Expression, 255
-Expression, x++
-Incdec_expression, ++
+Expression, ++
+Expression, x
 Code_block
 Sentence
 Expression, analogWrite(PWMpin,x)
-Function_call, analogWrite
+Expression, analogWrite
 Parameter
 Expression, PWMpin
 Expression, x
 Sentence
-Expression, sens=analogRead(sensorPin)
-Assignment, sens = analogRead(sensorPin)
+Assignment
+Expression, sens
 Expression, analogRead(sensorPin)
-Function_call, analogRead
+Expression, analogRead
 Parameter
 Expression, sensorPin
 Sentence
@@ -48,13 +49,13 @@ Expression, sens
 Expression, threshold
 Code_block
 Sentence
-Expression, x=0
-Assignment, x = 0
+Assignment
+Expression, x
 Expression, 0
 Sentence, break
 Sentence
 Expression, delay(50)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, 50
 Sentence, continue

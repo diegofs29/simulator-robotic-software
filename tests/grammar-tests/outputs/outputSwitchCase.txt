@@ -1,14 +1,14 @@
 Program
 Program_code
-Definition
-Simple_definition, var
+Declaration
+Simple_declaration, var
 Var_type, int
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, var=1
-Assignment, var = 1
+Assignment
+Expression, var
 Expression, 1
 Program_code
 Function, loop
@@ -18,11 +18,14 @@ Conditional_sentence, switch
 Expression, var
 Case_sentence
 Expression, 1
+Sentence, break
 Case_sentence
 Expression, 2
+Sentence, break
 Case_sentence
 Sentence
 Expression, println("hola")
-Function_call, println
+Expression, println
 Parameter
 Expression, "hola"
+Sentence, break

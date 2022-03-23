@@ -1,7 +1,7 @@
 Program
 Program_code
-Definition
-Assignment_definition, timer
+Declaration
+Simple_declaration, timer
 Var_type, int
 Expression, 100
 Program_code
@@ -9,18 +9,18 @@ Function, setup
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 2
 Expression, <
 Expression, thisPin
 Expression, 8
-Expression, thisPin++
-Incdec_expression, ++
+Expression, ++
+Expression, thisPin
 Code_block
 Sentence
 Expression, pinMode(thisPin,OUTPUT)
-Function_call, pinMode
+Expression, pinMode
 Parameter
 Expression, thisPin
 Expression, OUTPUT
@@ -29,57 +29,57 @@ Function, loop
 Var_type, void
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 2
 Expression, <
 Expression, thisPin
 Expression, 8
-Expression, thisPin++
-Incdec_expression, ++
+Expression, ++
+Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
 Expression, delay(timer)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, timer
 Sentence
 Expression, digitalWrite(thisPin,LOW)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, LOW
 Sentence
 Iteration_sentence, for
-Assignment_definition, thisPin
+Simple_declaration, thisPin
 Var_type, int
 Expression, 7
 Expression, >=
 Expression, thisPin
 Expression, 2
-Expression, thisPin--
-Incdec_expression, --
+Expression, --
+Expression, thisPin
 Code_block
 Sentence
 Expression, digitalWrite(thisPin,HIGH)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, HIGH
 Sentence
 Expression, delay(timer)
-Function_call, delay
+Expression, delay
 Parameter
 Expression, timer
 Sentence
 Expression, digitalWrite(thisPin,LOW)
-Function_call, digitalWrite
+Expression, digitalWrite
 Parameter
 Expression, thisPin
 Expression, LOW

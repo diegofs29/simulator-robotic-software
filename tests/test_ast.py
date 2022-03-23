@@ -1,11 +1,11 @@
-from tokenize import Floatnumber
 import unittest
 
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import BinaryNode, BitwiseExpressionNode, BooleanNode, BooleanTypeNode, BreakNode, ByteTypeNode, CharNode, CharTypeNode, ContinueNode, DefinitionNode, DoubleTypeNode, FloatNode, FloatTypeNode, FunctionCallNode, HexNode, IDNode, IntNode, IntTypeNode, LongTypeNode, OctalNode, ReturnNode, ShortTypeNode, Size_tTypeNode, StringNode, StringTypeNode, UCharTypeNode, UIntTypeNode, ULongTypeNode, VoidTypeNode, WordTypeNode
+from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
+from simulator.compiler.error_listener import CompilerErrorListener
 
 
 class TestBaseAST(unittest.TestCase):
@@ -28,11 +28,11 @@ class TestInclude(TestBaseAST):
     file = "tests/file-tests/include.txt"
 
     def test_file_name(self):
-        declarations = self.ast.declarations
-        self.assertEqual(declarations[0].file_name, "LibreriaDelIDE.h")
-        self.assertEqual(declarations[1].file_name, "ArchivoRandom.h")
-        self.assertEqual(declarations[2].file_name, "EstoEsUnaLibreria.h")
-        self.assertEqual(declarations[3].file_name, "iostream.h")
+        includes = self.ast.includes
+        self.assertEqual(includes[0].file_name, "LibreriaDelIDE.h")
+        self.assertEqual(includes[1].file_name, "ArchivoRandom.h")
+        self.assertEqual(includes[2].file_name, "EstoEsUnaLibreria.h")
+        self.assertEqual(includes[3].file_name, "iostream.h")
 
 
 class TestGlobalDefinition(TestBaseAST):
@@ -45,115 +45,109 @@ class TestGlobalDefinition(TestBaseAST):
 
     def test_type(self):
         self.assertTrue(
-            isinstance(self.code[0].definition.type, IntTypeNode)
-            , "No es del tipo int"
+            isinstance(self.code[0].declaration.type,
+                       IntTypeNode), "No es del tipo int"
         )
         self.assertTrue(
-            isinstance(self.code[1].definition.type, StringTypeNode)
-            , "No es del tipo string"
+            isinstance(self.code[1].declaration.type,
+                       StringTypeNode), "No es del tipo string"
         )
         self.assertTrue(
-            isinstance(self.code[2].definition.type, DoubleTypeNode)
-            , "No es del tipo double"
+            isinstance(self.code[2].declaration.type,
+                       DoubleTypeNode), "No es del tipo double"
         )
         self.assertTrue(
-            isinstance(self.code[3].definition.type, BooleanTypeNode)
-            , "No es del tipo Boolean"
+            isinstance(self.code[3].declaration.type,
+                       BooleanTypeNode), "No es del tipo Boolean"
         )
         self.assertTrue(
-            isinstance(self.code[4].definition.type, CharTypeNode)
-            , "No es del tipo char"
+            isinstance(self.code[4].declaration.type,
+                       CharTypeNode), "No es del tipo char"
         )
         self.assertTrue(
-            isinstance(self.code[5].definition.type, CharTypeNode)
-            , "No es del tipo char"
+            isinstance(self.code[5].declaration.type,
+                       CharTypeNode), "No es del tipo char"
         )
-        #define no prueba el tipo porque no tiene
+        # define no prueba el tipo porque no tiene
         self.assertTrue(
-            isinstance(self.code[7].definition.type, DoubleTypeNode)
-            , "No es del tipo double"
+            isinstance(self.code[7].declaration.type,
+                       DoubleTypeNode), "No es del tipo double"
         )
-        #define no prueba el tipo porque no tiene
+        # define no prueba el tipo porque no tiene
         self.assertTrue(
-            isinstance(self.code[9].definition.type, StringTypeNode)
-            , "No es del tipo string"
+            isinstance(self.code[9].declaration.type,
+                       StringTypeNode), "No es del tipo string"
         )
 
     def test_var_name(self):
-        self.assertEqual(self.code[0].definition.var_name, "num")
-        self.assertEqual(self.code[1].definition.var_name, "saludo")
-        self.assertEqual(self.code[2].definition.var_name, "notas")
-        self.assertEqual(self.code[3].definition.var_name, "interruptores")
-        self.assertEqual(self.code[4].definition.var_name, "iniciales")
-        self.assertEqual(self.code[5].definition.var_name, "mensaje")
-        self.assertEqual(self.code[6].definition.var_name, "ledPin")
-        self.assertEqual(self.code[7].definition.var_name, "gravity")
-        self.assertEqual(self.code[8].definition.var_name, "arrayPins")
-        self.assertEqual(self.code[9].definition.var_name, "nombres")
-
+        self.assertEqual(self.code[0].declaration.var_name, "num")
+        self.assertEqual(self.code[1].declaration.var_name, "saludo")
+        self.assertEqual(self.code[2].declaration.var_name, "notas")
+        self.assertEqual(self.code[3].declaration.var_name, "interruptores")
+        self.assertEqual(self.code[4].declaration.var_name, "iniciales")
+        self.assertEqual(self.code[5].declaration.var_name, "mensaje")
+        self.assertEqual(self.code[6].macro.macro_name, "ledPin")
+        self.assertEqual(self.code[7].declaration.var_name, "gravity")
+        self.assertEqual(self.code[8].macro.macro_name, "arrayPins")
+        self.assertEqual(self.code[9].declaration.var_name, "nombres")
 
     def test_is_constant(self):
-        self.assertEqual(self.code[0].definition.is_constant, False)
-        self.assertEqual(self.code[1].definition.is_constant, False)
-        self.assertEqual(self.code[2].definition.is_constant, False)
-        self.assertEqual(self.code[3].definition.is_constant, False)
-        self.assertEqual(self.code[4].definition.is_constant, False)
-        self.assertEqual(self.code[5].definition.is_constant, False)
-        self.assertEqual(self.code[6].definition.is_constant, True)
-        self.assertEqual(self.code[7].definition.is_constant, True)
-        self.assertEqual(self.code[8].definition.is_constant, True)
-        self.assertEqual(self.code[9].definition.is_constant, True)
+        self.assertEqual(self.code[0].declaration.is_const, False)
+        self.assertEqual(self.code[1].declaration.is_const, False)
+        self.assertEqual(self.code[2].declaration.is_const, False)
+        self.assertEqual(self.code[3].declaration.is_const, False)
+        self.assertEqual(self.code[4].declaration.is_const, False)
+        self.assertEqual(self.code[5].declaration.is_const, False)
+        self.assertEqual(self.code[7].declaration.is_const, True)
+        self.assertEqual(self.code[9].declaration.is_const, True)
 
     def test_value(self):
-        self.assertEqual(self.code[0].definition.value, None)
-        self.assertEqual(self.code[1].definition.value.value, "hola")
-        self.assertEqual(self.code[6].definition.value.value, 4)
-        self.assertEqual(self.code[7].definition.value.value, 9.8)
+        self.assertEqual(self.code[0].declaration.expr, None)
+        self.assertEqual(self.code[1].declaration.expr.value, "hola")
+        self.assertEqual(self.code[6].macro.expr.value, 4)
+        self.assertEqual(self.code[7].declaration.expr.value, 9.8)
 
     def test_array_index(self):
-        self.assertEqual(self.code[2].definition.size[0], 25)
-        self.assertEqual(self.code[3].definition.size, [])
-        self.assertEqual(self.code[4].definition.size[0], 5)
-        self.assertEqual(self.code[5].definition.size[0], 10)
-        self.assertEqual(self.code[8].definition.size, [])
-        self.assertEqual(self.code[9].definition.size[0], 3)
-
-    def test_array_expression(self):
-        self.assertEqual(self.code[2].definition.elements, [])
-        self.assertEqual(
-            self.code[5].definition.elements, 
-            ['T', 'r', 'a', 'e', ' ', 's', 'o', 'p', 'a']
-        )
+        self.assertEqual(self.code[2].declaration.size[0], 25)
+        self.assertEqual(self.code[3].declaration.size[0], 5)
+        self.assertEqual(self.code[4].declaration.size[0], 5)
+        self.assertEqual(self.code[5].declaration.size[0], 10)
+        self.assertEqual(self.code[9].declaration.size[0], 3)
 
     def test_array_elements(self):
+        self.assertEqual(self.code[2].declaration.elements, None)
         self.assertEqual(
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[3].definition.elements)
-                )
-            , [True, False, False, True, False]
+                    self.code[5].declaration.elements)
+            ), ['T', 'r', 'a', 'e', ' ', 's', 'o', 'p', 'a', '\0']
         )
         self.assertEqual(
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[4].definition.elements)
-                )
-            , ['E', 'A', 'M', 'A', 'P']
+                    self.code[3].declaration.elements)
+            ), [True, False, False, True, False]
         )
         self.assertEqual(
             list(
                 map(
                     lambda elem: elem.value,
-                    self.code[8].definition.elements)
-                )
-            , [1, 3, 7, 10]
+                    self.code[4].declaration.elements)
+            ), ['E', 'A', 'M', 'A', 'P']
+        )
+        self.assertEqual(
+            list(
+                map(
+                    lambda elem: elem.value,
+                    self.code[8].macro.elements)
+            ), [1, 3, 7, 10]
         )
 
 
 class TestFunctionDefinition(TestBaseAST):
-    
+
     file = "tests/file-tests/f-def.txt"
 
     def setUp(self):
@@ -229,7 +223,7 @@ class TestFunctionDefinition(TestBaseAST):
         self.assertEqual(len(self.code[3].function.sentences), 3)
         self.assertTrue(
             isinstance(
-                self.code[3].function.sentences[0], DefinitionNode
+                self.code[3].function.sentences[0], DeclarationNode
             ), "No es una definicion"
         )
         self.assertTrue(
@@ -253,40 +247,46 @@ class TestTerminals(TestBaseAST):
         self.code = self.ast.code
 
     def test_class(self):
-        self.assertTrue(isinstance(self.code[0].definition.value, BooleanNode))
-        self.assertTrue(isinstance(self.code[1].definition.value, BooleanNode))
-        self.assertTrue(isinstance(self.code[2].definition.value, IntNode))
-        self.assertTrue(isinstance(self.code[3].definition.value, FloatNode))
-        self.assertTrue(isinstance(self.code[4].definition.value, CharNode))
-        self.assertTrue(isinstance(self.code[5].definition.value, StringNode))
-        self.assertTrue(isinstance(self.code[6].definition.value, IDNode))
-        self.assertTrue(isinstance(self.code[7].definition.value, HexNode))
-        self.assertTrue(isinstance(self.code[8].definition.value, BinaryNode))
-        self.assertTrue(isinstance(self.code[9].definition.value, OctalNode))
+        self.assertTrue(isinstance(self.code[0].declaration.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[1].declaration.expr, BooleanNode))
+        self.assertTrue(isinstance(self.code[2].declaration.expr, IntNode))
+        self.assertTrue(isinstance(self.code[3].declaration.expr, FloatNode))
+        self.assertTrue(isinstance(self.code[4].declaration.expr, CharNode))
+        self.assertTrue(isinstance(self.code[5].declaration.expr, StringNode))
+        self.assertTrue(isinstance(self.code[6].declaration.expr, IDNode))
+        self.assertTrue(isinstance(self.code[7].declaration.expr, HexNode))
+        self.assertTrue(isinstance(self.code[8].declaration.expr, BinaryNode))
+        self.assertTrue(isinstance(self.code[9].declaration.expr, OctalNode))
 
     def test_values(self):
-        self.assertEqual(self.code[0].definition.value.value, True)
-        self.assertEqual(self.code[1].definition.value.value, False)
-        self.assertEqual(self.code[2].definition.value.value, 10)
-        self.assertEqual(self.code[3].definition.value.value, 29.29)
-        self.assertEqual(self.code[4].definition.value.value, 'D')
-        self.assertEqual(self.code[5].definition.value.value, "Diego")
-        self.assertEqual(self.code[6].definition.value.value, "c")
-        self.assertEqual(hex(self.code[7].definition.value.value), "0xaf66")
-        self.assertEqual(bin(self.code[8].definition.value.value), "0b1101")
-        self.assertEqual(oct(self.code[9].definition.value.value), "0o767")
+        self.assertEqual(self.code[0].declaration.expr.value, True)
+        self.assertEqual(self.code[1].declaration.expr.value, False)
+        self.assertEqual(self.code[2].declaration.expr.value, 10)
+        self.assertEqual(self.code[3].declaration.expr.value, 29.29)
+        self.assertEqual(self.code[4].declaration.expr.value, 'D')
+        self.assertEqual(self.code[5].declaration.expr.value, "Diego")
+        self.assertEqual(self.code[6].declaration.expr.value, "c")
+        self.assertEqual(hex(self.code[7].declaration.expr.value), "0xaf66")
+        self.assertEqual(bin(self.code[8].declaration.expr.value), "0b1101")
+        self.assertEqual(oct(self.code[9].declaration.expr.value), "0o767")
 
     def test_type_class(self):
-        self.assertTrue(isinstance(self.code[0].definition.type, BooleanTypeNode))
-        self.assertTrue(isinstance(self.code[1].definition.type, BooleanTypeNode))
-        self.assertTrue(isinstance(self.code[2].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[3].definition.type, FloatTypeNode))
-        self.assertTrue(isinstance(self.code[4].definition.type, CharTypeNode))
-        self.assertTrue(isinstance(self.code[5].definition.type, StringTypeNode))
-        self.assertTrue(isinstance(self.code[6].definition.type, StringTypeNode))
-        self.assertTrue(isinstance(self.code[7].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[8].definition.type, IntTypeNode))
-        self.assertTrue(isinstance(self.code[9].definition.type, IntTypeNode))
+        self.assertTrue(isinstance(
+            self.code[0].declaration.type, BooleanTypeNode))
+        self.assertTrue(isinstance(
+            self.code[1].declaration.type, BooleanTypeNode))
+        self.assertTrue(isinstance(self.code[2].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(
+            self.code[3].declaration.type, FloatTypeNode))
+        self.assertTrue(isinstance(
+            self.code[4].declaration.type, CharTypeNode))
+        self.assertTrue(isinstance(
+            self.code[5].declaration.type, StringTypeNode))
+        self.assertTrue(isinstance(
+            self.code[6].declaration.type, StringTypeNode))
+        self.assertTrue(isinstance(self.code[7].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[8].declaration.type, IntTypeNode))
+        self.assertTrue(isinstance(self.code[9].declaration.type, IntTypeNode))
 
 
 class TestFunctionCall(TestBaseAST):
@@ -298,11 +298,13 @@ class TestFunctionCall(TestBaseAST):
         self.code = self.ast.code
 
     def test_name(self):
-        self.assertEqual(self.code[0].function.sentences[0].name, "f")
-        self.assertEqual(self.code[0].function.sentences[1].name, "print")
-        self.assertEqual(self.code[0].function.sentences[2].name, "toUpperCase")
-        self.assertEqual(self.code[0].function.sentences[3].name, "toLowerCase")
-        self.assertEqual(self.code[0].function.sentences[4].name, "params")
+        self.assertEqual(self.code[0].function.sentences[0].name.value, "f")
+        self.assertEqual(self.code[0].function.sentences[1].name.value, "print")
+        self.assertEqual(
+            self.code[0].function.sentences[2].name.member.value, "toUpperCase")
+        self.assertEqual(
+            self.code[0].function.sentences[3].name.member.value, "toLowerCase")
+        self.assertEqual(self.code[0].function.sentences[4].name.value, "params")
 
     def test_parameters(self):
         self.assertEqual(
@@ -315,7 +317,8 @@ class TestFunctionCall(TestBaseAST):
                 self.code[0].function.sentences[1].parameters
             ), 1
         )
-        self.assertEqual(self.code[0].function.sentences[1].parameters[0].value, "hola")
+        self.assertEqual(
+            self.code[0].function.sentences[1].parameters[0].value, "hola")
         self.assertEqual(
             len(
                 self.code[0].function.sentences[2].parameters
@@ -341,18 +344,12 @@ class TestFunctionCall(TestBaseAST):
         )
 
     def test_clase(self):
-        self.assertEqual(self.code[0].function.sentences[0].clase, None)
-        self.assertEqual(self.code[0].function.sentences[1].clase, None)
-        self.assertEqual(self.code[0].function.sentences[2].clase, "mensaje")
-        self.assertEqual(self.code[0].function.sentences[3].clase, "persona")
-        self.assertEqual(self.code[0].function.sentences[4].clase, None)
-
-    def test_elems(self):
-        self.assertEqual(self.code[0].function.sentences[0].elems, None)
-        self.assertEqual(self.code[0].function.sentences[1].elems, None)
-        self.assertEqual(self.code[0].function.sentences[2].elems, None)
-        self.assertEqual(self.code[0].function.sentences[3].elems[0], "nombre")
-        self.assertEqual(self.code[0].function.sentences[4].elems, None)
+        self.assertEqual(type(self.code[0].function.sentences[0]), FunctionCallNode)
+        self.assertEqual(type(self.code[0].function.sentences[1]), FunctionCallNode)
+        self.assertEqual(self.code[0].function.sentences[2].name.element.value, "mensaje")
+        self.assertEqual(self.code[0].function.sentences[3].name.element.element.value, "persona")
+        self.assertEqual(self.code[0].function.sentences[3].name.element.member.value, "nombre")
+        self.assertEqual(type(self.code[0].function.sentences[4]), FunctionCallNode)
 
 
 class TestConditionals(TestBaseAST):
@@ -366,72 +363,61 @@ class TestConditionals(TestBaseAST):
     def test_condition(self):
         condition = self.code[0].function.sentences[0].condition
         self.assertEqual(
-            str(condition.left.value) 
-            + condition.op 
-            + str(condition.right.value)
-            , "i>2"
+            str(condition.left.value)
+            + condition.op
+            + str(condition.right.value), "i>2"
         )
         condition = self.code[0].function.sentences[1].condition
         self.assertEqual(
-            str(condition.left.value) 
-            + condition.op 
-            + str(condition.right.value)
-            , "d<29.69"
+            str(condition.left.value)
+            + condition.op
+            + str(condition.right.value), "d<29.69"
         )
         condition = self.code[0].function.sentences[2].condition
         self.assertEqual(condition.value, True)
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].condition.value
-            , False
+            self.code[0].function.sentences[2].else_expr[0].condition.value, False
         )
         self.assertEqual(
-            self.code[0].function.sentences[3].expression.value
-            , "var"
+            self.code[0].function.sentences[3].expression.value, "var"
         )
 
     def test_if_expr(self):
         self.assertEqual(
-            self.code[0].function.sentences[0].if_expr[0].name
-            , "doThis"
+            self.code[0].function.sentences[0].if_expr[0].name.value, "doThis"
         )
         self.assertEqual(
-            self.code[0].function.sentences[1].if_expr[0].name
-            , "doThat"
+            self.code[0].function.sentences[1].if_expr[0].name.value, "doThat"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].if_expr[0].name
-            , "doAlgo"
+            self.code[0].function.sentences[2].if_expr[0].name.value, "doAlgo"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].if_expr[0].name
-            , "print"
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0].name.value, "print"
         )
 
     def test_else_expr(self):
         self.assertEqual(
-            self.code[0].function.sentences[1].else_expr[0].name
-            , "print"
+            self.code[0].function.sentences[1].else_expr[0].name.value, "print"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None
-            , True
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None, True
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].else_expr[0].name
-            , "prueba"
+            self.code[0].function.sentences[2].else_expr[0].else_expr[0].name.value, "prueba"
         )
 
     def test_cases(self):
         cases = self.code[0].function.sentences[3].cases
         self.assertEqual(cases[0].type, "case")
         self.assertEqual(cases[0].expression.value, 1)
-        self.assertEqual(cases[0].sentences[0].name, "print")
+        self.assertEqual(cases[0].sentences[0].name.value, "print")
         self.assertEqual(cases[1].type, "case")
         self.assertEqual(cases[1].expression.value, 2)
-        self.assertEqual(cases[1].sentences[0].name, "println")
+        self.assertEqual(cases[1].sentences[0].name.value, "println")
         self.assertEqual(cases[2].type, "default")
         self.assertEqual(cases[2].expression, None)
-        self.assertEqual(cases[2].sentences[0].name, "exit")
+        self.assertEqual(cases[2].sentences[0].name.value, "exit")
 
 
 class TestBucles(TestBaseAST):
@@ -445,57 +431,54 @@ class TestBucles(TestBaseAST):
     def test_while(self):
         condition = self.code[0].function.sentences[0].expression
         self.assertEqual(
-            str(condition.left.value) 
-            + condition.op 
-            + str(condition.right.value)
-            , "i<f"
+            str(condition.left.value)
+            + condition.op
+            + str(condition.right.value), "i<f"
         )
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[0].sentences
                 )
             ), ["yada", "heeh"]
         )
-         
+
     def test_do_while(self):
         condition = self.code[0].function.sentences[1].expression
         self.assertEqual(
-            str(condition.left.value) 
-            + condition.op 
-            + str(condition.right.value)
-            , "b||c"
+            str(condition.left.value)
+            + condition.op
+            + str(condition.right.value), "b||c"
         )
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[1].sentences
                 )
             ), ["print"]
         )
 
     def test_for(self):
-        self.assertEqual(self.code[0].function.sentences[2].assignment.var_name, "i")
+        self.assertEqual(
+            self.code[0].function.sentences[2].assignment.var_name, "i")
         condition = self.code[0].function.sentences[2].condition
         self.assertEqual(
-            str(condition.left.value) 
-            + condition.op 
-            + str(condition.right.value)
-            , "i<100"
+            str(condition.left.value)
+            + condition.op
+            + str(condition.right.value), "i<100"
         )
         expression = self.code[0].function.sentences[2].expression
         self.assertEqual(
-            str(expression.left.value) 
-            + expression.op 
-            + str(expression.right.value)
-            , "i*=2"
+            str(expression.left.value)
+            + expression.op
+            + str(expression.right.value), "i*=2"
         )
         self.assertEqual(
             list(
                 map(
-                    lambda sent: sent.name,
+                    lambda sent: sent.name.value,
                     self.code[0].function.sentences[2].sentences
                 )
             ), ["println"]
@@ -512,17 +495,19 @@ class TestAsignations(TestBaseAST):
 
     def test_var_name(self):
         self.assertEqual(self.code[0].function.sentences[0].var_name, "i")
-        self.assertEqual(self.code[0].function.sentences[1].var_name, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var.value, "i")
         self.assertEqual(self.code[0].function.sentences[2].var_name, "x")
-        self.assertEqual(self.code[0].function.sentences[3].var_name, "x")
+        self.assertEqual(self.code[0].function.sentences[3].var.value, "x")
 
     def test_expression(self):
-        self.assertEqual(self.code[0].function.sentences[1].expression.name, "analogRead")
-        self.assertEqual(self.code[0].function.sentences[3].expression.value, 2000)
+        self.assertEqual(
+            self.code[0].function.sentences[1].expr.name.value, "analogRead")
+        self.assertEqual(self.code[0].function.sentences[3].expr.value, 2000)
 
     def test_left(self):
         for i in range(4, len(self.code[0].function.sentences)):
-            self.assertEqual(self.code[0].function.sentences[i].left.value, "x")
+            self.assertEqual(
+                self.code[0].function.sentences[i].left.value, "x")
 
     def test_op(self):
         self.assertEqual(self.code[0].function.sentences[4].op, "%=")
@@ -536,13 +521,16 @@ class TestAsignations(TestBaseAST):
 
     def test_right(self):
         self.assertEqual(self.code[0].function.sentences[4].right.value, 10)
-        self.assertEqual(bin(self.code[0].function.sentences[5].right.value), "0b1100")
+        self.assertEqual(
+            bin(self.code[0].function.sentences[5].right.value), "0b1100")
         self.assertEqual(self.code[0].function.sentences[6].right.value, 5)
         self.assertEqual(self.code[0].function.sentences[7].right.value, 200)
         self.assertEqual(self.code[0].function.sentences[8].right.value, 100)
         self.assertEqual(self.code[0].function.sentences[9].right.value, 25)
-        self.assertEqual(bin(self.code[0].function.sentences[10].right.value), "0b1010")
-        self.assertEqual(bin(self.code[0].function.sentences[11].right.value), "0b1001")
+        self.assertEqual(
+            bin(self.code[0].function.sentences[10].right.value), "0b1010")
+        self.assertEqual(
+            bin(self.code[0].function.sentences[11].right.value), "0b1001")
 
 
 class TestBitwise(TestBaseAST):
@@ -555,7 +543,8 @@ class TestBitwise(TestBaseAST):
 
     def test_class(self):
         for i in range(1, len(self.code[0].function.sentences) - 1):
-            self.assertTrue(isinstance(self.code[0].function.sentences[i], BitwiseExpressionNode))
+            self.assertTrue(isinstance(
+                self.code[0].function.sentences[i], BitwiseExpressionNode))
 
     def test_left(self):
         self.assertEqual(self.code[0].function.sentences[1].left.value, "i")
@@ -579,7 +568,8 @@ class TestBitwise(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[5].right.value, 215)
 
     def test_expression(self):
-        self.assertEqual(self.code[0].function.sentences[6].value.expression.value, "i")
+        self.assertEqual(
+            self.code[0].function.sentences[6].expr.expression.value, "i")
 
 
 class TestLocalDefinition(TestBaseAST):
@@ -731,17 +721,21 @@ class TestLocalDefinition(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[15].var_name, "cIni")
         self.assertEqual(self.code[0].function.sentences[16].var_name, "str")
         self.assertEqual(self.code[0].function.sentences[17].var_name, "ch")
-        self.assertEqual(self.code[0].function.sentences[18].var_name, "arraySimple")
-        self.assertEqual(self.code[0].function.sentences[19].var_name, "arrayDoble")
+        self.assertEqual(
+            self.code[0].function.sentences[18].var_name, "arraySimple")
+        self.assertEqual(
+            self.code[0].function.sentences[19].var_name, "arrayDoble")
 
     def test_value(self):
-        self.assertEqual(self.code[0].function.sentences[1].value.value, True)
-        self.assertEqual(self.code[0].function.sentences[3].value.value, 'd')
-        self.assertEqual(self.code[0].function.sentences[4].value.value, 29.73)
-        self.assertEqual(self.code[0].function.sentences[6].value.value, 1615)
-        self.assertEqual(self.code[0].function.sentences[10].value.value, "Diegui")
-        self.assertEqual(self.code[0].function.sentences[15].value.value, 29.456)
-        self.assertEqual(self.code[0].function.sentences[17].value.value, 'c')
+        self.assertEqual(self.code[0].function.sentences[1].expr.value, True)
+        self.assertEqual(self.code[0].function.sentences[3].expr.value, 'd')
+        self.assertEqual(self.code[0].function.sentences[4].expr.value, 29.73)
+        self.assertEqual(self.code[0].function.sentences[6].expr.value, 1615)
+        self.assertEqual(
+            self.code[0].function.sentences[10].expr.value, "Diegui")
+        self.assertEqual(
+            self.code[0].function.sentences[15].expr.value, 29.456)
+        self.assertEqual(self.code[0].function.sentences[17].expr.value, 'c')
 
     def test_elements(self):
         self.assertEqual(
@@ -754,12 +748,12 @@ class TestLocalDefinition(TestBaseAST):
         )
 
     def test_is_constant(self):
-        self.assertEqual(self.code[0].function.sentences[1].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[3].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[4].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[6].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[10].is_constant, False)
-        self.assertEqual(self.code[0].function.sentences[15].is_constant, True)
+        self.assertEqual(self.code[0].function.sentences[1].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[3].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[4].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[6].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[10].is_const, False)
+        self.assertEqual(self.code[0].function.sentences[15].is_const, True)
 
 
 class TestIncDec(TestBaseAST):
@@ -771,10 +765,10 @@ class TestIncDec(TestBaseAST):
         self.code = self.ast.code
 
     def test_var(self):
-        self.assertEqual(self.code[0].function.sentences[0].var, "i")
-        self.assertEqual(self.code[0].function.sentences[1].var, "a")
-        self.assertEqual(self.code[0].function.sentences[2].var, "z")
-        self.assertEqual(self.code[0].function.sentences[3].var, "w")
+        self.assertEqual(self.code[0].function.sentences[0].var.value, "i")
+        self.assertEqual(self.code[0].function.sentences[1].var.value, "a")
+        self.assertEqual(self.code[0].function.sentences[2].var.value, "z")
+        self.assertEqual(self.code[0].function.sentences[3].var.value, "w")
 
     def test_op(self):
         self.assertEqual(self.code[0].function.sentences[0].op, "++")
@@ -792,11 +786,16 @@ class TestSpecials(TestBaseAST):
         self.code = self.ast.code
 
     def test_specials(self):
-        self.assertTrue(isinstance(self.code[0].function.sentences[0], BreakNode))
-        self.assertTrue(isinstance(self.code[0].function.sentences[1], ContinueNode))
-        self.assertTrue(isinstance(self.code[0].function.sentences[2], ReturnNode))
-        self.assertEqual(self.code[0].function.sentences[2].expression.value, 1)
-        self.assertTrue(isinstance(self.code[0].function.sentences[3], ReturnNode))
+        self.assertTrue(isinstance(
+            self.code[0].function.sentences[0], BreakNode))
+        self.assertTrue(isinstance(
+            self.code[0].function.sentences[1], ContinueNode))
+        self.assertTrue(isinstance(
+            self.code[0].function.sentences[2], ReturnNode))
+        self.assertEqual(
+            self.code[0].function.sentences[2].expression.value, 1)
+        self.assertTrue(isinstance(
+            self.code[0].function.sentences[3], ReturnNode))
         self.assertEqual(self.code[0].function.sentences[3].expression, None)
 
 
@@ -815,8 +814,9 @@ class TestAritmetic(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[3].left.value, 255)
         self.assertEqual(self.code[0].function.sentences[4].left.value, "f")
         self.assertEqual(self.code[0].function.sentences[5].left.value, "f")
-        self.assertEqual(self.code[0].function.sentences[5].right.left.value, "a")
-        
+        self.assertEqual(
+            self.code[0].function.sentences[5].right.left.value, "a")
+
     def test_op(self):
         self.assertEqual(self.code[0].function.sentences[0].op, "%")
         self.assertEqual(self.code[0].function.sentences[1].op, "*")
@@ -825,14 +825,15 @@ class TestAritmetic(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[4].op, "/")
         self.assertEqual(self.code[0].function.sentences[5].op, "+")
         self.assertEqual(self.code[0].function.sentences[5].right.op, "/")
-        
+
     def test_right(self):
         self.assertEqual(self.code[0].function.sentences[0].right.value, 350)
         self.assertEqual(self.code[0].function.sentences[1].right.value, "f")
         self.assertEqual(self.code[0].function.sentences[2].right.value, "a")
         self.assertEqual(self.code[0].function.sentences[3].right.value, "x")
         self.assertEqual(self.code[0].function.sentences[4].right.value, 30)
-        self.assertEqual(self.code[0].function.sentences[5].right.right.value, 5)
+        self.assertEqual(
+            self.code[0].function.sentences[5].right.right.value, 5)
 
 
 class TestBoolean(TestBaseAST):
@@ -858,7 +859,8 @@ class TestBoolean(TestBaseAST):
             + str(sent.right.value),
             "x>29"
         )
-        self.assertEqual(self.code[0].function.sentences[8].expression.value, "var")
+        self.assertEqual(
+            self.code[0].function.sentences[8].expression.value, "var")
 
     def test_op(self):
         self.assertEqual(self.code[0].function.sentences[0].op, ">")
@@ -881,8 +883,168 @@ class TestBoolean(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[6].right.value, False)
         sent = self.code[0].function.sentences[7].right
         self.assertEqual(
-            str(sent.left.left.value) + sent.left.op + str(sent.left.right.value)
+            str(sent.left.left.value) + sent.left.op +
+            str(sent.left.right.value)
             + sent.op
-            + str(sent.right.left.value) + sent.right.op + str(sent.right.right.value),
+            + str(sent.right.left.value) + sent.right.op +
+            str(sent.right.right.value),
             "y!=0&&z<w"
         )
+
+
+class TestArrays(TestBaseAST):
+
+    file = "tests/file-tests/arrays.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_variable_names(self):
+        self.assertEqual(self.code[0].declaration.var_name, "arr1")
+        self.assertEqual(self.code[1].declaration.var_name, "arr1b")
+        self.assertEqual(self.code[2].declaration.var_name, "arr1c")
+        self.assertEqual(self.code[3].declaration.var_name, "arr2")
+        self.assertEqual(self.code[4].declaration.var_name, "arr2b")
+        self.assertEqual(self.code[5].declaration.var_name, "arr3")
+        self.assertEqual(self.code[6].declaration.var_name, "arr3b")
+        self.assertEqual(self.code[7].declaration.var_name, "arr4")
+        self.assertEqual(self.code[8].declaration.var_name, "arr5")
+        self.assertEqual(self.code[9].declaration.var_name, "arr3d1d")
+        self.assertEqual(self.code[10].declaration.var_name, "arr3d")
+
+    def test_dimensions(self):
+        self.assertEqual(self.code[0].declaration.dimensions, 1)
+        self.assertEqual(self.code[1].declaration.dimensions, 1)
+        self.assertEqual(self.code[2].declaration.dimensions, 1)
+        self.assertEqual(self.code[3].declaration.dimensions, 2)
+        self.assertEqual(self.code[4].declaration.dimensions, 2)
+        self.assertEqual(self.code[5].declaration.dimensions, 2)
+        self.assertEqual(self.code[6].declaration.dimensions, 2)
+        self.assertEqual(self.code[7].declaration.dimensions, 2)
+        self.assertEqual(self.code[8].declaration.dimensions, 1)
+        self.assertEqual(self.code[9].declaration.dimensions, 3)
+        self.assertEqual(self.code[10].declaration.dimensions, 3)
+
+    def test_sizes(self):
+        self.assertEqual(len(self.code[0].declaration.size), 1)
+        self.assertEqual(self.code[0].declaration.size, [25])
+        self.assertEqual(len(self.code[1].declaration.size), 1)
+        self.assertEqual(self.code[1].declaration.size, [4])
+        self.assertEqual(len(self.code[2].declaration.size), 1)
+        self.assertEqual(self.code[2].declaration.size, [4])
+        self.assertEqual(len(self.code[3].declaration.size), 2)
+        self.assertEqual(self.code[3].declaration.size, [4, 2])
+        self.assertEqual(len(self.code[4].declaration.size), 2)
+        self.assertEqual(self.code[4].declaration.size, [4, 2])
+        self.assertEqual(len(self.code[5].declaration.size), 2)
+        self.assertEqual(self.code[5].declaration.size, [2, 3])
+        self.assertEqual(len(self.code[6].declaration.size), 2)
+        self.assertEqual(self.code[6].declaration.size, [3, 2])
+        self.assertEqual(len(self.code[7].declaration.size), 2)
+        self.assertEqual(self.code[7].declaration.size, [2, 2])
+        self.assertEqual(len(self.code[8].declaration.size), 1)
+        self.assertEqual(self.code[8].declaration.size, [6])
+        self.assertEqual(len(self.code[9].declaration.size), 3)
+        self.assertEqual(self.code[9].declaration.size, [2, 3, 2])
+        self.assertEqual(len(self.code[10].declaration.size), 3)
+        self.assertEqual(self.code[10].declaration.size, [2, 2, 3])
+
+    def test_elements(self):
+        self.assertEqual(self.code[0].declaration.elements, None)
+        self.assertEqual(
+            list(
+                map(
+                    lambda elem: elem.value, self.code[1].declaration.elements)
+            ), [1, 5, 7, 10])
+        self.assertEqual(
+            list(
+                map(
+                    lambda elem: elem.value, self.code[2].declaration.elements)
+            ), [2, 4, 6, 8])
+        array_to_test = self.__build_array_for_test(
+            self.code[3].declaration.elements)
+        self.assertEqual(array_to_test, [[1, 2], [3, 4], [5, 6], [7, 8]])
+        array_to_test = self.__build_array_for_test(
+            self.code[4].declaration.elements)
+        self.assertEqual(array_to_test, [[1, 2], [3, 4], [5, 6], [7, 8]])
+        array_to_test = self.__build_array_for_test(
+            self.code[5].declaration.elements)
+        self.assertEqual(array_to_test, [[1, 2, 3], [4, 0, 0]])
+        array_to_test = self.__build_array_for_test(
+            self.code[6].declaration.elements)
+        self.assertEqual(array_to_test, [[1, 2], [3, 4], [5, 0]])
+        array_to_test = self.__build_array_for_test(
+            self.code[7].declaration.elements)
+        self.assertEqual(array_to_test, [[1, 2], [4, 0]])
+        self.assertEqual(
+            list(
+                map(
+                    lambda elem: elem.value, self.code[8].declaration.elements)
+            ), ['h', 'e', 'l', 'l', 'o', '\0'])
+        array_to_test = self.__build_array_for_test(
+            self.code[9].declaration.elements)
+        self.assertEqual(array_to_test, [
+            [
+                [1, 2],
+                [3, 4],
+                [5, 6]
+            ],
+            [
+                [7, 8],
+                [9, 10],
+                [0, 0]
+            ]
+        ])
+        array_to_test = self.__build_array_for_test(
+            self.code[10].declaration.elements)
+        self.assertEqual(array_to_test, [
+            [
+                [1, 2, 3],
+                [4, 5, 6]
+            ],
+            [
+                [7, 8, 9],
+                [10, 11, 12]
+            ]
+        ])
+
+    def __build_array_for_test(self, elements):
+        array_to_test = []
+        for e in elements:
+            if isinstance(e, list):
+                array_to_test.append(self.__build_array_for_test(e))
+            else:
+                array_to_test.append(e.value)
+        return array_to_test
+
+
+class TestArrayAccess(TestBaseAST):
+
+    file = "tests/file-tests/array-access.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_var(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].value, "acceso_a_array")
+        self.assertEqual(
+            self.code[0].function.sentences[1].value, "acc_arr_2")
+        self.assertEqual(
+            self.code[0].function.sentences[2].value, "random")
+
+    def test_index(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].indexes[0].value, 1)
+        self.assertEqual(
+            self.code[0].function.sentences[1].indexes[0].value, 2)
+        self.assertEqual(
+            self.code[0].function.sentences[1].indexes[1].value, 5)
+        self.assertEqual(
+            self.code[0].function.sentences[2].indexes[0].value, 1)
+        self.assertEqual(
+            self.code[0].function.sentences[2].indexes[1].value, 0)
+        self.assertEqual(
+            self.code[0].function.sentences[2].indexes[2].value, 3)

@@ -13,7 +13,7 @@ Sentence
 Conditional_sentence, if
 Expression, >
 Expression, analogRead(0)
-Function_call, analogRead
+Expression, analogRead
 Parameter
 Expression, 0
 Expression, 400

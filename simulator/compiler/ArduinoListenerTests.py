@@ -47,76 +47,58 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#include.
+    def enterInclude(self, ctx:ArduinoParser.IncludeContext):
+        if ctx.STRING_CONST() != None:
+            self.add_token("Include", ctx.STRING_CONST())
+        else:
+            self.add_token("Include", str(ctx.ID(0)) + "." + str(ctx.ID(1)))
+
+    # Exit a parse tree produced by ArduinoParser#include.
+    def exitInclude(self, ctx:ArduinoParser.IncludeContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#declaration.
     def enterDeclaration(self, ctx:ArduinoParser.DeclarationContext):
-        if ctx.h_file() != None:
-            self.add_token("Declaration", ctx.h_file().getText())
-        else:
-            self.add_token("Declaration", ctx.STRING_CONST())
+        self.add_token("Declaration")
 
     # Exit a parse tree produced by ArduinoParser#declaration.
     def exitDeclaration(self, ctx:ArduinoParser.DeclarationContext):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#h_file.
-    def enterH_file(self, ctx:ArduinoParser.H_fileContext):
-        pass
+    # Enter a parse tree produced by ArduinoParser#simple_declaration.
+    def enterSimple_declaration(self, ctx:ArduinoParser.Simple_declarationContext):
+        self.add_token("Simple_declaration", str(ctx.ID()))
 
-    # Exit a parse tree produced by ArduinoParser#h_file.
-    def exitH_file(self, ctx:ArduinoParser.H_fileContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#definition.
-    def enterDefinition(self, ctx:ArduinoParser.DefinitionContext):
-        self.add_token("Definition")
-
-    # Exit a parse tree produced by ArduinoParser#definition.
-    def exitDefinition(self, ctx:ArduinoParser.DefinitionContext):
+    # Exit a parse tree produced by ArduinoParser#simple_declaration.
+    def exitSimple_declaration(self, ctx:ArduinoParser.Simple_declarationContext):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#simple_definition.
-    def enterSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
-        self.add_token("Simple_definition", str(ctx.ID()))
+    # Enter a parse tree produced by ArduinoParser#array_declaration.
+    def enterArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
+        self.add_token("Array_declaration", str(ctx.ID()))
 
-    # Exit a parse tree produced by ArduinoParser#simple_definition.
-    def exitSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
+    # Exit a parse tree produced by ArduinoParser#array_declaration.
+    def exitArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#assignment_definition.
-    def enterAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        self.add_token("Assignment_definition", ctx.ID())
+    # Enter a parse tree produced by ArduinoParser#define_declaration.
+    def enterDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
+        self.add_token("Define_macro", str(ctx.ID()))
 
-    # Exit a parse tree produced by ArduinoParser#assignment_definition.
-    def exitAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#assignment.
-    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        self.add_token("Assignment", str(ctx.ID()) + " = " + str(ctx.expression().getText()))
-
-    # Exit a parse tree produced by ArduinoParser#assignment.
-    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#array_definition.
-    def enterArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
-        self.add_token("Array_definition")
-
-    # Exit a parse tree produced by ArduinoParser#array_definition.
-    def exitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+    # Exit a parse tree produced by ArduinoParser#define_declaration.
+    def exitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         pass
 
 
     # Enter a parse tree produced by ArduinoParser#array_index.
     def enterArray_index(self, ctx:ArduinoParser.Array_indexContext):
-        if ctx.INT_CONST() != None:
-            self.add_token("Array_index", ctx.INT_CONST())
+        if ctx.sizes != []:
+            self.add_token("Array_index", " ".join(map(str, map(lambda size: size.text, ctx.sizes))))
         else:
             self.add_token("Array_index")
 
@@ -131,19 +113,6 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Exit a parse tree produced by ArduinoParser#array_elements.
     def exitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#constant.
-    def enterConstant(self, ctx:ArduinoParser.ConstantContext):
-        if(ctx.ID() == None):
-            self.add_token("Constant")
-        else:
-            self.add_token("Constant", ctx.ID())
-
-
-    # Exit a parse tree produced by ArduinoParser#constant.
-    def exitConstant(self, ctx:ArduinoParser.ConstantContext):
         pass
 
 
@@ -214,6 +183,15 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#assignment.
+    def enterAssignment(self, ctx:ArduinoParser.AssignmentContext):
+        self.add_token("Assignment")
+
+    # Exit a parse tree produced by ArduinoParser#assignment.
+    def exitAssignment(self, ctx:ArduinoParser.AssignmentContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#case_sentence.
     def enterCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
         self.add_token("Case_sentence")
@@ -235,47 +213,11 @@ class ArduinoListenerTests(ArduinoListener):
         pass
 
 
-    # Enter a parse tree produced by ArduinoParser#incdec_expression.
-    def enterIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        self.add_token("Incdec_expression", ctx.operator.text)
-
-    # Exit a parse tree produced by ArduinoParser#incdec_expression.
-    def exitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#function_call.
-    def enterFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        if ctx.f_name != None:
-            self.add_token("Function_call", ctx.f_name.text)
-        else:
-            obj_str = ctx.obj.text
-            for elem in ctx.elems:
-                obj_str += "." + elem.text
-            self.add_token("Function_call", obj_str)
-
-    # Exit a parse tree produced by ArduinoParser#function_call.
-    def exitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        pass
-
-
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx:ArduinoParser.ParameterContext):
         self.add_token("Parameter")
 
     # Exit a parse tree produced by ArduinoParser#parameter.
     def exitParameter(self, ctx:ArduinoParser.ParameterContext):
-        pass
-
-
-    # Enter a parse tree produced by ArduinoParser#static_variable.
-    def enterStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
-        if ctx.ID() == None:
-            self.add_token("Static_variable")
-        else:
-            self.add_token("Static_variable", ctx.ID())
-
-    # Exit a parse tree produced by ArduinoParser#static_variable.
-    def exitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
         pass
 

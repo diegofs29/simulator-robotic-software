@@ -1,44 +1,44 @@
 Program
 Program_code
-Definition
-Simple_definition, x
+Declaration
+Simple_declaration, x
 Var_type, int
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, x=1+2
-Assignment, x = 1+2
+Assignment
+Expression, x
 Expression, +
 Expression, 1
 Expression, 2
 Sentence
-Expression, x=2-1
-Assignment, x = 2-1
+Assignment
+Expression, x
 Expression, -
 Expression, 2
 Expression, 1
 Sentence
-Expression, x=-2*3
-Assignment, x = -2*3
+Assignment
+Expression, x
 Expression, *
 Expression, -2
 Expression, 3
 Sentence
-Expression, x=2/-3
-Assignment, x = 2/-3
+Assignment
+Expression, x
 Expression, /
 Expression, 2
 Expression, -3
 Sentence
-Expression, x=2%3
-Assignment, x = 2%3
+Assignment
+Expression, x
 Expression, %
 Expression, 2
 Expression, 3
 Sentence
-Expression, x=2+3*5-2
-Assignment, x = 2+3*5-2
+Assignment
+Expression, x
 Expression, -
 Expression, +
 Expression, 2
@@ -51,14 +51,14 @@ Function, loop
 Var_type, void
 Sentence
 Expression, print(1--3)
-Function_call, print
+Expression, print
 Parameter
 Expression, -
 Expression, 1
 Expression, -3
 Sentence
 Expression, print(1+2/3*-4)
-Function_call, print
+Expression, print
 Parameter
 Expression, +
 Expression, 1

@@ -1,14 +1,14 @@
 Program
 Program_code
-Definition
-Simple_definition, temperature
+Declaration
+Simple_declaration, temperature
 Var_type, int
 Program_code
 Function, setup
 Var_type, void
 Sentence
-Expression, temperature=50
-Assignment, temperature = 50
+Assignment
+Expression, temperature
 Expression, 50
 Program_code
 Function, loop

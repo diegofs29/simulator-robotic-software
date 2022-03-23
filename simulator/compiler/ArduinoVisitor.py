@@ -19,6 +19,11 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArduinoParser#include.
+    def visitInclude(self, ctx:ArduinoParser.IncludeContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArduinoParser#program_code.
     def visitProgram_code(self, ctx:ArduinoParser.Program_codeContext):
         return self.visitChildren(ctx)
@@ -29,33 +34,18 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#h_file.
-    def visitH_file(self, ctx:ArduinoParser.H_fileContext):
+    # Visit a parse tree produced by ArduinoParser#simple_declaration.
+    def visitSimple_declaration(self, ctx:ArduinoParser.Simple_declarationContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#definition.
-    def visitDefinition(self, ctx:ArduinoParser.DefinitionContext):
+    # Visit a parse tree produced by ArduinoParser#array_declaration.
+    def visitArray_declaration(self, ctx:ArduinoParser.Array_declarationContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#simple_definition.
-    def visitSimple_definition(self, ctx:ArduinoParser.Simple_definitionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#assignment_definition.
-    def visitAssignment_definition(self, ctx:ArduinoParser.Assignment_definitionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#assignment.
-    def visitAssignment(self, ctx:ArduinoParser.AssignmentContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#array_definition.
-    def visitArray_definition(self, ctx:ArduinoParser.Array_definitionContext):
+    # Visit a parse tree produced by ArduinoParser#define_macro.
+    def visitDefine_macro(self, ctx:ArduinoParser.Define_macroContext):
         return self.visitChildren(ctx)
 
 
@@ -66,11 +56,6 @@ class ArduinoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ArduinoParser#array_elements.
     def visitArray_elements(self, ctx:ArduinoParser.Array_elementsContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#constant.
-    def visitConstant(self, ctx:ArduinoParser.ConstantContext):
         return self.visitChildren(ctx)
 
 
@@ -99,6 +84,11 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArduinoParser#case_sentence.
+    def visitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArduinoParser#code_block.
     def visitCode_block(self, ctx:ArduinoParser.Code_blockContext):
         return self.visitChildren(ctx)
@@ -109,8 +99,8 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#case_sentence.
-    def visitCase_sentence(self, ctx:ArduinoParser.Case_sentenceContext):
+    # Visit a parse tree produced by ArduinoParser#assignment.
+    def visitAssignment(self, ctx:ArduinoParser.AssignmentContext):
         return self.visitChildren(ctx)
 
 
@@ -119,23 +109,8 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ArduinoParser#incdec_expression.
-    def visitIncdec_expression(self, ctx:ArduinoParser.Incdec_expressionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#function_call.
-    def visitFunction_call(self, ctx:ArduinoParser.Function_callContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ArduinoParser#parameter.
     def visitParameter(self, ctx:ArduinoParser.ParameterContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ArduinoParser#static_variable.
-    def visitStatic_variable(self, ctx:ArduinoParser.Static_variableContext):
         return self.visitChildren(ctx)
 
 

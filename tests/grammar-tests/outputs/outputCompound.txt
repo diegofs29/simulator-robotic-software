@@ -3,7 +3,8 @@ Program_code
 Function, operacionUnica
 Var_type, void
 Sentence
-Assignment_definition, x
+Declaration
+Simple_declaration, x
 Var_type, int
 Expression, 7
 Sentence
@@ -27,30 +28,32 @@ Expression, /=
 Expression, x
 Expression, 2
 Sentence
-Simple_definition, y
+Declaration
+Simple_declaration, y
 Var_type, int
 Sentence
-Expression, y=++x
-Assignment, y = ++x
-Expression, ++x
-Incdec_expression, ++
+Assignment
+Expression, y
+Expression, ++
+Expression, x
 Sentence
-Expression, y=x++
-Assignment, y = x++
-Expression, x++
-Incdec_expression, ++
+Assignment
+Expression, y
+Expression, ++
+Expression, x
 Sentence
-Expression, y=--x
-Assignment, y = --x
-Expression, --x
-Incdec_expression, --
+Assignment
+Expression, y
+Expression, --
+Expression, x
 Sentence
-Expression, y=x--
-Assignment, y = x--
-Expression, x--
-Incdec_expression, --
+Assignment
+Expression, y
+Expression, --
+Expression, x
 Sentence
-Assignment_definition, myByte
+Declaration
+Simple_declaration, myByte
 Var_type, byte
 Expression, 10101010
 Sentence
