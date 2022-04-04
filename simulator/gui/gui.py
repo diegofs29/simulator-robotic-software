@@ -1,6 +1,10 @@
-from time import sleep
 import tkinter as tk
+import tkinter.ttk as ttk
 from robots import MobileRobot, LinearActuator, Drawing
+
+
+dark_blue = "#006468"
+blue = "#17a1a5"
 
 
 class MainApplication(tk.Tk):
@@ -14,15 +18,15 @@ class MainApplication(tk.Tk):
         self.robot = MobileRobot(self.drawing)
 
         self.vertical_pane = tk.PanedWindow(
-            orient=tk.VERTICAL, sashpad=5, sashrelief=tk.GROOVE, bg="#006468")
+            orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=dark_blue)
         self.horizontal_pane = tk.PanedWindow(
-            self.vertical_pane, orient=tk.HORIZONTAL, sashpad=5, sashrelief=tk.GROOVE, bg="#17a1a5")
+            self.vertical_pane, orient=tk.HORIZONTAL, sashpad=5, sashrelief="solid", bg=blue)
         self.drawing_frame = DrawingFrame(
-            self.horizontal_pane, self.drawing, bg="#17a1a5")
-        self.editor_frame = EditorFrame(self.horizontal_pane, bg="#17a1a5")
+            self.horizontal_pane, self.drawing, bg=blue)
+        self.editor_frame = EditorFrame(self.horizontal_pane, bg=blue)
         self.console_frame = ConsoleFrame(self.vertical_pane)
         self.menu_bar = MenuBar(self)
-        self.button_bar = ButtonBar(self, self.robot, bg="#006468")
+        self.button_bar = ButtonBar(self, self.robot, bg=dark_blue)
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="top")
@@ -52,17 +56,48 @@ class DrawingFrame(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.drawing = drawing
+        self.__load_images()
 
         self.canvas = tk.Canvas(self, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
+        self.zoom_frame = tk.Frame(self, bg=blue)
+        self.zoom_in_button = ImageButton(
+            self.zoom_frame,
+            {
+                "blue": self.zoom_img,
+                "white": self.zoom_whi_img,
+                "yellow": self.zoom_yel_img
+            },
+            bg=blue,
+            bd=0
+        )
+        self.zoom_out_button = ImageButton(
+            self.zoom_frame,
+            {
+                "blue": self.dezoom_img,
+                "white": self.dezoom_whi_img,
+                "yellow": self.dezoom_yel_img
+            },
+            bg=blue,
+            bd=0
+        )
+        self.zoom_label = tk.Label(self.zoom_frame, bg=blue, fg="white", font=("Consolas", 12), text="{}%".format(self.drawing.zoom_percentage()))
+
         self.drawing.set_canvas(self.canvas)
 
         self.canvas.configure(scrollregion=(0, 0, 1000, 1000))
         self.canvas.bind("<ButtonPress-1>", self.scroll_start)
         self.canvas.bind("<B1-Motion>", self.scroll_move)
         self.canvas.bind("<MouseWheel>", self.zoom)
+        self.zoom_in_button.configure(command=self.zoom_in)
+        self.zoom_out_button.configure(command=self.zoom_out)
+
+        self.zoom_in_button.grid(row=0, column=0, padx=5, pady=5)
+        self.zoom_label.grid(row=0, column=1, padx=5, pady=5)
+        self.zoom_out_button.grid(row=0, column=2, padx=5, pady=5)
 
         self.canvas.pack(fill=tk.BOTH, expand=True)
+        self.zoom_frame.pack(anchor="e")
 
     def scroll_start(self, event):
         self.canvas.scan_mark(event.x, event.y)
@@ -72,9 +107,28 @@ class DrawingFrame(tk.Frame):
 
     def zoom(self, event):
         if event.delta == -120:
-            pass  # zoomout
+            self.zoom_out()
         elif event.delta == 120:
-            pass  # zoomin
+            self.zoom_in()
+
+    def zoom_in(self):
+        self.drawing.zoom_in()
+        self.change_zoom_label()
+
+    def zoom_out(self):
+        self.drawing.zoom_out()
+        self.change_zoom_label()
+
+    def change_zoom_label(self):
+        self.zoom_label.configure(text="{}%".format(self.drawing.zoom_percentage()))
+
+    def __load_images(self):
+        self.zoom_img = tk.PhotoImage(file="simulator/gui/buttons/zoom.png")
+        self.zoom_whi_img = tk.PhotoImage(file="simulator/gui/buttons/zoom_w.png")
+        self.zoom_yel_img = tk.PhotoImage(file="simulator/gui/buttons/zoom_y.png")
+        self.dezoom_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom.png")
+        self.dezoom_whi_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom_w.png")
+        self.dezoom_yel_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom_y.png")
 
 
 class EditorFrame(tk.Frame):
@@ -83,7 +137,7 @@ class EditorFrame(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12))
-        self.line_bar = self.LineNumberBar(self, width=30, bg="#17a1a5", bd=0, highlightthickness=0)
+        self.line_bar = self.LineNumberBar(self, width=30, bg=blue, bd=0, highlightthickness=0)
         self.sb_x = tk.Scrollbar(self, orient=tk.HORIZONTAL,
                                  command=self.text.xview)
         self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL,
@@ -182,14 +236,12 @@ class ButtonBar(tk.Frame):
         self.exec_frame = tk.Frame(self, bg=kwargs["bg"])
         self.hist_frame = tk.Frame(self, bg=kwargs["bg"])
         self.utils_frame = tk.Frame(self, bg=kwargs["bg"])
-        self.button_hover = tk.Label(self, bg=kwargs["bg"], font=("consolas", 12), fg="white")
+        self.tooltip_hover = tk.Label(self, bg=kwargs["bg"], font=("consolas", 12), fg="white")
 
         self.__load_images()
 
         self.execute_button = ImageButton(
             self.exec_frame, 
-            self.button_hover,
-            "Ejecutar",
             images = 
             {
                 "blue": self.exec_img, 
@@ -201,8 +253,6 @@ class ButtonBar(tk.Frame):
         )
         self.stop_button = ImageButton(
             self.exec_frame,
-            self.button_hover,
-            "Detener",
             images = 
             {
                 "blue": self.stop_img, 
@@ -214,8 +264,6 @@ class ButtonBar(tk.Frame):
         )
         self.undo_button = ImageButton(
             self.hist_frame,
-            self.button_hover,
-            "Deshacer",
             images = 
             {
                 "blue": self.undo_img, 
@@ -227,8 +275,6 @@ class ButtonBar(tk.Frame):
         )
         self.redo_button = ImageButton(
             self.hist_frame, 
-            self.button_hover,
-            "Rehacer",
             images = 
             {
                 "blue": self.redo_img, 
@@ -240,8 +286,6 @@ class ButtonBar(tk.Frame):
         )
         self.save_button = ImageButton(
             self.utils_frame,
-            self.button_hover,
-            "Guardar",
             images = 
             {
                 "blue": self.save_img, 
@@ -253,8 +297,6 @@ class ButtonBar(tk.Frame):
         )
         self.import_button = ImageButton(
             self.utils_frame, 
-            self.button_hover,
-            "Importar",
             images = 
             {
                 "blue": self.import_img, 
@@ -265,12 +307,19 @@ class ButtonBar(tk.Frame):
             bd=0
         )
 
+        self.execute_button.set_tooltip_text(self.tooltip_hover, "Ejecutar")
+        self.stop_button.set_tooltip_text(self.tooltip_hover, "Detener")
+        self.undo_button.set_tooltip_text(self.tooltip_hover, "Deshacer")
+        self.redo_button.set_tooltip_text(self.tooltip_hover, "Rehacer")
+        self.save_button.set_tooltip_text(self.tooltip_hover, "Guardar")
+        self.import_button.set_tooltip_text(self.tooltip_hover, "Importar")
+
         self.execute_button.configure(command=self.execute)
 
         self.exec_frame.grid(row=0, column=0)
         self.hist_frame.grid(row=0, column=1)
         self.utils_frame.grid(row=0, column=2)
-        self.button_hover.grid(row=0, column=3)
+        self.tooltip_hover.grid(row=0, column=3)
 
         self.execute_button.grid(row=0, column=1, padx=5, pady=5)
         self.stop_button.grid(row=0, column=2, padx=5, pady=5)
@@ -306,25 +355,33 @@ class ButtonBar(tk.Frame):
 
 class ImageButton(tk.Button):
 
-    def __init__(self, parent, label: tk.Label, display_text, images, *args, **kwargs):
+    def __init__(self, parent, images, *args, **kwargs):
         tk.Button.__init__(self, parent, *args, **kwargs, image=images["blue"])
         self.images = images
-        self.label = label
-        self.display_text = display_text
 
         self.bind("<Enter>", self.on_enter)
         self.bind("<Leave>", self.on_leave)
 
     def on_enter(self, event):
         event.widget['image'] = self.images["white"]
-        self.label.configure(text=self.display_text)
+        try:
+            self.label.configure(text=self.tooltip)
+        except AttributeError:
+            pass
 
     def on_leave(self, event):
         event.widget['image'] = self.images["blue"]
-        self.label.configure(text="")
+        try:
+            self.label.configure(text="")
+        except AttributeError:
+            pass
 
     def on_click(self): # A futuro si se quiere
         self.configure(image=self.images["yellow"])
+
+    def set_tooltip_text(self, label:tk.Label, tooltip):
+        self.label = label
+        self.tooltip = tooltip
 
 
 def main():
