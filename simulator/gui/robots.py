@@ -3,9 +3,108 @@ import tkinter as tk
 from PIL import ImageTk, Image
 
 
+class DrawingTool:
+
+    def __init__(self, robot_type: str):
+        self.drawing = Drawing()
+        self.choose_robot(robot_type)
+        self.__zoom_percentage()
+        self.calculate_size()
+        self.drawing.set_size(self.width, self.height)
+
+    def calculate_size(self):
+        self.width = self.robot.drawing_width * self.drawing.scale
+        self.height = self.robot.drawing_height * self.drawing.scale
+
+    def execute(self):
+        self.stop_execute()
+        self.calculate_size()
+        self.change_canvas_dimensions()
+        self.robot.draw()
+
+    def stop_execute(self):
+        self.drawing.empty_drawing()
+
+    def zoom_in(self):
+        self.drawing.zoom_in()
+        self.__zoom_percentage()
+        self.calculate_size()
+        self.execute()
+
+    def zoom_out(self):
+        self.drawing.zoom_out()
+        self.__zoom_percentage()
+        self.calculate_size()
+        self.execute()
+
+    def __zoom_percentage(self):
+        self.zoom_percent = self.drawing.zoom_percentage()
+
+    def set_canvas(self, canvas: tk.Canvas):
+        self.drawing.set_canvas(canvas)
+
+    def choose_robot(self, robot_type: str):
+        if robot_type == "Robot móvil":
+            self.robot = MobileRobot(self.drawing)
+        elif robot_type == "Actuador lineal":
+            self.robot = LinearActuator(self.drawing)
+        else:
+            raise ArgumentError(message="No existe ese robot")
+
+    def change_canvas_dimensions(self):
+        self.drawing.canvas.configure(scrollregion=(0, 0, self.width, self.height))
+
+
+class Drawing:
+
+    def __init__(self):
+        self.images = {}
+        self.canvas_images = []
+        self.scale = 0.5
+        self.set_size(0, 0)
+
+    def set_canvas(self, canvas: tk.Canvas):
+        self.canvas = canvas
+
+    def empty_drawing(self):
+        self.canvas.delete('all')
+        self.images = []
+        self.canvas_images = []
+
+    def draw_image(self, element):
+        self.__add_to_canvas(element["x"], element["y"], element["image"])
+
+    def move_image(self, dx, dy):
+        pass
+
+    def zoom_in(self):
+        if self.scale < 1:
+            self.scale += 0.1
+        self.scale = round(self.scale, 1)
+
+    def zoom_out(self):
+        if self.scale > 0.1:
+            self.scale -= 0.1
+        self.scale = round(self.scale, 1)
+
+    def zoom_percentage(self):
+        return self.scale * 100
+
+    def set_size(self, width, height):
+        self.width = width
+        self.height = height
+
+    def __add_to_canvas(self, x, y, image: Image):
+        width = int(image.width * self.scale)
+        height = int(image.height * self.scale)
+        res_img = image.resize((width, height), Image.ANTIALIAS)
+        self.canvas_images.append(ImageTk.PhotoImage(res_img))
+        self.canvas.create_image(x * self.scale, y * self.scale, image=self.canvas_images[-1])
+
+
 class Robot:
 
-    def __init__(self, drawing):
+    def __init__(self, drawing: Drawing):
         self.x = 0
         self.y = 0
         self.drawing = drawing
@@ -16,30 +115,100 @@ class Robot:
     def draw(self):
         pass
 
+    def reboot(self):
+        self.drawing.empty_drawing()
+
 
 class LinearActuator(Robot):
 
-    def __init__(self, drawing):
+    def __init__(self, drawing: Drawing):
         super().__init__(drawing)
         self.img_act = Image.open("simulator/gui/assets/actuator.png")
-        self.img_buth = Image.open("simulator/gui/assets/button-hit.png")
-        self.img_butnh = Image.open("simulator/gui/assets/button-no-hit.png")
-        self.img_mob = Image.open("simulator/gui/assets/mobile-part.png")
-        self.button = False
+        self.drawing_width = 2500
+        self.drawing_height = 400
 
     def move(self, vx, vy, angle):
         return super().move(vx, vy, angle)
 
     def draw(self):
-        return super().draw()
+        self.x = int(self.drawing_width / 2)
+        self.y = int(self.drawing_height / 2)
+        self.image = {
+            "x": self.x,
+            "y": self.y,
+            "image": self.img_act
+        }
+        self.but_left = self.ActuatorButton(
+            "simulator/gui/assets/button-hit.png", 
+            "simulator/gui/assets/button-no-hit.png",
+            self.x - 960, self.y + 70, True
+        )
+        self.but_right = self.ActuatorButton(
+            "simulator/gui/assets/button-hit.png", 
+            "simulator/gui/assets/button-no-hit.png",
+            self.x + 880, self.y - 185, False
+        )
+        self.block = self.Block(
+            "simulator/gui/assets/mobile-part.png",
+            self.x, self.y - 50
+        )
+        self.drawing.draw_image(self.image)
+        self.drawing.draw_image(self.but_left.get_image())
+        self.drawing.draw_image(self.but_right.get_image())
+        self.drawing.draw_image(self.block.get_image())
 
-    def change_button(self):
-        self.button = not self.button
+
+    class ActuatorElement:
+
+        def __init__(self):
+            self.x = 0
+            self.y = 0
+            self.img_shown = None
+
+        def get_image(self):
+            return {
+                "x": self.x,
+                "y": self.y,
+                "image": self.img_shown
+            }
+
+
+    class Block(ActuatorElement):
+
+        def __init__(self, img_path, x, y):
+            self.img_shown = Image.open(img_path)
+            self.x = x
+            self.y = y
+
+
+    class ActuatorButton(ActuatorElement):
+
+        def __init__(self, img_path_hit, img_path_no_hit, x, y, rotate):
+            self.img_hit = Image.open(img_path_hit)
+            self.img_no_hit = Image.open(img_path_no_hit)
+            self.rotate(rotate)
+            self.img_shown = self.img_no_hit
+            self.x = x
+            self.y = y
+            self.pressed = False
+
+        def press(self):
+            self.pressed = True
+            self.img_shown = self.img_hit
+
+        def stop_press(self):
+            self.pressed = False
+            self.img_shown = self.img_no_hit
+
+        def rotate(self, rotate):
+            if rotate:
+                self.img_hit = self.img_hit.rotate(180)
+                self.img_no_hit = self.img_no_hit.rotate(180)
 
 
 class MobileRobot(Robot):
 
-    def __init__(self, drawing):
+    def __init__(self, drawing: Drawing):
         super().__init__(drawing)
         self.img_fspeed = Image.open("simulator/gui/assets/full-speed.png")
         self.img_mspeed = Image.open("simulator/gui/assets/mid-speed.png")
@@ -49,94 +218,91 @@ class MobileRobot(Robot):
         self.img_souh = Image.open("simulator/gui/assets/sound-hit.png")
         self.img_sounh = Image.open("simulator/gui/assets/sound-no-hit.png")
         self.img_mobrob = Image.open("simulator/gui/assets/mobile-robot.png")
+        self.drawing_width = 7500
+        self.drawing_height = 10000
 
     def move(self, vx, vy, angle):
         return super().move(vx, vy, angle)
 
     def draw(self):
-        self.x = self.img_mobrob.width
-        self.y = self.img_mobrob.height / 2 + 150
-        self.drawing.draw_image(self.x, self.y, self.img_mobrob)
-        self.show_arrow(self.x - (self.img_mobrob.width / 2 + 50), self.y, 0)
-        self.show_arrow(self.x + (self.img_mobrob.width / 2 + 50), self.y, 1)
-
-    def show_arrow(self, x, y, img_num: int):
-        if img_num == 0:
-            self.drawing.draw_image(x, y, self.img_fspeed)
-        elif img_num == 1:
-            self.drawing.draw_image(x, y, self.img_mspeed.rotate(180))
-        elif img_num == 2:
-            self.drawing.draw_image(x, y, self.img_sspeed)
-
-    def show_ultrasound(self, img_num: int):
-        try:
-            img_file = self.__select_img(img_num, 3, 4)
-        except ArgumentError:
-            pass
-
-    def show_light(self, img_num: int):
-        try:
-            img_file = self.__select_img(img_num, 5, 6)
-        except ArgumentError:
-            pass
-
-    def reboot(self):
-        self.drawing.empty_drawing()
+        self.x = 500
+        self.y = 500
+        self.image = {
+            "x": self.x,
+            "y": self.y,
+            "image": self.img_mobrob
+        }
+        self.arrow_left = self.DirectionArrow(
+            "simulator/gui/assets/slow-speed.png",
+            "simulator/gui/assets/mid-speed.png",
+            "simulator/gui/assets/full-speed.png",
+            self.x - (self.img_mobrob.width / 2 + 50),
+            self.y
+        )
+        self.arrow_right = self.DirectionArrow(
+            "simulator/gui/assets/slow-speed.png",
+            "simulator/gui/assets/mid-speed.png",
+            "simulator/gui/assets/full-speed.png",
+            self.x + (self.img_mobrob.width / 2 + 50), 
+            self.y
+        )
+        self.arrow_right.rotate()
+        self.drawing.draw_image(self.image)
+        self.drawing.draw_image(self.arrow_left.get_image())
+        self.drawing.draw_image(self.arrow_right.get_image())
 
 
-class Drawing:
+    class MobileElement:
 
-    def __init__(self):
-        self.images = {}
-        self.canvas_images = []
-        self.scale = 0.5
+        def __init__(self):
+            self.x = 0
+            self.y = 0
+            self.img_shown = None
 
-    def set_canvas(self, canvas: tk.Canvas):
-        self.canvas = canvas
+        def get_image(self):
+            return {
+                "x": self.x,
+                "y": self.y,
+                "image": self.img_shown
+            }
 
-    def draw_image(self, x, y, image: Image):
-        self.images.append({
-            "x": x,
-            "y": y,
-            "image": image
-        })
-        self.__add_to_canvas(x, y, image)
 
-    def empty_drawing(self):
-        self.canvas.delete('all')
-        self.images = []
-        self.canvas_images = []
+    class LightSensor(MobileElement):
 
-    def move_image(self, dx, dy):
-        pass
+        def __init__(self, img_light_bright, img_light_dark , x, y):
+            super().__init__()
+            self.img_light_bright = Image.open(img_light_bright)
+            self.img_light_dark = Image.open(img_light_dark)
+            self.img_path = self.img_light_bright
+            self.x = x
+            self.y = y
 
-    def zoom_in(self):
-        if self.scale < 1:
-            self.scale += 0.1
-        self.scale = round(self.scale, 1)
-        self.__redraw()
 
-    def zoom_out(self):
-        if self.scale > 0.1:
-            self.scale -= 0.1
-        self.scale = round(self.scale, 1)
-        self.__redraw()
+    class UltrasoundSensor(MobileElement):
 
-    def zoom_percentage(self):
-        return self.scale * 100
+        def __init__(self, img_sound_hit, img_sound_no_hit, x, y):
+            super().__init__()
+            self.img_sound_hit = Image.open(img_sound_hit)
+            self.img_sound_no_hit = Image.open(img_sound_no_hit)
+            self.img_path = self.img_sound_no_hit
+            self.x = x
+            self.y = y
 
-    def __redraw(self):
-        self.canvas.delete('all')
-        self.canvas_images = []
-        for img in self.images:
-            self.__add_to_canvas(img['x'], img['y'], img['image'])
 
-    def __add_to_canvas(self, x, y, image: Image):
-        width = int(image.width * self.scale)
-        height = int(image.height * self.scale)
-        res_img = image.resize((width, height), Image.ANTIALIAS)
-        self.canvas_images.append(ImageTk.PhotoImage(res_img))
-        self.canvas.create_image(x * self.scale, y * self.scale, image=self.canvas_images[-1])
+    class DirectionArrow(MobileElement):
+
+        def __init__(self, img_slow, img_mid, img_fast, x, y):
+            super().__init__()
+            self.img_slow = Image.open(img_slow)
+            self.img_mid = Image.open(img_mid)
+            self.img_fast = Image.open(img_fast)
+            self.img_shown = self.img_slow
+            self.x = x
+            self.y = y
+
+        def rotate(self):
+            self.img_shown = self.img_shown.rotate(180)
+
 
 
 class Circuit:
