@@ -246,10 +246,38 @@ class MobileRobot(Robot):
             self.x + (self.img_mobrob.width / 2 + 50), 
             self.y
         )
+        self.sound_left = self.UltrasoundSensor(
+            "simulator/gui/assets/sound-hit.png",
+            "simulator/gui/assets/sound-no-hit.png",
+            self.x - 30,
+            self.y - 320
+        )
+        self.sound_right = self.UltrasoundSensor(
+            "simulator/gui/assets/sound-hit.png",
+            "simulator/gui/assets/sound-no-hit.png",
+            self.x + 30,
+            self.y - 320
+        )
+        self.light_left = self.LightSensor(
+            "simulator/gui/assets/light-bright.png",
+            "simulator/gui/assets/light-dark.png",
+            self.x - 40,
+            self.y - 100
+        )
+        self.light_right = self.LightSensor(
+            "simulator/gui/assets/light-bright.png",
+            "simulator/gui/assets/light-dark.png",
+            self.x + 40,
+            self.y - 100
+        )
         self.arrow_right.rotate()
         self.drawing.draw_image(self.image)
         self.drawing.draw_image(self.arrow_left.get_image())
         self.drawing.draw_image(self.arrow_right.get_image())
+        self.drawing.draw_image(self.sound_left.get_image())
+        self.drawing.draw_image(self.sound_right.get_image())
+        self.drawing.draw_image(self.light_left.get_image())
+        self.drawing.draw_image(self.light_right.get_image())
 
 
     class MobileElement:
@@ -257,13 +285,13 @@ class MobileRobot(Robot):
         def __init__(self):
             self.x = 0
             self.y = 0
-            self.img_shown = None
+            self.img_path = None
 
         def get_image(self):
             return {
                 "x": self.x,
                 "y": self.y,
-                "image": self.img_shown
+                "image": self.img_path
             }
 
 
@@ -296,12 +324,12 @@ class MobileRobot(Robot):
             self.img_slow = Image.open(img_slow)
             self.img_mid = Image.open(img_mid)
             self.img_fast = Image.open(img_fast)
-            self.img_shown = self.img_slow
+            self.img_path = self.img_slow
             self.x = x
             self.y = y
 
         def rotate(self):
-            self.img_shown = self.img_shown.rotate(180)
+            self.img_path = self.img_path.rotate(180)
 
 
 
