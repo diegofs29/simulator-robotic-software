@@ -1,5 +1,6 @@
 from argparse import ArgumentError
 import tkinter as tk
+from turtle import width
 from PIL import ImageTk, Image
 
 
@@ -11,6 +12,8 @@ class DrawingTool:
         self.__zoom_percentage()
         self.calculate_size()
         self.drawing.set_size(self.width, self.height)
+        if isinstance(self.robot, MobileRobot):
+            self.circuit = Circuit(self.drawing)
 
     def calculate_size(self):
         self.width = self.robot.drawing_width * self.drawing.scale
@@ -20,6 +23,8 @@ class DrawingTool:
         self.stop_execute()
         self.calculate_size()
         self.change_canvas_dimensions()
+        if isinstance(self.robot, MobileRobot):
+            self.circuit.create_circuit()
         self.robot.draw()
 
     def stop_execute(self):
@@ -76,6 +81,14 @@ class Drawing:
 
     def move_image(self, dx, dy):
         pass
+
+    def draw_figure(self, form: dict):
+        x = int(form["x"] * self.scale)
+        y = int(form["y"] * self.scale)
+        width = int(form["width"] * self.scale)
+        height = int(form["height"] * self.scale)
+        self.canvas.create_rectangle(x, y, x + width, y + height, fill="black")
+
 
     def zoom_in(self):
         if self.scale < 1:
@@ -210,16 +223,9 @@ class MobileRobot(Robot):
 
     def __init__(self, drawing: Drawing):
         super().__init__(drawing)
-        self.img_fspeed = Image.open("simulator/gui/assets/full-speed.png")
-        self.img_mspeed = Image.open("simulator/gui/assets/mid-speed.png")
-        self.img_sspeed = Image.open("simulator/gui/assets/slow-speed.png")
-        self.img_ligb = Image.open("simulator/gui/assets/light-bright.png")
-        self.img_ligd = Image.open("simulator/gui/assets/light-dark.png")
-        self.img_souh = Image.open("simulator/gui/assets/sound-hit.png")
-        self.img_sounh = Image.open("simulator/gui/assets/sound-no-hit.png")
         self.img_mobrob = Image.open("simulator/gui/assets/mobile-robot.png")
-        self.drawing_width = 7500
-        self.drawing_height = 10000
+        self.drawing_width = 10000
+        self.drawing_height = 7500
 
     def move(self, vx, vy, angle):
         return super().move(vx, vy, angle)
@@ -332,11 +338,78 @@ class MobileRobot(Robot):
             self.img_path = self.img_path.rotate(180)
 
 
-
 class Circuit:
 
-    def __init__(self):
-        self.coords = None
+    def __init__(self, drawing: Drawing):
+        self.circuit_parts = []
+        self.drawing = drawing
+        self.ROAD_WIDTH = 600
 
     def create_circuit(self):
-        pass
+        x = 100
+        y = 100
+        straight_lengths = {
+            1: {"x": 9000}, #recta ppal
+            2: {"y": 1000}, #chicane 1
+            3: {"x": -750},
+            4: {"y": 1500}, #recta 1
+            5: {"x": 750}, #chicane 2
+            6: {"y": 1000},
+            7: {"x": -4000}, #recta 2
+            8: {"y": 1000}, #horquilla 1
+            9: {"x": 4000}, #recta 3
+            10: {"y": 1000}, #horquilla 2
+            11: {"x": -5250}, #recta 4
+            12: {"y": -1000}, #chicane 3
+            13: {"x": -1750},
+            14: {"y": -2000}, #recta 5
+            15: {"x": 1000},
+            16: {"y": -1000}, #horquilla 3
+            17: {"x": -2000},
+            18: {"y": 2000},
+            19: {"x": -1000}, #horquilla 4
+            20: {"y": -3500}, #ultima curva
+        }
+        for key in straight_lengths:
+            if "x" in straight_lengths[key]:
+                self.__create_piece(x, y, straight_lengths[key]["x"], self.ROAD_WIDTH)
+                x += straight_lengths[key]["x"]
+            elif "y" in straight_lengths[key]:
+                self.__create_piece(x, y, self.ROAD_WIDTH, straight_lengths[key]["y"])
+                y += straight_lengths[key]["y"]
+        for part in self.circuit_parts:
+            self.drawing.draw_figure(
+                {
+                    "x": part.x,
+                    "y": part.y,
+                    "width": part.width,
+                    "height": part.height
+                }
+            )
+
+    def __create_piece(self, x, y, width, height):
+        if width < 0:
+            x += self.ROAD_WIDTH
+            x += width
+            width *= -1
+        if height < 0:
+            y += self.ROAD_WIDTH
+            y += height
+            height *= -1
+        self.circuit_parts.append(
+            self.CircuitPart(x, y, width, height)
+        )
+
+    def is_overlapping(self, x, y):
+        for part in self.circuit_parts:
+            if (x >= part.x and x <= part.width) and (y >= part.y and y <= part.height):
+                return True
+        return False
+
+    class CircuitPart:
+
+        def __init__(self, x, y, width, height):
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
