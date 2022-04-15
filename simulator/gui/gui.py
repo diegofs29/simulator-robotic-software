@@ -3,8 +3,8 @@ import tkinter.ttk as ttk
 from robots import DrawingTool
 
 
-dark_blue = "#006468"
-blue = "#17a1a5"
+DARK_BLUE = "#006468"
+BLUE = "#17a1a5"
 
 
 class MainApplication(tk.Tk):
@@ -15,24 +15,33 @@ class MainApplication(tk.Tk):
         self.geometry("1280x720")
 
         self.menu_bar = MenuBar(self)
-        self.tools_frame = tk.Frame(self, bg=dark_blue)
-        self.button_bar = ButtonBar(self.tools_frame, self, bg=dark_blue)
+        self.tools_frame = tk.Frame(self, bg=DARK_BLUE)
+        self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
         self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"], state="readonly")
         self.robot_selector.current(0)
         self.drawing_tool = DrawingTool(self.robot_selector.get())
         self.vertical_pane = tk.PanedWindow(
-            orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=dark_blue)
+            orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=DARK_BLUE)
         self.horizontal_pane = tk.PanedWindow(
-            self.vertical_pane, orient=tk.HORIZONTAL, sashpad=5, sashrelief="solid", bg=blue)
+            self.vertical_pane, orient=tk.HORIZONTAL, sashpad=5, sashrelief="solid", bg=BLUE)
         self.drawing_frame = DrawingFrame(
-            self.horizontal_pane, self, bg=blue)
-        self.editor_frame = EditorFrame(self.horizontal_pane, bg=blue)
-        self.console_frame = ConsoleFrame(self.vertical_pane, bg=dark_blue)
+            self.horizontal_pane, self, bg=BLUE)
+        self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
+        self.console_frame = ConsoleFrame(self.vertical_pane, bg=DARK_BLUE)
 
+        self.drawing_tool.set_canvas(self.drawing_frame.canvas)
+        self.drawing_tool.choose_robot(self.robot_selector.get())
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
         self.robot_selector.pack(side="right", padx=15)
+        self.movement = {
+            "w": False,
+            "a": False,
+            "s": False,
+            "d": False
+        }
+        self.identifier = None
 
         self.tools_frame.pack(fill=tk.X)
         self.vertical_pane.pack(fill="both", expand=True)
@@ -44,9 +53,30 @@ class MainApplication(tk.Tk):
         self.vertical_pane.add(self.console_frame, stretch="never", height=200, minsize=100)
 
         self.robot_selector.bind("<<ComboboxSelected>>", self.change_robot)
+        self.bind("<KeyPress>", self.key_press)
+        self.bind("<KeyRelease>", self.key_release)
 
     def change_robot(self, event):
+        self.stop_move()
         self.drawing_tool.choose_robot(self.robot_selector.get())
+
+    def key_press(self, event):
+        pressed_key = event.char
+        if pressed_key in self.movement:
+            self.movement[pressed_key] = True
+
+    def key_release(self, event):
+        pressed_key = event.char
+        if pressed_key in self.movement:
+            self.movement[pressed_key] = False
+
+    def move(self):
+        self.drawing_tool.move(self.movement)
+        self.identifier = self.after(10, self.move)
+
+    def stop_move(self):
+        if self.identifier != None:
+            self.after_cancel(self.identifier)
 
 
 class MenuBar(tk.Menu):
@@ -70,7 +100,9 @@ class DrawingFrame(tk.Frame):
 
         self.canvas = tk.Canvas(self, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
-        self.zoom_frame = tk.Frame(self, bg=blue)
+        self.hud_canvas = tk.Canvas(self, height=100, bg=BLUE, highlightthickness=0)
+        self.hud_canvas.create_text(50, 25, text="HUD", font=("Consolas", 25))
+        self.zoom_frame = tk.Frame(self, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
             {
@@ -78,7 +110,7 @@ class DrawingFrame(tk.Frame):
                 "white": self.zoom_whi_img,
                 "yellow": self.zoom_yel_img
             },
-            bg=blue,
+            bg=BLUE,
             bd=0
         )
         self.zoom_out_button = ImageButton(
@@ -88,13 +120,11 @@ class DrawingFrame(tk.Frame):
                 "white": self.dezoom_whi_img,
                 "yellow": self.dezoom_yel_img
             },
-            bg=blue,
+            bg=BLUE,
             bd=0
         )
-        self.zoom_label = tk.Label(self.zoom_frame, bg=blue, fg="white", font=("Consolas", 12))
+        self.zoom_label = tk.Label(self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
 
-        self.application.drawing_tool.set_canvas(self.canvas)
-        self.canvas.configure(scrollregion=(0, 0, self.application.drawing_tool.width, self.application.drawing_tool.height))
         self.zoom_label.configure(text="{}%".format(self.application.drawing_tool.zoom_percent))
 
         self.canvas.bind("<ButtonPress-1>", self.scroll_start)
@@ -107,6 +137,7 @@ class DrawingFrame(tk.Frame):
         self.zoom_label.grid(row=0, column=1, padx=5, pady=5)
         self.zoom_out_button.grid(row=0, column=2, padx=5, pady=5)
 
+        self.hud_canvas.pack(fill=tk.X, expand=False)
         self.canvas.pack(fill=tk.BOTH, expand=True)
         self.zoom_frame.pack(anchor="e")
 
@@ -132,7 +163,6 @@ class DrawingFrame(tk.Frame):
 
     def __update_components_after_zoom(self):
         self.__change_zoom_label()
-        self.application.drawing_tool.change_canvas_dimensions()
 
     def __change_zoom_label(self):
         self.zoom_label.configure(text="{}%".format(self.application.drawing_tool.zoom_percent))
@@ -152,7 +182,7 @@ class EditorFrame(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12))
-        self.line_bar = self.LineNumberBar(self, width=30, bg=blue, bd=0, highlightthickness=0)
+        self.line_bar = self.LineNumberBar(self, width=30, bg=BLUE, bd=0, highlightthickness=0)
         self.sb_x = tk.Scrollbar(self, orient=tk.HORIZONTAL,
                                  command=self.text.xview)
         self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL,
@@ -236,10 +266,10 @@ class ConsoleFrame(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
-        self.filter_frame = tk.Frame(self, bg=dark_blue, padx=10)
-        self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12), bg=dark_blue, activebackground=dark_blue)
-        self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12), bg=dark_blue, activebackground=dark_blue)
-        self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12), bg=dark_blue, activebackground=dark_blue)
+        self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
+        self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
+        self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
+        self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
 
         self.console.insert(tk.END, "Esto sería la consola")
         self.console.config(state=tk.DISABLED)
@@ -339,6 +369,7 @@ class ButtonBar(tk.Frame):
         self.import_button.set_tooltip_text(self.tooltip_hover, "Importar")
 
         self.execute_button.configure(command=self.execute)
+        self.stop_button.configure(command=self.stop)
 
         self.exec_frame.grid(row=0, column=0)
         self.hist_frame.grid(row=0, column=1)
@@ -354,6 +385,11 @@ class ButtonBar(tk.Frame):
 
     def execute(self):
         self.application.drawing_tool.execute()
+        self.application.move()
+
+    def stop(self):
+        self.application.drawing_tool.stop_execute()
+        self.application.stop_move()
 
     def __load_images(self):
         self.exec_img = tk.PhotoImage(file="simulator/gui/buttons/exec.png")
