@@ -1,5 +1,5 @@
 from argparse import ArgumentError
-from cmath import cos, sin
+from math import cos, pi, sin
 import tkinter as tk
 from PIL import ImageTk, Image
 
@@ -45,7 +45,10 @@ class Layer:
         self._zoom_config()
 
     def move(self, movement):
-        self.robot.move(movement)
+        """
+        Moves the robot that is being used
+        """
+        pass
 
     def set_canvas(self, canvas: tk.Canvas):
         """
@@ -98,6 +101,26 @@ class MoblileRobotLayer(Layer):
         self.circuit = Circuit(self.drawing)
         self.obstacle = Obstacle(500, 3000, 600, 450, self.drawing)
 
+    def move(self, movement):
+        v = 0
+        threshold_xleft = self.robot.x > self.robot.width / 2
+        threshold_xright = self.robot.x < self.robot.drawing_width - self.robot.width / 2
+        threshold_ytop = self.robot.y > self.robot.height / 2
+        threshold_ybot = self.robot.y < self.robot.drawing_height - self.robot.height / 2
+        if movement["w"] == True:
+            if threshold_ytop:
+                v = -10
+        if movement["s"] == True:
+            if threshold_ybot:
+                v = 10
+        if movement["a"] == True:
+            if threshold_xleft:
+                self.robot.change_angle(5)
+        if movement["d"] == True:
+            if threshold_xright:
+                self.robot.change_angle(-5)
+        self.robot.move(v)
+
     def _drawing_config(self):
         super()._drawing_config()
         self.__create_circuit()
@@ -120,6 +143,22 @@ class LinearActuatorLayer(Layer):
         super().__init__()
         self.robot = LinearActuator(self.drawing)
 
+    def move(self, movement):
+        v = 0
+        self.robot.hit = False
+        if movement["a"] == True:
+            if self.robot.block.x > 508:
+                v -= 10
+                self.robot.hit = False
+            else:
+                self.robot.hit = True
+        elif movement["d"] == True:
+            if self.robot.block.x < 1912:
+                v += 10
+                self.robot.hit = False
+            else:
+                self.robot.hit = True
+        self.robot.move(v)
 
 class HUD:
 
@@ -134,8 +173,7 @@ class Drawing:
 
     def __init__(self):
         self.canvas = None
-        self.images = {}
-        self.canvas_images = []
+        self.canvas_images = {}
         self.scale = 0.2
         self.hud_w = 0
         self.hud_h = 0
@@ -145,8 +183,7 @@ class Drawing:
 
     def empty_drawing(self):
         self.canvas.delete('all')
-        self.images = []
-        self.canvas_images = []
+        self.canvas_images = {}
 
     def delete_zoomables(self):
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
@@ -157,6 +194,7 @@ class Drawing:
 
     def redraw_image(self, element, group):
         self.canvas.delete(group)
+        del self.canvas_images[group]
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
 
     def move_image(self, group, dx, dy):
@@ -172,14 +210,6 @@ class Drawing:
         color = form["color"]
         group = form["group"]
         self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
-
-    def draw_bg(self, form: dict, group):
-        x = int(form["x"] * self.scale)
-        y = int(form["y"] * self.scale)
-        self.hud_w = int(self.width * self.scale)
-        self.hud_h = form["height"]
-        color = form["color"]
-        self.canvas.create_rectangle(x, y, self.hud_w, self.hud_h, fill=color, tags=group)
 
     def zoom_in(self):
         if self.scale < 1:
@@ -210,10 +240,10 @@ class Drawing:
         width = int(image.width * self.scale)
         height = int(image.height * self.scale)
         res_img = image.resize((width, height), Image.ANTIALIAS)
-        self.canvas_images.append(ImageTk.PhotoImage(res_img))
+        self.canvas_images[group] = (ImageTk.PhotoImage(res_img))
         scale_x = x * self.scale
         scale_y = y * self.scale + self.hud_h
-        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[-1], tags=group)
+        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group], tags=group)
 
 
 class Robot:
@@ -221,11 +251,13 @@ class Robot:
     def __init__(self, drawing: Drawing):
         self.x = 0
         self.y = 0
+        self.width = 0
+        self.height = 0
         self.drawing_width = 0
         self.drawing_height = 0
         self.drawing = drawing
 
-    def move(self, vx, vy):
+    def move(self, vel):
         pass
 
     def draw(self):
@@ -247,33 +279,43 @@ class LinearActuator(Robot):
     def __init__(self, drawing: Drawing):
         super().__init__(drawing)
         self.img_act = Image.open("simulator/gui/assets/actuator.png")
+
         self.drawing_width = 2500
         self.drawing_height = 600
-
-    def move(self, movement):
-        vx = 0
-        if movement["a"] == True:
-            if self.block.x > 508:
-                vx -= 10
-                if self.but_right.pressed:
-                    self.but_right.stop_press()
-            elif not self.but_left.pressed:
-                self.but_left.press()
-        if movement["d"] == True:
-            if self.block.x < 1912:
-                vx += 10
-                if self.but_left.pressed:
-                    self.but_left.stop_press()
-            elif not self.but_right.pressed:
-                self.but_right.press()
-        self.drawing.redraw_image(self.but_left.get_image(), "button_left")
-        self.drawing.redraw_image(self.but_right.get_image(), "button_right")
-        self.block.x += vx
-        self.drawing.move_image("block", vx, 0)
-
-    def create_robot(self):
         self.x = int(self.drawing_width / 2)
         self.y = int(self.drawing_height / 2)
+        self.width = self.img_act.width
+        self.height = self.img_act.height
+        self.hit = False
+        self.direction = "stop"
+
+    def move(self, vel):
+        if (not self.hit) and vel != 0:
+            if self.but_right.pressed:
+                self.but_right.stop_press()
+            if self.but_left.pressed:
+                self.but_left.stop_press()
+            self.__redraw_buttons()
+        if vel < 0:
+            self.direction = "left"
+        elif vel > 0:
+            self.direction = "right"
+        if vel == 0 and self.hit and not self.direction == "stop":
+            if not self.but_left.pressed and self.direction == "left":
+                self.but_left.press()
+            if not self.but_right.pressed and self.direction == "right":
+                self.but_right.press()
+            self.__redraw_buttons()
+            self.direction = "stop"
+        else:
+            self.block.x += vel
+            self.drawing.move_image("block", vel, 0)
+
+    def __redraw_buttons(self):
+        self.drawing.redraw_image(self.but_left.get_image(), "button_left")
+        self.drawing.redraw_image(self.but_right.get_image(), "button_right")
+
+    def create_robot(self):
         self.image = {
             "x": self.x,
             "y": self.y,
@@ -354,34 +396,31 @@ class MobileRobot(Robot):
     def __init__(self, drawing: Drawing):
         super().__init__(drawing)
         self.img_mobrob = Image.open("simulator/gui/assets/mobile-robot.png")
+
         self.drawing_width = 6300
         self.drawing_height = 4300
         self.x = 500
         self.y = 500
         self.width = self.img_mobrob.width - 68
         self.height = self.img_mobrob.height
+        self.angle = 90
 
-    def move(self, movement):
-        vx = 0
-        vy = 0
-        threshold_ytop = self.y > self.height / 2
-        threshold_ybot = self.y < self.drawing_height - self.height / 2
-        threshold_xleft = self.x > self.width / 2
-        threshold_xright = self.x < self.drawing_width - self.width / 2
-        if movement["w"] == True:
-            if threshold_ytop:
-                vy -= 10
-        if movement["s"] == True:
-            if threshold_ybot:
-                vy += 10
-        if movement["a"] == True:
-            if threshold_xleft:
-                vx -= 10
-        if movement["d"] == True:
-            if threshold_xright:
-                vx += 10
+    def move(self, vel):
+        angle = self.angle * pi / 180
+        vx = int(vel * cos(angle))
+        vy = int(vel * sin(angle))
         self.__update_coords(vx, vy)
         self.drawing.move_image("robot", vx, vy)
+
+    def change_angle(self, d_angle):
+        if self.angle + d_angle >= 0 and self.angle + d_angle <= 360:
+            self.angle += d_angle
+        else:
+            if self.angle + d_angle < 0:
+                self.angle = 360 + (self.angle + d_angle)
+            else:
+                self.angle = (self.angle + d_angle) - 360
+        self.img_mobrob.rotate(self.angle)
 
     def create_robot(self):
         self.robot = {
