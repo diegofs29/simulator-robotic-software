@@ -1,75 +1,124 @@
 from argparse import ArgumentError
+from cmath import cos, sin
 import tkinter as tk
 from PIL import ImageTk, Image
 
 
-class DrawingTool:
+class Layer:
 
-    def __init__(self, robot_type: str):
+    def __init__(self):
+        """
+        Constructor for superclass layer
+        """
         self.drawing = Drawing()
-        self.__zoom_percentage()
+        self.robot: Robot = None
+        self._zoom_percentage()
         self.is_drawing = False
 
     def execute(self):
-        self.__drawing_config()
+        """
+        Executes the code, showing what the robot will do on the canvas
+        """
+        self._drawing_config()
         self.robot.draw()
         self.is_drawing = True
-
-    def stop_execute(self):
+        
+    def stop(self):
+        """
+        Stops all the executing code and clears the canvas
+        """
         self.drawing.empty_drawing()
         self.is_drawing = False
 
     def zoom_in(self):
+        """
+        Broadens the drawing
+        """
         self.drawing.zoom_in()
-        self.__zoom_config()
+        self._zoom_config()
 
     def zoom_out(self):
+        """
+        Unbroads the drawing
+        """
         self.drawing.zoom_out()
-        self.__zoom_config()
-
-    def set_canvas(self, canvas: tk.Canvas):
-        self.drawing.set_canvas(canvas)
-
-    def choose_robot(self, robot_type: str):
-        if robot_type == "Robot móvil":
-            self.robot = MobileRobot(self.drawing)
-            if isinstance(self.robot, MobileRobot):
-                self.circuit = Circuit(self.drawing)
-        elif robot_type == "Actuador lineal":
-            self.robot = LinearActuator(self.drawing)
-        else:
-            raise ArgumentError(message="No existe ese robot")
-        self.drawing.set_size(self.robot.drawing_width, self.robot.drawing_height)
+        self._zoom_config()
 
     def move(self, movement):
         self.robot.move(movement)
-        self.__check_overlap()
 
-    def __check_overlap(self):
-        x = self.robot.light_l["x"]
-        y = self.robot.light_l["y"]
-        print(self.circuit.is_overlapping(x, y))
+    def set_canvas(self, canvas: tk.Canvas):
+        """
+        Sets the canvas that the drawing will use
+        """
+        self.drawing.set_canvas(canvas)
+        self.drawing.set_size(self.robot.drawing_width, self.robot.drawing_height)
 
-    def __zoom_config(self):
-        self.__zoom_percentage()
+    def _zoom_config(self):
+        """
+        Configures the zoom in case when it changes
+        """
+        self._zoom_percentage()
         if self.is_drawing:
-            self.__zoom_redraw()
-    
-    def __zoom_percentage(self):
-        self.zoom_percent = self.drawing.zoom_percentage()
+            self._zoom_redraw()
 
-    def __zoom_redraw(self):
+    def _zoom_redraw(self):
+        """
+        Once the zoom changes, use this method for redrawing everything
+        up to scale
+        """
         self.drawing.delete_zoomables()
-        self.__create_circuit()
+        self._draw_before_robot()
         self.robot.draw_robot()
 
-    def __drawing_config(self):
+    def _draw_before_robot(self):
+        pass
+
+    def _zoom_percentage(self):
+        """
+        Updates the percentage of zoom that is being used currently
+        """
+        self.zoom_percent = self.drawing.zoom_percentage()
+
+    def _drawing_config(self):
+        """
+        Method used to configure the drawing before executing
+        """
         self.drawing.empty_drawing()
+
+
+class MoblileRobotLayer(Layer):
+
+    def __init__(self):
+        """
+        Constructor for MobileRobotLayer
+        """
+        super().__init__()
+        self.robot = MobileRobot(self.drawing)
+        self.circuit = Circuit(self.drawing)
+        self.obstacle = Obstacle(500, 3000, 600, 450, self.drawing)
+
+    def _drawing_config(self):
+        super()._drawing_config()
         self.__create_circuit()
+        self.__create_obstacle()
+
+    def _draw_before_robot(self):
+        self.__create_circuit()
+        self.__create_obstacle()
 
     def __create_circuit(self):
-        if isinstance(self.robot, MobileRobot):
-            self.circuit.create_circuit()
+        self.circuit.create_circuit()
+
+    def __create_obstacle(self):
+        self.obstacle.draw()
+
+
+class LinearActuatorLayer(Layer):
+
+    def __init__(self):
+        super().__init__()
+        self.robot = LinearActuator(self.drawing)
 
 
 class HUD:
@@ -87,7 +136,7 @@ class Drawing:
         self.canvas = None
         self.images = {}
         self.canvas_images = []
-        self.scale = 1
+        self.scale = 0.2
         self.hud_w = 0
         self.hud_h = 0
 
@@ -101,7 +150,7 @@ class Drawing:
 
     def delete_zoomables(self):
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
-        self.canvas.delete('robot', 'circuit')
+        self.canvas.delete('robot', 'circuit', 'obstacle')
 
     def draw_image(self, element, group):
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
@@ -115,12 +164,14 @@ class Drawing:
         vy = int(dy * self.scale)
         self.canvas.move(group, vx, vy)
 
-    def draw_circuit(self, form: dict):
+    def draw_rectangle(self, form: dict):
         x = int(form["x"] * self.scale)
         y = int(form["y"] * self.scale) + self.hud_h
         width = int(form["width"] * self.scale)
         height = int(form["height"] * self.scale)
-        self.canvas.create_rectangle(x, y, x + width, y + height, fill="black", tags="circuit")
+        color = form["color"]
+        group = form["group"]
+        self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
 
     def draw_bg(self, form: dict, group):
         x = int(form["x"] * self.scale)
@@ -170,6 +221,8 @@ class Robot:
     def __init__(self, drawing: Drawing):
         self.x = 0
         self.y = 0
+        self.drawing_width = 0
+        self.drawing_height = 0
         self.drawing = drawing
 
     def move(self, vx, vy):
@@ -305,14 +358,16 @@ class MobileRobot(Robot):
         self.drawing_height = 4300
         self.x = 500
         self.y = 500
+        self.width = self.img_mobrob.width - 68
+        self.height = self.img_mobrob.height
 
     def move(self, movement):
         vx = 0
         vy = 0
-        threshold_ytop = self.y > self.img_mobrob.height / 2
-        threshold_ybot = self.y < self.drawing_height - self.img_mobrob.height / 2
-        threshold_xleft = self.x > self.img_mobrob.width / 2
-        threshold_xright = self.x < self.drawing_width - self.img_mobrob.width / 2
+        threshold_ytop = self.y > self.height / 2
+        threshold_ybot = self.y < self.drawing_height - self.height / 2
+        threshold_xleft = self.x > self.width / 2
+        threshold_xright = self.x < self.drawing_width - self.width / 2
         if movement["w"] == True:
             if threshold_ytop:
                 vy -= 10
@@ -379,9 +434,9 @@ class Circuit:
             15: {"x": 750},
             16: {"y": -750}, #horquilla 1
             17: {"x": -1750},
-            18: {"y": 1000},
+            18: {"y": 750},
             19: {"x": -750}, #horquilla 1
-            20: {"y": -1750}, #ultima curva
+            20: {"y": -1500}, #ultima curva
         }
         self.create_straights(straight_lengths)
         self.draw_circuit()
@@ -399,12 +454,14 @@ class Circuit:
 
     def draw_circuit(self):
         for part in self.circuit_parts:
-            self.drawing.draw_circuit(
+            self.drawing.draw_rectangle(
                 {
                     "x": part.x,
                     "y": part.y,
                     "width": part.width,
-                    "height": part.height
+                    "height": part.height,
+                    "color": "black",
+                    "group": "circuit"
                 }
             )
     
@@ -439,3 +496,146 @@ class Circuit:
 
         def check_overlap(self, x, y):
             return (x >= self.x and x <= self.x + self.width) and (y >= self.y and y <= self.y + self.height)
+
+
+class Obstacle:
+
+    def __init__(self, x, y, width, height, drawing: Drawing):
+        """
+        Constructor for Obstacle
+        Arguments:
+            x: the initial x coordinate for the obstacle
+            y: the initial y coordinate for the obstacle
+            width: the width of the obstacle
+            height: the height of the obstacle
+            drawing: the drawing in which the obstacle will
+            be drawn
+        """
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.drawing = drawing
+
+    def draw(self):
+        """
+        Draws the obstacle in the corresponding drawing
+        """
+        self.drawing.draw_rectangle(
+            {
+                "x": self.x,
+                "y": self.y,
+                "width": self.width,
+                "height": self.height,
+                "color": "orange",
+                "group": "obstacle"
+            }
+        )
+
+    def check_closeness(self, px, py, angle):
+        """
+        Calculates the distance between the robot and the
+        obstacle
+        Arguments:
+            px: the x coordinate of the point from which the sound
+            ray starts
+            py: the y coordinate of the point from which the sound
+            ray starts
+            angle: the angle in degrees with which the ray was thrown
+        Returns:
+            The distance between the sensor and the obstacle
+        """
+        distance = -1
+        points = {
+            "x1": self.x,
+            "x2": self.x + self.width,
+            "y1": self.y,
+            "y2": self.y + self.width
+        }
+        vx = cos(angle)
+        vy = sin(angle)
+        res = {}
+        index = 1
+        for key in points:
+            dist = -1
+            v1 = v2 = None
+            if key[0] == "x":
+                dist = self.__calculate_distance(points[key], px, vx)
+                v1 = (points[key], points["y1"])
+                v2 = (points[key], points["y2"])
+            elif key[0] == "y":
+                dist = self.__calculate_distance(points[key], py, vy)
+                v1 = (points["x1"], points[key])
+                v2 = (points["x2"], points[key])
+            if dist != -1:
+                p_intersect = self.__calculate_intersection(px, py, vx, vy, dist)
+                intersects = self.__check_intersection(v1, v2, p_intersect)
+                res[index] = {
+                    "intersects": intersects,
+                    "dist": dist
+                }
+                index += 1
+        distance = self.__check_distance(res)
+        return distance
+
+    def __calculate_distance(self, p1, p2, v):
+        """
+        Calculates the distance between p1 and p2 given v.
+        Arguments:
+            p1: the coordinate of the wall
+            p2: the coordinate of the starting point
+            v: the velocity
+        Returns:
+            The distance between p1 and p2
+        """
+        return abs((p1 - p2) / v)
+
+    def __check_distance(self, dists):
+        """
+        Obtains the minimum of the distances that intersects with the
+        obstacle.
+        Arguments:
+            dists: a dictionary with the following keys:
+                intersects: True if intersects, false if not
+                dist: the distance to the obstacle
+        Returns:
+            The minimum distance or -1 if the ray does not intersect
+        """
+        dist = -1
+        if dists["intersects"]:
+            if dists["dist"] < dist or dist == -1:
+                dist = dists["dist"]
+        return dist
+
+    def __calculate_intersection(self, px, py, vx, vy, dist):
+        """
+        Calculates the point of intersection between the ray and
+        the obstacle.
+        Arguments:
+            px: the x coord from which the ray starts
+            py: the y coord from which the ray starts
+            vx: the velocity on the x axis
+            vy: the velocity on the y axis
+            dist: the distance to the wall of the obstacle
+        Returns:
+            The point of intersection between the ray and the obstacle
+        """
+        x = px + dist * vx
+        y = py + dist * vy
+        return (x, y)
+
+    def __check_intersection(self, p1, p2, op):
+        """
+        Checks for intersection of the ray line and the obstacle, done
+        by calculating if op is between p1 and p2.
+        Arguments:
+            p1: start point of the straight (tuple)
+            p2: end point of the straight (tuple)
+            op: the point to check
+        Returns:
+            True: if the ray and the obstacle intersect
+            False: if else
+        """
+        intersect_x = p1[0] <= op[0] <= p2[0] # 0 is the x coord
+        intersect_y = p1[1] <= op[1] <= p2[1] # 1 is the y coord
+        return intersect_x and intersect_y

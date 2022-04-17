@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from robots import DrawingTool
+from robots import Layer
+from simulator.gui.robots import LinearActuatorLayer, MoblileRobotLayer
 
 
 DARK_BLUE = "#006468"
@@ -19,7 +20,6 @@ class MainApplication(tk.Tk):
         self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
         self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"], state="readonly")
         self.robot_selector.current(0)
-        self.drawing_tool = DrawingTool(self.robot_selector.get())
         self.vertical_pane = tk.PanedWindow(
             orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=DARK_BLUE)
         self.horizontal_pane = tk.PanedWindow(
@@ -29,8 +29,8 @@ class MainApplication(tk.Tk):
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
         self.console_frame = ConsoleFrame(self.vertical_pane, bg=DARK_BLUE)
 
-        self.drawing_tool.set_canvas(self.drawing_frame.canvas)
-        self.drawing_tool.choose_robot(self.robot_selector.get())
+        self.robot_layer: Layer = self.select_robot()
+        self.configure_layer()
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
@@ -56,9 +56,22 @@ class MainApplication(tk.Tk):
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
 
+    def configure_layer(self):
+        self.robot_layer.set_canvas(self.drawing_frame.canvas)
+        self.drawing_frame.change_zoom_label()
+
     def change_robot(self, event):
         self.stop_move()
-        self.drawing_tool.choose_robot(self.robot_selector.get())
+        self.robot_layer = self.select_robot()
+        self.configure_layer()
+
+    def select_robot(self):
+        robot = self.robot_selector.current()
+        if robot == 0:
+            return MoblileRobotLayer()
+        elif robot == 1:
+            return LinearActuatorLayer()
+        return None
 
     def key_press(self, event):
         pressed_key = event.char
@@ -71,10 +84,11 @@ class MainApplication(tk.Tk):
             self.movement[pressed_key] = False
 
     def move(self):
-        self.drawing_tool.move(self.movement)
+        self.robot_layer.move(self.movement)
         self.identifier = self.after(10, self.move)
 
     def stop_move(self):
+        self.robot_layer.stop()
         if self.identifier != None:
             self.after_cancel(self.identifier)
 
@@ -125,8 +139,6 @@ class DrawingFrame(tk.Frame):
         )
         self.zoom_label = tk.Label(self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
 
-        self.zoom_label.configure(text="{}%".format(self.application.drawing_tool.zoom_percent))
-
         self.canvas.bind("<ButtonPress-1>", self.scroll_start)
         self.canvas.bind("<B1-Motion>", self.scroll_move)
         self.canvas.bind("<MouseWheel>", self.zoom)
@@ -154,18 +166,15 @@ class DrawingFrame(tk.Frame):
             self.zoom_in()
 
     def zoom_in(self):
-        self.application.drawing_tool.zoom_in()
-        self.__update_components_after_zoom()
+        self.application.robot_layer.zoom_in()
+        self.change_zoom_label()
 
     def zoom_out(self):
-        self.application.drawing_tool.zoom_out()
-        self.__update_components_after_zoom()
+        self.application.robot_layer.zoom_out()
+        self.change_zoom_label()
 
-    def __update_components_after_zoom(self):
-        self.__change_zoom_label()
-
-    def __change_zoom_label(self):
-        self.zoom_label.configure(text="{}%".format(self.application.drawing_tool.zoom_percent))
+    def change_zoom_label(self):
+        self.zoom_label.configure(text="{}%".format(self.application.robot_layer.zoom_percent))
 
     def __load_images(self):
         self.zoom_img = tk.PhotoImage(file="simulator/gui/buttons/zoom.png")
@@ -384,11 +393,11 @@ class ButtonBar(tk.Frame):
         self.import_button.grid(row=0, column=2, padx=5, pady=5)
 
     def execute(self):
-        self.application.drawing_tool.execute()
+        self.application.robot_layer.execute()
         self.application.move()
 
     def stop(self):
-        self.application.drawing_tool.stop_execute()
+        self.application.robot_layer.stop()
         self.application.stop_move()
 
     def __load_images(self):
