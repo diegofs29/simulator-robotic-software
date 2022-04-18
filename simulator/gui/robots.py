@@ -101,25 +101,44 @@ class MoblileRobotLayer(Layer):
         self.circuit = Circuit(self.drawing)
         self.obstacle = Obstacle(500, 3000, 600, 450, self.drawing)
 
+        self.is_rotating = False
+        self.is_moving = False
+
     def move(self, movement):
-        v = 0
+        v = 0 #Velocity
+        da = 0 #Angle
         threshold_xleft = self.robot.x > self.robot.width / 2
         threshold_xright = self.robot.x < self.robot.drawing_width - self.robot.width / 2
         threshold_ytop = self.robot.y > self.robot.height / 2
         threshold_ybot = self.robot.y < self.robot.drawing_height - self.robot.height / 2
-        if movement["w"] == True:
-            if threshold_ytop:
-                v = -10
-        if movement["s"] == True:
-            if threshold_ybot:
-                v = 10
-        if movement["a"] == True:
-            if threshold_xleft:
-                self.robot.change_angle(5)
-        if movement["d"] == True:
-            if threshold_xright:
-                self.robot.change_angle(-5)
-        self.robot.move(v)
+
+        #Process keys
+        if not self.is_rotating:
+            if movement["w"] == True:
+                if threshold_ytop:
+                    v = -10
+            if movement["s"] == True:
+                if threshold_ybot:
+                    v = 10
+            self.is_moving = True
+        if v == 0:
+            self.is_moving = False
+        if not self.is_moving:
+            if movement["a"] == True:
+                if threshold_xleft:
+                    da = 5
+            if movement["d"] == True:
+                if threshold_xright:
+                    da = -5
+            self.is_rotating = True
+        if da == 0:
+            self.is_rotating = False
+
+        #Move or rotate
+        if not self.is_rotating:
+            self.robot.move(v)
+        if not self.is_moving:
+            self.robot.change_angle(da)
 
     def _drawing_config(self):
         super()._drawing_config()
@@ -200,10 +219,16 @@ class Drawing:
         del self.canvas_images[group]
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
 
-    def move_image(self, group, dx, dy):
-        vx = int(dx * self.scale)
-        vy = int(dy * self.scale)
-        self.canvas.move(group, vx, vy)
+    def move_image(self, group, x, y):
+        current_x = self.canvas_images[group]["x"]
+        current_y = self.canvas_images[group]["y"]
+        scale_x = int(x * self.scale)
+        scale_y = int(y * self.scale)
+        dx = scale_x - current_x
+        dy = scale_y - current_y
+        self.canvas_images[group]["x"] = scale_x
+        self.canvas_images[group]["y"] = scale_y
+        self.canvas.move(group, dx, dy)
 
     def rotate_image(self, element, angle, group):
         self.canvas.delete(group)
@@ -248,10 +273,14 @@ class Drawing:
         width = int(image.width * self.scale)
         height = int(image.height * self.scale)
         res_img = image.resize((width, height), Image.ANTIALIAS)
-        self.canvas_images[group] = (ImageTk.PhotoImage(res_img))
         scale_x = x * self.scale
         scale_y = y * self.scale + self.hud_h
-        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group], tags=group)
+        self.canvas_images[group] = {
+            "x": scale_x,
+            "y": scale_y,
+            "image": ImageTk.PhotoImage(res_img)
+        }
+        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
 
 
 class Robot:
@@ -318,7 +347,7 @@ class LinearActuator(Robot):
             self.direction = "stop"
         else:
             self.block.x += vel
-            self.drawing.move_image("block", vel, 0)
+            self.drawing.move_image("block", self.block.x, self.block.y)
 
     def __redraw_buttons(self):
         self.drawing.redraw_image(self.but_left.get_image(), "button_left")
@@ -410,6 +439,8 @@ class MobileRobot(Robot):
         self.drawing_height = 4300
         self.x = 500
         self.y = 500
+        self.real_x = self.x
+        self.real_y = self.y
         self.width = self.img_mobrob.width
         self.height = self.img_mobrob.height
         self.angle = 90
@@ -424,11 +455,13 @@ class MobileRobot(Robot):
             from it the velocity in each axis is calculated
             by using sin and cos with the angle
         """
+        x = self.x
+        y = self.y
         angle = self.angle * pi / 180
-        vx = int(vel * cos(angle))
-        vy = int(vel * sin(angle))
-        self.__update_coords(vx, vy)
-        self.drawing.move_image("robot", vx, vy)
+        vx = -vel * cos(angle)
+        vy = vel * sin(angle)
+        if self.__update_coords(vx, vy):
+            self.drawing.move_image("robot", self.x, self.y)
 
     def change_angle(self, d_angle):
         """
@@ -483,14 +516,38 @@ class MobileRobot(Robot):
             )
 
     def __update_coords(self, dx, dy):
-        self.x += dx
-        self.y += dy
-        self.robot["x"] = self.x
-        self.robot["y"] = self.y
-        self.light_l["x"] += dx
-        self.light_l["y"] += dy
-        self.light_r["x"] += dx
-        self.light_r["y"] += dy
+        """
+        Updates the coordinates of the different components
+        of the robot. It does so by updating the real position
+        and when it changes compared to the coordinates, this are
+        updated.
+        Arguments:
+            dx: the change on x coordinates
+            dy: the change on y coordinates
+        """
+        self.real_x += dx
+        self.real_y += dy
+        if self.__check_change_coords():
+            self.x = int(self.real_x)
+            self.y = int(self.real_y)
+            self.robot["x"] = self.x
+            self.robot["y"] = self.y
+            self.light_l["x"] += dx
+            self.light_l["y"] += dy
+            self.light_r["x"] += dx
+            self.light_r["y"] += dy
+            return True
+        return False
+
+    def __check_change_coords(self):
+        """
+        Checks if the real coords (real_x and real_y)
+        are different when they are truncated, compared
+        to the int ones (x and y)
+        """
+        x = int(self.real_x)
+        y = int(self.real_y)
+        return self.x != x or self.y != y
 
 
 class Circuit:

@@ -1,0 +1,1400 @@
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 500, y real: 500
+diferencial x: 9, diferencial y: 0
+x real: 509, y real: 500
+in
+x = 509, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 518, y real: 500
+in
+x = 518, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 527, y real: 500
+in
+x = 527, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 536, y real: 500
+in
+x = 536, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 545, y real: 500
+in
+x = 545, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 554, y real: 500
+in
+x = 554, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 563, y real: 500
+in
+x = 563, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 572, y real: 500
+in
+x = 572, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 581, y real: 500
+in
+x = 581, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 590, y real: 500
+in
+x = 590, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 599, y real: 500
+in
+x = 599, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 608, y real: 500
+in
+x = 608, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 617, y real: 500
+in
+x = 617, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 626, y real: 500
+in
+x = 626, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 635, y real: 500
+in
+x = 635, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 644, y real: 500
+in
+x = 644, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 653, y real: 500
+in
+x = 653, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 662, y real: 500
+in
+x = 662, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 671, y real: 500
+in
+x = 671, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 680, y real: 500
+in
+x = 680, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 689, y real: 500
+in
+x = 689, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 698, y real: 500
+in
+x = 698, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 707, y real: 500
+in
+x = 707, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 716, y real: 500
+in
+x = 716, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 725, y real: 500
+in
+x = 725, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 734, y real: 500
+in
+x = 734, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 743, y real: 500
+in
+x = 743, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 752, y real: 500
+in
+x = 752, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 761, y real: 500
+in
+x = 761, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 770, y real: 500
+in
+x = 770, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 779, y real: 500
+in
+x = 779, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 788, y real: 500
+in
+x = 788, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 797, y real: 500
+in
+x = 797, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 806, y real: 500
+in
+x = 806, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 815, y real: 500
+in
+x = 815, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 824, y real: 500
+in
+x = 824, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 833, y real: 500
+in
+x = 833, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 842, y real: 500
+in
+x = 842, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 851, y real: 500
+in
+x = 851, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 860, y real: 500
+in
+x = 860, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 869, y real: 500
+in
+x = 869, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 878, y real: 500
+in
+x = 878, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 887, y real: 500
+in
+x = 887, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 896, y real: 500
+in
+x = 896, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 905, y real: 500
+in
+x = 905, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 914, y real: 500
+in
+x = 914, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 923, y real: 500
+in
+x = 923, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 932, y real: 500
+in
+x = 932, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 941, y real: 500
+in
+x = 941, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 950, y real: 500
+in
+x = 950, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 959, y real: 500
+in
+x = 959, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 968, y real: 500
+in
+x = 968, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 977, y real: 500
+in
+x = 977, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 986, y real: 500
+in
+x = 986, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 995, y real: 500
+in
+x = 995, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1004, y real: 500
+in
+x = 1004, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1013, y real: 500
+in
+x = 1013, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1022, y real: 500
+in
+x = 1022, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1031, y real: 500
+in
+x = 1031, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1040, y real: 500
+in
+x = 1040, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1049, y real: 500
+in
+x = 1049, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1058, y real: 500
+in
+x = 1058, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1067, y real: 500
+in
+x = 1067, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1076, y real: 500
+in
+x = 1076, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1085, y real: 500
+in
+x = 1085, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1094, y real: 500
+in
+x = 1094, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1103, y real: 500
+in
+x = 1103, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1112, y real: 500
+in
+x = 1112, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1121, y real: 500
+in
+x = 1121, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1130, y real: 500
+in
+x = 1130, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1139, y real: 500
+in
+x = 1139, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1148, y real: 500
+in
+x = 1148, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1157, y real: 500
+in
+x = 1157, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1166, y real: 500
+in
+x = 1166, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1175, y real: 500
+in
+x = 1175, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1184, y real: 500
+in
+x = 1184, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1193, y real: 500
+in
+x = 1193, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1202, y real: 500
+in
+x = 1202, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1211, y real: 500
+in
+x = 1211, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1220, y real: 500
+in
+x = 1220, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1229, y real: 500
+in
+x = 1229, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1238, y real: 500
+in
+x = 1238, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1247, y real: 500
+in
+x = 1247, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1256, y real: 500
+in
+x = 1256, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1265, y real: 500
+in
+x = 1265, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1274, y real: 500
+in
+x = 1274, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1283, y real: 500
+in
+x = 1283, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1292, y real: 500
+in
+x = 1292, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1301, y real: 500
+in
+x = 1301, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1310, y real: 500
+in
+x = 1310, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1319, y real: 500
+in
+x = 1319, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1328, y real: 500
+in
+x = 1328, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1337, y real: 500
+in
+x = 1337, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1346, y real: 500
+in
+x = 1346, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1355, y real: 500
+in
+x = 1355, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1364, y real: 500
+in
+x = 1364, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1373, y real: 500
+in
+x = 1373, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1382, y real: 500
+in
+x = 1382, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1391, y real: 500
+in
+x = 1391, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1400, y real: 500
+in
+x = 1400, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1409, y real: 500
+in
+x = 1409, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1418, y real: 500
+in
+x = 1418, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1427, y real: 500
+in
+x = 1427, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1436, y real: 500
+in
+x = 1436, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1445, y real: 500
+in
+x = 1445, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1454, y real: 500
+in
+x = 1454, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1463, y real: 500
+in
+x = 1463, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1472, y real: 500
+in
+x = 1472, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1481, y real: 500
+in
+x = 1481, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1490, y real: 500
+in
+x = 1490, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1499, y real: 500
+in
+x = 1499, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1508, y real: 500
+in
+x = 1508, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1517, y real: 500
+in
+x = 1517, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1526, y real: 500
+in
+x = 1526, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1535, y real: 500
+in
+x = 1535, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1544, y real: 500
+in
+x = 1544, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1553, y real: 500
+in
+x = 1553, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1562, y real: 500
+in
+x = 1562, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1571, y real: 500
+in
+x = 1571, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1580, y real: 500
+in
+x = 1580, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1589, y real: 500
+in
+x = 1589, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1598, y real: 500
+in
+x = 1598, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1607, y real: 500
+in
+x = 1607, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1616, y real: 500
+in
+x = 1616, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1625, y real: 500
+in
+x = 1625, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1634, y real: 500
+in
+x = 1634, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1643, y real: 500
+in
+x = 1643, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1652, y real: 500
+in
+x = 1652, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1661, y real: 500
+in
+x = 1661, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1670, y real: 500
+in
+x = 1670, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1679, y real: 500
+in
+x = 1679, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1688, y real: 500
+in
+x = 1688, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1697, y real: 500
+in
+x = 1697, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1706, y real: 500
+in
+x = 1706, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1715, y real: 500
+in
+x = 1715, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1724, y real: 500
+in
+x = 1724, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1733, y real: 500
+in
+x = 1733, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1742, y real: 500
+in
+x = 1742, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1751, y real: 500
+in
+x = 1751, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1760, y real: 500
+in
+x = 1760, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1769, y real: 500
+in
+x = 1769, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1778, y real: 500
+in
+x = 1778, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1787, y real: 500
+in
+x = 1787, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1796, y real: 500
+in
+x = 1796, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1805, y real: 500
+in
+x = 1805, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1814, y real: 500
+in
+x = 1814, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1823, y real: 500
+in
+x = 1823, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1832, y real: 500
+in
+x = 1832, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1841, y real: 500
+in
+x = 1841, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1850, y real: 500
+in
+x = 1850, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1859, y real: 500
+in
+x = 1859, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1868, y real: 500
+in
+x = 1868, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1877, y real: 500
+in
+x = 1877, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1886, y real: 500
+in
+x = 1886, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1895, y real: 500
+in
+x = 1895, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1904, y real: 500
+in
+x = 1904, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1913, y real: 500
+in
+x = 1913, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1922, y real: 500
+in
+x = 1922, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1931, y real: 500
+in
+x = 1931, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1940, y real: 500
+in
+x = 1940, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1949, y real: 500
+in
+x = 1949, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1958, y real: 500
+in
+x = 1958, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1967, y real: 500
+in
+x = 1967, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1976, y real: 500
+in
+x = 1976, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1985, y real: 500
+in
+x = 1985, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 1994, y real: 500
+in
+x = 1994, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2003, y real: 500
+in
+x = 2003, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2012, y real: 500
+in
+x = 2012, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2021, y real: 500
+in
+x = 2021, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2030, y real: 500
+in
+x = 2030, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2039, y real: 500
+in
+x = 2039, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2048, y real: 500
+in
+x = 2048, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2057, y real: 500
+in
+x = 2057, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2066, y real: 500
+in
+x = 2066, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2075, y real: 500
+in
+x = 2075, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2084, y real: 500
+in
+x = 2084, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2093, y real: 500
+in
+x = 2093, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2102, y real: 500
+in
+x = 2102, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2111, y real: 500
+in
+x = 2111, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2120, y real: 500
+in
+x = 2120, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2129, y real: 500
+in
+x = 2129, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2138, y real: 500
+in
+x = 2138, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2147, y real: 500
+in
+x = 2147, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2156, y real: 500
+in
+x = 2156, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2165, y real: 500
+in
+x = 2165, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2174, y real: 500
+in
+x = 2174, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2183, y real: 500
+in
+x = 2183, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2192, y real: 500
+in
+x = 2192, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2201, y real: 500
+in
+x = 2201, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2210, y real: 500
+in
+x = 2210, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2219, y real: 500
+in
+x = 2219, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2228, y real: 500
+in
+x = 2228, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2237, y real: 500
+in
+x = 2237, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2246, y real: 500
+in
+x = 2246, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2255, y real: 500
+in
+x = 2255, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2264, y real: 500
+in
+x = 2264, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2273, y real: 500
+in
+x = 2273, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2282, y real: 500
+in
+x = 2282, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2291, y real: 500
+in
+x = 2291, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2300, y real: 500
+in
+x = 2300, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2309, y real: 500
+in
+x = 2309, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2318, y real: 500
+in
+x = 2318, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2327, y real: 500
+in
+x = 2327, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2336, y real: 500
+in
+x = 2336, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2345, y real: 500
+in
+x = 2345, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2354, y real: 500
+in
+x = 2354, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2363, y real: 500
+in
+x = 2363, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2372, y real: 500
+in
+x = 2372, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2381, y real: 500
+in
+x = 2381, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2390, y real: 500
+in
+x = 2390, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2399, y real: 500
+in
+x = 2399, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2408, y real: 500
+in
+x = 2408, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2417, y real: 500
+in
+x = 2417, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2426, y real: 500
+in
+x = 2426, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2435, y real: 500
+in
+x = 2435, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2444, y real: 500
+in
+x = 2444, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2453, y real: 500
+in
+x = 2453, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2462, y real: 500
+in
+x = 2462, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2471, y real: 500
+in
+x = 2471, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2480, y real: 500
+in
+x = 2480, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2489, y real: 500
+in
+x = 2489, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2498, y real: 500
+in
+x = 2498, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2507, y real: 500
+in
+x = 2507, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2516, y real: 500
+in
+x = 2516, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2525, y real: 500
+in
+x = 2525, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2534, y real: 500
+in
+x = 2534, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2543, y real: 500
+in
+x = 2543, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2552, y real: 500
+in
+x = 2552, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2561, y real: 500
+in
+x = 2561, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2570, y real: 500
+in
+x = 2570, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2579, y real: 500
+in
+x = 2579, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2588, y real: 500
+in
+x = 2588, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2597, y real: 500
+in
+x = 2597, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2606, y real: 500
+in
+x = 2606, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2615, y real: 500
+in
+x = 2615, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2624, y real: 500
+in
+x = 2624, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2633, y real: 500
+in
+x = 2633, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2642, y real: 500
+in
+x = 2642, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2651, y real: 500
+in
+x = 2651, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2660, y real: 500
+in
+x = 2660, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2669, y real: 500
+in
+x = 2669, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2678, y real: 500
+in
+x = 2678, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2687, y real: 500
+in
+x = 2687, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2696, y real: 500
+in
+x = 2696, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2705, y real: 500
+in
+x = 2705, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2714, y real: 500
+in
+x = 2714, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2723, y real: 500
+in
+x = 2723, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2732, y real: 500
+in
+x = 2732, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2741, y real: 500
+in
+x = 2741, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2750, y real: 500
+in
+x = 2750, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2759, y real: 500
+in
+x = 2759, y = 500
+diferencial x: 9, diferencial y: 0
+x real: 2768, y real: 500
+in
+x = 2768, y = 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
+diferencial x: 0, diferencial y: 0
+x real: 2768, y real: 500
