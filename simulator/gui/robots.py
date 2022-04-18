@@ -140,6 +140,9 @@ class MoblileRobotLayer(Layer):
 class LinearActuatorLayer(Layer):
 
     def __init__(self):
+        """
+        Constuctor for LinearActuatorLayer
+        """
         super().__init__()
         self.robot = LinearActuator(self.drawing)
 
@@ -202,6 +205,11 @@ class Drawing:
         vy = int(dy * self.scale)
         self.canvas.move(group, vx, vy)
 
+    def rotate_image(self, element, angle, group):
+        self.canvas.delete(group)
+        rotated_img = element["image"].rotate(angle, expand=True)
+        self.__add_to_canvas(element["x"], element["y"], rotated_img, group)
+
     def draw_rectangle(self, form: dict):
         x = int(form["x"] * self.scale)
         y = int(form["y"] * self.scale) + self.hud_h
@@ -261,7 +269,6 @@ class Robot:
         pass
 
     def draw(self):
-        self.create_robot()
         self.draw_robot()
 
     def create_robot(self):
@@ -288,6 +295,8 @@ class LinearActuator(Robot):
         self.height = self.img_act.height
         self.hit = False
         self.direction = "stop"
+        
+        self.create_robot()
 
     def move(self, vel):
         if (not self.hit) and vel != 0:
@@ -401,11 +410,20 @@ class MobileRobot(Robot):
         self.drawing_height = 4300
         self.x = 500
         self.y = 500
-        self.width = self.img_mobrob.width - 68
+        self.width = self.img_mobrob.width
         self.height = self.img_mobrob.height
         self.angle = 90
 
+        self.create_robot()
+
     def move(self, vel):
+        """
+        Moves the robot
+        Arguments:
+            vel: the velocity that the robot is going at,
+            from it the velocity in each axis is calculated
+            by using sin and cos with the angle
+        """
         angle = self.angle * pi / 180
         vx = int(vel * cos(angle))
         vy = int(vel * sin(angle))
@@ -413,6 +431,12 @@ class MobileRobot(Robot):
         self.drawing.move_image("robot", vx, vy)
 
     def change_angle(self, d_angle):
+        """
+        Changes robot's angle when turning
+        Arguments:
+            d_angle: the number of degrees that the robot 
+            is going to rotate. Can be + or -
+        """
         if self.angle + d_angle >= 0 and self.angle + d_angle <= 360:
             self.angle += d_angle
         else:
@@ -420,7 +444,16 @@ class MobileRobot(Robot):
                 self.angle = 360 + (self.angle + d_angle)
             else:
                 self.angle = (self.angle + d_angle) - 360
-        self.img_mobrob.rotate(self.angle)
+        if d_angle != 0:
+            self.drawing.rotate_image(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_mobrob
+                },
+                self.angle - 90,
+                "robot"
+            )
 
     def create_robot(self):
         self.robot = {
@@ -439,6 +472,15 @@ class MobileRobot(Robot):
 
     def draw_robot(self):
         self.drawing.draw_image(self.robot, "robot")
+        self.drawing.rotate_image(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_mobrob
+                },
+                self.angle - 90,
+                "robot"
+            )
 
     def __update_coords(self, dx, dy):
         self.x += dx

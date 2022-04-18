@@ -89,6 +89,9 @@ class MainApplication(tk.Tk):
 
     def stop_move(self):
         self.robot_layer.stop()
+        self.abort_after()
+
+    def abort_after(self):
         if self.identifier != None:
             self.after_cancel(self.identifier)
 
@@ -393,6 +396,7 @@ class ButtonBar(tk.Frame):
         self.import_button.grid(row=0, column=2, padx=5, pady=5)
 
     def execute(self):
+        self.application.abort_after()
         self.application.robot_layer.execute()
         self.application.move()
 
