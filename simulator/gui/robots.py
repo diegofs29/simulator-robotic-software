@@ -1,5 +1,6 @@
 from argparse import ArgumentError
 from math import cos, pi, sin
+import math
 import tkinter as tk
 from PIL import ImageTk, Image
 
@@ -209,7 +210,7 @@ class Drawing:
 
     def delete_zoomables(self):
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
-        self.canvas.delete('robot', 'circuit', 'obstacle')
+        self.canvas.delete('robot', 'circuit', 'obstacle', 'light_1', 'light_2', 'light_3', 'light_4')
 
     def draw_image(self, element, group):
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
@@ -444,8 +445,49 @@ class MobileRobot(Robot):
         self.width = self.img_mobrob.width
         self.height = self.img_mobrob.height
         self.angle = 90
+        self.sensors = {}
 
         self.create_robot()
+
+    def create_robot(self):
+        self.robot = {
+            "x": self.x,
+            "y": self.y,
+            "image": self.img_mobrob
+        }
+        self.sensors["light_1"] = self.LightSensor(
+            self.x - 30,
+            self.y - 110
+        )
+        self.sensors["light_2"] = self.LightSensor(
+            self.x + 30,
+            self.y - 110
+        )
+        self.sensors["sound_1"] = self.UltrasoundSensor(
+            self.x - 30,
+            self.y - 320,
+            200
+        )
+        self.sensors["sound_2"] = self.UltrasoundSensor(
+            self.x + 30,
+            self.y - 320,
+            200
+        )
+
+    def draw_robot(self):
+        self.drawing.draw_image(self.robot, "robot")
+        self.drawing.rotate_image(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_mobrob
+                },
+                self.angle - 90,
+                "robot"
+            )
+        for key in self.sensors:
+            if self.sensors[key].get_image() != None:
+                self.drawing.draw_image(self.sensors[key].get_image(), key)
 
     def move(self, vel):
         """
@@ -455,13 +497,14 @@ class MobileRobot(Robot):
             from it the velocity in each axis is calculated
             by using sin and cos with the angle
         """
-        x = self.x
-        y = self.y
         angle = self.angle * pi / 180
         vx = -vel * cos(angle)
         vy = vel * sin(angle)
         if self.__update_coords(vx, vy):
             self.drawing.move_image("robot", self.x, self.y)
+            for key in self.sensors:
+                if self.sensors[key].get_image() != None:
+                    self.drawing.move_image(key, self.sensors[key].x, self.sensors[key].y)
 
     def change_angle(self, d_angle):
         """
@@ -487,33 +530,7 @@ class MobileRobot(Robot):
                 self.angle - 90,
                 "robot"
             )
-
-    def create_robot(self):
-        self.robot = {
-            "x": self.x,
-            "y": self.y,
-            "image": self.img_mobrob
-        }
-        self.light_l = {
-            "x": self.x - 30,
-            "y": self.y - 110
-        }
-        self.light_r = {
-            "x": self.x + 30,
-            "y": self.y - 110
-        }
-
-    def draw_robot(self):
-        self.drawing.draw_image(self.robot, "robot")
-        self.drawing.rotate_image(
-                {
-                    "x": self.x,
-                    "y": self.y,
-                    "image": self.img_mobrob
-                },
-                self.angle - 90,
-                "robot"
-            )
+            self.__rotate_sensors(d_angle)
 
     def __update_coords(self, dx, dy):
         """
@@ -527,15 +544,15 @@ class MobileRobot(Robot):
         """
         self.real_x += dx
         self.real_y += dy
+        for key in self.sensors:
+            dx_sens = self.sensors[key].real_x + dx
+            dy_sens = self.sensors[key].real_y + dy
+            self.sensors[key].change_coords(dx_sens, dy_sens)
         if self.__check_change_coords():
             self.x = int(self.real_x)
             self.y = int(self.real_y)
             self.robot["x"] = self.x
             self.robot["y"] = self.y
-            self.light_l["x"] += dx
-            self.light_l["y"] += dy
-            self.light_r["x"] += dx
-            self.light_r["y"] += dy
             return True
         return False
 
@@ -548,6 +565,142 @@ class MobileRobot(Robot):
         x = int(self.real_x)
         y = int(self.real_y)
         return self.x != x or self.y != y
+
+    def __rotate_sensors(self, da):
+        for key in self.sensors:
+            x, y = self.__rotate_center(
+                (self.sensors[key].real_x, self.sensors[key].real_y),
+                (self.x, self.y),
+                da
+            )
+            self.sensors[key].change_coords(self.x + x, self.y + y)
+            img = self.sensors[key].get_image()
+            if img != None:
+                self.drawing.redraw_image(img, key)
+
+    def __rotate_center(self, tp, c, da):
+        """
+        Rotates a component relative to a center
+        Arguments:
+            tp: point to be translated. Tuple = (x, y)
+            c: center point. Tuple = (x, y)
+            da: number of degrees to rotate (sixagesimal)
+        """
+        abs_px = tp[0] - c[0]
+        abs_py = tp[1] - c[1]
+        rads = da * (pi / 180) #degrees to radians
+
+        # Rotate
+        cos_r = cos(rads)
+        sin_r = sin(rads)
+        x = (abs_px * cos_r) + (abs_py * sin_r)
+        y = (-abs_px * sin_r) + (abs_py * cos_r)
+
+        print(
+            math.sqrt(
+                (
+                    pow(tp[0] - c[0], 2)
+                ) + 
+                (
+                    pow(tp[1] - c[1], 2)
+                )
+            )
+        )
+        return (x, y)
+
+
+    class Sensor:
+
+        def __init__(self, x, y):
+            """
+            Constructor for sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+            """
+            self.x = x
+            self.y = y
+            self.real_x = self.x
+            self.real_y = self.y
+            self.img_shown = None
+
+        def change_coords(self, x, y):
+            """
+            Moves the real coordinates of the sensor (double cooords)
+            Arguments:
+                x: the new real x coordinate
+                y: the new real y coordinate
+            """
+            self.real_x = x
+            self.real_y = y
+            self.x = int(self.real_x)
+            self.y = int(self.real_y)
+
+        def get_image(self):
+            """
+            Converts the image to a dictionary so the drawing
+            can parse it:
+            Returns:
+                A dictionary with the following keys:
+                    x: the x coordinate
+                    y: the y coordinate
+                    image: the image to represent
+            """
+            if self.img_shown != None:
+                return {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_shown
+                }
+            return None
+
+
+    class LightSensor(Sensor):
+
+        def __init__(self, x, y):
+            """
+            Constructor for light sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+            """
+            super().__init__(x, y)
+            self.img_light = Image.open("simulator/gui/assets/light-bright.png")
+            self.img_dark = Image.open("simulator/gui/assets/light-dark.png")
+            self.img_shown = self.img_light
+
+        def light(self):
+            """
+            Changes the sensor to light
+            """
+            self.img_shown = self.img_light
+            
+        def dark(self):
+            """
+            Changes the sensor to dark
+            """
+            self.img_shown = self.img_dark
+
+
+    class UltrasoundSensor(Sensor):
+
+        def __init__(self, x, y, dist):
+            """
+            Constructor for ultrasound sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+                dist: the distance to check
+            """
+            super().__init__(x, y)
+            self.dist = dist
+            self.is_detecting = False
+
+        def detect(self, dist):
+            if dist <= self.dist:
+                self.is_detecting = True
+            else:
+                self.is_detecting = False
 
 
 class Circuit:
