@@ -100,7 +100,7 @@ class MoblileRobotLayer(Layer):
         super().__init__()
         self.robot = MobileRobot(self.drawing)
         self.circuit = Circuit(self.drawing)
-        self.obstacle = Obstacle(500, 3000, 600, 450, self.drawing)
+        self.obstacle = Obstacle(700, 3000, 600, 450, self.drawing)
 
         self.is_rotating = False
         self.is_moving = False
@@ -108,31 +108,33 @@ class MoblileRobotLayer(Layer):
     def move(self, movement):
         v = 0 #Velocity
         da = 0 #Angle
-        threshold_xleft = self.robot.x > self.robot.width / 2
-        threshold_xright = self.robot.x < self.robot.drawing_width - self.robot.width / 2
-        threshold_ytop = self.robot.y > self.robot.height / 2
-        threshold_ybot = self.robot.y < self.robot.drawing_height - self.robot.height / 2
 
         #Process keys
         if not self.is_rotating:
             if movement["w"] == True:
-                if threshold_ytop:
-                    v = -10
+                v = -10
             if movement["s"] == True:
-                if threshold_ybot:
-                    v = 10
+                v = 10
             self.is_moving = True
-        if v == 0:
+        future_p = self.robot.predict_movement(v)
+        if (
+            v == 0 or
+            future_p[0] <= self.robot.width / 2 or
+            future_p[0] >= self.robot.drawing_width - self.robot.width / 2 or
+            future_p[1] <= self.robot.height / 2 or
+            future_p[1] >= self.robot.drawing_height - self.robot.height / 2 or
+            self.__check_obstacle_collision(future_p[0], future_p[1])
+        ):
+            v = 0
             self.is_moving = False
         if not self.is_moving:
             if movement["a"] == True:
-                if threshold_xleft:
-                    da = 5
+                da = 5
             if movement["d"] == True:
-                if threshold_xright:
-                    da = -5
+                da = -5
             self.is_rotating = True
         if da == 0:
+            da = 0
             self.is_rotating = False
 
         #Move or rotate
@@ -155,6 +157,31 @@ class MoblileRobotLayer(Layer):
 
     def __create_obstacle(self):
         self.obstacle.draw()
+
+    def __check_circuit_overlap(self):
+        pass
+
+    def __check_obstacle_collision(self, x, y):
+        """
+        Checks if the robot collides with the obstacle
+        Arguments:
+            x: the expected x position
+            y: the expected y position
+        Returns:
+            True if collides, False if else
+        """
+        return (
+            x + self.robot.width / 2 >= self.obstacle.x and
+            y + self.robot.height / 2 >= self.obstacle.y and
+            x <= self.obstacle.x + (self.obstacle.width + self.robot.width / 2) and
+            y <= self.obstacle.y + (self.obstacle.height + self.robot.height / 2) 
+        )
+
+    def __detect_obstacle(self):
+        pass
+
+    def __detect_circuit(self):
+        pass
 
 
 class LinearActuatorLayer(Layer):
@@ -211,6 +238,7 @@ class Drawing:
     def delete_zoomables(self):
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
         self.canvas.delete('robot', 'circuit', 'obstacle', 'light_1', 'light_2', 'light_3', 'light_4')
+        self.canvas.delete('prueba')
 
     def draw_image(self, element, group):
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
@@ -465,12 +493,12 @@ class MobileRobot(Robot):
         )
         self.sensors["sound_1"] = self.UltrasoundSensor(
             self.x - 30,
-            self.y - 320,
+            self.y - 285,
             200
         )
         self.sensors["sound_2"] = self.UltrasoundSensor(
             self.x + 30,
-            self.y - 320,
+            self.y - 285,
             200
         )
 
@@ -488,6 +516,38 @@ class MobileRobot(Robot):
         for key in self.sensors:
             if self.sensors[key].get_image() != None:
                 self.drawing.draw_image(self.sensors[key].get_image(), key)
+            else:
+                self.drawing.draw_rectangle(
+                    {
+                        "x": self.sensors[key].x,
+                        "y": self.sensors[key].y,
+                        "width": 20,
+                        "height": 20,
+                        "color": "blue",
+                        "group": "prueba"
+                    }
+                )
+
+    def predict_movement(self, vel):
+        """
+        Predicts the future position of the robot. Used to
+        check if a collision with an object will happen
+        Arguments:
+            vel: the velocity of the robot (with no axis)
+        Returns:
+            The predicted coordinates of the robot (tuple)
+        """
+        angle = self.angle * pi / 180
+        vx = -vel * cos(angle)
+        vy = vel * sin(angle)
+        real_x = self.real_x + vx
+        real_y = self.real_y + vy
+        x = self.x
+        y = self.y
+        if real_x != x or real_y != y:
+            x = int(real_x)
+            y = int(real_y)
+        return (x, y)
 
     def move(self, vel):
         """
@@ -501,10 +561,22 @@ class MobileRobot(Robot):
         vx = -vel * cos(angle)
         vy = vel * sin(angle)
         if self.__update_coords(vx, vy):
+            self.drawing.canvas.delete('prueba')
             self.drawing.move_image("robot", self.x, self.y)
             for key in self.sensors:
                 if self.sensors[key].get_image() != None:
                     self.drawing.move_image(key, self.sensors[key].x, self.sensors[key].y)
+                else:
+                    self.drawing.draw_rectangle(
+                        {
+                            "x": self.sensors[key].x,
+                            "y": self.sensors[key].y,
+                            "width": 20,
+                            "height": 20,
+                            "color": "blue",
+                            "group": "prueba"
+                        }
+                    )
 
     def change_angle(self, d_angle):
         """
@@ -567,6 +639,7 @@ class MobileRobot(Robot):
         return self.x != x or self.y != y
 
     def __rotate_sensors(self, da):
+        self.drawing.canvas.delete('prueba')
         for key in self.sensors:
             x, y = self.__rotate_center(
                 (self.sensors[key].real_x, self.sensors[key].real_y),
@@ -577,6 +650,17 @@ class MobileRobot(Robot):
             img = self.sensors[key].get_image()
             if img != None:
                 self.drawing.redraw_image(img, key)
+            else:
+                self.drawing.draw_rectangle(
+                    {
+                        "x": self.sensors[key].x,
+                        "y": self.sensors[key].y,
+                        "width": 20,
+                        "height": 20,
+                        "color": "blue",
+                        "group": "prueba"
+                    }
+                )
 
     def __rotate_center(self, tp, c, da):
         """
@@ -596,16 +680,7 @@ class MobileRobot(Robot):
         x = (abs_px * cos_r) + (abs_py * sin_r)
         y = (-abs_px * sin_r) + (abs_py * cos_r)
 
-        print(
-            math.sqrt(
-                (
-                    pow(tp[0] - c[0], 2)
-                ) + 
-                (
-                    pow(tp[1] - c[1], 2)
-                )
-            )
-        )
+        #print(math.sqrt((pow(tp[0] - c[0], 2)) + (pow(tp[1] - c[1], 2))))
         return (x, y)
 
 
