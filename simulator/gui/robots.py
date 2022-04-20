@@ -1,6 +1,5 @@
 from argparse import ArgumentError
-from math import cos, pi, sin
-import math
+from math import cos, pi, sin, sqrt, tan
 import tkinter as tk
 from PIL import ImageTk, Image
 
@@ -143,6 +142,10 @@ class MoblileRobotLayer(Layer):
         if not self.is_moving:
             self.robot.change_angle(da)
 
+        #Overlapping check
+        self.__check_circuit_overlap()  
+        self.__detect_obstacle()      
+
     def _drawing_config(self):
         super()._drawing_config()
         self.__create_circuit()
@@ -159,7 +162,18 @@ class MoblileRobotLayer(Layer):
         self.obstacle.draw()
 
     def __check_circuit_overlap(self):
-        pass
+        """
+        Checks if the robot is inside or outside of the circuit
+        """
+        for key in self.robot.sensors:
+            if key[0:5] == "light":
+                x = self.robot.sensors[key].x
+                y = self.robot.sensors[key].y
+                if self.circuit.is_overlapping(x, y):
+                    self.robot.sensors[key].dark()
+                else:
+                    self.robot.sensors[key].light()
+            self.robot.repaint_light_sensors()
 
     def __check_obstacle_collision(self, x, y):
         """
@@ -178,11 +192,12 @@ class MoblileRobotLayer(Layer):
         )
 
     def __detect_obstacle(self):
-        pass
-
-    def __detect_circuit(self):
-        pass
-
+        self.drawing.canvas.delete("pointUp")
+        for key in self.robot.sensors:
+            if key[0:5] == "sound":
+                self.drawing.canvas.delete("lineas")
+                dist = self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle)
+                print("Distance = {}".format(dist))
 
 class LinearActuatorLayer(Layer):
 
@@ -494,12 +509,12 @@ class MobileRobot(Robot):
         self.sensors["sound_1"] = self.UltrasoundSensor(
             self.x - 30,
             self.y - 285,
-            200
+            7630
         )
         self.sensors["sound_2"] = self.UltrasoundSensor(
             self.x + 30,
             self.y - 285,
-            200
+            7630,
         )
 
     def draw_robot(self):
@@ -603,6 +618,24 @@ class MobileRobot(Robot):
                 "robot"
             )
             self.__rotate_sensors(d_angle)
+
+    def repaint_light_sensors(self):
+        """
+        Repaints the light sensors
+        """
+        for key in self.sensors:
+            if key[0:5] == "light":
+                self.drawing.redraw_image(self.sensors[key].get_image(), key)
+
+    def configure_distance(self, dist_sens):
+        """
+        Configures the distance of detection of the ultrasounds
+        Arguments:
+            dist_sens: the distance at which the sensor returns True
+        """
+        for key in self.sensors:
+            if key[0:5] == "sound":
+                self.sensors[key].dist = dist_sens
 
     def __update_coords(self, dx, dy):
         """
@@ -845,6 +878,14 @@ class Circuit:
         )
 
     def is_overlapping(self, x, y):
+        """
+        Checks if the coordinates are overlapping with the circuit
+        Arguments:
+            x: the x coordinate to check
+            y: the y coordinate to check
+        Returns:
+            True if is overlapping, False if else
+        """
         overlap = False
         for part in self.circuit_parts:
             overlap = part.check_overlap(x, y)
@@ -898,110 +939,80 @@ class Obstacle:
             }
         )
 
-    def check_closeness(self, px, py, angle):
+    def calculate_distance(self, sx, sy, angle):
         """
-        Calculates the distance between the robot and the
-        obstacle
+        Checks if is detected by the ultrasound sensor.
         Arguments:
-            px: the x coordinate of the point from which the sound
-            ray starts
-            py: the y coordinate of the point from which the sound
-            ray starts
-            angle: the angle in degrees with which the ray was thrown
-        Returns:
-            The distance between the sensor and the obstacle
+            sx: the x coordinate of the sensor
+            sy: the y coordinate of the sensor
+            angle: the angle of the line (from ox)
+        Returns: 
+            True if is detected, False if else
         """
-        distance = -1
-        points = {
-            "x1": self.x,
-            "x2": self.x + self.width,
-            "y1": self.y,
-            "y2": self.y + self.width
-        }
-        vx = cos(angle)
-        vy = sin(angle)
-        res = {}
-        index = 1
-        for key in points:
-            dist = -1
-            v1 = v2 = None
-            if key[0] == "x":
-                dist = self.__calculate_distance(points[key], px, vx)
-                v1 = (points[key], points["y1"])
-                v2 = (points[key], points["y2"])
-            elif key[0] == "y":
-                dist = self.__calculate_distance(points[key], py, vy)
-                v1 = (points["x1"], points[key])
-                v2 = (points["x2"], points[key])
-            if dist != -1:
-                p_intersect = self.__calculate_intersection(px, py, vx, vy, dist)
-                intersects = self.__check_intersection(v1, v2, p_intersect)
-                res[index] = {
-                    "intersects": intersects,
-                    "dist": dist
-                }
-                index += 1
-        distance = self.__check_distance(res)
-        return distance
+        # Abs coords of obstacle
+        x1 = self.x - sx
+        x2 = self.x + self.width - sx
+        y1 = self.y - sy
+        y2 = self.y + self.height - sy
+        rads = angle * (pi / 180)
 
-    def __calculate_distance(self, p1, p2, v):
-        """
-        Calculates the distance between p1 and p2 given v.
-        Arguments:
-            p1: the coordinate of the wall
-            p2: the coordinate of the starting point
-            v: the velocity
-        Returns:
-            The distance between p1 and p2
-        """
-        return abs((p1 - p2) / v)
+        # Distance
+        if angle % 90 != 0 or angle % 180 == 0:
+            dist_x1 = int(abs(x1 / cos(rads)))
+            dist_x2 = int(abs(x2 / cos(rads)))
+        else:
+            dist_x1 = "inf"
+            dist_x2 = "inf"
+        if angle % 180 != 0:
+            dist_y1 = int(abs(y1 / sin(rads)))
+            dist_y2 = int(abs(y2 / sin(rads)))
+        else:
+            dist_y1 = "inf"
+            dist_y2 = "inf"
 
-    def __check_distance(self, dists):
-        """
-        Obtains the minimum of the distances that intersects with the
-        obstacle.
-        Arguments:
-            dists: a dictionary with the following keys:
-                intersects: True if intersects, false if not
-                dist: the distance to the obstacle
-        Returns:
-            The minimum distance or -1 if the ray does not intersect
-        """
+        #print("Dist x1: {}, dist x2: {}, dist y1: {}, dist y2: {}".format(dist_x1, dist_x2, dist_y1, dist_y2))
+        
+        # Point distance
+        dy = lambda d, r: int(-sin(r) * d)
+        dx = lambda d, r: int(cos(r) * d)
+        
         dist = -1
-        if dists["intersects"]:
-            if dists["dist"] < dist or dist == -1:
-                dist = dists["dist"]
+
+        # 10 coords in each point to ensure the fixed coord is inside
+        if dist_x1 != "inf":
+            px1 = (dx(dist_x1, rads), dy(dist_x1, rads))
+            if self.__check_inbounds(px1[0] + sx + 10, px1[1] + sy):
+                if dist == -1 or dist_x1 < dist:
+                    dist = dist_x1
+        if dist_x2 != "inf":
+            px2 = (dx(dist_x2, rads), dy(dist_x2, rads))
+            if self.__check_inbounds(px2[0] + sx - 10, px2[1] + sy):
+                if dist == -1 or dist_x2 < dist:
+                    dist = dist_x2
+        if dist_y1 != "inf":
+            py1 = (dx(dist_y1, rads), dy(dist_y1, rads))
+            if self.__check_inbounds(py1[0] + sx, py1[1] + sy + 10):
+                if dist == -1 or dist_y1 < dist:
+                    dist = dist_y1
+        if dist_y2 != "inf":
+            py2 = (dx(dist_y2, rads), dy(dist_y2, rads))
+            if self.__check_inbounds(py2[0] + sx, py2[1] + sy - 10):
+                if dist == -1 or dist_y2 < dist:
+                    dist = dist_y2
+        
         return dist
 
-    def __calculate_intersection(self, px, py, vx, vy, dist):
+    def __check_inbounds(self, x, y):
         """
-        Calculates the point of intersection between the ray and
-        the obstacle.
+        Checks if a point is inbounds of the obstacle (caution with
+        absolute coordinates)
         Arguments:
-            px: the x coord from which the ray starts
-            py: the y coord from which the ray starts
-            vx: the velocity on the x axis
-            vy: the velocity on the y axis
-            dist: the distance to the wall of the obstacle
+            x: the x coordinate of the point
+            y: the y coordinate of the point
         Returns:
-            The point of intersection between the ray and the obstacle
+            True if inbounds, False if else
         """
-        x = px + dist * vx
-        y = py + dist * vy
-        return (x, y)
-
-    def __check_intersection(self, p1, p2, op):
-        """
-        Checks for intersection of the ray line and the obstacle, done
-        by calculating if op is between p1 and p2.
-        Arguments:
-            p1: start point of the straight (tuple)
-            p2: end point of the straight (tuple)
-            op: the point to check
-        Returns:
-            True: if the ray and the obstacle intersect
-            False: if else
-        """
-        intersect_x = p1[0] <= op[0] <= p2[0] # 0 is the x coord
-        intersect_y = p1[1] <= op[1] <= p2[1] # 1 is the y coord
-        return intersect_x and intersect_y
+        return (
+            self.x <= x <= (self.x + self.width) and
+            self.y <= y <= (self.y + self.height)
+        )
