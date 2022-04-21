@@ -77,7 +77,7 @@ class Layer:
         """
         self.drawing.delete_zoomables()
         self._draw_before_robot()
-        self.robot.draw_robot()
+        self.robot.draw()
 
     def _draw_before_robot(self):
         pass
@@ -231,9 +231,9 @@ class MoblileRobotLayer(Layer):
                 self.drawing.canvas.delete("lineas")
                 dists.append(self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle))
                 if dists[-1] != -1:
-                    self.robot.sensors[key].is_detecting(True)
+                    self.robot.sensors[key].set_detect(True)
                 else:
-                    self.robot.sensors[key].is_detecting(False)
+                    self.robot.sensors[key].set_detect(False)
         self.hud.set_detect_obstacle(dists)
 
     def __hud_velocity(self):
@@ -273,6 +273,8 @@ class LinearActuatorLayer(Layer):
             else:
                 self.robot.hit = True
         self.robot.move(v)
+        self.hud.set_direction(v * 25)
+        self.hud.set_pressed([self.robot.but_left.pressed, self.robot.but_right.pressed])
 
 class HUD:
 
@@ -328,6 +330,7 @@ class MobileHUD(HUD):
         for each velocity, so it can represent the wheel's direction
         and velocity
         """
+        self.canvas.delete('arr_img')
         i = 0
         self.imgs = []
         for vel in vels:
@@ -361,7 +364,7 @@ class MobileHUD(HUD):
                 self.mf = self.mf.rotate(180, expand=True)
             self.imgs.append(ImageTk.PhotoImage(self.mf))
         y = 25 + (25 * i)
-        self.canvas.create_image(200, y, image=self.imgs[i])
+        self.canvas.create_image(200, y, image=self.imgs[i], tags="arr_img")
         
     def set_circuit(self, measurements):
         """
@@ -410,6 +413,59 @@ class ActuatorHUD(HUD):
         Constructor for linear actuator's HUD
         """
         super().__init__()
+        self.img_ff = Image.open('simulator/gui/assets/full-speed.png')
+        self.img_mf = Image.open('simulator/gui/assets/mid-speed.png')
+        self.img_sf = Image.open('simulator/gui/assets/slow-speed.png')
+
+    def set_text(self):
+        """
+        Sets the corresponding texts for the linear actuator
+        """
+        self.canvas.create_text(5, 25, text="Dirección de movimiento:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 50, text="Botón izquierdo:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 75, text="Botón derecho:", font=("Consolas", 13), anchor="w", fill="white")
+
+    def set_pressed(self, but_states):
+        """
+        Parses the button sates to data to show on the HUD
+        """
+        self.canvas.delete('but_text')
+        for i in range(0, len(but_states)):
+            text = "No pulsado"
+            if but_states[i]:
+                text = "Pulsado"
+            self.canvas.create_text(150 + 20 * ((i + 1) % 2), 50 + 25 * i, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="but_text")
+
+    def set_direction(self, vel):
+        """
+        Draws the direction arrows with the information 
+        of the velocity
+        """
+        self.canvas.delete('arr_img')
+        w = int(self.img_ff.width * 0.5)
+        h = int(self.img_ff.height * 0.5)
+        self.ff = self.img_ff.resize((w, h), Image.ANTIALIAS)
+        self.mf = self.img_mf.resize((w, h), Image.ANTIALIAS)
+        self.sf = self.img_sf.resize((w, h), Image.ANTIALIAS)
+        if abs(vel) < 100:
+            if vel < 0:
+                self.sf = self.sf.rotate(90, expand=True)
+            else:
+                self.sf = self.sf.rotate(-90, expand=True)
+            self.img = ImageTk.PhotoImage(self.sf)
+        elif abs(vel) > 200:
+            if vel < 0:
+                self.ff = self.ff.rotate(90, expand=True)
+            else:
+                self.ff = self.ff.rotate(-90, expand=True)
+            self.img = ImageTk.PhotoImage(self.ff)
+        else:
+            if vel < 0:
+                self.mf = self.mf.rotate(90, expand=True)
+            else:
+                self.mf = self.mf.rotate(-90, expand=True)
+            self.img = ImageTk.PhotoImage(self.mf)
+        self.canvas.create_image(250, 25, image=self.img, tags="arr_img")
 
 
 class Drawing:
@@ -613,7 +669,7 @@ class Robot:
         """
         pass
 
-    def draw_robot(self):
+    def draw(self):
         """
         Draws the robot
         """
@@ -710,7 +766,7 @@ class LinearActuator(Robot):
             self.x, self.y - 50
         )
 
-    def draw_robot(self):
+    def draw(self):
         """
         Draws the robot by drawing all its pieces
         """
@@ -861,7 +917,7 @@ class MobileRobot(Robot):
             7630,
         )
 
-    def draw_robot(self):
+    def draw(self):
         """
         Draws the robot with all of its elements
         """
@@ -878,17 +934,6 @@ class MobileRobot(Robot):
         for key in self.sensors:
             if self.sensors[key].get_image() != None:
                 self.drawing.draw_image(self.sensors[key].get_image(), key)
-            else:
-                self.drawing.draw_rectangle(
-                    {
-                        "x": self.sensors[key].x,
-                        "y": self.sensors[key].y,
-                        "width": 20,
-                        "height": 20,
-                        "color": "blue",
-                        "group": "prueba"
-                    }
-                )
 
     def predict_movement(self, vel):
         """
@@ -930,17 +975,6 @@ class MobileRobot(Robot):
             for key in self.sensors:
                 if self.sensors[key].get_image() != None:
                     self.drawing.move_image(key, self.sensors[key].x, self.sensors[key].y)
-                else:
-                    self.drawing.draw_rectangle(
-                        {
-                            "x": self.sensors[key].x,
-                            "y": self.sensors[key].y,
-                            "width": 20,
-                            "height": 20,
-                            "color": "blue",
-                            "group": "prueba"
-                        }
-                    )
 
     def change_angle(self, d_angle):
         """
@@ -1040,17 +1074,6 @@ class MobileRobot(Robot):
             img = self.sensors[key].get_image()
             if img != None:
                 self.drawing.redraw_image(img, key)
-            else:
-                self.drawing.draw_rectangle(
-                    {
-                        "x": self.sensors[key].x,
-                        "y": self.sensors[key].y,
-                        "width": 20,
-                        "height": 20,
-                        "color": "blue",
-                        "group": "prueba"
-                    }
-                )
 
     def __rotate_center(self, tp, c, da):
         """
