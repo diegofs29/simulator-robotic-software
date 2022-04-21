@@ -111,6 +111,9 @@ class MoblileRobotLayer(Layer):
         self.is_moving = False
 
     def move(self, movement):
+        """
+        Move method of the layer. Moves the robot and rotates it
+        """
         v = 0 #Velocity
         da = 0 #Angle
 
@@ -154,18 +157,31 @@ class MoblileRobotLayer(Layer):
         self.__detect_obstacle()      
 
     def _drawing_config(self):
+        """
+        Configures the drawing before executing or after
+        updating
+        """
         super()._drawing_config()
         self.__create_circuit()
         self.__create_obstacle()
 
     def _draw_before_robot(self):
+        """
+        Draws before the robot so the z-index is correct
+        """
         self.__create_circuit()
         self.__create_obstacle()
 
     def __create_circuit(self):
+        """
+        Creates and draws the circuit in the canvas
+        """
         self.circuit.create_circuit()
 
     def __create_obstacle(self):
+        """
+        Draws the obstacle in the canvas
+        """
         self.obstacle.draw()
 
     def __check_circuit_overlap(self):
@@ -203,15 +219,28 @@ class MoblileRobotLayer(Layer):
         )
 
     def __detect_obstacle(self):
+        """
+        Checks for every ultrasound sensor if it detects
+        any obstacle in front of it, and then sends the data
+        to the hud, so it can be parsed
+        """
         self.drawing.canvas.delete("pointUp")
         dists = []
         for key in self.robot.sensors:
             if key[0:5] == "sound":
                 self.drawing.canvas.delete("lineas")
                 dists.append(self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle))
+                if dists[-1] != -1:
+                    self.robot.sensors[key].is_detecting(True)
+                else:
+                    self.robot.sensors[key].is_detecting(False)
         self.hud.set_detect_obstacle(dists)
 
     def __hud_velocity(self):
+        """
+        Sends the velocity data of the wheels to the hud,
+        so it can be parsed
+        """
         self.hud.set_wheel([self.robot.vl, self.robot.vr])
 
 class LinearActuatorLayer(Layer):
@@ -225,6 +254,10 @@ class LinearActuatorLayer(Layer):
         self.hud = ActuatorHUD()
 
     def move(self, movement):
+        """
+        Move method of the layer. Moves the block of the
+        linear actuator
+        """
         v = 0
         self.robot.hit = False
         if movement["a"] == True:
@@ -244,20 +277,35 @@ class LinearActuatorLayer(Layer):
 class HUD:
 
     def __init__(self):
+        """
+        Constructor for HUD superclass
+        """
         self.canvas: tk.Canvas = None
 
     def set_canvas(self, canvas: tk.Canvas):
+        """
+        Sets the canvas where the data is going to be drawn at
+        Arguments:
+            canvas: the canvas
+        """
         self.canvas = canvas
         self.canvas.delete('all')
         self.set_text()
 
     def set_text(self):
+        """
+        Shows the text of the data that the HUD is going to
+        show
+        """
         pass
     
 
 class MobileHUD(HUD):
 
     def __init__(self):
+        """
+        Constructor for mobile robot's HUD
+        """
         super().__init__()
         self.img_ff = Image.open('simulator/gui/assets/full-speed.png')
         self.img_mf = Image.open('simulator/gui/assets/mid-speed.png')
@@ -275,25 +323,26 @@ class MobileHUD(HUD):
         self.canvas.create_text(250, 75, text="└Distancia 2:", font=("Consolas", 13), anchor="w", fill="white")
 
     def set_wheel(self, vels):
+        """
+        Method that gets all the velocitys and calls display_wheels
+        for each velocity, so it can represent the wheel's direction
+        and velocity
+        """
         i = 0
         self.imgs = []
         for vel in vels:
             self.__display_wheels(i, vel)
             i += 1
-        
-    def set_circuit(self, measurements):
-        self.canvas.delete("cir")
-        text = ""
-        for i in range(0, len(measurements)):
-            if i > 0:
-                text += " | "
-            if measurements[i]:
-                text += "Si"
-            else:
-                text += "No"
-        self.canvas.create_text(100, 75, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="cir")
 
     def __display_wheels(self, i, vel):
+        """
+        Displays arrows in the direction that the wheels are moving
+        and with a color that represents their velocity (blue fast, 
+        yellow medium, red slow).
+        Arguments:
+            i: the index of the wheel
+            vel: the velocity of the wheel
+        """
         w = int(self.img_ff.width * 0.5)
         h = int(self.img_ff.height * 0.5)
         self.ff = self.img_ff.resize((w, h), Image.ANTIALIAS)
@@ -313,8 +362,32 @@ class MobileHUD(HUD):
             self.imgs.append(ImageTk.PhotoImage(self.mf))
         y = 25 + (25 * i)
         self.canvas.create_image(200, y, image=self.imgs[i])
+        
+    def set_circuit(self, measurements):
+        """
+        Displays if the robot is on the circuit or outside it
+        Arguments:
+            measurements: a list with the measurements of the
+            light sensors. True if on track, False if else
+        """
+        self.canvas.delete("cir")
+        text = ""
+        for i in range(0, len(measurements)):
+            if i > 0:
+                text += " | "
+            if measurements[i]:
+                text += "Si"
+            else:
+                text += "No"
+        self.canvas.create_text(100, 75, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="cir")
 
     def set_detect_obstacle(self, dists):
+        """
+        Displays if the robot is detecting a obstacle, and the distance
+        to it.
+        Arguments:
+            dists: a list with the distances
+        """
         self.canvas.delete("obs")
         text = ""
         for i in range(0, len(dists)):
@@ -333,12 +406,18 @@ class MobileHUD(HUD):
 class ActuatorHUD(HUD):
 
     def __init__(self):
+        """
+        Constructor for linear actuator's HUD
+        """
         super().__init__()
 
 
 class Drawing:
 
     def __init__(self):
+        """
+        Constructor for the drawing
+        """
         self.canvas = None
         self.canvas_images = {}
         self.scale = 0.2
@@ -346,26 +425,60 @@ class Drawing:
         self.hud_h = 0
 
     def set_canvas(self, canvas: tk.Canvas):
+        """
+        Sets the canvas in which the drawing is going to be done
+        Arguments:
+            canvas: the canvas
+        """
         self.canvas = canvas
 
     def empty_drawing(self):
+        """
+        Deletes all elements from the drawing
+        """
         self.canvas.delete('all')
         self.canvas_images = {}
 
     def delete_zoomables(self):
+        """
+        Deletes all the elements that have to be zoomed
+        """
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
         self.canvas.delete('robot', 'circuit', 'obstacle', 'light_1', 'light_2', 'light_3', 'light_4')
         self.canvas.delete('prueba')
 
     def draw_image(self, element, group):
+        """
+        Draws an image
+        Arguments:
+            element: a dict whose content is the x and y
+            coordinates and the image (as Image instance)
+            group: the tag where the image is going to 
+            be added to
+        """
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
 
     def redraw_image(self, element, group):
+        """
+        Redraws an already existing image
+        Arguments:
+            element: a dict whose content is the x and y
+            coordinates and the image (as Image instance)
+            group: the tag where the image is going to 
+            be added to
+        """
         self.canvas.delete(group)
         del self.canvas_images[group]
         self.__add_to_canvas(element["x"], element["y"], element["image"], group)
 
     def move_image(self, group, x, y):
+        """
+        Moves a image (or group of) of the drawing
+        Arguments:
+            group: the tag of the image(s)
+            x: the x differential
+            y: the y differential
+        """
         current_x = self.canvas_images[group]["x"]
         current_y = self.canvas_images[group]["y"]
         scale_x = int(x * self.scale)
@@ -377,11 +490,26 @@ class Drawing:
         self.canvas.move(group, dx, dy)
 
     def rotate_image(self, element, angle, group):
+        """
+        Rotates a image by an angle
+        Arguments:
+            element: a dict whose elements are the x and
+            y coordinates and the image (as Image instance)
+            angle: the differential of the angle
+            group: the group of the image(s)
+        """
         self.canvas.delete(group)
         rotated_img = element["image"].rotate(angle, expand=True)
         self.__add_to_canvas(element["x"], element["y"], rotated_img, group)
 
     def draw_rectangle(self, form: dict):
+        """
+        Draws a rectangle given some measurements
+        Arguments:
+            form: a dictionary whose elements are the x and
+            y coordinates, the width and height of the
+            rectangle and the color and group (tag of tkinter)
+        """
         x = int(form["x"] * self.scale)
         y = int(form["y"] * self.scale) + self.hud_h
         width = int(form["width"] * self.scale)
@@ -391,31 +519,58 @@ class Drawing:
         self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
 
     def zoom_in(self):
+        """
+        Zooms in the scale and updates the drawing
+        """
         if self.scale < 1:
             self.scale += 0.1
         self.scale = round(self.scale, 1)
         self.__update_size()
 
     def zoom_out(self):
+        """
+        Zooms out the scale and updates the drawing
+        """
         if self.scale > 0.1:
             self.scale -= 0.1
         self.scale = round(self.scale, 1)
         self.__update_size()
 
     def zoom_percentage(self):
+        """
+        Returns the zoom percentage
+        """
         return self.scale * 100
 
     def set_size(self, width, height):
+        """
+        Sets the size limits of the canvas
+        Arguments:
+            width: the width of the canvas
+            height: the height of the canvas
+        """
         self.width = width
         self.height = height
         self.__update_size()
     
     def __update_size(self):
+        """
+        Updates the size of the canvas according
+        with the scale and the size of it
+        """
         w = self.width * self.scale
         h = self.height * self.scale
         self.canvas.configure(scrollregion=(0, 0, w, h))
 
     def __add_to_canvas(self, x, y, image: Image, group):
+        """
+        Adds a image to the canvas
+        Arguments:
+            x: the x coordinate of the image
+            y: the y coordinate of the image
+            image: the image to add (Image instance)
+            group: the group (tag of tkinter)
+        """
         width = int(image.width * self.scale)
         height = int(image.height * self.scale)
         res_img = image.resize((width, height), Image.ANTIALIAS)
@@ -432,6 +587,12 @@ class Drawing:
 class Robot:
 
     def __init__(self, drawing: Drawing):
+        """
+        Constructor for Robot superclass
+        Arguments:
+            drawing: the drawing where the robot is
+            going to be represented
+        """
         self.x = 0
         self.y = 0
         self.width = 0
@@ -441,24 +602,39 @@ class Robot:
         self.drawing = drawing
 
     def move(self, vel):
+        """
+        Moves the robot
+        """
         pass
 
-    def draw(self):
-        self.draw_robot()
-
     def create_robot(self):
+        """
+        Creates the robot
+        """
         pass
 
     def draw_robot(self):
+        """
+        Draws the robot
+        """
         pass
 
     def reboot(self):
+        """
+        Restarts all the parameters of the drawing
+        """
         self.drawing.empty_drawing()
 
 
 class LinearActuator(Robot):
 
     def __init__(self, drawing: Drawing):
+        """
+        Constructor for the Linear actuator robot
+        Arguments:
+            drawing: the drawing where the robot is going
+            to be represented
+        """
         super().__init__(drawing)
         self.img_act = Image.open("simulator/gui/assets/actuator.png")
 
@@ -474,6 +650,13 @@ class LinearActuator(Robot):
         self.create_robot()
 
     def move(self, vel):
+        """
+        Moves the block of the actuator by a determined
+        velocity. The movement is limited by the position
+        of the buttons
+        Arguments:
+            vel: the determined velocity
+        """
         if (not self.hit) and vel != 0:
             if self.but_right.pressed:
                 self.but_right.stop_press()
@@ -496,10 +679,17 @@ class LinearActuator(Robot):
             self.drawing.move_image("block", self.block.x, self.block.y)
 
     def __redraw_buttons(self):
+        """
+        Redraws the buttons when they are changed
+        """
         self.drawing.redraw_image(self.but_left.get_image(), "button_left")
         self.drawing.redraw_image(self.but_right.get_image(), "button_right")
 
     def create_robot(self):
+        """
+        Creates the linear actuator, piecing all of the
+        elements that compose it
+        """
         self.image = {
             "x": self.x,
             "y": self.y,
@@ -521,6 +711,9 @@ class LinearActuator(Robot):
         )
 
     def draw_robot(self):
+        """
+        Draws the robot by drawing all its pieces
+        """
         self.drawing.draw_image(self.image, "actuator")
         self.drawing.draw_image(self.but_left.get_image(), "button_left")
         self.drawing.draw_image(self.but_right.get_image(), "button_right")
@@ -530,11 +723,19 @@ class LinearActuator(Robot):
     class ActuatorElement:
 
         def __init__(self):
+            """
+            Constructor for ActuatorElement superclass
+            """
             self.x = 0
             self.y = 0
             self.img_shown = None
 
         def get_image(self):
+            """
+            Returns: a dictionary with the coordinates
+            of the element, as well as the image that
+            represent it (as Image instance)
+            """
             return {
                 "x": self.x,
                 "y": self.y,
@@ -545,6 +746,13 @@ class LinearActuator(Robot):
     class Block(ActuatorElement):
 
         def __init__(self, img_path, x, y):
+            """
+            Constructor for the block element
+            Arguments:
+                img_path: the image to show
+                x: the x coordinate of the block
+                y: the y coordinate of the block
+            """
             self.img_shown = Image.open(img_path)
             self.x = x
             self.y = y
@@ -553,6 +761,17 @@ class LinearActuator(Robot):
     class ActuatorButton(ActuatorElement):
 
         def __init__(self, img_path_hit, img_path_no_hit, x, y, rotate):
+            """
+            Constructor for linear actuator's buttons
+            Arguments:
+                img_path_hit: the image to show the button
+                has been pressed
+                img_path_no_hit: the image to show the button
+                has not been pressed
+                x: the x coordinate of the button
+                y: the y coordinate of the button
+                rotate: tells if the button needs to be rotated
+            """
             self.img_hit = Image.open(img_path_hit)
             self.img_no_hit = Image.open(img_path_no_hit)
             self.rotate(rotate)
@@ -562,14 +781,26 @@ class LinearActuator(Robot):
             self.pressed = False
 
         def press(self):
+            """
+            Presses the button, changing its state and image
+            """
             self.pressed = True
             self.img_shown = self.img_hit
 
         def stop_press(self):
+            """
+            Unpresses the button, changing its state and image
+            """
             self.pressed = False
             self.img_shown = self.img_no_hit
 
         def rotate(self, rotate):
+            """
+            Rotates the button for drawing purposes
+            Arguments:
+                rotate: True if needs to be rotated,
+                False if else
+            """
             if rotate:
                 self.img_hit = self.img_hit.rotate(180)
                 self.img_no_hit = self.img_no_hit.rotate(180)
@@ -578,6 +809,12 @@ class LinearActuator(Robot):
 class MobileRobot(Robot):
 
     def __init__(self, drawing: Drawing):
+        """
+        Constructor for mobile robot
+        Arguments:
+            drawing: the drawing where the robot is going
+            to be represented
+        """
         super().__init__(drawing)
         self.img_mobrob = Image.open("simulator/gui/assets/mobile-robot.png")
 
@@ -597,6 +834,9 @@ class MobileRobot(Robot):
         self.create_robot()
 
     def create_robot(self):
+        """
+        Creates the robot with all of its pieces
+        """
         self.robot = {
             "x": self.x,
             "y": self.y,
@@ -622,6 +862,9 @@ class MobileRobot(Robot):
         )
 
     def draw_robot(self):
+        """
+        Draws the robot with all of its elements
+        """
         self.drawing.draw_image(self.robot, "robot")
         self.drawing.rotate_image(
                 {
@@ -780,6 +1023,12 @@ class MobileRobot(Robot):
         return self.x != x or self.y != y
 
     def __rotate_sensors(self, da):
+        """
+        Rotates the sensors taking the robot position
+        as reference so they can move based on the radius
+        Arguments:
+            da: the differential of angle
+        """
         self.drawing.canvas.delete('prueba')
         for key in self.sensors:
             x, y = self.__rotate_center(
@@ -912,21 +1161,32 @@ class MobileRobot(Robot):
             self.dist = dist
             self.is_detecting = False
 
-        def detect(self, dist):
-            if dist <= self.dist:
-                self.is_detecting = True
-            else:
-                self.is_detecting = False
+        def set_detect(self, is_detecting):
+            """
+            Changes the state of the sensor
+            Arguments:
+                is_detecting: True if detects, False if else
+            """
+            self.is_detecting = is_detecting
 
 
 class Circuit:
 
     def __init__(self, drawing: Drawing):
+        """
+        Constructor for Circuit
+        Arguments:
+            drawing: the drawing where the circuit is
+            going to be represented
+        """
         self.circuit_parts = []
         self.drawing = drawing
         self.ROAD_WIDTH = 300
 
     def create_circuit(self):
+        """
+        Creates and draws a circuit
+        """
         straight_lengths = {
             1: {"x": 5000}, #recta ppal
             2: {"y": 1000}, #chicane 1
@@ -949,6 +1209,12 @@ class Circuit:
         self.draw_circuit()
 
     def create_straights(self, straight_lengths):
+        """
+        Creates all the circuit pieces
+        Arguments:
+            straight_lengths: a dictionary whose keys are x
+            if the straight is horizontal or y if it's vertical
+        """
         x = 500
         y = 500
         for key in straight_lengths:
@@ -960,6 +1226,9 @@ class Circuit:
                 y += straight_lengths[key]["y"]
 
     def draw_circuit(self):
+        """
+        Draws the circuit
+        """
         for part in self.circuit_parts:
             self.drawing.draw_rectangle(
                 {
@@ -973,6 +1242,14 @@ class Circuit:
             )
     
     def __create_straight(self, x, y, width, height):
+        """
+        Creates a straight
+        Arguments:
+            x: the x coordinate of the straight
+            y: the y coordinate of the straight
+            width: the width of the straight
+            heigth: the height of the straight
+        """
         if width < 0:
             x += self.ROAD_WIDTH
             x += width
@@ -1004,13 +1281,35 @@ class Circuit:
     class CircuitStraight:
 
         def __init__(self, x, y, width, height):
+            """
+            Constructor for circuit straight
+            Arguments:
+                x: the x coordinate of the straight
+                y: the y coordinate of the straight
+                width: the width of the straight
+                heigth: the height of the straight
+            """
             self.x = x
             self.y = y
             self.width = width
             self.height = height
 
         def check_overlap(self, x, y):
-            return (x >= self.x and x <= self.x + self.width) and (y >= self.y and y <= self.y + self.height)
+            """
+            Checks if the point is overlapped with the
+            circuit
+            """
+            return (
+                (
+                    x >= self.x and 
+                    x <= self.x + self.width
+                ) 
+                    and 
+                (
+                    y >= self.y and 
+                    y <= self.y + self.height
+                )
+            )
 
 
 class Obstacle:
@@ -1050,6 +1349,11 @@ class Obstacle:
     def calculate_distance(self, sx, sy, angle):
         """
         Checks if is detected by the ultrasound sensor.
+        It does so by using the sin or cos (depending on
+        if it's x coordinate or y coordinate) and the coordinate.
+        With it, we have the distance, so we get a point with
+        the angle and the distance (and sin or cos, to get the
+        other coordinate). Can be done by using basic trigonometry
         Arguments:
             sx: the x coordinate of the sensor
             sy: the y coordinate of the sensor
