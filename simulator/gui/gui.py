@@ -57,7 +57,7 @@ class MainApplication(tk.Tk):
         self.bind("<KeyRelease>", self.key_release)
 
     def configure_layer(self):
-        self.robot_layer.set_canvas(self.drawing_frame.canvas)
+        self.robot_layer.set_canvas(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
         self.drawing_frame.change_zoom_label()
 
     def change_robot(self, event):
@@ -117,8 +117,8 @@ class DrawingFrame(tk.Frame):
 
         self.canvas = tk.Canvas(self, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
-        self.hud_canvas = tk.Canvas(self, height=100, bg=BLUE, highlightthickness=0)
-        self.hud_canvas.create_text(50, 25, text="HUD", font=("Consolas", 25))
+        self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
+        
         self.zoom_frame = tk.Frame(self, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,

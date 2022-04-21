@@ -11,6 +11,7 @@ class Layer:
         Constructor for superclass layer
         """
         self.drawing = Drawing()
+        self.hud = None
         self.robot: Robot = None
         self._zoom_percentage()
         self.is_drawing = False
@@ -50,12 +51,16 @@ class Layer:
         """
         pass
 
-    def set_canvas(self, canvas: tk.Canvas):
+    def set_canvas(self, canvas: tk.Canvas, hud_canvas: tk.Canvas):
         """
-        Sets the canvas that the drawing will use
+        Sets the canvas that the drawing and will use
+        Arguments:
+            canvas: the canvas of the drawing
+            hud_canvas: the canvas of the hud
         """
         self.drawing.set_canvas(canvas)
         self.drawing.set_size(self.robot.drawing_width, self.robot.drawing_height)
+        self.hud.set_canvas(hud_canvas)
 
     def _zoom_config(self):
         """
@@ -100,6 +105,7 @@ class MoblileRobotLayer(Layer):
         self.robot = MobileRobot(self.drawing)
         self.circuit = Circuit(self.drawing)
         self.obstacle = Obstacle(700, 3000, 600, 450, self.drawing)
+        self.hud = MobileHUD()
 
         self.is_rotating = False
         self.is_moving = False
@@ -135,6 +141,7 @@ class MoblileRobotLayer(Layer):
         if da == 0:
             da = 0
             self.is_rotating = False
+        self.__hud_velocity()
 
         #Move or rotate
         if not self.is_rotating:
@@ -165,15 +172,19 @@ class MoblileRobotLayer(Layer):
         """
         Checks if the robot is inside or outside of the circuit
         """
+        measurements = []
         for key in self.robot.sensors:
             if key[0:5] == "light":
                 x = self.robot.sensors[key].x
                 y = self.robot.sensors[key].y
                 if self.circuit.is_overlapping(x, y):
                     self.robot.sensors[key].dark()
+                    measurements.append(True)
                 else:
                     self.robot.sensors[key].light()
+                    measurements.append(False)
             self.robot.repaint_light_sensors()
+            self.hud.set_circuit(measurements)
 
     def __check_obstacle_collision(self, x, y):
         """
@@ -193,11 +204,15 @@ class MoblileRobotLayer(Layer):
 
     def __detect_obstacle(self):
         self.drawing.canvas.delete("pointUp")
+        dists = []
         for key in self.robot.sensors:
             if key[0:5] == "sound":
                 self.drawing.canvas.delete("lineas")
-                dist = self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle)
-                print("Distance = {}".format(dist))
+                dists.append(self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle))
+        self.hud.set_detect_obstacle(dists)
+
+    def __hud_velocity(self):
+        self.hud.set_wheel([self.robot.vl, self.robot.vr])
 
 class LinearActuatorLayer(Layer):
 
@@ -207,6 +222,7 @@ class LinearActuatorLayer(Layer):
         """
         super().__init__()
         self.robot = LinearActuator(self.drawing)
+        self.hud = ActuatorHUD()
 
     def move(self, movement):
         v = 0
@@ -228,10 +244,96 @@ class LinearActuatorLayer(Layer):
 class HUD:
 
     def __init__(self):
-        self.canvas = None
+        self.canvas: tk.Canvas = None
 
-    def set_canvas(self, canvas):
+    def set_canvas(self, canvas: tk.Canvas):
         self.canvas = canvas
+        self.canvas.delete('all')
+        self.set_text()
+
+    def set_text(self):
+        pass
+    
+
+class MobileHUD(HUD):
+
+    def __init__(self):
+        super().__init__()
+        self.img_ff = Image.open('simulator/gui/assets/full-speed.png')
+        self.img_mf = Image.open('simulator/gui/assets/mid-speed.png')
+        self.img_sf = Image.open('simulator/gui/assets/slow-speed.png')
+
+    def set_text(self):
+        """
+        Sets the corresponding texts for the mobile robot
+        """
+        self.canvas.create_text(5, 25, text="Rueda izquierda:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 50, text="Rueda derecha:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 75, text="En pista:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 25, text="Detecta obstáculo:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 50, text="└Distancia 1:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 75, text="└Distancia 2:", font=("Consolas", 13), anchor="w", fill="white")
+
+    def set_wheel(self, vels):
+        i = 0
+        self.imgs = []
+        for vel in vels:
+            self.__display_wheels(i, vel)
+            i += 1
+        
+    def set_circuit(self, measurements):
+        self.canvas.delete("cir")
+        text = ""
+        for i in range(0, len(measurements)):
+            if i > 0:
+                text += " | "
+            if measurements[i]:
+                text += "Si"
+            else:
+                text += "No"
+        self.canvas.create_text(100, 75, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="cir")
+
+    def __display_wheels(self, i, vel):
+        w = int(self.img_ff.width * 0.5)
+        h = int(self.img_ff.height * 0.5)
+        self.ff = self.img_ff.resize((w, h), Image.ANTIALIAS)
+        self.mf = self.img_mf.resize((w, h), Image.ANTIALIAS)
+        self.sf = self.img_sf.resize((w, h), Image.ANTIALIAS)
+        if abs(vel) < 100:
+            if vel < 0:
+                self.sf = self.sf.rotate(180, expand=True)
+            self.imgs.append(ImageTk.PhotoImage(self.sf))
+        elif abs(vel) > 200:
+            if vel < 0:
+                self.ff = self.ff.rotate(180, expand=True)
+            self.imgs.append(ImageTk.PhotoImage(self.ff))
+        else:
+            if vel < 0:
+                self.mf = self.mf.rotate(180, expand=True)
+            self.imgs.append(ImageTk.PhotoImage(self.mf))
+        y = 25 + (25 * i)
+        self.canvas.create_image(200, y, image=self.imgs[i])
+
+    def set_detect_obstacle(self, dists):
+        self.canvas.delete("obs")
+        text = ""
+        for i in range(0, len(dists)):
+            dist_text = "-"
+            if i > 0:
+                text += " | "
+            if dists[i] != -1:
+                text += "Si"
+                dist_text = str(dists[i] - 1)
+            else:
+                text += "No"
+            self.canvas.create_text(375, 50 + (25 * i), text=dist_text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
+        self.canvas.create_text(425, 25, text=text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
+
+
+class ActuatorHUD(HUD):
+
+    def __init__(self):
+        super().__init__()
 
 
 class Drawing:
@@ -487,6 +589,8 @@ class MobileRobot(Robot):
         self.real_y = self.y
         self.width = self.img_mobrob.width
         self.height = self.img_mobrob.height
+        self.vl = 0
+        self.vr = 0
         self.angle = 90
         self.sensors = {}
 
@@ -572,6 +676,8 @@ class MobileRobot(Robot):
             from it the velocity in each axis is calculated
             by using sin and cos with the angle
         """
+        self.vl = -vel * 25
+        self.vr = -vel * 25
         angle = self.angle * pi / 180
         vx = -vel * cos(angle)
         vy = vel * sin(angle)
@@ -600,6 +706,8 @@ class MobileRobot(Robot):
             d_angle: the number of degrees that the robot 
             is going to rotate. Can be + or -
         """
+        self.vl = -d_angle * 50
+        self.vr = d_angle * 50
         if self.angle + d_angle >= 0 and self.angle + d_angle <= 360:
             self.angle += d_angle
         else:
