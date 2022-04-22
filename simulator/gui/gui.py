@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from robots import Layer, LinearActuatorLayer, MoblileRobotLayer
+from simulator.gui.robots import Layer, LinearActuatorLayer, MoblileRobotLayer
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"

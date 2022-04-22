@@ -1,2 +1,2 @@
-from gui import MainApplication
-from robots import Robot, MobileRobot, LinearActuator, Drawing
+from . import gui
+from . import robots
