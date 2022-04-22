@@ -1,8 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from robots import Layer
-from simulator.gui.robots import LinearActuatorLayer, MoblileRobotLayer
-
+from robots import Layer, LinearActuatorLayer, MoblileRobotLayer
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -18,7 +16,8 @@ class MainApplication(tk.Tk):
         self.menu_bar = MenuBar(self)
         self.tools_frame = tk.Frame(self, bg=DARK_BLUE)
         self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
-        self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"], state="readonly")
+        self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"],
+                                           state="readonly")
         self.robot_selector.current(0)
         self.vertical_pane = tk.PanedWindow(
             orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=DARK_BLUE)
@@ -92,13 +91,13 @@ class MainApplication(tk.Tk):
         self.abort_after()
 
     def abort_after(self):
-        if self.identifier != None:
+        if self.identifier is not None:
             self.after_cancel(self.identifier)
 
 
 class MenuBar(tk.Menu):
 
-    def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Menu.__init__(self, parent, *args, **kwargs)
 
         self.add_cascade(label="Archivo")
@@ -109,7 +108,7 @@ class MenuBar(tk.Menu):
 
 class DrawingFrame(tk.Frame):
 
-    def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.application = application
@@ -118,7 +117,7 @@ class DrawingFrame(tk.Frame):
         self.canvas = tk.Canvas(self, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
         self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
-        
+
         self.zoom_frame = tk.Frame(self, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
@@ -190,7 +189,7 @@ class DrawingFrame(tk.Frame):
 
 class EditorFrame(tk.Frame):
 
-    def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12))
@@ -244,7 +243,7 @@ class EditorFrame(tk.Frame):
                     args[0:2] == ("xview", "scroll") or
                     args[0:2] == ("yview", "moveto") or
                     args[0:2] == ("yview", "scroll")
-                ):
+            ):
                 self.event_generate("<<Change>>", when="tail")
 
             return result
@@ -253,6 +252,7 @@ class EditorFrame(tk.Frame):
 
         def __init__(self, *args, **kwargs):
             tk.Canvas.__init__(self, *args, **kwargs)
+            self.editor = None
 
         def attach(self, editor):
             self.editor = editor
@@ -279,9 +279,12 @@ class ConsoleFrame(tk.Frame):
 
         self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
-        self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
-        self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
-        self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12), bg=DARK_BLUE, activebackground=DARK_BLUE)
+        self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
+                                        bg=DARK_BLUE, activebackground=DARK_BLUE)
+        self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12),
+                                            bg=DARK_BLUE, activebackground=DARK_BLUE)
+        self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12),
+                                          bg=DARK_BLUE, activebackground=DARK_BLUE)
 
         self.console.insert(tk.END, "Esto sería la consola")
         self.console.config(state=tk.DISABLED)
@@ -307,69 +310,69 @@ class ButtonBar(tk.Frame):
         self.__load_images()
 
         self.execute_button = ImageButton(
-            self.exec_frame, 
-            images = 
+            self.exec_frame,
+            images=
             {
-                "blue": self.exec_img, 
+                "blue": self.exec_img,
                 "white": self.exec_whi_img,
                 "yellow": self.exec_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
         self.stop_button = ImageButton(
             self.exec_frame,
-            images = 
+            images=
             {
-                "blue": self.stop_img, 
+                "blue": self.stop_img,
                 "white": self.stop_whi_img,
                 "yellow": self.stop_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
         self.undo_button = ImageButton(
             self.hist_frame,
-            images = 
+            images=
             {
-                "blue": self.undo_img, 
+                "blue": self.undo_img,
                 "white": self.undo_whi_img,
                 "yellow": self.undo_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
         self.redo_button = ImageButton(
-            self.hist_frame, 
-            images = 
+            self.hist_frame,
+            images=
             {
-                "blue": self.redo_img, 
+                "blue": self.redo_img,
                 "white": self.redo_whi_img,
                 "yellow": self.redo_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
         self.save_button = ImageButton(
             self.utils_frame,
-            images = 
+            images=
             {
-                "blue": self.save_img, 
+                "blue": self.save_img,
                 "white": self.save_whi_img,
                 "yellow": self.save_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
         self.import_button = ImageButton(
-            self.utils_frame, 
-            images = 
+            self.utils_frame,
+            images=
             {
-                "blue": self.import_img, 
+                "blue": self.import_img,
                 "white": self.import_whi_img,
                 "yellow": self.import_yel_img
-            }, 
-            bg=kwargs["bg"], 
+            },
+            bg=kwargs["bg"],
             bd=0
         )
 
@@ -448,10 +451,10 @@ class ImageButton(tk.Button):
         except AttributeError:
             pass
 
-    def on_click(self): # A futuro si se quiere
+    def on_click(self):  # A futuro si se quiere
         self.configure(image=self.images["yellow"])
 
-    def set_tooltip_text(self, label:tk.Label, tooltip):
+    def set_tooltip_text(self, label: tk.Label, tooltip):
         self.label = label
         self.tooltip = tooltip
 
