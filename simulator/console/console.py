@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 
@@ -33,27 +34,35 @@ class Logger:
         """
         Constructor for logger
         """
-        date = datetime.now().strftime("%Y_%m_%d")
-        file_name = "log_{}.log".format(date)
-        self.f = open(file_name, "w")
+        date = datetime.now().strftime("%d-%m-%Y")
+        file_name = 'logs/log_{}.log'.format(date)
+        logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s')
+        logging.info("Started simulator session")
 
-    def write_log(self, m_type, extra_info, message):
+    def write_log(self, m_type, message):
         """
         Writes message to a log file
         Arguments:
+            m_type: the type of logging message
             message: the message to log
         """
-        current_date = datetime.now()
-        line = "{} - {} - {}".format(m_type, extra_info, message)
-        self.f.write(line)
+        if m_type == "debug":
+            logging.debug(message)
+        elif m_type == "info":
+            logging.info(message)
+        elif m_type == "warning":
+            logging.warning(message)
+        elif m_type == "error":
+            logging.error(message)
+        elif m_type == "critical":
+            logging.critical(message)
 
     def close_log(self):
         """
         Closes the log file
         """
-        self.f.write("====FIN SESION====")
-        self.f.write("")
-        self.f.close()
+        logging.info("Closed simulator session")
 
 
 class ConsoleReportMessage:
