@@ -1,4 +1,5 @@
 __pycache__/
+logs/
 notas.txt
 diagrama_ast.txt
 attribute_grammar.txt
