@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import robots
+import layers
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -28,7 +28,7 @@ class MainApplication(tk.Tk):
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
         self.console_frame = ConsoleFrame(self.vertical_pane, bg=DARK_BLUE)
 
-        self.robot_layer: robots.Layer = self.select_robot()
+        self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
 
         self.config(menu=self.menu_bar)
@@ -67,9 +67,9 @@ class MainApplication(tk.Tk):
     def select_robot(self):
         robot = self.robot_selector.current()
         if robot == 0:
-            return robots.MoblileRobotLayer()
+            return layers.MoblileRobotLayer()
         elif robot == 1:
-            return robots.LinearActuatorLayer()
+            return layers.LinearActuatorLayer()
         return None
 
     def key_press(self, event):

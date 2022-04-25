@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Console:
 
-    def __init__(self):
+    def __init__(self, text_widget):
         """
         Constructor for console
         """
