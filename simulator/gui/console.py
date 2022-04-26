@@ -71,9 +71,12 @@ class Console:
         """
         self.text_widget = text_widget
         self.logger = Logger()
+        self.messages = []
+
         self.text_widget.tag_config('info', foreground='white')
         self.text_widget.tag_config('warning', foreground='yellow')
         self.text_widget.tag_config('error', foreground='red')
+
         err = Error("prueba error", 1, 10, "error errorado")
         war = Warning("prueba advertencia", 2, 15, "advertencia advertida")
         self.write_output("informacion informada")
@@ -87,8 +90,10 @@ class Console:
         Arguments:
             message: the message to write
         """
-        self.__insert_text(message + '\n')
-        self.logger.write_log("info", message)
+        m_type = 'info'
+        self.__insert_text(message)
+        self.logger.write_log(m_type, message)
+        self.messages.append((m_type, message))
 
     def write_error(self, error_msg: Error):
         """
@@ -97,8 +102,10 @@ class Console:
             error_msg: the error to write
         """
         message = error_msg.to_string()
-        self.__insert_text(message, 'error')
-        self.logger.write_log("error", message)
+        m_type = 'error'
+        self.__insert_text(message, m_type)
+        self.logger.write_log(m_type, message)
+        self.messages.append((m_type, error_msg.to_string()))
 
         
     def write_warning(self, warning_msg: Warning):
@@ -108,8 +115,25 @@ class Console:
             warning_msg: the error to write
         """
         message = warning_msg.to_string()
-        self.__insert_text(message + "\n", 'warning')
-        self.logger.write_log("warning", message)
+        m_type = 'warning'
+        self.__insert_text(message + "\n", m_type)
+        self.logger.write_log(m_type, message)
+        self.messages.append((m_type, warning_msg.to_string()))
+
+    def filter_messages(self, *msg_types):
+        """
+        Filters messages by type(s)
+        Arguments:
+            msg_types: the type(s) of the message(s) to be
+            displayed
+        """
+        self.text_widget.config(state=tk.NORMAL)
+        self.text_widget.delete('1.0', tk.END)
+        for m in self.messages:
+            if m[0] in msg_types:
+                self.__insert_text(m[1], m[0])
+        self.text_widget.config(state=tk.DISABLED)
+            
 
     def __insert_text(self, message, tag='info'):
         """
@@ -131,8 +155,7 @@ class Logger:
         """
         date = datetime.now().strftime("%d-%m-%Y")
         file_name = 'logs/log_{}.log'.format(date)
-        logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s')
+        logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
         logging.info("Started simulator session")
 
     def write_log(self, m_type, message):

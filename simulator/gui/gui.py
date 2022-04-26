@@ -26,7 +26,7 @@ class MainApplication(tk.Tk):
         self.drawing_frame = DrawingFrame(
             self.horizontal_pane, self, bg=BLUE)
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
-        self.console_frame = ConsoleFrame(self.vertical_pane, bg=DARK_BLUE)
+        self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
 
         self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
@@ -94,6 +94,16 @@ class MainApplication(tk.Tk):
     def abort_after(self):
         if self.identifier is not None:
             self.after_cancel(self.identifier)
+
+    def console_filter(self):
+        msg_filters = []
+        if self.console_frame.output.get() == 1:
+            msg_filters.append('info')
+        if self.console_frame.warning.get() == 1:
+            msg_filters.append('warning')
+        if self.console_frame.error.get() == 1:
+            msg_filters.append('error')
+        self.console.filter_messages(*msg_filters)
 
 
 class MenuBar(tk.Menu):
@@ -278,17 +288,29 @@ class ConsoleFrame(tk.Frame):
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
+        self.output = tk.IntVar()
+        self.warning = tk.IntVar()
+        self.error = tk.IntVar()
+
         self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
         self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
-                                        bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                        bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
+                                        variable=self.output, onvalue=1, offvalue=0, 
+                                        command=application.console_filter)
         self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12),
-                                            bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                            bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black",
+                                            variable=self.warning, onvalue=1, offvalue=0, 
+                                            command=application.console_filter)
         self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12),
-                                          bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                          bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
+                                          variable=self.error, onvalue=1, offvalue=0, 
+                                          command=application.console_filter)
 
-        self.console.insert(tk.END, "Esto sería la consola\n")
         self.console.config(state=tk.DISABLED)
+        self.check_out.select()
+        self.check_warning.select()
+        self.check_error.select()
 
         self.check_out.grid(column=0, row=0)
         self.check_warning.grid(column=0, row=1)
