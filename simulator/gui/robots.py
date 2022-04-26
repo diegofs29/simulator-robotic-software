@@ -100,6 +100,7 @@ class LinearActuator(Robot):
         Redraws the buttons when they are changed
         """
         self.drawing.redraw_image(self.but_left.get_image(), "button_left")
+        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
         self.drawing.redraw_image(self.but_right.get_image(), "button_right")
 
     def create_robot(self):
@@ -115,12 +116,12 @@ class LinearActuator(Robot):
         self.but_left = self.ActuatorButton(
             "simulator/gui/assets/button-hit.png", 
             "simulator/gui/assets/button-no-hit.png",
-            self.x - 960, self.y + 70, True
+            self.x - 960, self.y + 70
         )
         self.but_right = self.ActuatorButton(
             "simulator/gui/assets/button-hit.png", 
             "simulator/gui/assets/button-no-hit.png",
-            self.x + 880, self.y - 185, False
+            self.x + 880, self.y - 185
         )
         self.block = self.Block(
             "simulator/gui/assets/mobile-part.png",
@@ -133,8 +134,8 @@ class LinearActuator(Robot):
         """
         self.drawing.draw_image(self.image, "actuator")
         self.drawing.draw_image(self.but_left.get_image(), "button_left")
+        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
         self.drawing.draw_image(self.but_right.get_image(), "button_right")
-        self.drawing.rotate_image(self.but_right.get_image(), 180, "button_right")
         self.drawing.draw_image(self.block.get_image(), "block")
 
 

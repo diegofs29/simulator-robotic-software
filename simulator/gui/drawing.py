@@ -47,7 +47,7 @@ class Drawing:
             group: the tag where the image is going to 
             be added to
         """
-        image = self.__open_image(element["image"])
+        image = self.__open_image(element["image"], group)
         self.__add_to_canvas(element["x"], element["y"], image, group)
 
     def redraw_image(self, element, group):
@@ -61,7 +61,7 @@ class Drawing:
         """
         self.canvas.delete(group)
         del self.canvas_images[group]
-        image = self.__open_image(element["image"])
+        image = self.__open_image(element["image"], group)
         self.__add_to_canvas(element["x"], element["y"], image, group)
 
     def move_image(self, group, x, y):
@@ -92,8 +92,8 @@ class Drawing:
             group: the group of the image(s)
         """
         self.canvas.delete(group)
-        image = self.__open_image(element["image"])
-        rotated_img = image.rotate(angle, expand=True)
+        image = self.__open_image(element["image"], group)
+        rotated_img = self.images[element["image"]] = image.rotate(angle, expand=True)
         self.__add_to_canvas(element["x"], element["y"], rotated_img, group)
 
     def draw_rectangle(self, form: dict):
@@ -177,11 +177,20 @@ class Drawing:
         }
         self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
 
-    def __open_image(self, image_path):
+    def __open_image(self, image_path, group):
         image = None
-        if not image_path in self.images:
-            image = Image.open(image_path)
-            self.images[image_path] = image
+        if not group in self.images:
+            image = self.__get_image(image_path, group)
+        elif not self.images[group]["path"] == image_path:
+            image = self.__get_image(image_path, group)
         else:
-            image = self.images[image_path]
+            image = self.images[group]["image"]
+        return image
+
+    def __get_image(self, image_path, group):
+        image = Image.open(image_path)
+        self.images[group] = {
+            "image": image,
+            "path": image_path
+        }
         return image
