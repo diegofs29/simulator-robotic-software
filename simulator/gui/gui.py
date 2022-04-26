@@ -293,6 +293,7 @@ class ConsoleFrame(tk.Frame):
         self.error = tk.IntVar()
 
         self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
+        self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL, command=self.console.yview)
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
         self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
                                         bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
@@ -307,7 +308,7 @@ class ConsoleFrame(tk.Frame):
                                           variable=self.error, onvalue=1, offvalue=0, 
                                           command=application.console_filter)
 
-        self.console.config(state=tk.DISABLED)
+        self.console.config(state=tk.DISABLED, yscrollcommand=self.sb_y.set)
         self.check_out.select()
         self.check_warning.select()
         self.check_error.select()
@@ -316,6 +317,7 @@ class ConsoleFrame(tk.Frame):
         self.check_warning.grid(column=0, row=1)
         self.check_error.grid(column=0, row=2)
         self.filter_frame.pack(side=tk.RIGHT)
+        self.sb_y.pack(fill=tk.Y, side=tk.RIGHT)
         self.console.pack(fill=tk.BOTH, expand=True)
 
 

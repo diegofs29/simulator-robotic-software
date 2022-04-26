@@ -82,6 +82,18 @@ class Console:
         self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
+        self.write_output("informacion informada")
+        self.write_error(err)
+        self.write_warning(war)
+        self.write_output("informacion informada")
+        self.write_error(err)
+        self.write_warning(war)
+        self.write_output("informacion informada")
+        self.write_error(err)
+        self.write_warning(war)
+        self.write_output("informacion informada")
+        self.write_error(err)
+        self.write_warning(war)
 
     def write_output(self, message):
         """
@@ -116,7 +128,7 @@ class Console:
         """
         message = warning_msg.to_string()
         m_type = 'warning'
-        self.__insert_text(message + "\n", m_type)
+        self.__insert_text(message, m_type)
         self.logger.write_log(m_type, message)
         self.messages.append((m_type, warning_msg.to_string()))
 
