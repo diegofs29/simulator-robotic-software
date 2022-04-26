@@ -48,11 +48,11 @@ class TestSyntaxErrors(TestBaseErrors):
         self.assertEqual(len(self.syntax_errors), 5)
 
     def test_type_of_errors(self):
-        self.assertEqual(self.syntax_errors[0].error_type, "Sintaxis")
-        self.assertEqual(self.syntax_errors[1].error_type, "Sintaxis")
-        self.assertEqual(self.syntax_errors[2].error_type, "Léxico")
-        self.assertEqual(self.syntax_errors[3].error_type, "Sintaxis")
-        self.assertEqual(self.syntax_errors[4].error_type, "Sintaxis")
+        self.assertEqual(self.syntax_errors[0].r_type, "Sintaxis")
+        self.assertEqual(self.syntax_errors[1].r_type, "Sintaxis")
+        self.assertEqual(self.syntax_errors[2].r_type, "Léxico")
+        self.assertEqual(self.syntax_errors[3].r_type, "Sintaxis")
+        self.assertEqual(self.syntax_errors[4].r_type, "Sintaxis")
 
     def test_error_messages(self):
         self.assertEqual(self.syntax_errors[0].message, 
@@ -74,9 +74,9 @@ class TestSetupLoopErrors(TestBaseErrors):
     def test_number_of_errors(self):
         self.assertEqual(len(self.semantic_errors), 2)
 
-    def test_error_type(self):
-        self.assertEqual(self.semantic_errors[0].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[1].error_type, "Declaración")
+    def test_r_type(self):
+        self.assertEqual(self.semantic_errors[0].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[1].r_type, "Declaración")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "No hay función setup")
@@ -90,11 +90,11 @@ class TestTypeErrors(TestBaseErrors):
     def test_number_of_errors(self):
         self.assertEqual(len(self.semantic_errors), 31)
 
-    def test_error_type(self):
+    def test_r_type(self):
         for err in self.semantic_errors[:-2]:
-            self.assertEqual(err.error_type, "Tipos")
-        self.assertEqual(self.semantic_errors[29].error_type, "Tipo de función setup")
-        self.assertEqual(self.semantic_errors[30].error_type, "Tipo de función loop")
+            self.assertEqual(err.r_type, "Tipos")
+        self.assertEqual(self.semantic_errors[29].r_type, "Tipo de función setup")
+        self.assertEqual(self.semantic_errors[30].r_type, "Tipo de función loop")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "El tipo de la variable es numérico, pero su valor no")
@@ -137,9 +137,9 @@ class TestDeclarationErrors(TestBaseErrors):
     def test_number_of_errors(self):
         self.assertEqual(len(self.semantic_errors), 12)
 
-    def test_error_type(self):
+    def test_r_type(self):
         for err in self.semantic_errors:
-            self.assertEqual(err.error_type, "Declaración")
+            self.assertEqual(err.r_type, "Declaración")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "La variable ya ha sido declarada")
@@ -163,9 +163,9 @@ class TestFlowErrors(TestBaseErrors):
     def test_number_of_errors(self):
         self.assertEqual(len(self.semantic_errors), 8)
 
-    def test_error_types(self):
+    def test_r_types(self):
         for error in self.semantic_errors:
-            self.assertEqual(error.error_type, "Mal uso de identificador")
+            self.assertEqual(error.r_type, "Mal uso de identificador")
 
     def test_error_messages(self):
         self.assertEqual(self.semantic_errors[0].message, "Continue debe ser usado dentro de un bucle")
@@ -185,31 +185,31 @@ class TestArrayAccessErrors(TestBaseErrors):
     def test_number_of_errors(self):
         self.assertEqual(len(self.semantic_errors), 24)
 
-    def test_error_type(self):
-        self.assertEqual(self.semantic_errors[0].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[1].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[2].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[3].error_type, "Tipos")
-        self.assertEqual(self.semantic_errors[4].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[5].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[6].error_type, "Tipos")
-        self.assertEqual(self.semantic_errors[7].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[8].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[9].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[10].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[11].error_type, "Declaración")
-        self.assertEqual(self.semantic_errors[12].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[13].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[14].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[15].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[16].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[17].error_type, "Índice")
-        self.assertEqual(self.semantic_errors[18].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[19].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[20].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[21].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[22].error_type, "Tamaños")
-        self.assertEqual(self.semantic_errors[23].error_type, "Tamaños")
+    def test_r_type(self):
+        self.assertEqual(self.semantic_errors[0].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[1].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[2].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[3].r_type, "Tipos")
+        self.assertEqual(self.semantic_errors[4].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[5].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[6].r_type, "Tipos")
+        self.assertEqual(self.semantic_errors[7].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[8].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[9].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[10].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[11].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[12].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[13].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[14].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[15].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[16].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[17].r_type, "Índice")
+        self.assertEqual(self.semantic_errors[18].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[19].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[20].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[21].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[22].r_type, "Tamaños")
+        self.assertEqual(self.semantic_errors[23].r_type, "Tamaños")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "El array ya ha sido declarado")

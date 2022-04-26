@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import layers
+import layers, console
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -30,6 +30,7 @@ class MainApplication(tk.Tk):
 
         self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
+        self.console = console.Console(self.console_frame.console)
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
@@ -286,7 +287,7 @@ class ConsoleFrame(tk.Frame):
         self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12),
                                           bg=DARK_BLUE, activebackground=DARK_BLUE)
 
-        self.console.insert(tk.END, "Esto sería la consola")
+        self.console.insert(tk.END, "Esto sería la consola\n")
         self.console.config(state=tk.DISABLED)
 
         self.check_out.grid(column=0, row=0)
