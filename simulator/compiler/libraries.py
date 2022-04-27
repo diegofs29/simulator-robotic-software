@@ -13,25 +13,68 @@ class Servo:
     """
 
     def __init__(self):
-        pass
+        self.pin = -1
+        self.min=544
+        self.max=2400
+        self.speed = 90
 
-    def attach(self):
-        pass
+    def attach(self, pin, min=544, max=2400):
+        """
+        Attaches the servo to a pin
+        Arguments:
+            pin: the number of the pin to be attached to
+            min: pulse width corresponging with the minimun angle on
+            the servo (default = 544)
+            max: pulse width corresponging with the max angel on the 
+            the servo (default = 2400)
+        """
+        self.pin = pin
+        self.min = min
+        self.max = max
 
-    def write(self):
-        pass
+    def write(self, angle):
+        """
+        Writes speed to servo.
+        Our Servos, being rotation ones, will have their speed set by this
+        method. If the angle is 0, the speed is full in one direction, if
+        it is 180, is full speed in the oposite direction; with 90 being no
+        movement done by the servo
+        Arguments:
+            angle: the value to write [0-180]
+        """
+        self.speed = angle
 
-    def write_microseconds(self):
-        pass
+    def write_microseconds(self, us):
+        """
+        Writes speed to servo in microseconds.
+        This method will work exactly the same way as write does (because our
+        servos are rotation ones)
+        Arguments:
+            us: the value of the parameter in microseconds (int)
+        """
+        self.write(us)
 
     def read(self):
-        pass
+        """
+        Reads the angle of the servo (being the last value passed to write)
+        Returns:
+            The angle of the servo from 0 to 180 degrees
+        """
+        return self.speed
 
     def attached(self):
-        pass
+        """
+        Checks wether the Servo variable is attached or not
+        Returns:
+            True if attached to pin, False if else
+        """
+        return self.pin != -1
 
     def detach(self):
-        pass
+        """
+        Detach the Servo variable from its pin
+        """
+        self.pin = -1
 
 
 class Standard:
