@@ -10,6 +10,7 @@ from math import cos, sin, sqrt, tan
 import string
 import time
 import random
+from ..gui.console import Console
 
 
 class Servo:
@@ -684,68 +685,144 @@ class Serial:
     into other devices not implemented)
     """
 
-    def __init__(self):
-        pass
+    OK = 0
+    ERROR = -1
+    NOT_IMPL_WARNING = -2
+
+    def __init__(self, console: Console):
+        """
+        Constructor for Serial
+        Arguments:
+            console: the console to write into
+        """
+        self.console = console
 
     def if_serial(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def available(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def available_for_write(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def begin(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def end(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def find(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def find_until(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def flush(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def parse_float(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def parse_int(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def peek(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
-    def print(self):
-        pass
+    def print(self, val):
+        """
+        Prints a value to the console
+        Arguments:
+            val: the value
+        """
+        self.console.write_output(val)
 
-    def println(self):
-        pass
+    def println(self, val):
+        """
+        Prints a value to the console and finishes the line
+        Arguments:
+            val: the value
+        """
+        self.console.write_output(val + '\n')
 
     def read(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def read_bytes(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def read_bytes_until(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def read_string(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def read_string_until(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def set_timeout(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def write(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
 
     def serial_event(self):
-        pass
+        """
+        Not needed (not implemented)
+        """
+        return self.NOT_IMPL_WARNING
