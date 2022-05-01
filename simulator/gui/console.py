@@ -79,19 +79,19 @@ class Console:
 
         err = Error("prueba error", 1, 10, "error errorado")
         war = Warning("prueba advertencia", 2, 15, "advertencia advertida")
-        self.write_output("informacion informada\n")
+        self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
-        self.write_output("informacion informada\n")
+        self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
-        self.write_output("informacion informada\n")
+        self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
-        self.write_output("informacion informada\n")
+        self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
-        self.write_output("informacion informada\n")
+        self.write_output("informacion informada")
         self.write_error(err)
         self.write_warning(war)
 
@@ -103,9 +103,7 @@ class Console:
             message: the message to write
         """
         m_type = 'info'
-        self.text_widget.config(state=tk.NORMAL)
-        self.text_widget.insert(tk.END, message, 'info')
-        self.text_widget.config(state=tk.DISABLED)
+        self.__insert_text(message, m_type)
         self.logger.write_log(m_type, message)
         self.messages.append((m_type, message))
 

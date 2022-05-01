@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from turtle import color
 import layers, console
 
 DARK_BLUE = "#006468"
@@ -292,8 +293,9 @@ class ConsoleFrame(tk.Frame):
         self.warning = tk.IntVar()
         self.error = tk.IntVar()
 
-        self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
-        self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL, command=self.console.yview)
+        self.console_frame = tk.Frame(self, bg=DARK_BLUE)
+        self.console = tk.Text(self.console_frame, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
+        self.sb_y = tk.Scrollbar(self.console_frame, orient=tk.VERTICAL, command=self.console.yview)
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
         self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
                                         bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
@@ -307,6 +309,9 @@ class ConsoleFrame(tk.Frame):
                                           bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
                                           variable=self.error, onvalue=1, offvalue=0, 
                                           command=application.console_filter)
+        self.input_frame = tk.Frame(self, bg=DARK_BLUE)
+        self.input_entry = tk.Entry(self.input_frame, bd=1, relief=tk.SOLID, bg="black", insertbackground="white", fg="white", font=("Consolas", 12))
+        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, text="Enviar", font=("Consolas", 12))
 
         self.console.config(state=tk.DISABLED, yscrollcommand=self.sb_y.set)
         self.check_out.select()
@@ -316,9 +321,16 @@ class ConsoleFrame(tk.Frame):
         self.check_out.grid(column=0, row=0)
         self.check_warning.grid(column=0, row=1)
         self.check_error.grid(column=0, row=2)
-        self.filter_frame.pack(side=tk.RIGHT)
+
+        self.input_button.pack(side=tk.RIGHT, padx=(5, 0))
+        self.input_entry.pack(fill=tk.X, expand=True)
+
         self.sb_y.pack(fill=tk.Y, side=tk.RIGHT)
         self.console.pack(fill=tk.BOTH, expand=True)
+
+        self.filter_frame.pack(side=tk.RIGHT)
+        self.input_frame.pack(fill=tk.X, side=tk.BOTTOM, expand=True, pady=(5, 0))
+        self.console_frame.pack(fill=tk.BOTH, expand=True)
 
 
 class ButtonBar(tk.Frame):
@@ -343,6 +355,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.exec_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.stop_button = ImageButton(
@@ -354,6 +367,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.stop_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.undo_button = ImageButton(
@@ -365,6 +379,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.undo_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.redo_button = ImageButton(
@@ -376,6 +391,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.redo_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.save_button = ImageButton(
@@ -387,6 +403,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.save_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.import_button = ImageButton(
@@ -398,6 +415,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.import_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
 
