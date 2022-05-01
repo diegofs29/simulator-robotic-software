@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from time import time
 import tkinter as tk
 
 
@@ -72,11 +73,16 @@ class Console:
         self.text_widget = text_widget
         self.logger = Logger()
         self.messages = []
+        self.input_msgs = []
+        self.serial_started = False
+        self.speed = 0
+        self.curr_time = time() * 1000
 
         self.text_widget.tag_config('info', foreground='white')
         self.text_widget.tag_config('warning', foreground='yellow')
         self.text_widget.tag_config('error', foreground='red')
 
+        self.begin(4000000)
         err = Error("prueba error", 1, 10, "error errorado")
         war = Warning("prueba advertencia", 2, 15, "advertencia advertida")
         self.write_output("informacion informada")
@@ -95,6 +101,54 @@ class Console:
         self.write_error(err)
         self.write_warning(war)
 
+    def begin(self, speed):
+        """
+        Starts and set ups the speed for the console
+        Arguments:
+            speed: the speed at which the messages will be printed
+        """
+        self.speed = int(abs(speed - 4000000) / 1000)
+        self.serial_started = True
+
+    def get_read_bytes(self):
+        """
+        Counts and returns the number of bytes yet to read
+        Returns:
+            The bytes yet to read
+        """
+        counter = 0
+        for i in range(0, len(self.input_msgs)):
+            msg = str(self.input_msgs[i])
+            counter += len(msg)
+        return counter
+
+    def read(self):
+        """
+        Reads one byte of the message list if a message is present.
+        If not, returns -1
+        Returns:
+            The next byte of the message or -1 if no messages available
+        """
+        if len(self.input_msgs) == 0:
+            return -1
+        else:
+            msg = str(self.input_msgs[0])
+            f_byte = msg[0]
+            if len(msg) > 1:
+                self.input_msgs[0] = msg[1:]
+            else:
+                self.input_msgs.pop(0)
+            return f_byte
+
+    def input(self, message):
+        """
+        Adds input to the list of introduced inputs
+        Arguments:
+            message: the message to add to the list
+        """
+        self.logger.write_log('info', "Input: {}".format(message))
+        self.input_msgs.append(message)
+
     def write_output(self, message):
         """
         Writes a normal message, usually intended by
@@ -102,10 +156,13 @@ class Console:
         Arguments:
             message: the message to write
         """
-        m_type = 'info'
-        self.__insert_text(message, m_type)
-        self.logger.write_log(m_type, message)
-        self.messages.append((m_type, message))
+        d_time = (time() * 1000) - self.curr_time
+        if self.serial_started and d_time >= self.speed:
+            m_type = 'info'
+            self.__insert_text(message, m_type)
+            self.logger.write_log(m_type, message)
+            self.messages.append((m_type, message))
+            self.curr_time = time() * 1000
 
     def write_error(self, error_msg: Error):
         """

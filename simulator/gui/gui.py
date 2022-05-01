@@ -288,6 +288,7 @@ class ConsoleFrame(tk.Frame):
 
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.application = application
 
         self.output = tk.IntVar()
         self.warning = tk.IntVar()
@@ -311,7 +312,7 @@ class ConsoleFrame(tk.Frame):
                                           command=application.console_filter)
         self.input_frame = tk.Frame(self, bg=DARK_BLUE)
         self.input_entry = tk.Entry(self.input_frame, bd=1, relief=tk.SOLID, bg="black", insertbackground="white", fg="white", font=("Consolas", 12))
-        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, text="Enviar", font=("Consolas", 12))
+        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, text="Enviar", font=("Consolas", 12), command=self.__send_input)
 
         self.console.config(state=tk.DISABLED, yscrollcommand=self.sb_y.set)
         self.check_out.select()
@@ -331,6 +332,9 @@ class ConsoleFrame(tk.Frame):
         self.filter_frame.pack(side=tk.RIGHT)
         self.input_frame.pack(fill=tk.X, side=tk.BOTTOM, expand=True, pady=(5, 0))
         self.console_frame.pack(fill=tk.BOTH, expand=True)
+    
+    def __send_input(self):
+        self.application.console.input(self.input_entry.get())
 
 
 class ButtonBar(tk.Frame):

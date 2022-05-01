@@ -705,9 +705,12 @@ class Serial:
 
     def available(self):
         """
-        Not needed (not implemented)
+        Get the number of bytes (characters) available for reading from 
+        the serial port
+        Returns:
+            The number of bytes available to read
         """
-        return self.NOT_IMPL_WARNING
+        return self.console.get_read_bytes()
 
     def available_for_write(self):
         """
@@ -715,11 +718,26 @@ class Serial:
         """
         return self.NOT_IMPL_WARNING
 
-    def begin(self):
+    def begin(self, speed):
         """
-        Not needed (not implemented)
+        Sets the data rate in bauds for serial data transmission.
+        Config is not used because simulating its behaviour is very
+        complex for our situation.
+        Arguments:
+            speed: the bauds (use: 50, 75, 110, 134, 150, 200, 300,
+            600, 1200, 1800, 2400, 9600, 19200, 38400, 57600, 115200,
+            230400, 460800, 500000, 576000, 921600, 1000000, 1152000,
+            1500000, 2000000, 2500000, 3000000, 3500000, 4000000)
         """
-        return self.NOT_IMPL_WARNING
+        bauds = [50, 75, 110, 134, 150, 200, 300,
+                 600, 1200, 1800, 2400, 9600, 19200, 38400, 57600, 115200,
+                 230400, 460800, 500000, 576000, 921600, 1000000, 1152000,
+                 1500000, 2000000, 2500000, 3000000, 3500000, 4000000]
+        if speed not in bauds:
+            return self.ERROR
+        else:
+            self.console.begin(speed)
+        return self.OK
 
     def end(self):
         """
@@ -781,9 +799,12 @@ class Serial:
 
     def read(self):
         """
-        Not needed (not implemented)
+        Reads incoming serial data
+        Returns:
+            The first byte of incoming serial data or -1 if
+            none available
         """
-        return self.NOT_IMPL_WARNING
+        return self.console.read()
 
     def read_bytes(self):
         """
