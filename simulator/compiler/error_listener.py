@@ -1,8 +1,5 @@
-from distutils.log import error
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import *
-
-from simulator.compiler.ArduinoParser import ArduinoParser
 from ..gui.console import Error
 
 

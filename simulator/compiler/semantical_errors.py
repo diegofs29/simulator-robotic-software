@@ -1,5 +1,3 @@
-from email.policy import default
-import re
 from .ast import *
 from .ast_visitor import ASTVisitor
 from ..gui.console import Error

@@ -27,6 +27,23 @@ class Servo:
         self.max = 2400
         self.speed = 90
 
+    def get_methods(self):
+        """
+        Returns the methods of the library as a dict, whose
+        key is the naming in Arduino and whose value is the
+        corresponding method.
+        Returns:
+            A dict with the methods
+        """
+        methods = {}
+        methods["attach"] = self.attach
+        methods["write"] = self.write
+        methods["writeMicroseconds"] = self.write_microseconds
+        methods["read"] = self.read
+        methods["attached"] = self.attached
+        methods["detach"] = self.detach
+        return methods
+
     def attach(self, pin, min=544, max=2400):
         """
         Attaches the servo to a pin
@@ -109,6 +126,91 @@ class Standard:
         """
         self.start = time.time()
         self.pins = {}
+
+    def get_methods(self):
+        """
+        Returns the methods of the library as a dict, whose
+        key is the naming in Arduino and whose value is the
+        corresponding method.
+        Returns:
+            A dict with the methods
+        """
+        methods = {}
+        #Digital I/O
+        methods["digitalRead"] = self.digital_read
+        methods["digitalWrite"] = self.digital_write
+        methods["pinMode"] = self.pin_mode
+
+        #Analog I/O
+        methods["analogRead"] = self.analog_read
+        methods["analogReference"] = self.analog_reference
+        methods["analogWrite"] = self.analog_write
+
+        #Zero, Due & MKR Family
+        methods["analogReadResolution"] = self.analog_read_resolution
+        methods["analogWriteResolution"] = self.analog_write_resolution
+
+        #Advanced I/O
+        methods["noTone"] = self.no_tone
+        methods["pulseIn"] = self.pulse_in
+        methods["pulseInLong"] = self.pulse_in_long
+        methods["shiftIn"] = self.shift_in
+        methods["shiftOut"] = self.shift_out
+        methods["tone"] = self.tone
+
+        #Time
+        methods["delay"] = self.delay
+        methods["delayMicroseconds"] = self.delay_microseconds
+        methods["micros"] = self.micros
+        methods["millis"] = self.millis
+
+        #Math
+        methods["abs"] = self.abs
+        methods["constrain"] = self.constrain
+        methods["map"] = self.map
+        methods["max"] = self.max
+        methods["min"] = self.min
+        methods["pow"] = self.pow
+        methods["sq"] = self.sq
+        methods["sqrt"] = self.sqrt
+
+        #Trigonometry
+        methods["cos"] = self.cos
+        methods["sin"] = self.sin
+        methods["tan"] = self.tan
+
+        #Characters
+        methods["isAlpha"] = self.is_alpha
+        methods["isAlphaNumeric"] = self.is_alpha_numeric
+        methods["isAscii"] = self.is_ascii
+        methods["isControl"] = self.is_control
+        methods["isDigit"] = self.is_digit
+        methods["isGraph"] = self.is_graph
+        methods["isHexadecimalDigit"] = self.is_hexadecimal_digit
+        methods["isLowerCase"] = self.is_lower_case
+        methods["isPrintable"] = self.is_printable
+        methods["isPunct"] = self.is_punct
+        methods["isSpace"] = self.is_space
+        methods["isUpperCase"] = self.is_upper_case
+        methods["isWhiteSpace"] = self.is_whitespace
+        
+        #Random Numbers
+        methods["random"] = self.random
+        methods["randomSeed"] = self.random_seed
+
+        #Bits and bytes
+        methods["bit"] = self.bit
+        methods["bitClear"] = self.bit_clear
+        methods["bitRead"] = self.bit_read
+        methods["bitSet"] = self.bit_set
+        methods["bitWrite"] = self.bit_write
+        methods["highByte"] = self.high_byte
+        methods["lowByte"] = self.low_byte
+
+        #External Interrupts
+        methods["attachInterrupt"] = self.attach_interrupt
+        methods["detachInterrupt"] = self.detach_interrupt
+        return methods
 
     # Digital I/O
     def digital_read(self, pin):
@@ -697,6 +799,38 @@ class Serial:
         """
         self.console = console
 
+    def get_methods(self):
+        """
+        Returns the methods of the library as a dict, whose
+        key is the naming in Arduino and whose value is the
+        corresponding method.
+        Returns:
+            A dict with the methods
+        """
+        methods = {}
+        methods["if(Serial)"] = self.if_serial
+        methods["available"] = self.available
+        methods["availableForWrite"] = self.available_for_write
+        methods["begin"] = self.begin
+        methods["end"] = self.end
+        methods["find"] = self.find
+        methods["findUntil"] = self.find_until
+        methods["flush"] = self.flush
+        methods["parseFloat"] = self.parse_float
+        methods["parseInt"] = self.parse_int
+        methods["peek"] = self.peek
+        methods["print"] = self.print
+        methods["println"] = self.println
+        methods["read"] = self.read
+        methods["readBytes"] = self.read_bytes
+        methods["readBytesUntil"] = self.read_bytes_until
+        methods["readString"] = self.read_string
+        methods["readStringUntil"] = self.read_string_until
+        methods["setTimeout"] = self.set_timeout
+        methods["write"] = self.write
+        methods["serialEvent"] = self.serial_event
+        return methods
+
     def if_serial(self):
         """
         Not needed (not implemented)
@@ -847,3 +981,33 @@ class Serial:
         Not needed (not implemented)
         """
         return self.NOT_IMPL_WARNING
+
+
+class LibraryManager:
+
+    def __init__(self, servo: Servo, standard: Standard, serial: Serial):
+        """
+        Constructor for library manager
+        """
+        self.servo = servo
+        self.standard = standard
+        self.serial = serial
+        self.library_methods = {
+            "servo": self.servo.get_methods(),
+            "standard": self.standard.get_methods(),
+            "serial": self.serial.get_methods()
+        }
+
+    def find(self, library, method):
+        """
+        Finds a method within a library
+        Arguments:
+            library: the library in which to search
+            method: the method to search
+        Returns:
+            The method if it exists or None if else
+        """
+        if library in self.library_methods:
+            if method in self.library_methods[library]:
+                return self.library_methods[library][method]
+        return None
