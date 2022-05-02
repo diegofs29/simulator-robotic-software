@@ -56,6 +56,75 @@ class MainApplication(tk.Tk):
         self.robot_selector.bind("<<ComboboxSelected>>", self.change_robot)
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
+        self.open_pin_configuration()
+
+    def open_pin_configuration(self):
+        """
+        Top level window to configure pins connected to the
+        Arduino board
+        """
+        top = tk.Toplevel(self)
+        x = self.winfo_x()
+        y = self.winfo_y()
+        top.geometry("+%d+%d" %(x, y))
+        top.resizable(False, False)
+        
+        frame_actuator = tk.Frame(top)
+        lb_actuator = tk.Label(frame_actuator, text="Actuador lineal")
+        lb_pin_bt1 = tk.Label(frame_actuator, text="Pin botón izquierdo:")
+        entry_pin_bt1 = tk.Entry(frame_actuator)
+        lb_pin_bt2 = tk.Label(frame_actuator, text="Pin botón derecho:")
+        entry_pin_bt2 = tk.Entry(frame_actuator)
+        lb_pin_joystick = tk.Label(frame_actuator, text="Pin Joystick:")
+        entry_pin_joystick = tk.Entry(frame_actuator)
+
+        lb_actuator.grid(row=0, column=0, sticky="w")
+        lb_pin_bt1.grid(row=1, column=0, sticky="w")
+        entry_pin_bt1.grid(row=1, column=1, sticky="w", padx=5)
+        lb_pin_bt2.grid(row=1, column=2, sticky="w")
+        entry_pin_bt2.grid(row=1, column=3, sticky="w", padx=5)
+        lb_pin_joystick.grid(row=2, column=0, sticky="w")
+        entry_pin_joystick.grid(row=2, column=1, sticky="w", padx=5)
+
+        frame_mobile = tk.Frame(top)
+        lb_mobile = tk.Label(frame_mobile, text="Robot móvil")
+        lb_pin_servo1 = tk.Label(frame_mobile, text="Pin servo izquierdo")
+        entry_pin_se1 = tk.Entry(frame_mobile)
+        lb_pin_servo2 = tk.Label(frame_mobile, text="Pin servo derecho")
+        entry_pin_se2 = tk.Entry(frame_mobile)
+        lb_pin_light1 = tk.Label(frame_mobile, text="Pin luz mas izquierda")
+        entry_pin_l1 = tk.Entry(frame_mobile)
+        lb_pin_light2 = tk.Label(frame_mobile, text="Pin luz izquierda")
+        entry_pin_l2 = tk.Entry(frame_mobile)
+        lb_pin_light3 = tk.Label(frame_mobile, text="Pin luz derecha")
+        entry_pin_l3 = tk.Entry(frame_mobile)
+        lb_pin_light4 = tk.Label(frame_mobile, text="Pin luz mas derecha")
+        entry_pin_l4 = tk.Entry(frame_mobile)
+        lb_pin_sound1 = tk.Label(frame_actuator, text="Pin ultrasonidos izquierdo")
+        entry_pin_so1 = tk.Entry(frame_actuator)
+        lb_pin_sound2 = tk.Label(frame_actuator, text="Pin ultrasonidos derecho")
+        entry_pin_so2 = tk.Entry(frame_actuator)
+        
+        lb_mobile.grid(row=0, column=0, sticky="w")
+        lb_pin_servo1.grid(row=1, column=0, sticky="w")
+        entry_pin_se1.grid(row=1, column=1, sticky="w", padx=5)
+        lb_pin_servo2.grid(row=1, column=2, sticky="w")
+        entry_pin_se2.grid(row=1, column=3, sticky="w", padx=5)
+        lb_pin_light2.grid(row=2, column=0, sticky="w")
+        entry_pin_l2.grid(row=2, column=1, sticky="w", padx=5)
+        lb_pin_light3.grid(row=2, column=2, sticky="w")
+        entry_pin_l3.grid(row=2, column=3, sticky="w", padx=5)
+        lb_pin_light1.grid(row=3, column=0, sticky="w")
+        entry_pin_l1.grid(row=3, column=1, sticky="w", padx=5)
+        lb_pin_light4.grid(row=3, column=2, sticky="w")
+        entry_pin_l4.grid(row=3, column=3, sticky="w", padx=5)
+        lb_pin_sound1.grid(row=4, column=0, sticky="w")
+        entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
+        lb_pin_sound2.grid(row=4, column=2, sticky="w")
+        entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
+
+        frame_mobile.pack(anchor="nw", padx=5, pady=5)
+        frame_actuator.pack(anchor="sw", padx=5, pady=5)
 
     def configure_layer(self):
         self.robot_layer.set_canvas(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
@@ -114,6 +183,7 @@ class MenuBar(tk.Menu):
 
         self.add_cascade(label="Archivo")
         self.add_cascade(label="Editar")
+        self.add_cascade(label="Configurar")
         self.add_cascade(label="Ver")
         self.add_cascade(label="Ayuda")
 

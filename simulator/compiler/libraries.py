@@ -11,7 +11,8 @@ from math import cos, sin, sqrt, tan
 import string
 import time
 import random
-from ...console.console import Console
+import simulator.console.console as console
+import simulator.robots.robots as robots
 
 
 class Servo:
@@ -45,21 +46,23 @@ class Servo:
         methods["detach"] = self.detach
         return methods
 
-    def attach(self, pin, min=544, max=2400):
+    def attach(self, servo: robots.Servo, pin, min=544, max=2400):
         """
         Attaches the servo to a pin
         Arguments:
+            servo: the servo to attach
             pin: the number of the pin to be attached to
             min: pulse width corresponging with the minimun angle on
             the servo (default = 544)
             max: pulse width corresponging with the max angel on the 
             the servo (default = 2400)
         """
-        self.pin = pin
-        self.min = min
-        self.max = max
+        servo.pin = pin
+        servo.min = min
+        servo.max = max
+        
 
-    def write(self, angle):
+    def write(self, servo: robots.Servo, angle):
         """
         Writes speed to servo.
         Our Servos, being rotation ones, will have their speed set by this
@@ -67,41 +70,49 @@ class Servo:
         it is 180, is full speed in the oposite direction; with 90 being no
         movement done by the servo
         Arguments:
+            servo: the servo to write to
             angle: the value to write [0-180]
         """
-        self.speed = angle
+        servo.write(angle)
 
-    def write_microseconds(self, us):
+    def write_microseconds(self, servo: robots.Servo, us):
         """
         Writes speed to servo in microseconds.
         This method will work exactly the same way as write does (because our
         servos are rotation ones)
         Arguments:
+            servo: the servo to write to
             us: the value of the parameter in microseconds (int)
         """
-        self.write(us)
+        servo.write(us)
 
-    def read(self):
+    def read(self, servo: robots.Servo):
         """
         Reads the angle of the servo (being the last value passed to write)
+        Arguments:
+            The servo to read from
         Returns:
             The angle of the servo from 0 to 180 degrees
         """
-        return self.speed
+        return servo.speed
 
-    def attached(self):
+    def attached(self, servo: robots.Servo):
         """
         Checks wether the Servo variable is attached or not
+        Arguments:
+            servo: the servo to check
         Returns:
             True if attached to pin, False if else
         """
-        return self.pin != -1
+        return servo.pin != -1
 
-    def detach(self):
+    def detach(self, servo: robots.Servo):
         """
         Detach the Servo variable from its pin
+        Arguments:
+            servo: the servo to detach
         """
-        self.pin = -1
+        servo.pin = -1
 
 
 class Standard:
@@ -792,7 +803,7 @@ class Serial:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, console: Console):
+    def __init__(self, console: console.Console):
         """
         Constructor for Serial
         Arguments:
@@ -990,7 +1001,7 @@ class LibraryManager:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, console: Console, **kwargs):
+    def __init__(self, console: console.Console, **kwargs):
         """
         Constructor for library manager
         """
