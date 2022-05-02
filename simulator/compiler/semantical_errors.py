@@ -1,6 +1,6 @@
 from .ast import *
 from .ast_visitor import ASTVisitor
-from ..gui.console import Error
+from ...console.console import Error
 
 
 class Semantic:

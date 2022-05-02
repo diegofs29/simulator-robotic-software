@@ -444,7 +444,6 @@ class MobileRobot(Robot):
         x = (abs_px * cos_r) + (abs_py * sin_r)
         y = (-abs_px * sin_r) + (abs_py * cos_r)
 
-        #print(math.sqrt((pow(tp[0] - c[0], 2)) + (pow(tp[1] - c[1], 2))))
         return (x, y)
 
 

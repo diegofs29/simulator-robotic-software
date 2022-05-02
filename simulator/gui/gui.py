@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from turtle import color
-import layers, console
+import layers
+import console.console as console
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"

@@ -3,6 +3,7 @@ This module includes all needed Arduino libraries for
 the programming of a Linear Actuator and a Mobile Robot.
 Those libraries are:
     - The standard ones of Arduino
+    - Serial
     - Servo
 """
 
@@ -10,7 +11,7 @@ from math import cos, sin, sqrt, tan
 import string
 import time
 import random
-from ..gui.console import Console
+from ...console.console import Console
 
 
 class Servo:
@@ -984,18 +985,26 @@ class Serial:
 
 
 class LibraryManager:
+    
+    OK = 0
+    ERROR = -1
+    NOT_IMPL_WARNING = -2
 
-    def __init__(self, servo: Servo, standard: Standard, serial: Serial):
+    def __init__(self, console: Console, **kwargs):
         """
         Constructor for library manager
         """
-        self.servo = servo
-        self.standard = standard
-        self.serial = serial
+        self.servo = Servo()
+        self.standard = Standard()
+        self.serial = Serial(console)
         self.library_methods = {
-            "servo": self.servo.get_methods(),
             "standard": self.standard.get_methods(),
             "serial": self.serial.get_methods()
+        }
+        self.libraries = {
+            "Servo": Servo,
+            "Standard": Standard,
+            "Serial": Serial
         }
 
     def find(self, library, method):
@@ -1011,3 +1020,17 @@ class LibraryManager:
             if method in self.library_methods[library]:
                 return self.library_methods[library][method]
         return None
+
+    def add_library(self, library):
+        """
+        Adds a library to the library_methods dict, so its methods
+        can be found
+        Arguments:
+            library: the library to add
+        """
+        lib: str = library[0:-2]
+        if lib in self.libraries:
+            self.library_methods[lib.lower()] = self.libraries[lib].get_methods()
+        else:
+            return self.ERROR
+        return self.OK

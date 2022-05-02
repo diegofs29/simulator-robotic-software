@@ -1,5 +1,5 @@
 import drawing
-import robots
+import robot_drawings
 import huds
 
 class Layer:
@@ -10,7 +10,7 @@ class Layer:
         """
         self.drawing = drawing.Drawing()
         self.hud = None
-        self.robot: robots.Robot = None
+        self.robot: robot_drawings.Robot = None
         self._zoom_percentage()
         self.is_drawing = False
 
@@ -100,9 +100,9 @@ class MoblileRobotLayer(Layer):
         Constructor for MobileRobotLayer
         """
         super().__init__()
-        self.robot = robots.MobileRobot(self.drawing)
-        self.circuit = robots.Circuit(self.drawing)
-        self.obstacle = robots.Obstacle(700, 3000, 600, 450, self.drawing)
+        self.robot = robot_drawings.MobileRobot(self.drawing)
+        self.circuit = robot_drawings.Circuit(self.drawing)
+        self.obstacle = robot_drawings.Obstacle(700, 3000, 600, 450, self.drawing)
         self.hud = huds.MobileHUD()
 
         self.is_rotating = False
@@ -248,7 +248,7 @@ class LinearActuatorLayer(Layer):
         Constuctor for LinearActuatorLayer
         """
         super().__init__()
-        self.robot = robots.LinearActuator(self.drawing)
+        self.robot = robot_drawings.LinearActuator(self.drawing)
         self.hud = huds.ActuatorHUD()
 
     def move(self, movement):
