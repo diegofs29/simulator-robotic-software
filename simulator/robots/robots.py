@@ -136,7 +136,22 @@ class BQzumBT328(Board):
         self.pins["txrx"] = ["0", "1"]
 
 
-class Servo:
+class Element:
+
+    def __init__(self):
+        """
+        Constructor for Element
+        """
+        self.value = 0
+
+    def get_value(self):
+        """
+        Gets the value (digital or analog) of the element
+        """
+        return self.value
+
+
+class Servo(Element):
 
     def __init__(self):
         """
@@ -146,7 +161,7 @@ class Servo:
         self.pin = -1
         self.min = 544 #default arduino value
         self.max = 2400 #default arduino value
-        self.speed = 90 #stopped (180 and 0 full speed)
+        self.value = 90 #stopped (180 and 0 full speed)
 
     def write(self, angle):
         """
@@ -157,30 +172,46 @@ class Servo:
             True if updated, False if else
         """
         if 0 <= angle <= 180:
-            self.speed = angle
+            self.value = angle
             return True
         return False
 
 
-class Button:
+class Button(Element):
 
     def __init__(self):
         """
         Constructor for button
         """
         self.pin = -1
-        self.pressed = False
+        self.value = 0
 
 
-class Joystick:
+class Joystick(Element):
 
     def __init__(self):
         """
         Constructor for joystick
         """
-        self.pin = -1
+        self.pinx = -1
+        self.piny = -1
         self.dx = 0
         self.dy = 0
+
+    def get_value(self, pin):
+        """
+        Gets the analog value of the selected pin
+        Arguments:
+            pin: the pin to read
+        Returns:
+            The value of the pin
+        """
+        if pin == self.pinx:
+            return self.dx
+        elif pin == self.piny:
+            return self.dy
+        else:
+            return None
 
 
 class LightSensor:
@@ -190,7 +221,7 @@ class LightSensor:
         Constructor for Light sensor
         """
         self.pin = -1
-        self.dark = False
+        self.value = 0
 
 
 class UltrasoundSensor:
@@ -200,7 +231,7 @@ class UltrasoundSensor:
         Constructor for Ultrasound sensor
         """
         self.pin = -1
-        self.detecting = False
+        self.value = 0
 
 
 class MobileRobot:
