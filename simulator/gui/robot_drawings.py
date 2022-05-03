@@ -1,7 +1,7 @@
 from math import cos, pi, sin
 import drawing
 
-class Robot:
+class RobotDrawing:
 
     def __init__(self, drawing: drawing.Drawing):
         """
@@ -43,7 +43,7 @@ class Robot:
         self.drawing.empty_drawing()
 
 
-class LinearActuator(Robot):
+class LinearActuatorDrawing(RobotDrawing):
 
     def __init__(self, drawing: drawing.Drawing):
         """
@@ -213,7 +213,7 @@ class LinearActuator(Robot):
             self.img_shown = self.img_no_hit
 
 
-class MobileRobot(Robot):
+class MobileRobotDrawing(RobotDrawing):
 
     def __init__(self, drawing: drawing.Drawing):
         """
@@ -249,23 +249,23 @@ class MobileRobot(Robot):
             "y": self.y,
             "image": self.img_mobrob
         }
-        self.sensors["light_1"] = self.LightSensor(
-            self.x - 30,
-            self.y - 110
+        self.sensors["light"] = []
+        self.sensors["light"].append(
+            self.LightSensor(
+                self.x - 30,
+                self.y - 110
+            )
         )
-        self.sensors["light_2"] = self.LightSensor(
-            self.x + 30,
-            self.y - 110
+        self.sensors["light"].append(
+            self.LightSensor(
+                self.x + 30,
+                self.y - 110
+            )
         )
-        self.sensors["sound_1"] = self.UltrasoundSensor(
+        self.sensors["sound"] = self.UltrasoundSensor(
             self.x - 30,
             self.y - 285,
             7630
-        )
-        self.sensors["sound_2"] = self.UltrasoundSensor(
-            self.x + 30,
-            self.y - 285,
-            7630,
         )
 
     def draw(self):
@@ -282,9 +282,10 @@ class MobileRobot(Robot):
                 self.angle - 90,
                 "robot"
             )
-        for key in self.sensors:
-            if self.sensors[key].get_image() != None:
-                self.drawing.draw_image(self.sensors[key].get_image(), key)
+        i = 1
+        for sens in self.sensors["light"]:
+            self.drawing.draw_image(sens.get_image(), "light_{}".format(i))
+            i += 1
 
     def predict_movement(self, vel):
         """
@@ -323,9 +324,10 @@ class MobileRobot(Robot):
         if self.__update_coords(vx, vy):
             self.drawing.canvas.delete('prueba')
             self.drawing.move_image("robot", self.x, self.y)
-            for key in self.sensors:
-                if self.sensors[key].get_image() != None:
-                    self.drawing.move_image(key, self.sensors[key].x, self.sensors[key].y)
+            i = 1
+            for sens in self.sensors["light"]:
+                self.drawing.move_image("light_{}".format(i), sens.x, sens.y)
+                i += 1
 
     def change_angle(self, d_angle):
         """
@@ -359,9 +361,10 @@ class MobileRobot(Robot):
         """
         Repaints the light sensors
         """
-        for key in self.sensors:
-            if key[0:5] == "light":
-                self.drawing.redraw_image(self.sensors[key].get_image(), key)
+        i = 1
+        for sens in self.sensors["light"]:
+            self.drawing.redraw_image(sens.get_image(), "light_{}".format(i))
+            i += 1
 
     def configure_distance(self, dist_sens):
         """
@@ -369,9 +372,7 @@ class MobileRobot(Robot):
         Arguments:
             dist_sens: the distance at which the sensor returns True
         """
-        for key in self.sensors:
-            if key[0:5] == "sound":
-                self.sensors[key].dist = dist_sens
+        self.sensors["sound"].dist = dist_sens
 
     def __update_coords(self, dx, dy):
         """
@@ -385,10 +386,13 @@ class MobileRobot(Robot):
         """
         self.real_x += dx
         self.real_y += dy
-        for key in self.sensors:
-            dx_sens = self.sensors[key].real_x + dx
-            dy_sens = self.sensors[key].real_y + dy
-            self.sensors[key].change_coords(dx_sens, dy_sens)
+        for sens in self.sensors["light"]:
+            dx_sens = sens.real_x + dx
+            dy_sens = sens.real_y + dy
+            sens.change_coords(dx_sens, dy_sens)
+        dx_sens = self.sensors["sound"].real_x + dx
+        dy_sens = self.sensors["sound"].real_y + dy
+        self.sensors["sound"].change_coords(dx_sens, dy_sens)
         if self.__check_change_coords():
             self.x = int(self.real_x)
             self.y = int(self.real_y)
@@ -414,17 +418,24 @@ class MobileRobot(Robot):
         Arguments:
             da: the differential of angle
         """
-        self.drawing.canvas.delete('prueba')
-        for key in self.sensors:
+        i = 1
+        for sens in self.sensors["light"]:
             x, y = self.__rotate_center(
-                (self.sensors[key].real_x, self.sensors[key].real_y),
+                (sens.real_x, sens.real_y),
                 (self.x, self.y),
                 da
             )
-            self.sensors[key].change_coords(self.x + x, self.y + y)
-            img = self.sensors[key].get_image()
-            if img != None:
-                self.drawing.redraw_image(img, key)
+            sens.change_coords(self.x + x, self.y + y)
+            img = sens.get_image()
+            self.drawing.redraw_image(img, "light_{}".format(i))
+            i += 1
+        x, y = self.__rotate_center(
+                (self.sensors["sound"].real_x, self.sensors["sound"].real_y),
+                (self.x, self.y),
+                da
+            )
+        self.sensors["sound"].change_coords(self.x + x, self.y + y)
+        
 
     def __rotate_center(self, tp, c, da):
         """

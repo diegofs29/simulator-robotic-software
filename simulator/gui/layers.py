@@ -10,7 +10,7 @@ class Layer:
         """
         self.drawing = drawing.Drawing()
         self.hud = None
-        self.robot: robot_drawings.Robot = None
+        self.robot: robot_drawings.RobotDrawing = None
         self._zoom_percentage()
         self.is_drawing = False
 
@@ -100,7 +100,7 @@ class MoblileRobotLayer(Layer):
         Constructor for MobileRobotLayer
         """
         super().__init__()
-        self.robot = robot_drawings.MobileRobot(self.drawing)
+        self.robot = robot_drawings.MobileRobotDrawing(self.drawing)
         self.circuit = robot_drawings.Circuit(self.drawing)
         self.obstacle = robot_drawings.Obstacle(700, 3000, 600, 450, self.drawing)
         self.hud = huds.MobileHUD()
@@ -187,18 +187,17 @@ class MoblileRobotLayer(Layer):
         Checks if the robot is inside or outside of the circuit
         """
         measurements = []
-        for key in self.robot.sensors:
-            if key[0:5] == "light":
-                x = self.robot.sensors[key].x
-                y = self.robot.sensors[key].y
-                if self.circuit.is_overlapping(x, y):
-                    self.robot.sensors[key].dark()
-                    measurements.append(True)
-                else:
-                    self.robot.sensors[key].light()
-                    measurements.append(False)
-            self.robot.repaint_light_sensors()
-            self.hud.set_circuit(measurements)
+        for sens in self.robot.sensors["light"]:
+            x = sens.x
+            y = sens.y
+            if self.circuit.is_overlapping(x, y):
+                sens.dark()
+                measurements.append(True)
+            else:
+                sens.light()
+                measurements.append(False)
+        self.robot.repaint_light_sensors()
+        self.hud.set_circuit(measurements)
 
     def __check_obstacle_collision(self, x, y):
         """
@@ -222,16 +221,14 @@ class MoblileRobotLayer(Layer):
         any obstacle in front of it, and then sends the data
         to the hud, so it can be parsed
         """
-        self.drawing.canvas.delete("pointUp")
+        #self.drawing.canvas.delete("pointUp")
         dists = []
-        for key in self.robot.sensors:
-            if key[0:5] == "sound":
-                self.drawing.canvas.delete("lineas")
-                dists.append(self.obstacle.calculate_distance(self.robot.sensors[key].x, self.robot.sensors[key].y, self.robot.angle))
-                if dists[-1] != -1:
-                    self.robot.sensors[key].set_detect(True)
-                else:
-                    self.robot.sensors[key].set_detect(False)
+        #self.drawing.canvas.delete("lineas")
+        dists.append(self.obstacle.calculate_distance(self.robot.sensors["sound"].x, self.robot.sensors["sound"].y, self.robot.angle))
+        if dists[-1] != -1:
+            self.robot.sensors["sound"].set_detect(True)
+        else:
+            self.robot.sensors["sound"].set_detect(False)
         self.hud.set_detect_obstacle(dists)
 
     def __hud_velocity(self):
@@ -248,7 +245,7 @@ class LinearActuatorLayer(Layer):
         Constuctor for LinearActuatorLayer
         """
         super().__init__()
-        self.robot = robot_drawings.LinearActuator(self.drawing)
+        self.robot = robot_drawings.LinearActuatorDrawing(self.drawing)
         self.hud = huds.ActuatorHUD()
 
     def move(self, movement):

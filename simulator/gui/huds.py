@@ -46,8 +46,7 @@ class MobileHUD(HUD):
         self.canvas.create_text(5, 50, text="Rueda derecha:", font=("Consolas", 13), anchor="w", fill="white")
         self.canvas.create_text(5, 75, text="En pista:", font=("Consolas", 13), anchor="w", fill="white")
         self.canvas.create_text(250, 25, text="Detecta obstáculo:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(250, 50, text="└Distancia 1:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(250, 75, text="└Distancia 2:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 50, text="└Distancia:", font=("Consolas", 13), anchor="w", fill="white")
 
     def set_wheel(self, vels):
         """
@@ -127,7 +126,7 @@ class MobileHUD(HUD):
                 dist_text = str(dists[i] - 1)
             else:
                 text += "No"
-            self.canvas.create_text(375, 50 + (25 * i), text=dist_text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
+            self.canvas.create_text(360, 50 + (25 * i), text=dist_text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
         self.canvas.create_text(425, 25, text=text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
 
 
