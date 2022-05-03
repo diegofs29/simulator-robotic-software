@@ -32,6 +32,7 @@ class MainApplication(tk.Tk):
         self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
         self.console = console.Console(self.console_frame.console)
+        self.keys_used = True
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
@@ -92,7 +93,7 @@ class MainApplication(tk.Tk):
             self.movement[pressed_key] = False
 
     def move(self):
-        self.robot_layer.move(self.movement)
+        self.robot_layer.move(self.keys_used, self.movement)
         self.identifier = self.after(10, self.move)
 
     def stop_move(self):
@@ -112,6 +113,9 @@ class MainApplication(tk.Tk):
         if self.console_frame.error.get() == 1:
             msg_filters.append('error')
         self.console.filter_messages(*msg_filters)
+
+    def toggle_keys(self):
+        self.keys_used = not self.keys_used
 
 
 class PinConfigurationWindow(tk.Toplevel):
@@ -215,7 +219,10 @@ class DrawingFrame(tk.Frame):
                                 relief=tk.SOLID, highlightthickness=0)
         self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
 
-        self.zoom_frame = tk.Frame(self, bg=BLUE)
+        self.bottom_frame = tk.Frame(self, bg=BLUE)
+        self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white", font=("Consolas", 12),
+                                          bg=BLUE, activebackground=BLUE, selectcolor="black", command=application.toggle_keys)        
+        self.zoom_frame = tk.Frame(self.bottom_frame, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
             {
@@ -243,14 +250,18 @@ class DrawingFrame(tk.Frame):
         self.canvas.bind("<MouseWheel>", self.zoom)
         self.zoom_in_button.configure(command=self.zoom_in)
         self.zoom_out_button.configure(command=self.zoom_out)
+        self.key_movement.select()
 
         self.zoom_in_button.grid(row=0, column=0, padx=5, pady=5)
         self.zoom_label.grid(row=0, column=1, padx=5, pady=5)
         self.zoom_out_button.grid(row=0, column=2, padx=5, pady=5)
 
+        self.key_movement.pack(anchor="w", side=tk.LEFT)
+        self.zoom_frame.pack(anchor="e", side=tk.RIGHT)
+
         self.hud_canvas.pack(fill=tk.X, expand=False)
         self.canvas.pack(fill=tk.BOTH, expand=True)
-        self.zoom_frame.pack(anchor="e")
+        self.bottom_frame.pack(fill=tk.X)
 
     def scroll_start(self, event):
         self.canvas.scan_mark(event.x, event.y)

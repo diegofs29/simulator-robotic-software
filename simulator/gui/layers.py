@@ -1,6 +1,7 @@
 import drawing
 import robot_drawings
 import huds
+import simulator.robots.robots as robots
 
 class Layer:
 
@@ -10,16 +11,17 @@ class Layer:
         """
         self.drawing = drawing.Drawing()
         self.hud = None
-        self.robot: robot_drawings.RobotDrawing = None
+        self.robot_drawing: robot_drawings.RobotDrawing = None
         self._zoom_percentage()
         self.is_drawing = False
+        self.robot = None
 
     def execute(self):
         """
         Executes the code, showing what the robot will do on the canvas
         """
         self._drawing_config()
-        self.robot.draw()
+        self.robot_drawing.draw()
         self.is_drawing = True
         
     def stop(self):
@@ -43,9 +45,14 @@ class Layer:
         self.drawing.zoom_out()
         self._zoom_config()
 
-    def move(self, movement):
+    def move(self, using_keys, movement):
         """
         Moves the robot that is being used
+        Arguments:
+            using_keys: specifies keys are being used for movement (True)
+            or not (False)
+            movement: a map that specifies if any of the keys WASD is being
+            pressed
         """
         pass
 
@@ -57,7 +64,7 @@ class Layer:
             hud_canvas: the canvas of the hud
         """
         self.drawing.set_canvas(canvas)
-        self.drawing.set_size(self.robot.drawing_width, self.robot.drawing_height)
+        self.drawing.set_size(self.robot_drawing.drawing_width, self.robot_drawing.drawing_height)
         self.hud.set_canvas(hud_canvas)
 
     def _zoom_config(self):
@@ -75,7 +82,7 @@ class Layer:
         """
         self.drawing.delete_zoomables()
         self._draw_before_robot()
-        self.robot.draw()
+        self.robot_drawing.draw()
 
     def _draw_before_robot(self):
         pass
@@ -100,59 +107,77 @@ class MoblileRobotLayer(Layer):
         Constructor for MobileRobotLayer
         """
         super().__init__()
-        self.robot = robot_drawings.MobileRobotDrawing(self.drawing)
+        self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing)
         self.circuit = robot_drawings.Circuit(self.drawing)
         self.obstacle = robot_drawings.Obstacle(700, 3000, 600, 450, self.drawing)
         self.hud = huds.MobileHUD()
+        self.robot = robots.MobileRobot()
 
         self.is_rotating = False
         self.is_moving = False
 
-    def move(self, movement):
+    def move(self, using_keys, movement):
         """
         Move method of the layer. Moves the robot and rotates it
         """
         v = 0 #Velocity
         da = 0 #Angle
+        if using_keys:
+            v, da = self.__move_keys(movement)
+        else:
+            v, da = self.__move_code()
 
+        future_p = self.robot_drawing.predict_movement(v)
+        if (
+            v == 0 or
+            future_p[0] <= self.robot_drawing.width / 2 or
+            future_p[0] >= self.robot_drawing.drawing_width - self.robot_drawing.width / 2 or
+            future_p[1] <= self.robot_drawing.height / 2 or
+            future_p[1] >= self.robot_drawing.drawing_height - self.robot_drawing.height / 2 or
+            self.__check_obstacle_collision(future_p[0], future_p[1])
+        ):
+            v = 0
+            self.is_moving = False
+        #Move or rotate
+        self.__hud_velocity()
+        if not self.is_rotating:
+            self.robot_drawing.move(v)
+        if not self.is_moving:
+            self.robot_drawing.change_angle(da)
+
+        #Overlapping check
+        self.__check_circuit_overlap()  
+        self.__detect_obstacle()
+
+    def __move_keys(self, movement):
         #Process keys
+        v = 0
+        da = 0
         if not self.is_rotating:
             if movement["w"] == True:
                 v = -10
             if movement["s"] == True:
                 v = 10
-            self.is_moving = True
-        future_p = self.robot.predict_movement(v)
-        if (
-            v == 0 or
-            future_p[0] <= self.robot.width / 2 or
-            future_p[0] >= self.robot.drawing_width - self.robot.width / 2 or
-            future_p[1] <= self.robot.height / 2 or
-            future_p[1] >= self.robot.drawing_height - self.robot.height / 2 or
-            self.__check_obstacle_collision(future_p[0], future_p[1])
-        ):
-            v = 0
-            self.is_moving = False
+            if v != 0:
+                self.is_moving = True
+            else:
+                self.is_moving = False
         if not self.is_moving:
             if movement["a"] == True:
                 da = 5
             if movement["d"] == True:
                 da = -5
-            self.is_rotating = True
-        if da == 0:
-            da = 0
-            self.is_rotating = False
-        self.__hud_velocity()
+            if da != 0:
+                self.is_rotating = True
+            else:
+                self.is_rotating = False
+        return v, da
 
-        #Move or rotate
-        if not self.is_rotating:
-            self.robot.move(v)
-        if not self.is_moving:
-            self.robot.change_angle(da)
-
-        #Overlapping check
-        self.__check_circuit_overlap()  
-        self.__detect_obstacle()      
+    def __move_code(self):
+        v = 0
+        da = 0
+        print("lololo")
+        return v, da
 
     def _drawing_config(self):
         """
@@ -187,7 +212,7 @@ class MoblileRobotLayer(Layer):
         Checks if the robot is inside or outside of the circuit
         """
         measurements = []
-        for sens in self.robot.sensors["light"]:
+        for sens in self.robot_drawing.sensors["light"]:
             x = sens.x
             y = sens.y
             if self.circuit.is_overlapping(x, y):
@@ -196,7 +221,7 @@ class MoblileRobotLayer(Layer):
             else:
                 sens.light()
                 measurements.append(False)
-        self.robot.repaint_light_sensors()
+        self.robot_drawing.repaint_light_sensors()
         self.hud.set_circuit(measurements)
 
     def __check_obstacle_collision(self, x, y):
@@ -209,10 +234,10 @@ class MoblileRobotLayer(Layer):
             True if collides, False if else
         """
         return (
-            x + self.robot.width / 2 >= self.obstacle.x and
-            y + self.robot.height / 2 >= self.obstacle.y and
-            x <= self.obstacle.x + (self.obstacle.width + self.robot.width / 2) and
-            y <= self.obstacle.y + (self.obstacle.height + self.robot.height / 2) 
+            x + self.robot_drawing.width / 2 >= self.obstacle.x and
+            y + self.robot_drawing.height / 2 >= self.obstacle.y and
+            x <= self.obstacle.x + (self.obstacle.width + self.robot_drawing.width / 2) and
+            y <= self.obstacle.y + (self.obstacle.height + self.robot_drawing.height / 2) 
         )
 
     def __detect_obstacle(self):
@@ -224,11 +249,11 @@ class MoblileRobotLayer(Layer):
         #self.drawing.canvas.delete("pointUp")
         dists = []
         #self.drawing.canvas.delete("lineas")
-        dists.append(self.obstacle.calculate_distance(self.robot.sensors["sound"].x, self.robot.sensors["sound"].y, self.robot.angle))
+        dists.append(self.obstacle.calculate_distance(self.robot_drawing.sensors["sound"].x, self.robot_drawing.sensors["sound"].y, self.robot_drawing.angle))
         if dists[-1] != -1:
-            self.robot.sensors["sound"].set_detect(True)
+            self.robot_drawing.sensors["sound"].set_detect(True)
         else:
-            self.robot.sensors["sound"].set_detect(False)
+            self.robot_drawing.sensors["sound"].set_detect(False)
         self.hud.set_detect_obstacle(dists)
 
     def __hud_velocity(self):
@@ -236,7 +261,7 @@ class MoblileRobotLayer(Layer):
         Sends the velocity data of the wheels to the hud,
         so it can be parsed
         """
-        self.hud.set_wheel([self.robot.vl, self.robot.vr])
+        self.hud.set_wheel([self.robot_drawing.vl, self.robot_drawing.vr])
 
 class LinearActuatorLayer(Layer):
 
@@ -245,28 +270,29 @@ class LinearActuatorLayer(Layer):
         Constuctor for LinearActuatorLayer
         """
         super().__init__()
-        self.robot = robot_drawings.LinearActuatorDrawing(self.drawing)
+        self.robot_drawing = robot_drawings.LinearActuatorDrawing(self.drawing)
         self.hud = huds.ActuatorHUD()
+        self.robot = robots.LinearActuator()
 
-    def move(self, movement):
+    def move(self, using_keys, movement):
         """
         Move method of the layer. Moves the block of the
         linear actuator
         """
         v = 0
-        self.robot.hit = False
+        self.robot_drawing.hit = False
         if movement["a"] == True:
-            if self.robot.block.x > 508:
+            if self.robot_drawing.block.x > 508:
                 v -= 10
-                self.robot.hit = False
+                self.robot_drawing.hit = False
             else:
-                self.robot.hit = True
+                self.robot_drawing.hit = True
         elif movement["d"] == True:
-            if self.robot.block.x < 1912:
+            if self.robot_drawing.block.x < 1912:
                 v += 10
-                self.robot.hit = False
+                self.robot_drawing.hit = False
             else:
-                self.robot.hit = True
-        self.robot.move(v)
+                self.robot_drawing.hit = True
+        self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
-        self.hud.set_pressed([self.robot.but_left.pressed, self.robot.but_right.pressed])
+        self.hud.set_pressed([self.robot_drawing.but_left.pressed, self.robot_drawing.but_right.pressed])

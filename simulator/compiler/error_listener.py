@@ -1,6 +1,6 @@
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import *
-from ...console.console import Error
+from simulator.console.console import Error
 
 
 class CompilerErrorListener(ErrorListener):
