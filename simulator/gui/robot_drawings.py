@@ -236,6 +236,7 @@ class MobileRobotDrawing(RobotDrawing):
         self.vl = 0
         self.vr = 0
         self.angle = 90
+        self.n_light_sens = 2
         self.sensors = {}
 
         self.create_robot()
@@ -250,18 +251,16 @@ class MobileRobotDrawing(RobotDrawing):
             "image": self.img_mobrob
         }
         self.sensors["light"] = []
-        self.sensors["light"].append(
-            self.LightSensor(
-                self.x - 30,
-                self.y - 110
+        init_diff = 30
+        if self.n_light_sens == 4:
+            init_diff = 90
+        for i in range(0, self.n_light_sens):
+            self.sensors["light"].append(
+                self.LightSensor(
+                    self.x - init_diff + (60 * i),
+                    self.y - 110
+                )
             )
-        )
-        self.sensors["light"].append(
-            self.LightSensor(
-                self.x + 30,
-                self.y - 110
-            )
-        )
         self.sensors["sound"] = self.UltrasoundSensor(
             self.x - 30,
             self.y - 285,
