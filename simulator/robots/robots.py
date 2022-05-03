@@ -99,6 +99,24 @@ class Board:
             return True
         return False
 
+    def get_output(self, pin):
+        """
+        Reads the value of the elements
+        Arguments:
+            pin: the pin to read
+        Returns:
+            The value of the output
+        """
+        return self.used_pins[pin].get_value(pin)
+
+    def write_value(self, pin, value):
+        """
+        Writes value to element
+        Arguments:
+            pin: the pin of the element to write
+            value: the value to write
+        """
+
 
 class ArduinoUno(Board):
 
@@ -144,11 +162,26 @@ class Element:
         """
         self.value = 0
 
-    def get_value(self):
+    def get_value(self, pin):
         """
         Gets the value (digital or analog) of the element
+        Arguments:
+            pin: the pin to read (only needed in case the 
+            element uses 2 or more pins)
+        Returns:
+            The value of the element
         """
         return self.value
+
+    def set_value(self, pin, value):
+        """
+        Writes a value into an element
+        Arguments:
+            pin: the pin to write (only needed in case the
+            element uses 2 or more pins)
+            value: the value to write
+        """
+        self.value = value
 
 
 class Servo(Element):
@@ -163,7 +196,7 @@ class Servo(Element):
         self.max = 2400 #default arduino value
         self.value = 90 #stopped (180 and 0 full speed)
 
-    def write(self, angle):
+    def set_value(self, pin, value):
         """
         Writes speed to servo.
         Arguments:
@@ -171,8 +204,8 @@ class Servo(Element):
         Returns:
             True if updated, False if else
         """
-        if 0 <= angle <= 180:
-            self.value = angle
+        if 0 <= value <= 180:
+            super().set_value(pin, value)
             return True
         return False
 
@@ -185,6 +218,12 @@ class Button(Element):
         """
         self.pin = -1
         self.value = 0
+
+    def set_value(self, pin, value):
+        if value == 1 or value == 0:
+            super().set_value(pin, value)
+            return True
+        return False
 
 
 class Joystick(Element):
@@ -213,8 +252,19 @@ class Joystick(Element):
         else:
             return None
 
+    def set_value(self, pin, value):
+        if 0 <= value <= 1023:
+            if pin == self.pinx:
+                self.dx = value
+            elif pin == self.piny:
+                self.dy = value
+            else:
+                return False
+            return True
+        return False
 
-class LightSensor:
+
+class LightSensor(Element):
 
     def __init__(self):
         """
@@ -223,8 +273,14 @@ class LightSensor:
         self.pin = -1
         self.value = 0
 
+    def set_value(self, pin, value):
+        if value == 1 or value == 0:
+            super().set_value(pin, value)
+            return True
+        return False
 
-class UltrasoundSensor:
+
+class UltrasoundSensor(Element):
 
     def __init__(self):
         """
@@ -232,6 +288,12 @@ class UltrasoundSensor:
         """
         self.pin = -1
         self.value = 0
+
+    def set_value(self, pin, value):
+        if value == 1 or value == 0:
+            super().set_value(pin, value)
+            return True
+        return False
 
 
 class MobileRobot:
@@ -250,8 +312,7 @@ class MobileRobot:
         self.light_right = LightSensor()
         self.light_mright = LightSensor()
 
-        self.sound_left = UltrasoundSensor()
-        self.sound_right = UltrasoundSensor()
+        self.sound = UltrasoundSensor()
 
     def set_servo_left(self, pin):
         """
@@ -343,35 +404,20 @@ class MobileRobot:
         self.board.detach_pin(self.light_mright.pin)
         self.light_mright.pin = -1
 
-    def set_sound_left(self, pin):
+    def set_sound(self, pin):
         """
-        Sets left sound sensor attached to a pin and marks it
+        Sets sound sensor attached to a pin and marks it
         as used at the board
         """
-        self.sound_left.pin = pin
-        self.board.attach_pin(pin, self.sound_left)
+        self.sound.pin = pin
+        self.board.attach_pin(pin, self.sound)
 
-    def detach_sound_left(self):
+    def detach_sound(self):
         """
-        Detaches left ultrasound sensor from board
+        Detaches ultrasound sensor from board
         """
-        self.board.detach_pin(self.sound_left.pin)
-        self.sound_left.pin = -1
-
-    def set_sound_right(self, pin):
-        """
-        Sets right sound sensor attached to a pin and marks it
-        as used at the board
-        """
-        self.sound_right.pin = pin
-        self.board.attach_pin(pin, self.sound_right)
-
-    def detach_sound_right(self, pin):
-        """
-        Detaches right ultrasound sensor from board
-        """
-        self.board.detach_pin(self.sound_right.pin)
-        self.sound_right.pin = -1
+        self.board.detach_pin(self.sound.pin)
+        self.sound.pin = -1
 
 
 class LinearActuator:

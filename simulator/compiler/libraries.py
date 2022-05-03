@@ -132,12 +132,12 @@ class Standard:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self):
+    def __init__(self, board: robots.Board):
         """
         Constructor for Standard class
         """
         self.start = time.time()
-        self.pins = {}
+        self.board = board
 
     def get_methods(self):
         """
@@ -233,9 +233,7 @@ class Standard:
         Returns:
             HIGH if reads 1, LOW if reads 0
         """
-        if pin in self.pins:
-            return self.pins[pin]
-        return random.randint(self.LOW, self.HIGH)
+        return self.board.get_output(pin) ###### Añadir write a robots para analog y digital.
 
     def digital_write(self, pin, value):
         """
