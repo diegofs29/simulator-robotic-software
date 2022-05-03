@@ -7,6 +7,10 @@ joystick)
 
 class Board:
 
+    INPUT = "input"
+    OUTPUT = "output"
+    INPUT_PULLUP = "input_pullup"
+
     def __init__(self):
         """
         Constructor for Arduino board
@@ -82,7 +86,10 @@ class Board:
             pin in self.pins["digital"] or
             pin in self.pins["txrx"]
         ):
-            self.used_pins[pin] = elem
+            self.used_pins[pin] = {
+                "element": elem,
+                "mode": self.INPUT
+            }
             return True
         return False
 
@@ -99,15 +106,32 @@ class Board:
             return True
         return False
 
-    def get_output(self, pin):
+    def read(self, pin):
         """
         Reads the value of the elements
         Arguments:
             pin: the pin to read
         Returns:
-            The value of the output
+            The value of the output or None if pin not input
         """
-        return self.used_pins[pin].get_value(pin)
+        if self.__is_used_pin(pin):
+            if self.used_pins[pin]["mode"] == self.INPUT:
+                return self.used_pins[pin]["element"].get_value(pin)
+        return None
+
+    def read_pulse(self, pin, value):
+        """
+        Reads a pulse from a pin
+        Arguments:
+            pin: the pin to read the pulse from
+            value: the value (0 or 1) to read
+        Returns:
+            The value or None if no value
+        """
+        if self.__is_used_pin(pin):
+            if self.used_pins[pin]["mode"] == self.INPUT:
+                return self.used_pins[pin]["element"].get_pulse(pin)
+        return None
 
     def write_value(self, pin, value):
         """
@@ -115,7 +139,38 @@ class Board:
         Arguments:
             pin: the pin of the element to write
             value: the value to write
+        Returns:
+            True if operation done, False if else
         """
+        if self.__is_used_pin(pin):
+            if self.used_pins[pin]["mode"] == self.OUTPUT:
+                self.used_pins[pin]["element"].set_value(value)
+                return True
+        return False
+
+    def set_pin_mode(self, pin, mode):
+        """
+        Changes pin's mode
+        Arguments:
+            pin: the pin whose mode will be changed
+            mode: the mode to use
+        Returns:
+            True if operation done, False if else
+        """
+        if self.__is_used_pin(pin):
+            self.used_pins[pin]["mode"] = mode
+            return True
+        return False
+
+    def __is_used_pin(self, pin):
+        """
+        Checks if a pin is being used
+        Arguments:
+            pin: the pin to check
+        Returns:
+            True if used, False if else
+        """
+        return pin in self.used_pins
 
 
 class ArduinoUno(Board):
@@ -182,6 +237,17 @@ class Element:
             value: the value to write
         """
         self.value = value
+
+    def get_pulse(self, pin, value):
+        """
+        Reads a pulse value from a pin
+        Arguments:
+            pin: the pin to read from
+            value: the value to read
+        Returns:
+            The read value or None if none read
+        """
+        return None
 
 
 class Servo(Element):
@@ -286,14 +352,22 @@ class UltrasoundSensor(Element):
         """
         Constructor for Ultrasound sensor
         """
-        self.pin = -1
-        self.value = 0
+        self.pin_trig = -1
+        self.pin_echo = -1
+        self.value = -1
 
     def set_value(self, pin, value):
-        if value == 1 or value == 0:
-            super().set_value(pin, value)
-            return True
+        if pin == self.pin_trig:
+            if value == 1 or value == 0:
+                super().set_value(pin, value)
+                return True
         return False
+
+    def get_pulse(self, pin, value):
+        if pin == self.pin_echo:
+            if value == 1:
+                return self.value
+        return None
 
 
 class MobileRobot:

@@ -61,7 +61,6 @@ class Servo:
         servo.min = min
         servo.max = max
         
-
     def write(self, servo: robots.Servo, angle):
         """
         Writes speed to servo.
@@ -73,7 +72,7 @@ class Servo:
             servo: the servo to write to
             angle: the value to write [0-180]
         """
-        servo.write(angle)
+        servo.value = angle
 
     def write_microseconds(self, servo: robots.Servo, us):
         """
@@ -84,7 +83,7 @@ class Servo:
             servo: the servo to write to
             us: the value of the parameter in microseconds (int)
         """
-        servo.write(us)
+        servo.value = us
 
     def read(self, servo: robots.Servo):
         """
@@ -94,7 +93,7 @@ class Servo:
         Returns:
             The angle of the servo from 0 to 180 degrees
         """
-        return servo.speed
+        return servo.value
 
     def attached(self, servo: robots.Servo):
         """
@@ -231,9 +230,11 @@ class Standard:
         Arguments:
             pin: the pin to read
         Returns:
-            HIGH if reads 1, LOW if reads 0
+            HIGH if reads 1, LOW if reads 0, None if else
         """
-        return self.board.get_output(pin) ###### Añadir write a robots para analog y digital.
+        if self.board.is_digital(pin):
+            return self.board.read(pin)
+        return None
 
     def digital_write(self, pin, value):
         """
@@ -244,11 +245,10 @@ class Standard:
         Returns:
             -1 if error, 0 if else
         """
-        if value == self.HIGH or value == self.LOW:
-            self.pins[pin]["value"] = value
-        else:
-            return self.ERROR
-        return self.OK
+        if self.board.is_digital(pin):
+            if self.board.write_value(pin, value):
+                return self.OK
+        return self.ERROR
 
     def pin_mode(self, pin, mode):
         """
@@ -259,11 +259,10 @@ class Standard:
         Returns:
             -1 if error, 0 if else
         """
-        if mode == self.INPUT or mode == self.OUTPUT or mode == self.INPUT_PULLUP:
-            self.pins[pin]["mode"] = mode
-        else:
-            return self.ERROR
-        return self.OK
+        if self.board.is_digital(pin):
+            self.board.set_pin_mode(pin, mode)
+            return self.OK
+        return self.ERROR
 
     # Analog I/O
     def analog_read(self, pin):
@@ -272,10 +271,12 @@ class Standard:
         Its value can be in the range [0-1023]
         Arguments:
             pin: the pin to read
+        Returns:
+            the value that is read or None if error
         """
-        if pin in self.pins:
-            return self.pins[pin]
-        return random.randint(0, 1023)
+        if self.board.is_analog(pin):
+            return self.board.read(pin)
+        return None
 
     def analog_reference(self):
         """
@@ -293,12 +294,13 @@ class Standard:
         Arguments:
             pin: the pin to write (int)
             value: the duty cycle [0-255] (int)
+        Returns:
+            0 if correct, -1 if error
         """
-        if isinstance(pin, int) and isinstance(value, int):
-            self.pins[pin]["value"] = value * 4
-        else:
-            return self.ERROR
-        return self.OK
+        if self.board.is_analog(pin):
+            if self.board.write_value(pin, value * 4):
+                return self.OK
+        return self.ERROR
 
     # Zero, Due & MKR Family
     def analog_read_resolution(self):
@@ -320,11 +322,16 @@ class Standard:
         """
         return self.NOT_IMPL_WARNING
 
-    def pulse_in(self):
+    def pulse_in(self, pin, value):
         """
-        Not needed (not implemented)
+        Reads a pulse (either HIGH or LOW) on a pin
+        Arguments:
+            pin: the pin to read
+            value: the value (HIGH or LOW to read)
+        Returns:
+            The read value
         """
-        return self.NOT_IMPL_WARNING
+        return self.board.read_pulse(pin, value)
 
     def pulse_in_long(self):
         """
