@@ -217,7 +217,7 @@ class Element:
         """
         self.value = 0
 
-    def get_value(self, pin):
+    def get_value(self, pin=-1):
         """
         Gets the value (digital or analog) of the element
         Arguments:

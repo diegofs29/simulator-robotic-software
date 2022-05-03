@@ -176,7 +176,19 @@ class MoblileRobotLayer(Layer):
     def __move_code(self):
         v = 0
         da = 0
-        print("lololo")
+        v_i = int((self.robot.servo_left.get_value() - 90) / 10)
+        v_r = int((self.robot.servo_right.get_value() - 90) / 10)
+        print(v_r, v_i)
+        if v_i == v_r:
+            if v_i > 0:
+                v = -v_i
+            if v_i < 0:
+                v = -v_i
+        if v_i != v_r:
+            if v_i > v_r:
+                da = -5
+            if v_i < v_r:
+                da = 5
         return v, da
 
     def _drawing_config(self):
