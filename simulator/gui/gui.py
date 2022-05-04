@@ -37,11 +37,17 @@ class MainApplication(tk.Tk):
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
         self.robot_selector.pack(side="right", padx=15)
-        self.movement = {
+        self.move_WASD = {
             "w": False,
             "a": False,
             "s": False,
             "d": False
+        }
+        self.move_dir = {
+            "up": False,
+            "down": False,
+            "left": False,
+            "right": False
         }
         self.identifier = None
 
@@ -57,6 +63,14 @@ class MainApplication(tk.Tk):
         self.robot_selector.bind("<<ComboboxSelected>>", self.change_robot)
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
+        self.bind("<KeyPress-Up>", self.__up)
+        self.bind("<KeyPress-Down>", self.__down)
+        self.bind("<KeyPress-Left>", self.__left)
+        self.bind("<KeyPress-Right>", self.__right)
+        self.bind("<KeyRelease-Up>", self.__release_up)
+        self.bind("<KeyRelease-Down>", self.__release_down)
+        self.bind("<KeyRelease-Left>", self.__release_left)
+        self.bind("<KeyRelease-Right>", self.__release_right)
 
     def open_pin_configuration(self):
         """
@@ -84,16 +98,16 @@ class MainApplication(tk.Tk):
 
     def key_press(self, event):
         pressed_key = event.char
-        if pressed_key in self.movement:
-            self.movement[pressed_key] = True
+        if pressed_key in self.move_WASD:
+            self.move_WASD[pressed_key] = True
 
     def key_release(self, event):
         pressed_key = event.char
-        if pressed_key in self.movement:
-            self.movement[pressed_key] = False
+        if pressed_key in self.move_WASD:
+            self.move_WASD[pressed_key] = False
 
     def move(self):
-        self.robot_layer.move(self.keys_used, self.movement)
+        self.robot_layer.move(self.keys_used, self.move_WASD, self.move_dir)
         self.identifier = self.after(10, self.move)
 
     def stop_move(self):
@@ -116,6 +130,30 @@ class MainApplication(tk.Tk):
 
     def toggle_keys(self):
         self.keys_used = not self.keys_used
+
+    def __up(self, event):
+        self.move_dir["up"] = True
+
+    def __down(self, event):
+        self.move_dir["down"] = True
+
+    def __left(self, event):
+        self.move_dir["left"] = True
+
+    def __right(self, event):
+        self.move_dir["right"] = True
+
+    def __release_up(self, event):
+        self.move_dir["up"] = False
+
+    def __release_down(self, event):
+        self.move_dir["down"] = False
+
+    def __release_left(self, event):
+        self.move_dir["left"] = False
+
+    def __release_right(self, event):
+        self.move_dir["right"] = False
 
 
 class PinConfigurationWindow(tk.Toplevel):

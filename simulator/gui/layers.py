@@ -45,14 +45,15 @@ class Layer:
         self.drawing.zoom_out()
         self._zoom_config()
 
-    def move(self, using_keys, movement):
+    def move(self, using_keys, move_WASD, move_dir):
         """
         Moves the robot that is being used
         Arguments:
             using_keys: specifies keys are being used for movement (True)
             or not (False)
-            movement: a map that specifies if any of the keys WASD is being
+            move_WASD: a map that specifies if any of the keys WASD is being
             pressed
+            move_dir: a map that specifies if arrow keys are being pressed
         """
         pass
 
@@ -116,14 +117,14 @@ class MoblileRobotLayer(Layer):
         self.is_rotating = False
         self.is_moving = False
 
-    def move(self, using_keys, movement):
+    def move(self, using_keys, move_WASD, move_dir):
         """
         Move method of the layer. Moves the robot and rotates it
         """
         v = 0 #Velocity
         da = 0 #Angle
         if using_keys:
-            v, da = self.__move_keys(movement)
+            v, da = self.__move_keys(move_WASD)
         else:
             v, da = self.__move_code()
 
@@ -305,7 +306,7 @@ class LinearActuatorLayer(Layer):
         self.robot = robots.LinearActuator()
         self.robot_drawing = robot_drawings.LinearActuatorDrawing(self.drawing)
 
-    def move(self, using_keys, movement):
+    def move(self, using_keys, move_WASD, move_dir):
         """
         Move method of the layer. Moves the block of the
         linear actuator
@@ -313,8 +314,9 @@ class LinearActuatorLayer(Layer):
         v = 0
         self.robot_drawing.hit = False
         if using_keys:
-            v = self.__move_keys(movement)
+            v = self.__move_keys(move_WASD)
         else:
+            self.__parse_joystick(move_dir)
             v = self.__move_code()
         self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
@@ -331,11 +333,11 @@ class LinearActuatorLayer(Layer):
         if movement["a"] == True:
             if self.robot_drawing.block.x > 508:
                 v -= 10
-            self.__hit_left(v != 0)
+            self.__hit_left(v == 0)
         elif movement["d"] == True:
             if self.robot_drawing.block.x < 1912:
                 v += 10
-            self.__hit_right(v != 0)
+            self.__hit_right(v == 0)
         return v
 
     def __move_code(self):
@@ -343,8 +345,40 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        print("lololo")
+        self.robot.servo.value = 0
+        v_s = int((self.robot.servo.value - 90) / 10)
+        if v_s > 0:
+            if self.robot_drawing.block.x < 1912:
+                v = v_s
+            self.__hit_right(v == 0)
+        if v_s < 0:
+            if self.robot_drawing.block.x > 508:
+                v = v_s
+            self.__hit_left(v == 0)
         return v
+
+    def __parse_joystick(self, movement):
+        """
+        The direction keys will be used as joystick.
+        This method will parse the value of the joystick
+        knowing what direction keys are being pressed.
+        Arguments:
+            movement: a map with the direction keys and if
+            they are being pressed or not
+        """
+        dx = 500
+        dy = 500
+        if movement["up"] == True:
+            dy = 0
+        if movement["down"] == True:
+            dy = 1023
+        if movement["left"] == True:
+            dx = 0
+        if movement["right"] == True:
+            dx = 1023
+        print("diff x: {}, diff y: {}".format(dx, dy))
+        self.robot.joystick.dx = dx
+        self.robot.joystick.dy = dy
 
     def __hit_left(self, has_hit):
         """
