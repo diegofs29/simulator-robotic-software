@@ -77,7 +77,7 @@ class MainApplication(tk.Tk):
     def select_robot(self):
         robot = self.robot_selector.current()
         if robot == 0:
-            return layers.MoblileRobotLayer()
+            return layers.MoblileRobotLayer(2)
         elif robot == 1:
             return layers.LinearActuatorLayer()
         return None
@@ -158,9 +158,6 @@ class PinConfigurationWindow(tk.Toplevel):
         self.entry_pin_so1 = tk.Entry(frame_actuator)
         lb_pin_sound2 = tk.Label(frame_actuator, text="Pin ultrasonidos derecho:")
         self.entry_pin_so2 = tk.Entry(frame_actuator)
-
-        self.entry_pin_l1.config(state=tk.DISABLED)
-        self.entry_pin_l4.config(state=tk.DISABLED)
         
         lb_mobile.grid(row=0, column=0, sticky="w")
         lb_pin_servo1.grid(row=1, column=0, sticky="w")

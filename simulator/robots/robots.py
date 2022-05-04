@@ -354,7 +354,8 @@ class UltrasoundSensor(Element):
         """
         self.pin_trig = -1
         self.pin_echo = -1
-        self.value = -1
+        self.value = 0
+        self.dist = -1
 
     def set_value(self, pin, value):
         if pin == self.pin_trig:
@@ -365,28 +366,40 @@ class UltrasoundSensor(Element):
 
     def get_pulse(self, pin, value):
         if pin == self.pin_echo:
-            if value == 1:
-                return self.value
+            return self.dist
         return None
 
 
 class MobileRobot:
 
-    def __init__(self):
+    def __init__(self, n_ligth_sens):
         """
         Constructor for mobile robot
+        Arguments:
+            n_light_sens: the number of light sensors
+            of the robot
         """
         self.board = BQzumBT328()
 
         self.servo_left = Servo()
         self.servo_right = Servo()
 
-        self.light_mleft = LightSensor()
-        self.light_left = LightSensor()
-        self.light_right = LightSensor()
-        self.light_mright = LightSensor()
+        self.light_sensors = []
+        i = 0
+        while i < n_ligth_sens:
+            self.light_sensors.append(LightSensor())
+            i += 1
 
         self.sound = UltrasoundSensor()
+
+    def set_light_sens_value(self, values):
+        """
+        Sets the light sensor values
+        Arguments:
+            values: the values to write into the sensors
+        """
+        for i in range(0, len(self.light_sensors)):
+            self.light_sensors[i].value = values[i]
 
     def set_servo_left(self, pin):
         """

@@ -215,12 +215,14 @@ class LinearActuatorDrawing(RobotDrawing):
 
 class MobileRobotDrawing(RobotDrawing):
 
-    def __init__(self, drawing: drawing.Drawing):
+    def __init__(self, drawing: drawing.Drawing, n_light_sens):
         """
         Constructor for mobile robot
         Arguments:
             drawing: the drawing where the robot is going
             to be represented
+            n_light_sens: the number of light sensors of the
+            robot
         """
         super().__init__(drawing)
         self.img_mobrob = "simulator/gui/assets/mobile-robot.png"
@@ -236,7 +238,7 @@ class MobileRobotDrawing(RobotDrawing):
         self.vl = 0
         self.vr = 0
         self.angle = 90
-        self.n_light_sens = 2
+        self.n_light_sens = n_light_sens
         self.sensors = {}
 
         self.create_robot()
