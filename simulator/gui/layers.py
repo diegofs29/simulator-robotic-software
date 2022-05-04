@@ -376,7 +376,7 @@ class LinearActuatorLayer(Layer):
             dx = 0
         if movement["right"] == True:
             dx = 1023
-        print("diff x: {}, diff y: {}".format(dx, dy))
+        #print("diff x: {}, diff y: {}".format(dx, dy))
         self.robot.joystick.dx = dx
         self.robot.joystick.dy = dy
 
