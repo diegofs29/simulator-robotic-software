@@ -150,7 +150,12 @@ class MoblileRobotLayer(Layer):
         self.__detect_obstacle()
 
     def __move_keys(self, movement):
-        #Process keys
+        """
+        Moves the robot using WASD
+        Arguments:
+            movement: contains the information about the pressing
+            of the keys
+        """
         v = 0
         da = 0
         if not self.is_rotating:
@@ -174,20 +179,29 @@ class MoblileRobotLayer(Layer):
         return v, da
 
     def __move_code(self):
+        """
+        Moves the robot using the programmed instructions
+        """
         v = 0
         da = 0
+        self.robot.servo_left.value = 0
+        self.robot.servo_right.value = 0
         v_i = int((self.robot.servo_left.get_value() - 90) / 10)
         v_r = int((self.robot.servo_right.get_value() - 90) / 10)
-        if v_i == v_r:
+        rotates = False
+        if v_i >= 0 and v_r >= 0:
+            if v_i != 0 or v_r != 0:
+                da = -5
+                rotates = True
+        if v_i <= 0 and v_r <= 0:
+            if v_i != 0 or v_r != 0:
+                da = 5
+                rotates = True
+        if abs(v_i) == abs(v_r) and not rotates:
             if v_i > 0:
                 v = -v_i
             if v_i < 0:
                 v = -v_i
-        if v_i != v_r:
-            if v_i > v_r:
-                da = -5
-            if v_i < v_r:
-                da = 5
         return v, da
 
     def _drawing_config(self):
@@ -271,7 +285,6 @@ class MoblileRobotLayer(Layer):
             self.robot_drawing.sensors["sound"].set_detect(False)
             self.robot.sound.value = 0
             self.robot.sound.dist = -1
-        print(self.robot.sound.dist)
         self.hud.set_detect_obstacle(dists)
 
     def __hud_velocity(self):
@@ -299,18 +312,64 @@ class LinearActuatorLayer(Layer):
         """
         v = 0
         self.robot_drawing.hit = False
-        if movement["a"] == True:
-            if self.robot_drawing.block.x > 508:
-                v -= 10
-                self.robot_drawing.hit = False
-            else:
-                self.robot_drawing.hit = True
-        elif movement["d"] == True:
-            if self.robot_drawing.block.x < 1912:
-                v += 10
-                self.robot_drawing.hit = False
-            else:
-                self.robot_drawing.hit = True
+        if using_keys:
+            v = self.__move_keys(movement)
+        else:
+            v = self.__move_code()
         self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
         self.hud.set_pressed([self.robot_drawing.but_left.pressed, self.robot_drawing.but_right.pressed])
+
+    def __move_keys(self, movement):
+        """
+        Moves the robot using WASD
+        Arguments:
+            movement: contains the information about the pressing
+            of the keys
+        """
+        v = 0
+        if movement["a"] == True:
+            if self.robot_drawing.block.x > 508:
+                v -= 10
+            self.__hit_left(v != 0)
+        elif movement["d"] == True:
+            if self.robot_drawing.block.x < 1912:
+                v += 10
+            self.__hit_right(v != 0)
+        return v
+
+    def __move_code(self):
+        """
+        Moves the robot using the programmed instructions
+        """
+        v = 0
+        print("lololo")
+        return v
+
+    def __hit_left(self, has_hit):
+        """
+        Establishes the value for the left button
+        Arguments:
+            has_hit: True if the button has been hit, False
+            if else
+        """
+        if has_hit:
+            self.robot_drawing.hit = True
+            self.robot.button_left.value = 1
+        else:
+            self.robot_drawing.hit = False
+            self.robot.button_left.value = 0
+
+    def __hit_right(self, has_hit):
+        """
+        Establishes the value for the right button
+        Arguments:
+            has_hit: True if the button has been hit, False
+            if else
+        """
+        if has_hit:
+            self.robot_drawing.hit = True
+            self.robot.button_right.value = 1
+        else:
+            self.robot_drawing.hit = False
+            self.robot.button_right.value = 0
