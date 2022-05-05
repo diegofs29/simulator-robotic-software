@@ -185,8 +185,8 @@ class MoblileRobotLayer(Layer):
         """
         v = 0
         da = 0
-        self.robot.servo_left.value = 0
-        self.robot.servo_right.value = 0
+        #self.robot.servo_left.value = 0
+        #self.robot.servo_right.value = 0
         v_i = int((self.robot.servo_left.get_value() - 90) / 10)
         v_r = int((self.robot.servo_right.get_value() - 90) / 10)
         rotates = False
@@ -345,7 +345,7 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        self.robot.servo.value = 0
+        #self.robot.servo.value = 0
         v_s = int((self.robot.servo.value - 90) / 10)
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:
