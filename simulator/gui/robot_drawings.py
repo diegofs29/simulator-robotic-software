@@ -1,0 +1,815 @@
+from math import cos, pi, sin
+import drawing
+
+class RobotDrawing:
+
+    def __init__(self, drawing: drawing.Drawing):
+        """
+        Constructor for Robot superclass
+        Arguments:
+            drawing: the drawing where the robot is
+            going to be represented
+        """
+        self.x = 0
+        self.y = 0
+        self.width = 0
+        self.height = 0
+        self.drawing_width = 0
+        self.drawing_height = 0
+        self.drawing = drawing
+
+    def move(self, vel):
+        """
+        Moves the robot
+        """
+        pass
+
+    def create_robot(self):
+        """
+        Creates the robot
+        """
+        pass
+
+    def draw(self):
+        """
+        Draws the robot
+        """
+        pass
+
+    def reboot(self):
+        """
+        Restarts all the parameters of the drawing
+        """
+        self.drawing.empty_drawing()
+
+
+class LinearActuatorDrawing(RobotDrawing):
+
+    def __init__(self, drawing: drawing.Drawing):
+        """
+        Constructor for the Linear actuator robot
+        Arguments:
+            drawing: the drawing where the robot is going
+            to be represented
+        """
+        super().__init__(drawing)
+        self.img_act = "simulator/gui/assets/actuator.png"
+
+        self.drawing_width = 2500
+        self.drawing_height = 600
+        self.x = int(self.drawing_width / 2)
+        self.y = int(self.drawing_height / 2)
+        self.width = 2280
+        self.height = 380
+        self.hit = False
+        self.direction = "stop"
+        
+        self.create_robot()
+
+    def move(self, vel):
+        """
+        Moves the block of the actuator by a determined
+        velocity. The movement is limited by the position
+        of the buttons
+        Arguments:
+            vel: the determined velocity
+        """
+        if (not self.hit) and vel != 0:
+            if self.but_right.pressed:
+                self.but_right.stop_press()
+            if self.but_left.pressed:
+                self.but_left.stop_press()
+            self.__redraw_buttons()
+        if vel < 0:
+            self.direction = "left"
+        elif vel > 0:
+            self.direction = "right"
+        if vel == 0 and self.hit and not self.direction == "stop":
+            if not self.but_left.pressed and self.direction == "left":
+                self.but_left.press()
+            if not self.but_right.pressed and self.direction == "right":
+                self.but_right.press()
+            self.__redraw_buttons()
+            self.direction = "stop"
+        else:
+            self.block.x += vel
+            self.drawing.move_image("block", self.block.x, self.block.y)
+
+    def __redraw_buttons(self):
+        """
+        Redraws the buttons when they are changed
+        """
+        self.drawing.redraw_image(self.but_left.get_image(), "button_left")
+        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
+        self.drawing.redraw_image(self.but_right.get_image(), "button_right")
+
+    def create_robot(self):
+        """
+        Creates the linear actuator, piecing all of the
+        elements that compose it
+        """
+        self.image = {
+            "x": self.x,
+            "y": self.y,
+            "image": self.img_act
+        }
+        self.but_left = self.ActuatorButton(
+            "simulator/gui/assets/button-hit.png", 
+            "simulator/gui/assets/button-no-hit.png",
+            self.x - 960, self.y + 70
+        )
+        self.but_right = self.ActuatorButton(
+            "simulator/gui/assets/button-hit.png", 
+            "simulator/gui/assets/button-no-hit.png",
+            self.x + 880, self.y - 185
+        )
+        self.block = self.Block(
+            "simulator/gui/assets/mobile-part.png",
+            self.x, self.y - 50
+        )
+
+    def draw(self):
+        """
+        Draws the robot by drawing all its pieces
+        """
+        self.drawing.draw_image(self.image, "actuator")
+        self.drawing.draw_image(self.but_left.get_image(), "button_left")
+        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
+        self.drawing.draw_image(self.but_right.get_image(), "button_right")
+        self.drawing.draw_image(self.block.get_image(), "block")
+
+
+    class ActuatorElement:
+
+        def __init__(self):
+            """
+            Constructor for ActuatorElement superclass
+            """
+            self.x = 0
+            self.y = 0
+            self.img_shown = None
+
+        def get_image(self):
+            """
+            Returns: a dictionary with the coordinates
+            of the element, as well as the image that
+            represent it (as Image instance)
+            """
+            return {
+                "x": self.x,
+                "y": self.y,
+                "image": self.img_shown
+            }
+
+
+    class Block(ActuatorElement):
+
+        def __init__(self, img_path, x, y):
+            """
+            Constructor for the block element
+            Arguments:
+                img_path: the image to show
+                x: the x coordinate of the block
+                y: the y coordinate of the block
+            """
+            self.img_shown = img_path
+            self.x = x
+            self.y = y
+
+
+    class ActuatorButton(ActuatorElement):
+
+        def __init__(self, img_path_hit, img_path_no_hit, x, y):
+            """
+            Constructor for linear actuator's buttons
+            Arguments:
+                img_path_hit: the image to show the button
+                has been pressed
+                img_path_no_hit: the image to show the button
+                has not been pressed
+                x: the x coordinate of the button
+                y: the y coordinate of the button
+                rotate: tells if the button needs to be rotated
+            """
+            self.img_hit = img_path_hit
+            self.img_no_hit = img_path_no_hit
+            self.img_shown = self.img_no_hit
+            self.x = x
+            self.y = y
+            self.pressed = False
+
+        def press(self):
+            """
+            Presses the button, changing its state and image
+            """
+            self.pressed = True
+            self.img_shown = self.img_hit
+
+        def stop_press(self):
+            """
+            Unpresses the button, changing its state and image
+            """
+            self.pressed = False
+            self.img_shown = self.img_no_hit
+
+
+class MobileRobotDrawing(RobotDrawing):
+
+    def __init__(self, drawing: drawing.Drawing, n_light_sens):
+        """
+        Constructor for mobile robot
+        Arguments:
+            drawing: the drawing where the robot is going
+            to be represented
+            n_light_sens: the number of light sensors of the
+            robot
+        """
+        super().__init__(drawing)
+        self.img_mobrob = "simulator/gui/assets/mobile-robot.png"
+
+        self.drawing_width = 6300
+        self.drawing_height = 4300
+        self.x = 500
+        self.y = 500
+        self.real_x = self.x
+        self.real_y = self.y
+        self.width = 516
+        self.height = 584
+        self.vl = 0
+        self.vr = 0
+        self.angle = 90
+        self.n_light_sens = n_light_sens
+        self.sensors = {}
+
+        self.create_robot()
+
+    def create_robot(self):
+        """
+        Creates the robot with all of its pieces
+        """
+        self.robot = {
+            "x": self.x,
+            "y": self.y,
+            "image": self.img_mobrob
+        }
+        self.sensors["light"] = []
+        init_diff = 30
+        if self.n_light_sens == 4:
+            init_diff = 90
+        for i in range(0, self.n_light_sens):
+            self.sensors["light"].append(
+                self.LightSensor(
+                    self.x - init_diff + (60 * i),
+                    self.y - 110
+                )
+            )
+        self.sensors["sound"] = self.UltrasoundSensor(
+            self.x - 30,
+            self.y - 285,
+            7630
+        )
+
+    def draw(self):
+        """
+        Draws the robot with all of its elements
+        """
+        self.drawing.draw_image(self.robot, "robot")
+        self.drawing.rotate_image(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_mobrob
+                },
+                self.angle - 90,
+                "robot"
+            )
+        i = 1
+        for sens in self.sensors["light"]:
+            self.drawing.draw_image(sens.get_image(), "light_{}".format(i))
+            i += 1
+
+    def predict_movement(self, vel):
+        """
+        Predicts the future position of the robot. Used to
+        check if a collision with an object will happen
+        Arguments:
+            vel: the velocity of the robot (with no axis)
+        Returns:
+            The predicted coordinates of the robot (tuple)
+        """
+        angle = self.angle * pi / 180
+        vx = -vel * cos(angle)
+        vy = vel * sin(angle)
+        real_x = self.real_x + vx
+        real_y = self.real_y + vy
+        x = self.x
+        y = self.y
+        if real_x != x or real_y != y:
+            x = int(real_x)
+            y = int(real_y)
+        return (x, y)
+
+    def move(self, vel):
+        """
+        Moves the robot
+        Arguments:
+            vel: the velocity that the robot is going at,
+            from it the velocity in each axis is calculated
+            by using sin and cos with the angle
+        """
+        self.vl = -vel * 25
+        self.vr = -vel * 25
+        angle = self.angle * pi / 180
+        vx = -vel * cos(angle)
+        vy = vel * sin(angle)
+        if self.__update_coords(vx, vy):
+            self.drawing.canvas.delete('prueba')
+            self.drawing.move_image("robot", self.x, self.y)
+            i = 1
+            for sens in self.sensors["light"]:
+                self.drawing.move_image("light_{}".format(i), sens.x, sens.y)
+                i += 1
+
+    def change_angle(self, d_angle):
+        """
+        Changes robot's angle when turning
+        Arguments:
+            d_angle: the number of degrees that the robot 
+            is going to rotate. Can be + or -
+        """
+        self.vl = -d_angle * 50
+        self.vr = d_angle * 50
+        if self.angle + d_angle >= 0 and self.angle + d_angle <= 360:
+            self.angle += d_angle
+        else:
+            if self.angle + d_angle < 0:
+                self.angle = 360 + (self.angle + d_angle)
+            else:
+                self.angle = (self.angle + d_angle) - 360
+        if d_angle != 0:
+            self.drawing.rotate_image(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_mobrob
+                },
+                self.angle - 90,
+                "robot"
+            )
+            self.__rotate_sensors(d_angle)
+
+    def repaint_light_sensors(self):
+        """
+        Repaints the light sensors
+        """
+        i = 1
+        for sens in self.sensors["light"]:
+            self.drawing.redraw_image(sens.get_image(), "light_{}".format(i))
+            i += 1
+
+    def configure_distance(self, dist_sens):
+        """
+        Configures the distance of detection of the ultrasounds
+        Arguments:
+            dist_sens: the distance at which the sensor returns True
+        """
+        self.sensors["sound"].dist = dist_sens
+
+    def __update_coords(self, dx, dy):
+        """
+        Updates the coordinates of the different components
+        of the robot. It does so by updating the real position
+        and when it changes compared to the coordinates, this are
+        updated.
+        Arguments:
+            dx: the change on x coordinates
+            dy: the change on y coordinates
+        """
+        self.real_x += dx
+        self.real_y += dy
+        for sens in self.sensors["light"]:
+            dx_sens = sens.real_x + dx
+            dy_sens = sens.real_y + dy
+            sens.change_coords(dx_sens, dy_sens)
+        dx_sens = self.sensors["sound"].real_x + dx
+        dy_sens = self.sensors["sound"].real_y + dy
+        self.sensors["sound"].change_coords(dx_sens, dy_sens)
+        if self.__check_change_coords():
+            self.x = int(self.real_x)
+            self.y = int(self.real_y)
+            self.robot["x"] = self.x
+            self.robot["y"] = self.y
+            return True
+        return False
+
+    def __check_change_coords(self):
+        """
+        Checks if the real coords (real_x and real_y)
+        are different when they are truncated, compared
+        to the int ones (x and y)
+        """
+        x = int(self.real_x)
+        y = int(self.real_y)
+        return self.x != x or self.y != y
+
+    def __rotate_sensors(self, da):
+        """
+        Rotates the sensors taking the robot position
+        as reference so they can move based on the radius
+        Arguments:
+            da: the differential of angle
+        """
+        i = 1
+        for sens in self.sensors["light"]:
+            x, y = self.__rotate_center(
+                (sens.real_x, sens.real_y),
+                (self.x, self.y),
+                da
+            )
+            sens.change_coords(self.x + x, self.y + y)
+            img = sens.get_image()
+            self.drawing.redraw_image(img, "light_{}".format(i))
+            i += 1
+        x, y = self.__rotate_center(
+                (self.sensors["sound"].real_x, self.sensors["sound"].real_y),
+                (self.x, self.y),
+                da
+            )
+        self.sensors["sound"].change_coords(self.x + x, self.y + y)
+        
+
+    def __rotate_center(self, tp, c, da):
+        """
+        Rotates a component relative to a center
+        Arguments:
+            tp: point to be translated. Tuple = (x, y)
+            c: center point. Tuple = (x, y)
+            da: number of degrees to rotate (sixagesimal)
+        """
+        abs_px = tp[0] - c[0]
+        abs_py = tp[1] - c[1]
+        rads = da * (pi / 180) #degrees to radians
+
+        # Rotate
+        cos_r = cos(rads)
+        sin_r = sin(rads)
+        x = (abs_px * cos_r) + (abs_py * sin_r)
+        y = (-abs_px * sin_r) + (abs_py * cos_r)
+
+        return (x, y)
+
+
+    class Sensor:
+
+        def __init__(self, x, y):
+            """
+            Constructor for sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+            """
+            self.x = x
+            self.y = y
+            self.real_x = self.x
+            self.real_y = self.y
+            self.img_shown = None
+
+        def change_coords(self, x, y):
+            """
+            Moves the real coordinates of the sensor (double cooords)
+            Arguments:
+                x: the new real x coordinate
+                y: the new real y coordinate
+            """
+            self.real_x = x
+            self.real_y = y
+            self.x = int(self.real_x)
+            self.y = int(self.real_y)
+
+        def get_image(self):
+            """
+            Converts the image to a dictionary so the drawing
+            can parse it:
+            Returns:
+                A dictionary with the following keys:
+                    x: the x coordinate
+                    y: the y coordinate
+                    image: the image to represent
+            """
+            if self.img_shown != None:
+                return {
+                    "x": self.x,
+                    "y": self.y,
+                    "image": self.img_shown
+                }
+            return None
+
+
+    class LightSensor(Sensor):
+
+        def __init__(self, x, y):
+            """
+            Constructor for light sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+            """
+            super().__init__(x, y)
+            self.img_light = "simulator/gui/assets/light-bright.png"
+            self.img_dark = "simulator/gui/assets/light-dark.png"
+            self.img_shown = self.img_light
+
+        def light(self):
+            """
+            Changes the sensor to light
+            """
+            self.img_shown = self.img_light
+            
+        def dark(self):
+            """
+            Changes the sensor to dark
+            """
+            self.img_shown = self.img_dark
+
+
+    class UltrasoundSensor(Sensor):
+
+        def __init__(self, x, y, dist):
+            """
+            Constructor for ultrasound sensor
+            Arguments:
+                x: the x position of the sensor
+                y: the y position of the sensor
+                dist: the distance to check
+            """
+            super().__init__(x, y)
+            self.dist = dist
+            self.is_detecting = False
+
+        def set_detect(self, is_detecting):
+            """
+            Changes the state of the sensor
+            Arguments:
+                is_detecting: True if detects, False if else
+            """
+            self.is_detecting = is_detecting
+
+
+class Circuit:
+
+    def __init__(self, drawing: drawing.Drawing):
+        """
+        Constructor for Circuit
+        Arguments:
+            drawing: the drawing where the circuit is
+            going to be represented
+        """
+        self.circuit_parts = []
+        self.drawing = drawing
+        self.ROAD_WIDTH = 300
+
+    def create_circuit(self):
+        """
+        Creates and draws a circuit
+        """
+        straight_lengths = {
+            1: {"x": 5000}, #recta ppal
+            2: {"y": 1000}, #chicane 1
+            3: {"x": -370},
+            4: {"y": 1000}, #recta 1
+            5: {"x": 370}, #chicane 2
+            6: {"y": 1000},
+            7: {"x": -2000}, #recta 2
+            8: {"y": -500}, #chicane 3
+            13: {"x": -1250},
+            14: {"y": -1000}, #recta 5
+            15: {"x": 750},
+            16: {"y": -750}, #horquilla 1
+            17: {"x": -1750},
+            18: {"y": 750},
+            19: {"x": -750}, #horquilla 1
+            20: {"y": -1500}, #ultima curva
+        }
+        self.create_straights(straight_lengths)
+        self.draw_circuit()
+
+    def create_straights(self, straight_lengths):
+        """
+        Creates all the circuit pieces
+        Arguments:
+            straight_lengths: a dictionary whose keys are x
+            if the straight is horizontal or y if it's vertical
+        """
+        x = 500
+        y = 500
+        for key in straight_lengths:
+            if "x" in straight_lengths[key]:
+                self.__create_straight(x, y, straight_lengths[key]["x"], self.ROAD_WIDTH)
+                x += straight_lengths[key]["x"]
+            elif "y" in straight_lengths[key]:
+                self.__create_straight(x, y, self.ROAD_WIDTH, straight_lengths[key]["y"])
+                y += straight_lengths[key]["y"]
+
+    def draw_circuit(self):
+        """
+        Draws the circuit
+        """
+        for part in self.circuit_parts:
+            self.drawing.draw_rectangle(
+                {
+                    "x": part.x,
+                    "y": part.y,
+                    "width": part.width,
+                    "height": part.height,
+                    "color": "black",
+                    "group": "circuit"
+                }
+            )
+    
+    def __create_straight(self, x, y, width, height):
+        """
+        Creates a straight
+        Arguments:
+            x: the x coordinate of the straight
+            y: the y coordinate of the straight
+            width: the width of the straight
+            heigth: the height of the straight
+        """
+        if width < 0:
+            x += self.ROAD_WIDTH
+            x += width
+            width *= -1
+        if height < 0:
+            y += self.ROAD_WIDTH
+            y += height
+            height *= -1
+        self.circuit_parts.append(
+            self.CircuitStraight(x, y, width, height)
+        )
+
+    def is_overlapping(self, x, y):
+        """
+        Checks if the coordinates are overlapping with the circuit
+        Arguments:
+            x: the x coordinate to check
+            y: the y coordinate to check
+        Returns:
+            True if is overlapping, False if else
+        """
+        overlap = False
+        for part in self.circuit_parts:
+            overlap = part.check_overlap(x, y)
+            if overlap:
+                break
+        return overlap
+
+    class CircuitStraight:
+
+        def __init__(self, x, y, width, height):
+            """
+            Constructor for circuit straight
+            Arguments:
+                x: the x coordinate of the straight
+                y: the y coordinate of the straight
+                width: the width of the straight
+                heigth: the height of the straight
+            """
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+
+        def check_overlap(self, x, y):
+            """
+            Checks if the point is overlapped with the
+            circuit
+            """
+            return (
+                (
+                    x >= self.x and 
+                    x <= self.x + self.width
+                ) 
+                    and 
+                (
+                    y >= self.y and 
+                    y <= self.y + self.height
+                )
+            )
+
+
+class Obstacle:
+
+    def __init__(self, x, y, width, height, drawing: drawing.Drawing):
+        """
+        Constructor for Obstacle
+        Arguments:
+            x: the initial x coordinate for the obstacle
+            y: the initial y coordinate for the obstacle
+            width: the width of the obstacle
+            height: the height of the obstacle
+            drawing: the drawing in which the obstacle will
+            be drawn
+        """
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.drawing = drawing
+
+    def draw(self):
+        """
+        Draws the obstacle in the corresponding drawing
+        """
+        self.drawing.draw_rectangle(
+            {
+                "x": self.x,
+                "y": self.y,
+                "width": self.width,
+                "height": self.height,
+                "color": "orange",
+                "group": "obstacle"
+            }
+        )
+
+    def calculate_distance(self, sx, sy, angle):
+        """
+        Checks if is detected by the ultrasound sensor.
+        It does so by using the sin or cos (depending on
+        if it's x coordinate or y coordinate) and the coordinate.
+        With it, we have the distance, so we get a point with
+        the angle and the distance (and sin or cos, to get the
+        other coordinate). Can be done by using basic trigonometry
+        Arguments:
+            sx: the x coordinate of the sensor
+            sy: the y coordinate of the sensor
+            angle: the angle of the line (from ox)
+        Returns: 
+            True if is detected, False if else
+        """
+        # Abs coords of obstacle
+        x1 = self.x - sx
+        x2 = self.x + self.width - sx
+        y1 = self.y - sy
+        y2 = self.y + self.height - sy
+        rads = angle * (pi / 180)
+
+        # Distance
+        if angle % 90 != 0 or angle % 180 == 0:
+            dist_x1 = int(abs(x1 / cos(rads)))
+            dist_x2 = int(abs(x2 / cos(rads)))
+        else:
+            dist_x1 = "inf"
+            dist_x2 = "inf"
+        if angle % 180 != 0:
+            dist_y1 = int(abs(y1 / sin(rads)))
+            dist_y2 = int(abs(y2 / sin(rads)))
+        else:
+            dist_y1 = "inf"
+            dist_y2 = "inf"
+
+        #print("Dist x1: {}, dist x2: {}, dist y1: {}, dist y2: {}".format(dist_x1, dist_x2, dist_y1, dist_y2))
+        
+        # Point distance
+        dy = lambda d, r: int(-sin(r) * d)
+        dx = lambda d, r: int(cos(r) * d)
+        
+        dist = -1
+
+        # 10 coords in each point to ensure the fixed coord is inside
+        if dist_x1 != "inf":
+            px1 = (dx(dist_x1, rads), dy(dist_x1, rads))
+            if self.__check_inbounds(px1[0] + sx + 10, px1[1] + sy):
+                if dist == -1 or dist_x1 < dist:
+                    dist = dist_x1
+        if dist_x2 != "inf":
+            px2 = (dx(dist_x2, rads), dy(dist_x2, rads))
+            if self.__check_inbounds(px2[0] + sx - 10, px2[1] + sy):
+                if dist == -1 or dist_x2 < dist:
+                    dist = dist_x2
+        if dist_y1 != "inf":
+            py1 = (dx(dist_y1, rads), dy(dist_y1, rads))
+            if self.__check_inbounds(py1[0] + sx, py1[1] + sy + 10):
+                if dist == -1 or dist_y1 < dist:
+                    dist = dist_y1
+        if dist_y2 != "inf":
+            py2 = (dx(dist_y2, rads), dy(dist_y2, rads))
+            if self.__check_inbounds(py2[0] + sx, py2[1] + sy - 10):
+                if dist == -1 or dist_y2 < dist:
+                    dist = dist_y2
+        
+        return dist
+
+    def __check_inbounds(self, x, y):
+        """
+        Checks if a point is inbounds of the obstacle (caution with
+        absolute coordinates)
+        Arguments:
+            x: the x coordinate of the point
+            y: the y coordinate of the point
+        Returns:
+            True if inbounds, False if else
+        """
+        return (
+            self.x <= x <= (self.x + self.width) and
+            self.y <= y <= (self.y + self.height)
+        )

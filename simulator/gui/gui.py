@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import robots
+import layers
+import simulator.console.console as console
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -13,7 +14,7 @@ class MainApplication(tk.Tk):
         self.title("Simulador Software para Robots")
         self.geometry("1280x720")
 
-        self.menu_bar = MenuBar(self)
+        self.menu_bar = MenuBar(self, self)
         self.tools_frame = tk.Frame(self, bg=DARK_BLUE)
         self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
         self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"],
@@ -26,19 +27,27 @@ class MainApplication(tk.Tk):
         self.drawing_frame = DrawingFrame(
             self.horizontal_pane, self, bg=BLUE)
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
-        self.console_frame = ConsoleFrame(self.vertical_pane, bg=DARK_BLUE)
+        self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
 
-        self.robot_layer: robots.Layer = self.select_robot()
+        self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
+        self.console = console.Console(self.console_frame.console)
+        self.keys_used = True
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
         self.robot_selector.pack(side="right", padx=15)
-        self.movement = {
+        self.move_WASD = {
             "w": False,
             "a": False,
             "s": False,
             "d": False
+        }
+        self.move_dir = {
+            "up": False,
+            "down": False,
+            "left": False,
+            "right": False
         }
         self.identifier = None
 
@@ -54,6 +63,21 @@ class MainApplication(tk.Tk):
         self.robot_selector.bind("<<ComboboxSelected>>", self.change_robot)
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
+        self.bind("<KeyPress-Up>", self.__up)
+        self.bind("<KeyPress-Down>", self.__down)
+        self.bind("<KeyPress-Left>", self.__left)
+        self.bind("<KeyPress-Right>", self.__right)
+        self.bind("<KeyRelease-Up>", self.__release_up)
+        self.bind("<KeyRelease-Down>", self.__release_down)
+        self.bind("<KeyRelease-Left>", self.__release_left)
+        self.bind("<KeyRelease-Right>", self.__release_right)
+
+    def open_pin_configuration(self):
+        """
+        Top level window to configure pins connected to the
+        Arduino board
+        """
+        conf_win = PinConfigurationWindow(self)
 
     def configure_layer(self):
         self.robot_layer.set_canvas(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
@@ -67,23 +91,23 @@ class MainApplication(tk.Tk):
     def select_robot(self):
         robot = self.robot_selector.current()
         if robot == 0:
-            return robots.MoblileRobotLayer()
+            return layers.MoblileRobotLayer(2)
         elif robot == 1:
-            return robots.LinearActuatorLayer()
+            return layers.LinearActuatorLayer()
         return None
 
     def key_press(self, event):
         pressed_key = event.char
-        if pressed_key in self.movement:
-            self.movement[pressed_key] = True
+        if pressed_key in self.move_WASD:
+            self.move_WASD[pressed_key] = True
 
     def key_release(self, event):
         pressed_key = event.char
-        if pressed_key in self.movement:
-            self.movement[pressed_key] = False
+        if pressed_key in self.move_WASD:
+            self.move_WASD[pressed_key] = False
 
     def move(self):
-        self.robot_layer.move(self.movement)
+        self.robot_layer.move(self.keys_used, self.move_WASD, self.move_dir)
         self.identifier = self.after(10, self.move)
 
     def stop_move(self):
@@ -94,6 +118,111 @@ class MainApplication(tk.Tk):
         if self.identifier is not None:
             self.after_cancel(self.identifier)
 
+    def console_filter(self):
+        msg_filters = []
+        if self.console_frame.output.get() == 1:
+            msg_filters.append('info')
+        if self.console_frame.warning.get() == 1:
+            msg_filters.append('warning')
+        if self.console_frame.error.get() == 1:
+            msg_filters.append('error')
+        self.console.filter_messages(*msg_filters)
+
+    def toggle_keys(self):
+        self.keys_used = not self.keys_used
+
+    def __up(self, event):
+        self.move_dir["up"] = True
+
+    def __down(self, event):
+        self.move_dir["down"] = True
+
+    def __left(self, event):
+        self.move_dir["left"] = True
+
+    def __right(self, event):
+        self.move_dir["right"] = True
+
+    def __release_up(self, event):
+        self.move_dir["up"] = False
+
+    def __release_down(self, event):
+        self.move_dir["down"] = False
+
+    def __release_left(self, event):
+        self.move_dir["left"] = False
+
+    def __release_right(self, event):
+        self.move_dir["right"] = False
+
+
+class PinConfigurationWindow(tk.Toplevel):
+
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
+        tk.Toplevel.__init__(self, parent, *args, **kwargs)
+        
+        frame_actuator = tk.Frame(self)
+        lb_actuator = tk.Label(frame_actuator, text="Actuador lineal:")
+        lb_pin_bt1 = tk.Label(frame_actuator, text="Pin botón izquierdo:")
+        self.entry_pin_bt1 = tk.Entry(frame_actuator)
+        lb_pin_bt2 = tk.Label(frame_actuator, text="Pin botón derecho:")
+        self.entry_pin_bt2 = tk.Entry(frame_actuator)
+        lb_pin_joystick = tk.Label(frame_actuator, text="Pin Joystick:")
+        self.entry_pin_joystick = tk.Entry(frame_actuator)
+
+        lb_actuator.grid(row=0, column=0, sticky="w")
+        lb_pin_bt1.grid(row=1, column=0, sticky="w")
+        self.entry_pin_bt1.grid(row=1, column=1, sticky="w", padx=5)
+        lb_pin_bt2.grid(row=1, column=2, sticky="w")
+        self.entry_pin_bt2.grid(row=1, column=3, sticky="w", padx=5)
+        lb_pin_joystick.grid(row=2, column=0, sticky="w")
+        self.entry_pin_joystick.grid(row=2, column=1, sticky="w", padx=5)
+
+        frame_mobile = tk.Frame(self)
+        lb_mobile = tk.Label(frame_mobile, text="Robot móvil")
+        lb_pin_servo1 = tk.Label(frame_mobile, text="Pin servo izquierdo:")
+        self.entry_pin_se1 = tk.Entry(frame_mobile)
+        lb_pin_servo2 = tk.Label(frame_mobile, text="Pin servo derecho:")
+        self.entry_pin_se2 = tk.Entry(frame_mobile)
+        lb_pin_light1 = tk.Label(frame_mobile, text="Pin luz mas izquierda:")
+        self.entry_pin_l1 = tk.Entry(frame_mobile)
+        lb_pin_light2 = tk.Label(frame_mobile, text="Pin luz izquierda:")
+        self.entry_pin_l2 = tk.Entry(frame_mobile)
+        lb_pin_light3 = tk.Label(frame_mobile, text="Pin luz derecha:")
+        self.entry_pin_l3 = tk.Entry(frame_mobile)
+        lb_pin_light4 = tk.Label(frame_mobile, text="Pin luz mas derecha:")
+        self.entry_pin_l4 = tk.Entry(frame_mobile)
+        lb_pin_sound1 = tk.Label(frame_actuator, text="Pin ultrasonidos izquierdo:")
+        self.entry_pin_so1 = tk.Entry(frame_actuator)
+        lb_pin_sound2 = tk.Label(frame_actuator, text="Pin ultrasonidos derecho:")
+        self.entry_pin_so2 = tk.Entry(frame_actuator)
+        
+        lb_mobile.grid(row=0, column=0, sticky="w")
+        lb_pin_servo1.grid(row=1, column=0, sticky="w")
+        self.entry_pin_se1.grid(row=1, column=1, sticky="w", padx=5)
+        lb_pin_servo2.grid(row=1, column=2, sticky="w")
+        self.entry_pin_se2.grid(row=1, column=3, sticky="w", padx=5)
+        lb_pin_light2.grid(row=2, column=0, sticky="w")
+        self.entry_pin_l2.grid(row=2, column=1, sticky="w", padx=5)
+        lb_pin_light3.grid(row=2, column=2, sticky="w")
+        self.entry_pin_l3.grid(row=2, column=3, sticky="w", padx=5)
+        lb_pin_light1.grid(row=3, column=0, sticky="w")
+        self.entry_pin_l1.grid(row=3, column=1, sticky="w", padx=5)
+        lb_pin_light4.grid(row=3, column=2, sticky="w")
+        self.entry_pin_l4.grid(row=3, column=3, sticky="w", padx=5)
+        lb_pin_sound1.grid(row=4, column=0, sticky="w")
+        self.entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
+        lb_pin_sound2.grid(row=4, column=2, sticky="w")
+        self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
+
+        frame_mobile.pack(anchor="nw", padx=5, pady=5)
+        frame_actuator.pack(anchor="sw", padx=5, pady=5)
+
+        x = (parent.winfo_x() + (parent.winfo_width() / 2)) - (self.winfo_reqwidth() / 2)
+        y = (parent.winfo_y() + (parent.winfo_height() / 2)) - (self.winfo_reqheight() / 2)
+        self.geometry("+%d+%d" %(x, y))
+        self.resizable(False, False)
+
 
 class MenuBar(tk.Menu):
 
@@ -101,8 +230,15 @@ class MenuBar(tk.Menu):
         tk.Menu.__init__(self, parent, *args, **kwargs)
 
         self.add_cascade(label="Archivo")
+
         self.add_cascade(label="Editar")
+
+        conf_menu = tk.Menu(self, tearoff=0)
+        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration)
+        self.add_cascade(label="Configurar", menu=conf_menu)
+
         self.add_cascade(label="Ver")
+
         self.add_cascade(label="Ayuda")
 
 
@@ -118,7 +254,10 @@ class DrawingFrame(tk.Frame):
                                 relief=tk.SOLID, highlightthickness=0)
         self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
 
-        self.zoom_frame = tk.Frame(self, bg=BLUE)
+        self.bottom_frame = tk.Frame(self, bg=BLUE)
+        self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white", font=("Consolas", 12),
+                                          bg=BLUE, activebackground=BLUE, selectcolor="black", command=application.toggle_keys)        
+        self.zoom_frame = tk.Frame(self.bottom_frame, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
             {
@@ -146,14 +285,18 @@ class DrawingFrame(tk.Frame):
         self.canvas.bind("<MouseWheel>", self.zoom)
         self.zoom_in_button.configure(command=self.zoom_in)
         self.zoom_out_button.configure(command=self.zoom_out)
+        self.key_movement.select()
 
         self.zoom_in_button.grid(row=0, column=0, padx=5, pady=5)
         self.zoom_label.grid(row=0, column=1, padx=5, pady=5)
         self.zoom_out_button.grid(row=0, column=2, padx=5, pady=5)
 
+        self.key_movement.pack(anchor="w", side=tk.LEFT)
+        self.zoom_frame.pack(anchor="e", side=tk.RIGHT)
+
         self.hud_canvas.pack(fill=tk.X, expand=False)
         self.canvas.pack(fill=tk.BOTH, expand=True)
-        self.zoom_frame.pack(anchor="e")
+        self.bottom_frame.pack(fill=tk.X)
 
     def scroll_start(self, event):
         self.canvas.scan_mark(event.x, event.y)
@@ -276,24 +419,53 @@ class ConsoleFrame(tk.Frame):
 
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.application = application
 
-        self.console = tk.Text(self, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
+        self.output = tk.IntVar()
+        self.warning = tk.IntVar()
+        self.error = tk.IntVar()
+
+        self.console_frame = tk.Frame(self, bg=DARK_BLUE)
+        self.console = tk.Text(self.console_frame, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
+        self.sb_y = tk.Scrollbar(self.console_frame, orient=tk.VERTICAL, command=self.console.yview)
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
         self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
-                                        bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                        bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
+                                        variable=self.output, onvalue=1, offvalue=0, 
+                                        command=application.console_filter)
         self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12),
-                                            bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                            bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black",
+                                            variable=self.warning, onvalue=1, offvalue=0, 
+                                            command=application.console_filter)
         self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12),
-                                          bg=DARK_BLUE, activebackground=DARK_BLUE)
+                                          bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
+                                          variable=self.error, onvalue=1, offvalue=0, 
+                                          command=application.console_filter)
+        self.input_frame = tk.Frame(self, bg=DARK_BLUE)
+        self.input_entry = tk.Entry(self.input_frame, bd=1, relief=tk.SOLID, bg="black", insertbackground="white", fg="white", font=("Consolas", 12))
+        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, fg=DARK_BLUE, text="Enviar", font=("Consolas", 12), command=self.__send_input)
 
-        self.console.insert(tk.END, "Esto sería la consola")
-        self.console.config(state=tk.DISABLED)
+        self.console.config(state=tk.DISABLED, yscrollcommand=self.sb_y.set)
+        self.check_out.select()
+        self.check_warning.select()
+        self.check_error.select()
 
         self.check_out.grid(column=0, row=0)
         self.check_warning.grid(column=0, row=1)
         self.check_error.grid(column=0, row=2)
-        self.filter_frame.pack(side=tk.RIGHT)
+
+        self.input_button.pack(side=tk.RIGHT, padx=(5, 0))
+        self.input_entry.pack(fill=tk.X, expand=True)
+
+        self.sb_y.pack(fill=tk.Y, side=tk.RIGHT)
         self.console.pack(fill=tk.BOTH, expand=True)
+
+        self.filter_frame.pack(side=tk.RIGHT)
+        self.input_frame.pack(fill=tk.X, side=tk.BOTTOM, expand=True, pady=5)
+        self.console_frame.pack(fill=tk.BOTH, expand=True)
+    
+    def __send_input(self):
+        self.application.console.input(self.input_entry.get())
 
 
 class ButtonBar(tk.Frame):
@@ -318,6 +490,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.exec_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.stop_button = ImageButton(
@@ -329,6 +502,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.stop_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.undo_button = ImageButton(
@@ -340,6 +514,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.undo_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.redo_button = ImageButton(
@@ -351,6 +526,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.redo_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.save_button = ImageButton(
@@ -362,6 +538,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.save_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
         self.import_button = ImageButton(
@@ -373,6 +550,7 @@ class ButtonBar(tk.Frame):
                 "yellow": self.import_yel_img
             },
             bg=kwargs["bg"],
+            activebackground=DARK_BLUE,
             bd=0
         )
 

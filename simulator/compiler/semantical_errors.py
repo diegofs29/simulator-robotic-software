@@ -1,8 +1,6 @@
-from email.policy import default
-import re
 from .ast import *
 from .ast_visitor import ASTVisitor
-from ..console.console import Error
+from simulator.console.console import Error
 
 
 class Semantic:
