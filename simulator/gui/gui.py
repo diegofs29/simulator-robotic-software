@@ -15,11 +15,11 @@ class MainApplication(tk.Tk):
         self.geometry("1280x720")
 
         self.menu_bar = MenuBar(self, self)
+
         self.tools_frame = tk.Frame(self, bg=DARK_BLUE)
         self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
-        self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil (2 infrarrojos)", "Robot móvil (4 infrarrojos)", "Actuador lineal"],
-                                           state="readonly")
-        self.robot_selector.current(0)
+        self.selector_bar = SelectorBar(self.tools_frame, self, bg=DARK_BLUE)
+
         self.vertical_pane = tk.PanedWindow(
             orient=tk.VERTICAL, sashpad=5, sashrelief="solid", bg=DARK_BLUE)
         self.horizontal_pane = tk.PanedWindow(
@@ -29,14 +29,14 @@ class MainApplication(tk.Tk):
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
         self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
 
+        self.console = console.Console(self.console_frame.console)
         self.robot_layer: layers.Layer = self.select_robot()
         self.configure_layer()
-        self.console = console.Console(self.console_frame.console)
         self.keys_used = True
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
-        self.robot_selector.pack(side="right", padx=15)
+        self.selector_bar.pack(fill=tk.X, side="right")
         self.move_WASD = {
             "w": False,
             "a": False,
@@ -60,7 +60,6 @@ class MainApplication(tk.Tk):
         self.vertical_pane.add(self.horizontal_pane, stretch="first", minsize=100)
         self.vertical_pane.add(self.console_frame, stretch="never", height=200, minsize=100)
 
-        self.robot_selector.bind("<<ComboboxSelected>>", self.change_robot)
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
         self.bind("<KeyPress-Up>", self.__up)
@@ -89,12 +88,15 @@ class MainApplication(tk.Tk):
         self.configure_layer()
 
     def select_robot(self):
-        robot = self.robot_selector.current()
+        robot = self.selector_bar.robot_selector.current()
         if robot == 0:
+            self.selector_bar.recover_circuit_selector()
             return layers.MoblileRobotLayer(2)
         elif robot == 1:
+            self.selector_bar.recover_circuit_selector()
             return layers.MoblileRobotLayer(4)
         elif robot == 2:
+            self.selector_bar.hide_circuit_selector()
             return layers.LinearActuatorLayer()
         return None
 
@@ -324,12 +326,12 @@ class DrawingFrame(tk.Frame):
         self.zoom_label.configure(text="{}%".format(self.application.robot_layer.zoom_percent))
 
     def __load_images(self):
-        self.zoom_img = tk.PhotoImage(file="simulator/gui/buttons/zoom.png")
-        self.zoom_whi_img = tk.PhotoImage(file="simulator/gui/buttons/zoom_w.png")
-        self.zoom_yel_img = tk.PhotoImage(file="simulator/gui/buttons/zoom_y.png")
-        self.dezoom_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom.png")
-        self.dezoom_whi_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom_w.png")
-        self.dezoom_yel_img = tk.PhotoImage(file="simulator/gui/buttons/dezoom_y.png")
+        self.zoom_img = tk.PhotoImage(file="buttons/zoom.png")
+        self.zoom_whi_img = tk.PhotoImage(file="buttons/zoom_w.png")
+        self.zoom_yel_img = tk.PhotoImage(file="buttons/zoom_y.png")
+        self.dezoom_img = tk.PhotoImage(file="buttons/dezoom.png")
+        self.dezoom_whi_img = tk.PhotoImage(file="buttons/dezoom_w.png")
+        self.dezoom_yel_img = tk.PhotoImage(file="buttons/dezoom_y.png")
 
 
 class EditorFrame(tk.Frame):
@@ -588,24 +590,24 @@ class ButtonBar(tk.Frame):
         self.application.stop_move()
 
     def __load_images(self):
-        self.exec_img = tk.PhotoImage(file="simulator/gui/buttons/exec.png")
-        self.exec_whi_img = tk.PhotoImage(file="simulator/gui/buttons/exec_w.png")
-        self.exec_yel_img = tk.PhotoImage(file="simulator/gui/buttons/exec_y.png")
-        self.import_img = tk.PhotoImage(file="simulator/gui/buttons/import.png")
-        self.import_whi_img = tk.PhotoImage(file="simulator/gui/buttons/import_w.png")
-        self.import_yel_img = tk.PhotoImage(file="simulator/gui/buttons/import_y.png")
-        self.redo_img = tk.PhotoImage(file="simulator/gui/buttons/redo.png")
-        self.redo_whi_img = tk.PhotoImage(file="simulator/gui/buttons/redo_w.png")
-        self.redo_yel_img = tk.PhotoImage(file="simulator/gui/buttons/redo_y.png")
-        self.save_img = tk.PhotoImage(file="simulator/gui/buttons/save.png")
-        self.save_whi_img = tk.PhotoImage(file="simulator/gui/buttons/save_w.png")
-        self.save_yel_img = tk.PhotoImage(file="simulator/gui/buttons/save_y.png")
-        self.stop_img = tk.PhotoImage(file="simulator/gui/buttons/stop.png")
-        self.stop_whi_img = tk.PhotoImage(file="simulator/gui/buttons/stop_w.png")
-        self.stop_yel_img = tk.PhotoImage(file="simulator/gui/buttons/stop_y.png")
-        self.undo_img = tk.PhotoImage(file="simulator/gui/buttons/undo.png")
-        self.undo_whi_img = tk.PhotoImage(file="simulator/gui/buttons/undo_w.png")
-        self.undo_yel_img = tk.PhotoImage(file="simulator/gui/buttons/undo_y.png")
+        self.exec_img = tk.PhotoImage(file="buttons/exec.png")
+        self.exec_whi_img = tk.PhotoImage(file="buttons/exec_w.png")
+        self.exec_yel_img = tk.PhotoImage(file="buttons/exec_y.png")
+        self.import_img = tk.PhotoImage(file="buttons/import.png")
+        self.import_whi_img = tk.PhotoImage(file="buttons/import_w.png")
+        self.import_yel_img = tk.PhotoImage(file="buttons/import_y.png")
+        self.redo_img = tk.PhotoImage(file="buttons/redo.png")
+        self.redo_whi_img = tk.PhotoImage(file="buttons/redo_w.png")
+        self.redo_yel_img = tk.PhotoImage(file="buttons/redo_y.png")
+        self.save_img = tk.PhotoImage(file="buttons/save.png")
+        self.save_whi_img = tk.PhotoImage(file="buttons/save_w.png")
+        self.save_yel_img = tk.PhotoImage(file="buttons/save_y.png")
+        self.stop_img = tk.PhotoImage(file="buttons/stop.png")
+        self.stop_whi_img = tk.PhotoImage(file="buttons/stop_w.png")
+        self.stop_yel_img = tk.PhotoImage(file="buttons/stop_y.png")
+        self.undo_img = tk.PhotoImage(file="buttons/undo.png")
+        self.undo_whi_img = tk.PhotoImage(file="buttons/undo_w.png")
+        self.undo_yel_img = tk.PhotoImage(file="buttons/undo_y.png")
 
 
 class ImageButton(tk.Button):
@@ -637,6 +639,41 @@ class ImageButton(tk.Button):
     def set_tooltip_text(self, label: tk.Label, tooltip):
         self.label = label
         self.tooltip = tooltip
+
+
+class SelectorBar(tk.Frame):
+
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+
+        self.lb_robot = tk.Label(self, text="Robot:", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
+        self.robot_selector = ttk.Combobox(self, state="readonly")
+        self.lb_track = tk.Label(self, text="Circuito:", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
+        self.track_selector = ttk.Combobox(self, state="readonly")
+
+        self.robot_selector['values'] = ["Robot móvil (2 infrarrojos)", "Robot móvil (4 infrarrojos)", "Actuador lineal"]
+        self.robot_selector.current(0)
+        self.track_selector['values'] = ["Circuito", "Laberinto", "Recta", "Obstáculo", "Recta y obstáculo"]
+        self.track_selector.current(0)
+
+        self.robot_selector.bind("<<ComboboxSelected>>", application.change_robot)
+        
+        self.lb_robot.grid(row=0, column=0)
+        self.robot_selector.grid(row=0, column=1, padx=(5, 15))
+        self.lb_track.grid(row=0, column=2)
+        self.track_selector.grid(row=0, column=3, padx=(5, 10))
+
+    def hide_circuit_selector(self):
+        if self.lb_track.winfo_ismapped():
+            self.lb_track.grid_forget()
+        if self.track_selector.winfo_ismapped():
+            self.track_selector.grid_forget()
+
+    def recover_circuit_selector(self):
+        if not self.lb_track.winfo_ismapped():
+            self.lb_track.grid(row=0, column=2)
+        if not self.track_selector.winfo_ismapped():
+            self.track_selector.grid(row=0, column=3, padx=(5, 10))
 
 
 def main():

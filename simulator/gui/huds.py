@@ -34,9 +34,9 @@ class MobileHUD(HUD):
         Constructor for mobile robot's HUD
         """
         super().__init__()
-        self.img_ff = Image.open('simulator/gui/assets/full-speed.png')
-        self.img_mf = Image.open('simulator/gui/assets/mid-speed.png')
-        self.img_sf = Image.open('simulator/gui/assets/slow-speed.png')
+        self.img_ff = Image.open('assets/full-speed.png')
+        self.img_mf = Image.open('assets/mid-speed.png')
+        self.img_sf = Image.open('assets/slow-speed.png')
 
     def set_text(self):
         """
@@ -137,9 +137,9 @@ class ActuatorHUD(HUD):
         Constructor for linear actuator's HUD
         """
         super().__init__()
-        self.img_ff = Image.open('simulator/gui/assets/full-speed.png')
-        self.img_mf = Image.open('simulator/gui/assets/mid-speed.png')
-        self.img_sf = Image.open('simulator/gui/assets/slow-speed.png')
+        self.img_ff = Image.open('assets/full-speed.png')
+        self.img_mf = Image.open('assets/mid-speed.png')
+        self.img_sf = Image.open('assets/slow-speed.png')
 
     def set_text(self):
         """

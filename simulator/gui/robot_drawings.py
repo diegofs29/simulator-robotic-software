@@ -53,7 +53,7 @@ class LinearActuatorDrawing(RobotDrawing):
             to be represented
         """
         super().__init__(drawing)
-        self.img_act = "simulator/gui/assets/actuator.png"
+        self.img_act = "assets/actuator.png"
 
         self.drawing_width = 2500
         self.drawing_height = 600
@@ -114,17 +114,17 @@ class LinearActuatorDrawing(RobotDrawing):
             "image": self.img_act
         }
         self.but_left = self.ActuatorButton(
-            "simulator/gui/assets/button-hit.png", 
-            "simulator/gui/assets/button-no-hit.png",
+            "assets/button-hit.png", 
+            "assets/button-no-hit.png",
             self.x - 960, self.y + 70
         )
         self.but_right = self.ActuatorButton(
-            "simulator/gui/assets/button-hit.png", 
-            "simulator/gui/assets/button-no-hit.png",
+            "assets/button-hit.png", 
+            "assets/button-no-hit.png",
             self.x + 880, self.y - 185
         )
         self.block = self.Block(
-            "simulator/gui/assets/mobile-part.png",
+            "assets/mobile-part.png",
             self.x, self.y - 50
         )
 
@@ -225,7 +225,7 @@ class MobileRobotDrawing(RobotDrawing):
             robot
         """
         super().__init__(drawing)
-        self.img_mobrob = "simulator/gui/assets/mobile-robot.png"
+        self.img_mobrob = "assets/mobile-robot.png"
 
         self.drawing_width = 6300
         self.drawing_height = 4300
@@ -515,8 +515,8 @@ class MobileRobotDrawing(RobotDrawing):
                 y: the y position of the sensor
             """
             super().__init__(x, y)
-            self.img_light = "simulator/gui/assets/light-bright.png"
-            self.img_dark = "simulator/gui/assets/light-dark.png"
+            self.img_light = "assets/light-bright.png"
+            self.img_dark = "assets/light-dark.png"
             self.img_shown = self.img_light
 
         def light(self):
