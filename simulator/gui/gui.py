@@ -87,14 +87,20 @@ class MainApplication(tk.Tk):
         self.robot_layer = self.select_robot()
         self.configure_layer()
 
+    def change_track(self, event):
+        self.stop_move()
+        circuit = self.selector_bar.track_selector.current()
+        self.robot_layer.set_circuit(circuit)
+        self.configure_layer()
+
     def select_robot(self):
         robot = self.selector_bar.robot_selector.current()
         if robot == 0:
             self.selector_bar.recover_circuit_selector()
-            return layers.MoblileRobotLayer(2)
+            return layers.MoblileRobotLayer(2, self.selector_bar.track_selector.current())
         elif robot == 1:
             self.selector_bar.recover_circuit_selector()
-            return layers.MoblileRobotLayer(4)
+            return layers.MoblileRobotLayer(4, self.selector_bar.track_selector.current())
         elif robot == 2:
             self.selector_bar.hide_circuit_selector()
             return layers.LinearActuatorLayer()
@@ -657,6 +663,7 @@ class SelectorBar(tk.Frame):
         self.track_selector.current(0)
 
         self.robot_selector.bind("<<ComboboxSelected>>", application.change_robot)
+        self.track_selector.bind("<<ComboboxSelected>>", application.change_track)
         
         self.lb_robot.grid(row=0, column=0)
         self.robot_selector.grid(row=0, column=1, padx=(5, 15))

@@ -25,8 +25,10 @@ class RobotDataReader:
         for circuit in self.circuits:
             if circuit_name == circuit['name']:
                 if circuit['name'] == circuit_name:
-                    straights = self.__read_straights(circuit['parts'])
-                    obstacles = self.__read_obstacles(circuit['obstacles'])
+                    if 'parts' in circuit:
+                        straights = self.__read_straights(circuit['parts'])
+                    if 'obstacles' in circuit:
+                        obstacles = self.__read_obstacles(circuit['obstacles'])
         return (straights, obstacles)
 
     def __read_straights(self, parts):

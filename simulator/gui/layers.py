@@ -104,21 +104,22 @@ class Layer:
 
 class MoblileRobotLayer(Layer):
 
-    def __init__(self, n_light_sens):
+    def __init__(self, n_light_sens, circuit_opt):
         """
         Constructor for MobileRobotLayer
+        Arguments:
+            n_light_sens: the number of light sensors
+            circuit_opt: a number that specifies the chosen
+            circuit
         """
         super().__init__()
         self.hud = huds.MobileHUD()
         self.robot = robots.MobileRobot(n_light_sens)
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
 
-        rdr = filesr.RobotDataReader()
-        map_tuple = rdr.parse_circuit("circuit")
-        straights = map_tuple[0]
-        obstacles = map_tuple[1]
-        self.circuit = robot_drawings.Circuit(straights, self.drawing)
-        self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
+        self.rdr = filesr.RobotDataReader()
+        self.n_sens = n_light_sens
+        self.set_circuit(circuit_opt)
 
         self.is_rotating = False
         self.is_moving = False
@@ -153,8 +154,36 @@ class MoblileRobotLayer(Layer):
             self.robot_drawing.change_angle(da)
 
         #Overlapping check
-        self.__check_circuit_overlap()  
-        self.__detect_obstacle()
+        if self.circuit != None:
+            self.__check_circuit_overlap()
+        if self.obstacle != None: 
+            self.__detect_obstacle()
+
+    def set_circuit(self, circuit_opt):
+        """
+        Changes the circuit
+        Arguments: 
+            circuit_opt: the number of the chosen circuit
+        """
+        circuit_name = self.__parse_circuit_opt(circuit_opt)
+        map_tuple = self.rdr.parse_circuit(circuit_name)
+        straights = map_tuple[0]
+        obstacles = map_tuple[1]
+        self.circuit = None
+        if len(straights) > 0:
+            self.circuit = robot_drawings.Circuit(straights, self.drawing)
+        self.obstacle = None
+        if len(obstacles) > 0:
+            self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
+        self.reset_robot()
+    
+    def reset_robot(self):
+        """
+        Resets the robot
+        """
+        self.hud = huds.MobileHUD()
+        self.robot = robots.MobileRobot(self.n_sens)
+        self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, self.n_sens)
 
     def __move_keys(self, movement):
         """
@@ -211,6 +240,26 @@ class MoblileRobotLayer(Layer):
                 v = -v_i
         return v, da
 
+    def __parse_circuit_opt(self, circuit_opt):
+        """
+        Parses the option chosen for the circuit
+        Arguments:
+            circuit_opt: the number which specifies the option
+        Returns:
+            A string with the corresponding name
+        """
+        if circuit_opt == 0:
+            return "circuit"
+        elif circuit_opt == 1:
+            return "labyrinth"
+        elif circuit_opt == 2:
+            return "straight"
+        elif circuit_opt == 3:
+            return "obstacle"
+        elif circuit_opt == 4:
+            return "straight and obstacle"
+        return "circuit"
+
     def _drawing_config(self):
         """
         Configures the drawing before executing or after
@@ -231,13 +280,15 @@ class MoblileRobotLayer(Layer):
         """
         Creates and draws the circuit in the canvas
         """
-        self.circuit.create_circuit()
+        if self.circuit != None:
+            self.circuit.create_circuit()
 
     def __create_obstacle(self):
         """
         Draws the obstacle in the canvas
         """
-        self.obstacle.draw()
+        if self.obstacle != None:
+            self.obstacle.draw()
 
     def __check_circuit_overlap(self):
         """
@@ -269,6 +320,8 @@ class MoblileRobotLayer(Layer):
         Returns:
             True if collides, False if else
         """
+        if self.obstacle == None:
+            return False
         return (
             x + self.robot_drawing.width / 2 >= self.obstacle.x and
             y + self.robot_drawing.height / 2 >= self.obstacle.y and
