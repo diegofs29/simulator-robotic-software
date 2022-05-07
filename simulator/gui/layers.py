@@ -345,7 +345,7 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        #self.robot.servo.value = 0
+        self.robot.servo.value = 0
         v_s = int((self.robot.servo.value - 90) / 10)
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:

@@ -17,7 +17,7 @@ class MainApplication(tk.Tk):
         self.menu_bar = MenuBar(self, self)
         self.tools_frame = tk.Frame(self, bg=DARK_BLUE)
         self.button_bar = ButtonBar(self.tools_frame, self, bg=DARK_BLUE)
-        self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil", "Actuador lineal"],
+        self.robot_selector = ttk.Combobox(self.tools_frame, values=["Robot móvil (2 infrarrojos)", "Robot móvil (4 infrarrojos)", "Actuador lineal"],
                                            state="readonly")
         self.robot_selector.current(0)
         self.vertical_pane = tk.PanedWindow(
@@ -93,6 +93,8 @@ class MainApplication(tk.Tk):
         if robot == 0:
             return layers.MoblileRobotLayer(2)
         elif robot == 1:
+            return layers.MoblileRobotLayer(4)
+        elif robot == 2:
             return layers.LinearActuatorLayer()
         return None
 
