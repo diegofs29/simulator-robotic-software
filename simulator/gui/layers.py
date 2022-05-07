@@ -2,6 +2,7 @@ import drawing
 import robot_drawings
 import huds
 import simulator.robots.robots as robots
+import simulator.files.files_reader as filesr
 
 class Layer:
 
@@ -111,8 +112,13 @@ class MoblileRobotLayer(Layer):
         self.hud = huds.MobileHUD()
         self.robot = robots.MobileRobot(n_light_sens)
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
-        self.circuit = robot_drawings.Circuit(self.drawing)
-        self.obstacle = robot_drawings.Obstacle(700, 3000, 600, 450, self.drawing)
+
+        rdr = filesr.RobotDataReader()
+        map_tuple = rdr.parse_circuit("circuit")
+        straights = map_tuple[0]
+        obstacles = map_tuple[1]
+        self.circuit = robot_drawings.Circuit(straights, self.drawing)
+        self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
 
         self.is_rotating = False
         self.is_moving = False

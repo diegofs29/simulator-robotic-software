@@ -557,13 +557,16 @@ class MobileRobotDrawing(RobotDrawing):
 
 class Circuit:
 
-    def __init__(self, drawing: drawing.Drawing):
+    def __init__(self, straights, drawing: drawing.Drawing):
         """
         Constructor for Circuit
         Arguments:
+            straights: a list with the straights (map with
+            orientation: length)
             drawing: the drawing where the circuit is
             going to be represented
         """
+        self.straights = straights
         self.circuit_parts = []
         self.drawing = drawing
         self.ROAD_WIDTH = 300
@@ -572,25 +575,7 @@ class Circuit:
         """
         Creates and draws a circuit
         """
-        straight_lengths = {
-            1: {"x": 5000}, #recta ppal
-            2: {"y": 1000}, #chicane 1
-            3: {"x": -370},
-            4: {"y": 1000}, #recta 1
-            5: {"x": 370}, #chicane 2
-            6: {"y": 1000},
-            7: {"x": -2000}, #recta 2
-            8: {"y": -500}, #chicane 3
-            13: {"x": -1250},
-            14: {"y": -1000}, #recta 5
-            15: {"x": 750},
-            16: {"y": -750}, #horquilla 1
-            17: {"x": -1750},
-            18: {"y": 750},
-            19: {"x": -750}, #horquilla 1
-            20: {"y": -1500}, #ultima curva
-        }
-        self.create_straights(straight_lengths)
+        self.create_straights(self.straights)
         self.draw_circuit()
 
     def create_straights(self, straight_lengths):
@@ -602,13 +587,13 @@ class Circuit:
         """
         x = 500
         y = 500
-        for key in straight_lengths:
-            if "x" in straight_lengths[key]:
-                self.__create_straight(x, y, straight_lengths[key]["x"], self.ROAD_WIDTH)
-                x += straight_lengths[key]["x"]
-            elif "y" in straight_lengths[key]:
-                self.__create_straight(x, y, self.ROAD_WIDTH, straight_lengths[key]["y"])
-                y += straight_lengths[key]["y"]
+        for straight in straight_lengths:
+            if "x" in straight:
+                self.__create_straight(x, y, straight["x"], self.ROAD_WIDTH)
+                x += straight["x"]
+            elif "y" in straight:
+                self.__create_straight(x, y, self.ROAD_WIDTH, straight["y"])
+                y += straight["y"]
 
     def draw_circuit(self):
         """
@@ -699,21 +684,18 @@ class Circuit:
 
 class Obstacle:
 
-    def __init__(self, x, y, width, height, drawing: drawing.Drawing):
+    def __init__(self, obstacle, drawing: drawing.Drawing):
         """
         Constructor for Obstacle
         Arguments:
-            x: the initial x coordinate for the obstacle
-            y: the initial y coordinate for the obstacle
-            width: the width of the obstacle
-            height: the height of the obstacle
+            obstacle: an obstacle (map with int x, y, width and height)
             drawing: the drawing in which the obstacle will
             be drawn
         """
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        self.x = obstacle['x']
+        self.y = obstacle['y']
+        self.width = obstacle['width']
+        self.height = obstacle['height']
         self.drawing = drawing
 
     def draw(self):
