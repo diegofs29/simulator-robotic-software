@@ -17,6 +17,8 @@ class Layer:
         self._zoom_percentage()
         self.is_drawing = False
 
+        self.rdr = filesr.RobotDataReader()
+
     def execute(self):
         """
         Executes the code, showing what the robot will do on the canvas
@@ -114,10 +116,10 @@ class MoblileRobotLayer(Layer):
         """
         super().__init__()
         self.hud = huds.MobileHUD()
-        self.robot = robots.MobileRobot(n_light_sens)
+        self.robot_data = self.rdr.parse_robot(0 if n_light_sens == 2 else 1)
+        self.robot = robots.MobileRobot(n_light_sens, self.robot_data)
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
 
-        self.rdr = filesr.RobotDataReader()
         self.n_sens = n_light_sens
         self.set_circuit(circuit_opt)
 
@@ -182,7 +184,7 @@ class MoblileRobotLayer(Layer):
         Resets the robot
         """
         self.hud = huds.MobileHUD()
-        self.robot = robots.MobileRobot(self.n_sens)
+        self.robot = robots.MobileRobot(self.n_sens, self.robot_data)
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, self.n_sens)
 
     def __move_keys(self, movement):
@@ -362,7 +364,8 @@ class LinearActuatorLayer(Layer):
         """
         super().__init__()
         self.hud = huds.ActuatorHUD()
-        self.robot = robots.LinearActuator()
+        self.robot_data = self.rdr.parse_robot(2)
+        self.robot = robots.LinearActuator(self.robot_data)
         self.robot_drawing = robot_drawings.LinearActuatorDrawing(self.drawing)
 
     def move(self, using_keys, move_WASD, move_dir):

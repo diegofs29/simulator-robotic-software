@@ -12,6 +12,22 @@ class RobotDataReader:
         self.robots = self.data['robots']
         self.circuits = self.data['circuits']
 
+    def parse_robot(self, robot_opt):
+        """
+        Parses robot's configuration from json file
+        Arguments:
+            robot_opt: the number of the robot to load
+        Returns:
+            A list of tuples with the corresponding pins
+        """
+        list_elem = []
+        robot_name = self.__name_from_opt(robot_opt)
+        for robot in self.robots:
+            if robot['name'] == robot_name:
+                for elem in robot['elements']:
+                    list_elem.append((elem['name'], elem['pin']))
+        return list_elem
+
     def parse_circuit(self, circuit_name):
         """
         Parses circuit's straights and obstacles
@@ -30,6 +46,22 @@ class RobotDataReader:
                     if 'obstacles' in circuit:
                         obstacles = self.__read_obstacles(circuit['obstacles'])
         return (straights, obstacles)
+
+    def __name_from_opt(self, robot_opt):
+        """
+        Gets the name given the option number
+        Arguments:
+            robot_opt: the number of the robot
+        Returns:
+            The name of the robot that has been requested
+        """
+        if robot_opt == 0:
+            return "mobile2"
+        elif robot_opt == 1:
+            return "mobile4"
+        elif robot_opt == 2:
+            return "actuator"
+        return "mobile2"
 
     def __read_straights(self, parts):
         """
@@ -64,7 +96,3 @@ class RobotDataReader:
                 obs
             )
         return list_obs
-
-
-if __name__ == "__main__":
-    RobotDataReader()

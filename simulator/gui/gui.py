@@ -76,7 +76,8 @@ class MainApplication(tk.Tk):
         Top level window to configure pins connected to the
         Arduino board
         """
-        conf_win = PinConfigurationWindow(self)
+        robot = self.selector_bar.robot_selector.current()
+        conf_win = PinConfigurationWindow(self, robot, self)
 
     def configure_layer(self):
         self.robot_layer.set_canvas(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
@@ -168,70 +169,157 @@ class MainApplication(tk.Tk):
 
 class PinConfigurationWindow(tk.Toplevel):
 
-    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
+    def __init__(self, parent, robot_option, application: MainApplication = None, *args, **kwargs):
         tk.Toplevel.__init__(self, parent, *args, **kwargs)
+        self.application = application
         
-        frame_actuator = tk.Frame(self)
-        lb_actuator = tk.Label(frame_actuator, text="Actuador lineal:")
-        lb_pin_bt1 = tk.Label(frame_actuator, text="Pin botón izquierdo:")
-        self.entry_pin_bt1 = tk.Entry(frame_actuator)
-        lb_pin_bt2 = tk.Label(frame_actuator, text="Pin botón derecho:")
-        self.entry_pin_bt2 = tk.Entry(frame_actuator)
-        lb_pin_joystick = tk.Label(frame_actuator, text="Pin Joystick:")
-        self.entry_pin_joystick = tk.Entry(frame_actuator)
+        frame_content = tk.Frame(self)
+        frame_buttons = tk.Frame(self)
+        self.robot_option = robot_option
 
-        lb_actuator.grid(row=0, column=0, sticky="w")
-        lb_pin_bt1.grid(row=1, column=0, sticky="w")
-        self.entry_pin_bt1.grid(row=1, column=1, sticky="w", padx=5)
-        lb_pin_bt2.grid(row=1, column=2, sticky="w")
-        self.entry_pin_bt2.grid(row=1, column=3, sticky="w", padx=5)
-        lb_pin_joystick.grid(row=2, column=0, sticky="w")
-        self.entry_pin_joystick.grid(row=2, column=1, sticky="w", padx=5)
+        #Actuator
+        self.lb_actuator = tk.Label(frame_content, text="Actuador lineal:")
+        self.lb_pin_bt1 = tk.Label(frame_content, text="Pin botón izquierdo:")
+        self.entry_pin_bt1 = tk.Entry(frame_content)
+        self.lb_pin_bt2 = tk.Label(frame_content, text="Pin botón derecho:")
+        self.entry_pin_bt2 = tk.Entry(frame_content)
+        self.lb_pin_joystick = tk.Label(frame_content, text="Pin botón Joystick:")
+        self.entry_pin_joystick = tk.Entry(frame_content)
+        self.lb_pin_joystick_x = tk.Label(frame_content, text="Pin Joystick (x):")
+        self.entry_pin_joystick_x = tk.Entry(frame_content)
+        self.lb_pin_joystick_y = tk.Label(frame_content, text="Pin Joystick (y):")
+        self.entry_pin_joystick_y = tk.Entry(frame_content)
+        self.lb_pin_aservo = tk.Label(frame_content, text="Pin Servo:")
+        self.entry_pin_aservo = tk.Entry(frame_content)
 
-        frame_mobile = tk.Frame(self)
-        lb_mobile = tk.Label(frame_mobile, text="Robot móvil")
-        lb_pin_servo1 = tk.Label(frame_mobile, text="Pin servo izquierdo:")
-        self.entry_pin_se1 = tk.Entry(frame_mobile)
-        lb_pin_servo2 = tk.Label(frame_mobile, text="Pin servo derecho:")
-        self.entry_pin_se2 = tk.Entry(frame_mobile)
-        lb_pin_light1 = tk.Label(frame_mobile, text="Pin luz mas izquierda:")
-        self.entry_pin_l1 = tk.Entry(frame_mobile)
-        lb_pin_light2 = tk.Label(frame_mobile, text="Pin luz izquierda:")
-        self.entry_pin_l2 = tk.Entry(frame_mobile)
-        lb_pin_light3 = tk.Label(frame_mobile, text="Pin luz derecha:")
-        self.entry_pin_l3 = tk.Entry(frame_mobile)
-        lb_pin_light4 = tk.Label(frame_mobile, text="Pin luz mas derecha:")
-        self.entry_pin_l4 = tk.Entry(frame_mobile)
-        lb_pin_sound1 = tk.Label(frame_actuator, text="Pin ultrasonidos izquierdo:")
-        self.entry_pin_so1 = tk.Entry(frame_actuator)
-        lb_pin_sound2 = tk.Label(frame_actuator, text="Pin ultrasonidos derecho:")
-        self.entry_pin_so2 = tk.Entry(frame_actuator)
-        
-        lb_mobile.grid(row=0, column=0, sticky="w")
-        lb_pin_servo1.grid(row=1, column=0, sticky="w")
-        self.entry_pin_se1.grid(row=1, column=1, sticky="w", padx=5)
-        lb_pin_servo2.grid(row=1, column=2, sticky="w")
-        self.entry_pin_se2.grid(row=1, column=3, sticky="w", padx=5)
-        lb_pin_light2.grid(row=2, column=0, sticky="w")
-        self.entry_pin_l2.grid(row=2, column=1, sticky="w", padx=5)
-        lb_pin_light3.grid(row=2, column=2, sticky="w")
-        self.entry_pin_l3.grid(row=2, column=3, sticky="w", padx=5)
-        lb_pin_light1.grid(row=3, column=0, sticky="w")
-        self.entry_pin_l1.grid(row=3, column=1, sticky="w", padx=5)
-        lb_pin_light4.grid(row=3, column=2, sticky="w")
-        self.entry_pin_l4.grid(row=3, column=3, sticky="w", padx=5)
-        lb_pin_sound1.grid(row=4, column=0, sticky="w")
-        self.entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
-        lb_pin_sound2.grid(row=4, column=2, sticky="w")
-        self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
+        self.lb_mobile = tk.Label(frame_content, text="Robot móvil")
+        self.lb_pin_servo1 = tk.Label(frame_content, text="Pin servo izquierdo:")
+        self.entry_pin_se1 = tk.Entry(frame_content)
+        self.lb_pin_servo2 = tk.Label(frame_content, text="Pin servo derecho:")
+        self.entry_pin_se2 = tk.Entry(frame_content)
+        self.lb_pin_light1 = tk.Label(frame_content, text="Pin luz mas izquierda:")
+        self.entry_pin_l1 = tk.Entry(frame_content)
+        self.lb_pin_light2 = tk.Label(frame_content, text="Pin luz izquierda:")
+        self.entry_pin_l2 = tk.Entry(frame_content)
+        self.lb_pin_light3 = tk.Label(frame_content, text="Pin luz derecha:")
+        self.entry_pin_l3 = tk.Entry(frame_content)
+        self.lb_pin_light4 = tk.Label(frame_content, text="Pin luz mas derecha:")
+        self.entry_pin_l4 = tk.Entry(frame_content)
+        self.lb_pin_sound1 = tk.Label(frame_content, text="Pin trigger:")
+        self.entry_pin_so1 = tk.Entry(frame_content)
+        self.lb_pin_sound2 = tk.Label(frame_content, text="Pin echo:")
+        self.entry_pin_so2 = tk.Entry(frame_content)
 
-        frame_mobile.pack(anchor="nw", padx=5, pady=5)
-        frame_actuator.pack(anchor="sw", padx=5, pady=5)
+        self.btn_accept = tk.Button(frame_buttons, text="Aceptar")
+        self.btn_cancel = tk.Button(frame_buttons, text="Cancelar", command=self.destroy)
+
+        if robot_option == 0:
+            self.show_for_mobile2()
+        if robot_option == 1:
+            self.show_for_mobile4()
+        if robot_option == 2:
+            self.show_for_actuator()
+
+        self.btn_accept.grid(row=0, column=0, sticky="se", padx=(0, 10))
+        self.btn_cancel.grid(row=0, column=1, sticky="se")
+
+        frame_content.pack(padx=5, pady=5)
+        frame_buttons.pack(anchor="se", padx=5, pady=5)
 
         x = (parent.winfo_x() + (parent.winfo_width() / 2)) - (self.winfo_reqwidth() / 2)
         y = (parent.winfo_y() + (parent.winfo_height() / 2)) - (self.winfo_reqheight() / 2)
         self.geometry("+%d+%d" %(x, y))
         self.resizable(False, False)
+
+    def show_for_mobile2(self):
+        """
+        Shows the window with the components needed to
+        configure the mobile robot which has 2 light sensors
+        """
+        robot = self.application.robot_layer.robot
+
+        self.lb_mobile.grid(row=0, column=0, sticky="w")
+        self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
+        self.entry_pin_se1.grid(row=1, column=1, sticky="w", padx=5)
+        self.lb_pin_servo2.grid(row=1, column=2, sticky="w")
+        self.entry_pin_se2.grid(row=1, column=3, sticky="w", padx=5)
+        self.lb_pin_light2.grid(row=2, column=0, sticky="w")
+        self.entry_pin_l2.grid(row=2, column=1, sticky="w", padx=5)
+        self.lb_pin_light3.grid(row=2, column=2, sticky="w")
+        self.entry_pin_l3.grid(row=2, column=3, sticky="w", padx=5)
+        self.lb_pin_sound1.grid(row=4, column=0, sticky="w")
+        self.entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
+        self.lb_pin_sound2.grid(row=4, column=2, sticky="w")
+        self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
+        
+        self.entry_pin_se1.insert(tk.END, robot.servo_left.pin)
+        self.entry_pin_se2.insert(tk.END, robot.servo_right.pin)
+        self.entry_pin_l2.insert(tk.END, robot.light_sensors[0].pin)
+        self.entry_pin_l3.insert(tk.END, robot.light_sensors[1].pin)
+        self.entry_pin_so1.insert(tk.END, robot.sound.pin_trig)
+        self.entry_pin_so2.insert(tk.END, robot.sound.pin_echo)
+
+    def show_for_mobile4(self):
+        """
+        Shows the window with the components needed to
+        configure the mobile robot which has 4 light sensors
+        """
+        robot = self.application.robot_layer.robot
+
+        self.lb_mobile.grid(row=0, column=0, sticky="w")
+        self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
+        self.entry_pin_se1.grid(row=1, column=1, sticky="w", padx=5)
+        self.lb_pin_servo2.grid(row=1, column=2, sticky="w")
+        self.entry_pin_se2.grid(row=1, column=3, sticky="w", padx=5)
+        self.lb_pin_light2.grid(row=2, column=0, sticky="w")
+        self.entry_pin_l2.grid(row=2, column=1, sticky="w", padx=5)
+        self.lb_pin_light3.grid(row=2, column=2, sticky="w")
+        self.entry_pin_l3.grid(row=2, column=3, sticky="w", padx=5)
+        self.lb_pin_light1.grid(row=3, column=0, sticky="w")
+        self.entry_pin_l1.grid(row=3, column=1, sticky="w", padx=5)
+        self.lb_pin_light4.grid(row=3, column=2, sticky="w")
+        self.entry_pin_l4.grid(row=3, column=3, sticky="w", padx=5)
+        self.lb_pin_sound1.grid(row=4, column=0, sticky="w")
+        self.entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
+        self.lb_pin_sound2.grid(row=4, column=2, sticky="w")
+        self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
+
+        self.entry_pin_se1.insert(tk.END, robot.servo_left.pin)
+        self.entry_pin_se2.insert(tk.END, robot.servo_right.pin)
+        self.entry_pin_l1.insert(tk.END, robot.light_sensors[0].pin)
+        self.entry_pin_l2.insert(tk.END, robot.light_sensors[1].pin)
+        self.entry_pin_l3.insert(tk.END, robot.light_sensors[2].pin)
+        self.entry_pin_l4.insert(tk.END, robot.light_sensors[3].pin)
+        self.entry_pin_so1.insert(tk.END, robot.sound.pin_trig)
+        self.entry_pin_so2.insert(tk.END, robot.sound.pin_echo)
+
+    def show_for_actuator(self):
+        """
+        Shows the window with the components needed to
+        configure the actuator
+        """
+        robot = self.application.robot_layer.robot
+
+        self.lb_actuator.grid(row=0, column=0, sticky="w")
+        self.lb_pin_bt1.grid(row=1, column=0, sticky="w")
+        self.entry_pin_bt1.grid(row=1, column=1, sticky="w", padx=5)
+        self.lb_pin_bt2.grid(row=1, column=2, sticky="w")
+        self.entry_pin_bt2.grid(row=1, column=3, sticky="w", padx=5)
+        self.lb_pin_joystick.grid(row=2, column=0, sticky="w")
+        self.entry_pin_joystick.grid(row=2, column=1, sticky="w", padx=5)
+        self.lb_pin_aservo.grid(row=2, column=2, sticky="w")
+        self.entry_pin_aservo.grid(row=2, column=3, sticky="w", padx=5)
+        self.lb_pin_joystick_x.grid(row=3, column=0, sticky="w")
+        self.entry_pin_joystick_x.grid(row=3, column=1, sticky="w", padx=5)
+        self.lb_pin_joystick_y.grid(row=3, column=2, sticky="w")
+        self.entry_pin_joystick_y.grid(row=3, column=3, sticky="w", padx=5)
+
+        self.entry_pin_bt1.insert(tk.END, robot.button_left.pin)
+        self.entry_pin_bt2.insert(tk.END, robot.button_right.pin)
+        self.entry_pin_joystick.insert(tk.END, robot.joystick.pinb)
+        self.entry_pin_aservo.insert(tk.END, robot.servo.pin)
+        self.entry_pin_joystick_x.insert(tk.END, robot.joystick.pinx)
+        self.entry_pin_joystick_y.insert(tk.END, robot.joystick.piny)
 
 
 class MenuBar(tk.Menu):

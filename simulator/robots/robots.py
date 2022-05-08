@@ -300,6 +300,7 @@ class Joystick(Element):
         """
         self.pinx = -1
         self.piny = -1
+        self.pinb = -1
         self.dx = 0
         self.dy = 0
 
@@ -372,12 +373,13 @@ class UltrasoundSensor(Element):
 
 class MobileRobot:
 
-    def __init__(self, n_ligth_sens):
+    def __init__(self, n_ligth_sens, pins):
         """
         Constructor for mobile robot
         Arguments:
             n_light_sens: the number of light sensors
             of the robot
+            pins: the used pins of the board
         """
         self.board = BQzumBT328()
 
@@ -391,6 +393,35 @@ class MobileRobot:
             i += 1
 
         self.sound = UltrasoundSensor()
+
+        self.assign_pins(pins)
+
+    def assign_pins(self, pins):
+        """
+        Assigns the pins to the corresponding element
+        Arguments:
+            pins: a list of tuples with the name of the element
+            and the corresponding pin
+        """
+        for pin in pins:
+            name = pin[0]
+            pin = pin[1]
+            if name == "servo left":
+                self.set_servo_left(pin)
+            elif name == "servo right":
+                self.set_servo_right(pin)
+            elif name == "light 1":
+                self.set_light_mleft(pin)
+            elif name == "light 2":
+                self.set_light_left(pin)
+            elif name == "light 3":
+                self.set_light_right(pin)
+            elif name == "light 4":
+                self.set_light_mright(pin)
+            elif name == "trig":
+                self.set_sound_trig(pin)
+            elif name == "echo":
+                self.set_sound_echo(pin)
 
     def set_light_sens_value(self, values):
         """
@@ -436,82 +467,107 @@ class MobileRobot:
         Sets the most left light sensor attached to a pin
         and marks the pin as used at the board
         """
-        self.light_mleft.pin = pin
-        self.board.attach_pin(pin, self.light_mleft)
+        light = self.light_sensors[0]
+        light.pin = pin
+        self.board.attach_pin(pin, light)
 
     def detach_light_mleft(self):
         """
         Detaches the most left light sensor from board
         """
-        self.board.detach_pin(self.light_mleft.pin)
-        self.light_mleft.pin = -1
+        light = self.light_sensors[0]
+        self.board.detach_pin(light.pin)
+        light.pin = -1
 
     def set_light_left(self, pin):
         """
         Sets left light sensor attached to a pin
         and marks the pin as used at the board
         """
-        self.light_left.pin = pin
-        self.board.attach_pin(pin, self.light_left)
+        light = self.light_sensors[0] if len(self.light_sensors) == 2 else self.light_sensors[1]
+        light.pin = pin
+        self.board.attach_pin(pin, light)
 
     def detach_light_left(self):
         """
         Detaches left light sensor from board
         """
-        self.board.detach_pin(self.light_left.pin)
-        self.light_left.pin = -1
+        light = self.light_sensors[0] if len(self.light_sensors) == 2 else self.light_sensors[1]
+        self.board.detach_pin(light.pin)
+        light.pin = -1
 
     def set_light_right(self, pin):
         """
         Sets right light sensor attached to a pin
         and marks the pin as used at the board
         """
-        self.light_right.pin = pin
-        self.board.attach_pin(pin, self.light_right)
+        light = self.light_sensors[1] if len(self.light_sensors) == 2 else self.light_sensors[2]
+        light.pin = pin
+        self.board.attach_pin(pin, light)
 
     def detach_light_right(self):
         """
         Detaches right light sensor from board
         """
-        self.board.detach_pin(self.light_right.pin)
-        self.light_right.pin = -1
+        light = self.light_sensors[1] if len(self.light_sensors) == 2 else self.light_sensors[2]
+        self.board.detach_pin(light.pin)
+        light.pin = -1
 
     def set_light_mright(self, pin):
         """
         Sets the most right light sensor attached to a pin
         and marks the pin as used at the board
         """
-        self.light_mright.pin = pin
-        self.board.attach_pin(pin, self.light_mright)
+        light = self.light_sensors[3]
+        light.pin = pin
+        self.board.attach_pin(pin, light)
 
     def detach_light_mright(self):
         """
         Detaches the most right light sensor from board
         """
-        self.board.detach_pin(self.light_mright.pin)
-        self.light_mright.pin = -1
+        light = self.light_sensors[3]
+        self.board.detach_pin(light.pin)
+        light.pin = -1
 
-    def set_sound(self, pin):
+    def set_sound_trig(self, pin):
         """
-        Sets sound sensor attached to a pin and marks it
+        Sets sound sensor attached to a pin (trig) and marks it
         as used at the board
         """
-        self.sound.pin = pin
+        self.sound.pin_trig = pin
         self.board.attach_pin(pin, self.sound)
 
-    def detach_sound(self):
+    def detach_sound_trig(self):
         """
-        Detaches ultrasound sensor from board
+        Detaches ultrasound sensor (trig) from board
         """
-        self.board.detach_pin(self.sound.pin)
-        self.sound.pin = -1
+        self.board.detach_pin(self.sound.pin_trig)
+        self.sound.pin_trig = -1
+
+    def set_sound_echo(self, pin):
+        """
+        Sets sound sensor attached to a pin (echo) and marks it
+        as used at the board
+        """
+        self.sound.pin_echo = pin
+        self.board.attach_pin(pin, self.sound)
+
+    def detach_sound_echo(self):
+        """
+        Detaches ultrasound sensor (echo) from board
+        """
+        self.board.detach_pin(self.sound.pin_echo)
+        self.sound.pin_echo = -1
 
 
 class LinearActuator:
 
-    def __init__(self):
+    def __init__(self, pins):
         """
         Constructor for Linear Actuator
+        Arguments:
+            pins: the used pins of the board
         """
         self.board = ArduinoUno()
 
@@ -521,6 +577,31 @@ class LinearActuator:
         self.servo = Servo()
 
         self.joystick = Joystick()
+
+        self.assign_pins(pins)
+
+    def assign_pins(self, pins):
+        """
+        Assigns the pins to the corresponding element
+        Arguments:
+            pins: a list of tuples with the name of the element
+            and the corresponding pin
+        """
+        for pin in pins:
+            name = pin[0]
+            pin = pin[1]
+            if name == "servo":
+                self.set_servo(pin)
+            elif name == "button joystick":
+                self.set_joystick_button(pin)
+            elif name == "x joystick":
+                self.set_joystick_x(pin)
+            elif name == "y joystick":
+                self.set_joystick_y(pin)
+            elif name == "button left":
+                self.set_button_left(pin)
+            elif name == "button right":
+                self.set_button_right(pin)
 
     def set_button_left(self, pin):
         """
@@ -570,18 +651,50 @@ class LinearActuator:
         self.board.detach_pin(self.servo.pin)
         self.servo.pin = -1
 
-    def set_joystick(self, pin):
+    def set_joystick_x(self, pin):
         """
-        Attaches joystick to board pin
+        Attaches joystick (x) to board pin
         Arguments:
             pin: the pin of the board
         """
-        self.joystick.pin = pin
+        self.joystick.pinx = pin
         self.board.attach_pin(pin, self.joystick)
 
-    def detach_joystick(self):
+    def detach_joystick_x(self):
         """
-        Detaches joystick from board
+        Detaches joystick (x) from board
         """
-        self.board.detach_pin(self.joystick.pin)
-        self.joystick.pin = -1
+        self.board.detach_pin(self.joystick.pinx)
+        self.joystick.pinx = -1
+
+    def set_joystick_y(self, pin):
+        """
+        Attaches joystick (y) to board pin
+        Arguments:
+            pin: the pin of the board
+        """
+        self.joystick.piny = pin
+        self.board.attach_pin(pin, self.joystick)
+
+    def detach_joystick_x(self):
+        """
+        Detaches joystick (y) from board
+        """
+        self.board.detach_pin(self.joystick.piny)
+        self.joystick.piny = -1
+
+    def set_joystick_button(self, pin):
+        """
+        Attaches joystick (x) to board pin
+        Arguments:
+            pin: the pin of the board
+        """
+        self.joystick.pinb = pin
+        self.board.attach_pin(pin, self.joystick)
+
+    def detach_joystick_button(self):
+        """
+        Detaches joystick (x) from board
+        """
+        self.board.detach_pin(self.joystick.pinb)
+        self.joystick.pinb = -1
