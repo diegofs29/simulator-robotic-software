@@ -303,6 +303,7 @@ class Joystick(Element):
         self.pinb = -1
         self.dx = 0
         self.dy = 0
+        self.value = 0
 
     def get_value(self, pin):
         """
@@ -316,6 +317,8 @@ class Joystick(Element):
             return self.dx
         elif pin == self.piny:
             return self.dy
+        elif pin == self.pinb:
+            return self.value
         else:
             return None
 
@@ -325,6 +328,8 @@ class Joystick(Element):
                 self.dx = value
             elif pin == self.piny:
                 self.dy = value
+            elif pin == self.pinb:
+                self.value = value
             else:
                 return False
             return True

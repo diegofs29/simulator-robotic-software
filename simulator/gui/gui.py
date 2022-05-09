@@ -62,14 +62,6 @@ class MainApplication(tk.Tk):
 
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
-        self.bind("<KeyPress-Up>", self.__up)
-        self.bind("<KeyPress-Down>", self.__down)
-        self.bind("<KeyPress-Left>", self.__left)
-        self.bind("<KeyPress-Right>", self.__right)
-        self.bind("<KeyRelease-Up>", self.__release_up)
-        self.bind("<KeyRelease-Down>", self.__release_down)
-        self.bind("<KeyRelease-Left>", self.__release_left)
-        self.bind("<KeyRelease-Right>", self.__release_right)
 
     def open_pin_configuration(self):
         """
@@ -98,12 +90,15 @@ class MainApplication(tk.Tk):
         robot = self.selector_bar.robot_selector.current()
         if robot == 0:
             self.selector_bar.recover_circuit_selector()
+            self.drawing_frame.hide_joystick()
             return layers.MoblileRobotLayer(2, self.selector_bar.track_selector.current())
         elif robot == 1:
             self.selector_bar.recover_circuit_selector()
+            self.drawing_frame.hide_joystick()
             return layers.MoblileRobotLayer(4, self.selector_bar.track_selector.current())
         elif robot == 2:
             self.selector_bar.hide_circuit_selector()
+            self.drawing_frame.show_joystick()
             return layers.LinearActuatorLayer()
         return None
 
@@ -141,30 +136,6 @@ class MainApplication(tk.Tk):
 
     def toggle_keys(self):
         self.keys_used = not self.keys_used
-
-    def __up(self, event):
-        self.move_dir["up"] = True
-
-    def __down(self, event):
-        self.move_dir["down"] = True
-
-    def __left(self, event):
-        self.move_dir["left"] = True
-
-    def __right(self, event):
-        self.move_dir["right"] = True
-
-    def __release_up(self, event):
-        self.move_dir["up"] = False
-
-    def __release_down(self, event):
-        self.move_dir["down"] = False
-
-    def __release_left(self, event):
-        self.move_dir["left"] = False
-
-    def __release_right(self, event):
-        self.move_dir["right"] = False
 
 
 class PinConfigurationWindow(tk.Toplevel):
@@ -348,13 +319,16 @@ class DrawingFrame(tk.Frame):
         self.application = application
         self.__load_images()
 
-        self.canvas = tk.Canvas(self, bg="white", bd=1,
-                                relief=tk.SOLID, highlightthickness=0)
         self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
+
+        self.canvas_frame = tk.Frame(self, bg=BLUE)
+        self.canvas = tk.Canvas(self.canvas_frame, bg="white", bd=1,
+                                relief=tk.SOLID, highlightthickness=0)
+        self.joystick_frame = JoystickFrame(self.canvas_frame, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
 
         self.bottom_frame = tk.Frame(self, bg=BLUE)
         self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white", font=("Consolas", 12),
-                                          bg=BLUE, activebackground=BLUE, selectcolor="black", command=application.toggle_keys)        
+                                          bg=BLUE, activebackground=BLUE, selectcolor="black", command=application.toggle_keys)       
         self.zoom_frame = tk.Frame(self.bottom_frame, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
@@ -366,6 +340,7 @@ class DrawingFrame(tk.Frame):
             bg=BLUE,
             bd=0
         )
+        self.zoom_label = tk.Label(self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
         self.zoom_out_button = ImageButton(
             self.zoom_frame,
             {
@@ -376,7 +351,6 @@ class DrawingFrame(tk.Frame):
             bg=BLUE,
             bd=0
         )
-        self.zoom_label = tk.Label(self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
 
         self.canvas.bind("<ButtonPress-1>", self.scroll_start)
         self.canvas.bind("<B1-Motion>", self.scroll_move)
@@ -389,11 +363,13 @@ class DrawingFrame(tk.Frame):
         self.zoom_label.grid(row=0, column=1, padx=5, pady=5)
         self.zoom_out_button.grid(row=0, column=2, padx=5, pady=5)
 
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+
         self.key_movement.pack(anchor="w", side=tk.LEFT)
         self.zoom_frame.pack(anchor="e", side=tk.RIGHT)
 
         self.hud_canvas.pack(fill=tk.X, expand=False)
-        self.canvas.pack(fill=tk.BOTH, expand=True)
+        self.canvas_frame.pack(fill=tk.BOTH, expand=True)
         self.bottom_frame.pack(fill=tk.X)
 
     def scroll_start(self, event):
@@ -419,6 +395,12 @@ class DrawingFrame(tk.Frame):
     def change_zoom_label(self):
         self.zoom_label.configure(text="{}%".format(self.application.robot_layer.zoom_percent))
 
+    def show_joystick(self):
+        self.joystick_frame.pack(anchor="center", fill=tk.X)
+
+    def hide_joystick(self):
+        self.joystick_frame.pack_forget()
+
     def __load_images(self):
         self.zoom_img = tk.PhotoImage(file="buttons/zoom.png")
         self.zoom_whi_img = tk.PhotoImage(file="buttons/zoom_w.png")
@@ -426,6 +408,53 @@ class DrawingFrame(tk.Frame):
         self.dezoom_img = tk.PhotoImage(file="buttons/dezoom.png")
         self.dezoom_whi_img = tk.PhotoImage(file="buttons/dezoom_w.png")
         self.dezoom_yel_img = tk.PhotoImage(file="buttons/dezoom_y.png")
+
+
+class JoystickFrame(tk.Frame):
+
+    def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+
+        self.lb_joystick = tk.Label(self, text="Joystick", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
+        self.lb_x = tk.Label(self, text="X:", bg=DARK_BLUE, fg="white", font=("Consolas", 12))
+        self.x_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white", sliderrelief=tk.FLAT, highlightthickness=0)
+        self.lb_y = tk.Label(self, text="Y:", bg=DARK_BLUE, fg="white", font=("Consolas", 12))
+        self.y_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white", sliderrelief=tk.FLAT, highlightthickness=0)
+        self.j_button = tk.Button(self, text="Botón", bg=BLUE, bd=0, fg=DARK_BLUE, font=("Consolas", 13))
+
+        self.x_dir.set(500)
+        self.y_dir.set(500)
+
+        self.x_dir.bind("<ButtonRelease-1>", self.__updatex)
+        self.y_dir.bind("<ButtonRelease-1>", self.__updatey)
+        self.j_button.bind("<ButtonPress>", self.__pressb)
+        self.j_button.bind("<ButtonRelease>", self.__releaseb)
+
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
+        self.columnconfigure(4, weight=1)
+        self.columnconfigure(5, weight=1)
+
+        self.lb_joystick.grid(row=1, column=0, padx=(0, 20))
+        self.lb_x.grid(row=1, column=1, padx=(0, 5))
+        self.x_dir.grid(row=1, column=2, padx=(0, 20), pady=5)
+        self.lb_y.grid(row=1, column=3, padx=(0, 5))
+        self.y_dir.grid(row=1, column=4, padx=(0, 20), pady=5)
+        self.j_button.grid(row=1, column=5, padx=10)
+
+    def __updatex(self, event):
+        print(self.x_dir.get())
+
+    def __updatey(self, event):
+        print(self.y_dir.get())
+
+    def __pressb(self, event):
+        print(1)
+
+    def __releaseb(self, event):
+        print(0)
 
 
 class EditorFrame(tk.Frame):
