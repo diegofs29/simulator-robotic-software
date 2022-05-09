@@ -143,6 +143,7 @@ class PinConfigurationWindow(tk.Toplevel):
     def __init__(self, parent, robot_option, application: MainApplication = None, *args, **kwargs):
         tk.Toplevel.__init__(self, parent, *args, **kwargs)
         self.application = application
+        self.data = {}
         
         frame_content = tk.Frame(self)
         frame_buttons = tk.Frame(self)
@@ -181,7 +182,7 @@ class PinConfigurationWindow(tk.Toplevel):
         self.lb_pin_sound2 = tk.Label(frame_content, text="Pin echo:")
         self.entry_pin_so2 = tk.Entry(frame_content)
 
-        self.btn_accept = tk.Button(frame_buttons, text="Aceptar")
+        self.btn_accept = tk.Button(frame_buttons, text="Aceptar", command=self.commit_data)
         self.btn_cancel = tk.Button(frame_buttons, text="Cancelar", command=self.destroy)
 
         if robot_option == 0:
@@ -202,12 +203,80 @@ class PinConfigurationWindow(tk.Toplevel):
         self.geometry("+%d+%d" %(x, y))
         self.resizable(False, False)
 
+    def commit_data(self):
+        robot = self.application.robot_layer.robot
+        if 'servo_left' in self.data:
+            value = self.entry_pin_se1.get()
+            if self.data['servo_left'] != value:
+                robot.set_servo_left(value)
+        if 'servo_right' in self.data:
+            value = self.entry_pin_se2.get()
+            if self.data['servo_right'] != value:
+                robot.set_servo_right(value)
+        if 'light_mleft' in self.data:
+            value = self.entry_pin_l1.get()
+            if self.data['light_mleft'] != value:
+                robot.set_light_mleft(value)
+        if 'light_left' in self.data:
+            value = self.entry_pin_l2.get()
+            if self.data['light_left'] != value:
+                robot.set_light_left(value)
+        if 'light_right' in self.data:
+            value = self.entry_pin_l3.get()
+            if self.data['light_right'] != value:
+                robot.set_light_right(value)
+        if 'light_mright' in self.data:
+            value = self.entry_pin_l4.get()
+            if self.data['light_mright'] != value:
+                robot.set_light_mright(value)
+        if 'sound_trig' in self.data:
+            value = self.entry_pin_so1.get()
+            if self.data['sound_trig'] != value:
+                robot.set_sound_trig(value)
+        if 'sound_echo' in self.data:
+            value = self.entry_pin_so2.get()
+            if self.data['sound_echo'] != value:
+                robot.set_sound_echo(value)
+        if 'button_left' in self.data:
+            value = self.entry_pin_bt1.get()
+            if self.data['button_left'] != value:
+                robot.set_button_left(value)
+        if 'button_right' in self.data:
+            value = self.entry_pin_bt2.get()
+            if self.data['button_right'] != value:
+                robot.set_button_right(value)
+        if 'servo' in self.data:
+            value = self.entry_pin_aservo.get()
+            if self.data['servo'] != value:
+                robot.set_servo(value)
+        if 'button_joystick' in self.data:
+            value = self.entry_pin_joystick.get()
+            if self.data['button_joystick'] != value:
+                robot.set_joystick_button(value)
+        if 'joystick_x' in self.data:
+            value = self.entry_pin_joystick_x.get()
+            if self.data['joystick_x'] != value:
+                robot.set_joystick_x(value)
+        if 'joystick_y' in self.data:
+            value = self.entry_pin_joystick_y.get()
+            if self.data['joystick_y'] != value:
+                robot.set_joystick_y(value)
+        self.destroy()
+
     def show_for_mobile2(self):
         """
         Shows the window with the components needed to
         configure the mobile robot which has 2 light sensors
         """
         robot = self.application.robot_layer.robot
+        self.data = {
+            "servo_left": robot.servo_left.pin,
+            "servo_right": robot.servo_right.pin,
+            "light_left": robot.light_sensors[0].pin,
+            "light_right": robot.light_sensors[1].pin,
+            "sound_trig": robot.sound.pin_trig,
+            "sound_echo": robot.sound.pin_echo
+        }
 
         self.lb_mobile.grid(row=0, column=0, sticky="w")
         self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
@@ -223,12 +292,12 @@ class PinConfigurationWindow(tk.Toplevel):
         self.lb_pin_sound2.grid(row=4, column=2, sticky="w")
         self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
         
-        self.entry_pin_se1.insert(tk.END, robot.servo_left.pin)
-        self.entry_pin_se2.insert(tk.END, robot.servo_right.pin)
-        self.entry_pin_l2.insert(tk.END, robot.light_sensors[0].pin)
-        self.entry_pin_l3.insert(tk.END, robot.light_sensors[1].pin)
-        self.entry_pin_so1.insert(tk.END, robot.sound.pin_trig)
-        self.entry_pin_so2.insert(tk.END, robot.sound.pin_echo)
+        self.entry_pin_se1.insert(tk.END, self.data["servo_left"])
+        self.entry_pin_se2.insert(tk.END, self.data["servo_right"])
+        self.entry_pin_l2.insert(tk.END, self.data["light_left"])
+        self.entry_pin_l3.insert(tk.END, self.data["light_right"])
+        self.entry_pin_so1.insert(tk.END, self.data["sound_trig"])
+        self.entry_pin_so2.insert(tk.END, self.data["sound_echo"])
 
     def show_for_mobile4(self):
         """
@@ -236,6 +305,16 @@ class PinConfigurationWindow(tk.Toplevel):
         configure the mobile robot which has 4 light sensors
         """
         robot = self.application.robot_layer.robot
+        self.data = {
+            "servo_left": robot.servo_left.pin,
+            "servo_right": robot.servo_right.pin,
+            "light_mleft": robot.light_sensors[0].pin,
+            "light_left": robot.light_sensors[1].pin,
+            "light_right": robot.light_sensors[2].pin,
+            "light_mright": robot.light_sensors[3].pin,
+            "sound_trig": robot.sound.pin_trig,
+            "sound_echo": robot.sound.pin_echo
+        }
 
         self.lb_mobile.grid(row=0, column=0, sticky="w")
         self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
@@ -255,14 +334,14 @@ class PinConfigurationWindow(tk.Toplevel):
         self.lb_pin_sound2.grid(row=4, column=2, sticky="w")
         self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
 
-        self.entry_pin_se1.insert(tk.END, robot.servo_left.pin)
-        self.entry_pin_se2.insert(tk.END, robot.servo_right.pin)
-        self.entry_pin_l1.insert(tk.END, robot.light_sensors[0].pin)
-        self.entry_pin_l2.insert(tk.END, robot.light_sensors[1].pin)
-        self.entry_pin_l3.insert(tk.END, robot.light_sensors[2].pin)
-        self.entry_pin_l4.insert(tk.END, robot.light_sensors[3].pin)
-        self.entry_pin_so1.insert(tk.END, robot.sound.pin_trig)
-        self.entry_pin_so2.insert(tk.END, robot.sound.pin_echo)
+        self.entry_pin_se1.insert(tk.END, self.data["servo_left"])
+        self.entry_pin_se2.insert(tk.END, self.data["servo_right"])
+        self.entry_pin_l1.insert(tk.END, self.data["light_mleft"])
+        self.entry_pin_l2.insert(tk.END, self.data["light_left"])
+        self.entry_pin_l3.insert(tk.END, self.data["light_right"])
+        self.entry_pin_l4.insert(tk.END, self.data["light_mright"])
+        self.entry_pin_so1.insert(tk.END, self.data["sound_trig"])
+        self.entry_pin_so2.insert(tk.END, self.data["sound_echo"])
 
     def show_for_actuator(self):
         """
@@ -270,6 +349,14 @@ class PinConfigurationWindow(tk.Toplevel):
         configure the actuator
         """
         robot = self.application.robot_layer.robot
+        self.data = {
+            "button_left": robot.button_left.pin,
+            "button_right": robot.button_right.pin,
+            "servo": robot.servo.pin,
+            "button_joystick": robot.joystick.pinb,
+            "joystick_x": robot.joystick.pinx,
+            "joystick_y": robot.joystick.piny
+        }
 
         self.lb_actuator.grid(row=0, column=0, sticky="w")
         self.lb_pin_bt1.grid(row=1, column=0, sticky="w")
@@ -285,12 +372,12 @@ class PinConfigurationWindow(tk.Toplevel):
         self.lb_pin_joystick_y.grid(row=3, column=2, sticky="w")
         self.entry_pin_joystick_y.grid(row=3, column=3, sticky="w", padx=5)
 
-        self.entry_pin_bt1.insert(tk.END, robot.button_left.pin)
-        self.entry_pin_bt2.insert(tk.END, robot.button_right.pin)
-        self.entry_pin_joystick.insert(tk.END, robot.joystick.pinb)
-        self.entry_pin_aservo.insert(tk.END, robot.servo.pin)
-        self.entry_pin_joystick_x.insert(tk.END, robot.joystick.pinx)
-        self.entry_pin_joystick_y.insert(tk.END, robot.joystick.piny)
+        self.entry_pin_bt1.insert(tk.END, self.data["button_left"])
+        self.entry_pin_bt2.insert(tk.END, self.data["button_right"])
+        self.entry_pin_joystick.insert(tk.END, self.data["button_joystick"])
+        self.entry_pin_aservo.insert(tk.END, self.data["servo"])
+        self.entry_pin_joystick_x.insert(tk.END, self.data["joystick_x"])
+        self.entry_pin_joystick_y.insert(tk.END, self.data["joystick_y"])
 
 
 class MenuBar(tk.Menu):

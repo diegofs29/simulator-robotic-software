@@ -85,7 +85,7 @@ class Board:
             pin in self.pins["analog"] or
             pin in self.pins["digital"] or
             pin in self.pins["txrx"]
-        ):
+        ) and not pin in self.used_pins:
             self.used_pins[pin] = {
                 "element": elem,
                 "mode": self.INPUT
@@ -442,8 +442,8 @@ class MobileRobot:
         Sets servo left attached to a pin and marks
         the pin as used at the board
         """
-        self.servo_left.pin = pin
-        self.board.attach_pin(pin, self.servo_left)
+        if self.board.attach_pin(pin, self.servo_left):
+            self.servo_left.pin = pin
 
     def detach_servo_left(self):
         """
@@ -457,8 +457,8 @@ class MobileRobot:
         Sets servo right attached to a pin and marks
         the pin as used at the board
         """
-        self.servo_right.pin = pin
-        self.board.attach_pin(pin, self.servo_right)
+        if self.board.attach_pin(pin, self.servo_right):
+            self.servo_right.pin = pin
 
     def detach_servo_right(self):
         """
@@ -473,8 +473,8 @@ class MobileRobot:
         and marks the pin as used at the board
         """
         light = self.light_sensors[0]
-        light.pin = pin
-        self.board.attach_pin(pin, light)
+        if self.board.attach_pin(pin, light):
+            light.pin = pin
 
     def detach_light_mleft(self):
         """
@@ -490,8 +490,8 @@ class MobileRobot:
         and marks the pin as used at the board
         """
         light = self.light_sensors[0] if len(self.light_sensors) == 2 else self.light_sensors[1]
-        light.pin = pin
-        self.board.attach_pin(pin, light)
+        if self.board.attach_pin(pin, light):
+            light.pin = pin
 
     def detach_light_left(self):
         """
@@ -507,8 +507,8 @@ class MobileRobot:
         and marks the pin as used at the board
         """
         light = self.light_sensors[1] if len(self.light_sensors) == 2 else self.light_sensors[2]
-        light.pin = pin
-        self.board.attach_pin(pin, light)
+        if self.board.attach_pin(pin, light):
+            light.pin = pin
 
     def detach_light_right(self):
         """
@@ -524,8 +524,8 @@ class MobileRobot:
         and marks the pin as used at the board
         """
         light = self.light_sensors[3]
-        light.pin = pin
-        self.board.attach_pin(pin, light)
+        if self.board.attach_pin(pin, light):
+            light.pin = pin
 
     def detach_light_mright(self):
         """
@@ -540,8 +540,8 @@ class MobileRobot:
         Sets sound sensor attached to a pin (trig) and marks it
         as used at the board
         """
-        self.sound.pin_trig = pin
-        self.board.attach_pin(pin, self.sound)
+        if self.board.attach_pin(pin, self.sound):
+            self.sound.pin_trig = pin
 
     def detach_sound_trig(self):
         """
@@ -555,8 +555,8 @@ class MobileRobot:
         Sets sound sensor attached to a pin (echo) and marks it
         as used at the board
         """
-        self.sound.pin_echo = pin
-        self.board.attach_pin(pin, self.sound)
+        if self.board.attach_pin(pin, self.sound):
+            self.sound.pin_echo = pin
 
     def detach_sound_echo(self):
         """
@@ -614,8 +614,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.button_left.pin = pin
-        self.board.attach_pin(pin, self.button_left)
+        if self.board.attach_pin(pin, self.button_left):
+            self.button_left.pin = pin
 
     def detach_button_left(self):
         """
@@ -630,8 +630,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.button_right.pin = pin
-        self.board.attach_pin(pin, self.button_right)
+        if self.board.attach_pin(pin, self.button_right):
+            self.button_right.pin = pin
 
     def detach_button_right(self):
         """
@@ -646,8 +646,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.servo.pin = pin
-        self.board.attach_pin(pin, self.servo)
+        if self.board.attach_pin(pin, self.servo):
+            self.servo.pin = pin
 
     def detach_servo(self):
         """
@@ -662,8 +662,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.joystick.pinx = pin
-        self.board.attach_pin(pin, self.joystick)
+        if self.board.attach_pin(pin, self.joystick):
+            self.joystick.pinx = pin
 
     def detach_joystick_x(self):
         """
@@ -678,8 +678,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.joystick.piny = pin
-        self.board.attach_pin(pin, self.joystick)
+        if self.board.attach_pin(pin, self.joystick):
+            self.joystick.piny = pin
 
     def detach_joystick_x(self):
         """
@@ -694,8 +694,8 @@ class LinearActuator:
         Arguments:
             pin: the pin of the board
         """
-        self.joystick.pinb = pin
-        self.board.attach_pin(pin, self.joystick)
+        if self.board.attach_pin(pin, self.joystick):
+            self.joystick.pinb = pin
 
     def detach_joystick_button(self):
         """
