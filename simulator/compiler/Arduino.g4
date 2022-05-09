@@ -117,6 +117,8 @@ assignment
 expression 
        : 'true'
        | 'false'
+       | LOW
+       | HIGH
        | HEX_CONST
        | OCTAL_CONST
        | BINARY_CONST

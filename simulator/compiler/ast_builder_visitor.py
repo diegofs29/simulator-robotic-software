@@ -397,6 +397,10 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = BooleanNode(True)
         elif ctx.getText() == "false":
             node = BooleanNode(False)
+        if ctx.LOW() != None:
+            node = IntNode(0)
+        if ctx.HIGH() != None:
+            node = IntNode(1)
         if ctx.HEX_CONST() != None:
             node = HexNode(int(ctx.HEX_CONST().getText(), 16))
         if ctx.OCTAL_CONST() != None:

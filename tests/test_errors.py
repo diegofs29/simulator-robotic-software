@@ -5,7 +5,7 @@ from simulator.compiler.ArduinoParser import ArduinoParser
 from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 from simulator.compiler.error_listener import CompilerErrorListener
-from simulator.compiler.semantical_errors import Semantic, SemanticAnalyzer
+from simulator.compiler.semantical_errors import Semantic
 
 
 class TestBaseErrors(unittest.TestCase):

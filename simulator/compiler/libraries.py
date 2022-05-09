@@ -1011,7 +1011,7 @@ class LibraryManager:
         Constructor for library manager
         """
         self.servo = Servo()
-        self.standard = Standard()
+        self.standard = Standard(robots.ArduinoUno())
         self.serial = Serial(console)
         self.library_methods = {
             "standard": self.standard.get_methods(),

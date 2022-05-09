@@ -1,8 +1,12 @@
-from compiler import parse_grammar
+import simulator.compiler.transpiler as transpiler
+import simulator.console.console as console
+import tkinter as tk
 
 
 def main():
-    parse_grammar.parse_grammar("tests/grammar-tests/ejemploBreakContinue.txt")
+    con = console.Console(tk.Text(None))
+    tra = transpiler.Compiler(con)
+    tra.transpile("examples/mobile_robot.txt")
 
 if __name__ == '__main__':
     main()
