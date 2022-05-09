@@ -324,7 +324,7 @@ class DrawingFrame(tk.Frame):
         self.canvas_frame = tk.Frame(self, bg=BLUE)
         self.canvas = tk.Canvas(self.canvas_frame, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
-        self.joystick_frame = JoystickFrame(self.canvas_frame, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
+        self.joystick_frame = JoystickFrame(self.canvas_frame, application, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
 
         self.bottom_frame = tk.Frame(self, bg=BLUE)
         self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white", font=("Consolas", 12),
@@ -414,6 +414,7 @@ class JoystickFrame(tk.Frame):
 
     def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.application = application
 
         self.lb_joystick = tk.Label(self, text="Joystick", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
         self.lb_x = tk.Label(self, text="X:", bg=DARK_BLUE, fg="white", font=("Consolas", 12))
@@ -445,16 +446,16 @@ class JoystickFrame(tk.Frame):
         self.j_button.grid(row=1, column=5, padx=10)
 
     def __updatex(self, event):
-        print(self.x_dir.get())
+        self.application.robot_layer.robot.joystick.dx = self.x_dir.get()
 
     def __updatey(self, event):
-        print(self.y_dir.get())
+        self.application.robot_layer.robot.joystick.dy = self.y_dir.get()
 
     def __pressb(self, event):
-        print(1)
+        self.application.robot_layer.robot.joystick.value = 1
 
     def __releaseb(self, event):
-        print(0)
+        self.application.robot_layer.robot.joystick.value = 0
 
 
 class EditorFrame(tk.Frame):

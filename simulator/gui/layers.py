@@ -378,7 +378,6 @@ class LinearActuatorLayer(Layer):
         if using_keys:
             v = self.__move_keys(move_WASD)
         else:
-            self.__parse_joystick(move_dir)
             v = self.__move_code()
         self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
@@ -418,29 +417,6 @@ class LinearActuatorLayer(Layer):
                 v = v_s
             self.__hit_left(v == 0)
         return v
-
-    def __parse_joystick(self, movement):
-        """
-        The direction keys will be used as joystick.
-        This method will parse the value of the joystick
-        knowing what direction keys are being pressed.
-        Arguments:
-            movement: a map with the direction keys and if
-            they are being pressed or not
-        """
-        dx = 500
-        dy = 500
-        if movement["up"] == True:
-            dy = 0
-        if movement["down"] == True:
-            dy = 1023
-        if movement["left"] == True:
-            dx = 0
-        if movement["right"] == True:
-            dx = 1023
-        #print("diff x: {}, diff y: {}".format(dx, dy))
-        self.robot.joystick.dx = dx
-        self.robot.joystick.dy = dy
 
     def __hit_left(self, has_hit):
         """
