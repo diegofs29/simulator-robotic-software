@@ -1,15 +1,20 @@
-from .ast import *
-from .ast_visitor import ASTVisitor
+from simulator.compiler.libraries import LibraryManager
+from simulator.compiler.ast import *
+from simulator.compiler.ast_visitor import ASTVisitor
 from simulator.console.console import Error
 
 
 class Semantic:
 
+    def __init__(self, console):
+        self.console = console
+
     def execute(self, ast):
-        decl = DeclarationAnalyzer()
+        self.library_manager = LibraryManager(self.console)
+        decl = DeclarationAnalyzer(self.library_manager)
         decl.visit_program(ast, None)
         self.errors = decl.errors
-        semt = SemanticAnalyzer(
+        semt = SemanticAnalyzer(self.library_manager,
             decl.globals, decl.locals, decl.functions)
         semt.visit_program(ast, None)
         self.errors.extend(semt.errors)
@@ -17,7 +22,8 @@ class Semantic:
 
 class DeclarationAnalyzer(ASTVisitor):
 
-    def __init__(self):
+    def __init__(self, library_manager: LibraryManager):
+        self.library_manager = library_manager
         self.errors = []
         self.globals = {}
         self.locals = {}
@@ -32,16 +38,24 @@ class DeclarationAnalyzer(ASTVisitor):
             self.add_error("Declaración", program, "No hay función loop")
         return None
 
+    def visit_include(self, program: IncludeNode, param):
+        library = program.file_name[:-2]
+        self.library_manager.add_library(library)
+        return None
+
     def visit_function(self, function: FunctionNode, param):
         if function.type != None:
             function.type.accept(self, param)
-        self.visit_children(function.args, param)
+        if function.args != None:
+            for arg in function.args:
+                arg.set_function(function)
+                arg.accept(self, param)
         if function.sentences != None:
             for sent in function.sentences:
                 sent.set_function(function)
                 sent.accept(self, param)
         if not function.name in self.functions:
-            self.functions[function.name] = function
+            self.functions[function.name] = function   
         else:
             self.add_error("Declaración", function,
                            "La función ya ha sido declarada")
@@ -117,8 +131,9 @@ class DeclarationAnalyzer(ASTVisitor):
 
 class SemanticAnalyzer(ASTVisitor):
 
-    def __init__(self, globals, locals, functions):
+    def __init__(self, library_manager: LibraryManager, globals, locals, functions):
         self.errors = []
+        self.library_manager = library_manager
         self.globals = globals
         self.locals = locals
         self.functions = functions
@@ -313,7 +328,7 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ContinueNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Continue debe usarse en bucles")
-                if isinstance(sent, BreakNode):
+                if isinstance(sent, BreakNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Break debe usarse en bucles o en case switch")
         if conditional_sentence.else_expr != None:
@@ -323,7 +338,7 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ContinueNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Continue debe usarse en bucles")
-                if isinstance(sent, BreakNode):
+                if isinstance(sent, BreakNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Break debe usarse en bucles o en case switch")
         if self.check_in_types(conditional_sentence.condition.type, self.integer_types):
@@ -385,13 +400,19 @@ class SemanticAnalyzer(ASTVisitor):
     def visit_function_call(self, function_call: FunctionCallNode, param):
         definition = None
         if isinstance(function_call.name, MemberAccessNode):
-            print("hehehe")
+            #print("hehehe")
+            pass
         else:
             if function_call.name.value in self.functions:
                 definition = self.functions[function_call.name.value]
             else:
-                self.add_error("Declaración", function_call,
-                            "La función no se ha declarado")
+                func_from_lib = False
+                for lib in self.library_manager.get_libraries():
+                    if self.library_manager.find(lib, function_call.name.value) != None:
+                        func_from_lib = True
+                if not func_from_lib:
+                    self.add_error("Declaración", function_call,
+                                "La función no se ha declarado")
         if definition != None:
             if function_call.parameters != None:
                 if len(function_call.parameters) == len(definition.args):

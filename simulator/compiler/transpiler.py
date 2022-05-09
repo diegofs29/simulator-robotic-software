@@ -24,13 +24,15 @@ class Compiler:
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        semantic = Semantic()
+        semantic = Semantic(self.console)
         code_generator = CodeGenerator(self.console)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
         if len(self.syntax_errors) < 1:
             self.ast = visitor.visit(tree)
             semantic.execute(self.ast)
+        else:
+            self.print_errors(self.syntax_errors)
         try:
             self.semantic_errors = semantic.errors
         except AttributeError:
@@ -38,3 +40,9 @@ class Compiler:
         else:
             if len(self.semantic_errors) < 1:
                 code_generator.visit_program(self.ast, None)
+            else:
+                self.print_errors(self.semantic_errors)
+                
+    def print_errors(self, errors):
+        for error in errors:
+            print(error.to_string())
