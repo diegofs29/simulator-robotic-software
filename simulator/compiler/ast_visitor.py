@@ -89,8 +89,8 @@ class ASTVisitor:
     def visit_function(self, function: FunctionNode, param):
         if function.type != None:
             function.type.accept(self, param)
-        self.visit_children(function.args, param, param)
-        self.visit_children(function.sentences, param, param)
+        self.visit_children(function.args, param)
+        self.visit_children(function.sentences, param)
         return None
 
     def visit_while(self, while_p: WhileNode, param):

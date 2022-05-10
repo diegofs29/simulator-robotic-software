@@ -1022,9 +1022,9 @@ class LibraryManager:
             "Serial": self.serial.get_methods()
         }
         self.libraries = {
-            "Servo": Servo,
-            "Standard": Standard,
-            "Serial": Serial
+            "Servo": self.servo,
+            "Standard": self.standard,
+            "Serial": self.serial
         }
     
     def get_libraries(self):
@@ -1059,7 +1059,7 @@ class LibraryManager:
         """
         lib: str = library[0:-2]
         if lib in self.libraries:
-            self.library_methods[lib.lower()] = self.libraries[lib].get_methods()
+            self.library_methods[lib] = self.libraries[lib].get_methods()
         else:
             return self.ERROR
         return self.OK

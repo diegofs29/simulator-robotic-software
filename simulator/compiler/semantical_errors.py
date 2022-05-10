@@ -39,7 +39,7 @@ class DeclarationAnalyzer(ASTVisitor):
         return None
 
     def visit_include(self, program: IncludeNode, param):
-        library = program.file_name[:-2]
+        library = program.file_name
         self.library_manager.add_library(library)
         return None
 
@@ -141,11 +141,15 @@ class SemanticAnalyzer(ASTVisitor):
                                 DoubleTypeNode, ByteTypeNode,
                                 ShortTypeNode, LongTypeNode,
                                 CharTypeNode, BooleanTypeNode,
-                                Size_tTypeNode, WordTypeNode]
+                                Size_tTypeNode, WordTypeNode,
+                                ULongTypeNode, UIntTypeNode,
+                                UCharTypeNode]
         self.integer_types = [IntTypeNode, ByteTypeNode,
                               ShortTypeNode, LongTypeNode,
                               CharTypeNode, BooleanTypeNode,
-                              Size_tTypeNode, WordTypeNode]
+                              Size_tTypeNode, WordTypeNode,
+                              ULongTypeNode, UIntTypeNode,
+                              UCharTypeNode]
 
     def visit_program(self, program: ProgramNode, param):
         self.visit_children(program.includes, param)
@@ -400,16 +404,33 @@ class SemanticAnalyzer(ASTVisitor):
     def visit_function_call(self, function_call: FunctionCallNode, param):
         definition = None
         if isinstance(function_call.name, MemberAccessNode):
-            #print("hehehe")
-            pass
+            function_call.name.accept(self, param)
+            lib = function_call.name.element.type.type_name
+            method = function_call.name.member.value
+            found_func = self.library_manager.find(lib, method)
+            if found_func != None:
+                func_type = found_func[0]
+                f_type = self.__parse_type(func_type)
+                function_call.type = f_type
+                function_call.name.member.type = f_type
+                function_call.name.member.function = function_call.function
+            else:
+                self.add_error("Declaración", function_call,
+                                "La función no se ha declarado")
         else:
             if function_call.name.value in self.functions:
                 definition = self.functions[function_call.name.value]
             else:
                 func_from_lib = False
                 for lib in self.library_manager.get_libraries():
-                    if self.library_manager.find(lib, function_call.name.value) != None:
+                    found_func = self.library_manager.find(lib, function_call.name.value)
+                    if found_func != None:
                         func_from_lib = True
+                        func_type = found_func[0]
+                        f_type = self.__parse_type(func_type)
+                        function_call.type = f_type
+                        function_call.name.type = f_type
+                        function_call.name.function = function_call.function
                 if not func_from_lib:
                     self.add_error("Declaración", function_call,
                                 "La función no se ha declarado")
@@ -425,6 +446,47 @@ class SemanticAnalyzer(ASTVisitor):
                 self.add_error("Parámetros", function_call,
                                "El número de parámetros no coincide con los de la definición")
         return None
+    
+    def __parse_type(self, func_type):
+        """
+        Parses type from text to its corresponding class type
+        Arguments:
+            func_type: the type (string) to parse
+        Returns:
+            The type class to create
+        """
+        if func_type == 'bool':
+            return BooleanTypeNode()
+        elif func_type == 'byte':
+            return ByteTypeNode()
+        elif func_type == 'char':
+            return CharTypeNode()
+        elif func_type == 'double':
+            return DoubleTypeNode()
+        elif func_type == 'float':
+            return FloatTypeNode()
+        elif func_type == 'int':
+            return IntTypeNode()
+        elif func_type == 'long':
+            return LongTypeNode()
+        elif func_type == 'short':
+            return ShortTypeNode()
+        elif func_type == 'size_t':
+            return Size_tTypeNode()
+        elif func_type == 'string':
+            return StringTypeNode()
+        elif func_type == 'uint':
+            return UIntTypeNode()
+        elif func_type == 'uchar':
+            return UCharTypeNode()
+        elif func_type == 'ulong':
+            return ULongTypeNode()
+        elif func_type == 'void':
+            return VoidTypeNode()
+        elif func_type == 'word':
+            return WordTypeNode()
+        else:
+            return IDTypeNode(func_type)
 
     def visit_inc_dec_expression(self, inc_dec_expression: IncDecExpressionNode, param):
         if inc_dec_expression.var != None:
