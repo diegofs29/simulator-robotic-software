@@ -6,6 +6,7 @@ int LINEA = HIGH; // También podría ponerse 1
 Servo servoIzq;
 Servo servoDer;
 
+int pinAnalog = A0;
 int pinIrDer = 3;
 int pinIrIzq = 2;
 

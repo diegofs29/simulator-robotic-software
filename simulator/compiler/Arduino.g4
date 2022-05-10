@@ -119,6 +119,7 @@ expression
        | 'false'
        | LOW
        | HIGH
+       | ANALOG_PIN
        | HEX_CONST
        | OCTAL_CONST
        | BINARY_CONST

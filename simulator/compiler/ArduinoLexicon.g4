@@ -16,6 +16,10 @@ HIGH
     : 'HIGH'
     ;
 
+ANALOG_PIN
+    : 'A' [0-5]
+    ;
+
 BINARY_CONST
     : '0' 'b' [0-1]+
     ;

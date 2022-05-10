@@ -38,12 +38,12 @@ class Servo:
             A dict with the methods
         """
         methods = {}
-        methods["attach"] = ("void", self.attach)
-        methods["write"] = ("void", self.write)
-        methods["writeMicroseconds"] = ("void", self.write_microseconds)
-        methods["read"] = ("int", self.read)
-        methods["attached"] = ("bool", self.attached)
-        methods["detach"] = ("void", self.detach)
+        methods["attach"] = ("void", self.attach, ['int', '(int)', '(int)'])
+        methods["write"] = ("void", self.write, ['int'])
+        methods["writeMicroseconds"] = ("void", self.write_microseconds, ['int'])
+        methods["read"] = ("int", self.read, [])
+        methods["attached"] = ("bool", self.attached, [])
+        methods["detach"] = ("void", self.detach, [])
         return methods
 
     def attach(self, servo: robots.Servo, pin, min=544, max=2400):
