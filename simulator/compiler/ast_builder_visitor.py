@@ -403,6 +403,12 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = IntNode(1)
         if ctx.ANALOG_PIN() != None:
             node = IntNode(14 + int(ctx.ANALOG_PIN().getText()[-1]))
+        if ctx.INPUT() != None:
+            node = HexNode(int('0x0', 16))
+        if ctx.OUTPUT() != None:
+            node = HexNode(int('0x1', 16))
+        if ctx.INPUT_PULLUP() != None:
+            node = HexNode(int('0x2', 16))
         if ctx.HEX_CONST() != None:
             node = HexNode(int(ctx.HEX_CONST().getText(), 16))
         if ctx.OCTAL_CONST() != None:

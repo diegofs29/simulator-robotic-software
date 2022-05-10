@@ -20,6 +20,18 @@ ANALOG_PIN
     : 'A' [0-5]
     ;
 
+INPUT
+    : 'INPUT'
+    ;
+
+INPUT_PULLUP
+    : 'INPUT_PULLUP'
+    ;
+
+OUTPUT
+    : 'OUTPUT'
+    ;
+
 BINARY_CONST
     : '0' 'b' [0-1]+
     ;

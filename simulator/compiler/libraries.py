@@ -148,79 +148,83 @@ class Standard:
         """
         methods = {}
         #Digital I/O
-        methods["digitalRead"] = ("int", self.digital_read)
-        methods["digitalWrite"] = ("void", self.digital_write)
-        methods["pinMode"] = ("void", self.pin_mode)
+        methods["digitalRead"] = ("int", self.digital_read, ["int"])
+        methods["digitalWrite"] = ("void", self.digital_write, ["int", "int"])
+        methods["pinMode"] = ("void", self.pin_mode, ["int", "int"])
 
         #Analog I/O
-        methods["analogRead"] = ("int", self.analog_read)
-        methods["analogReference"] = ("void", self.analog_reference)
-        methods["analogWrite"] = ("void", self.analog_write)
+        methods["analogRead"] = ("int", self.analog_read, ["int"])
+        methods["analogReference"] = ("void", self.analog_reference, []) #Not implemented
+        methods["analogWrite"] = ("void", self.analog_write, ["int", "int"])
 
         #Zero, Due & MKR Family
-        methods["analogReadResolution"] = ("void", self.analog_read_resolution)
-        methods["analogWriteResolution"] = ("void", self.analog_write_resolution)
+        methods["analogReadResolution"] = ("void", self.analog_read_resolution, []) #Not implemented
+        methods["analogWriteResolution"] = ("void", self.analog_write_resolution, []) #Not implemented
 
         #Advanced I/O
-        methods["noTone"] = ("void", self.no_tone)
-        methods["pulseIn"] = ("long", self.pulse_in)
-        methods["pulseInLong"] = ("long", self.pulse_in_long)
-        methods["shiftIn"] = ("byte", self.shift_in)
-        methods["shiftOut"] = ("void", self.shift_out)
-        methods["tone"] = ("void", self.tone)
+        methods["noTone"] = ("void", self.no_tone, []) #Not implemented
+        methods["pulseIn"] = ("long", self.pulse_in, ["int", "int"])
+        methods["pulseInLong"] = ("long", self.pulse_in_long, []) #Not implemented
+        methods["shiftIn"] = ("byte", self.shift_in, []) #Not implemented
+        methods["shiftOut"] = ("void", self.shift_out, []) #Not implemented
+        methods["tone"] = ("void", self.tone, []) #Not implemented
 
         #Time
-        methods["delay"] = ("void", self.delay)
-        methods["delayMicroseconds"] = ("void", self.delay_microseconds)
-        methods["micros"] = ("ulong", self.micros)
-        methods["millis"] = ("ulong", self.millis)
+        methods["delay"] = ("void", self.delay, ["long"])
+        methods["delayMicroseconds"] = ("void", self.delay_microseconds, ["uint"])
+        methods["micros"] = ("ulong", self.micros, [])
+        methods["millis"] = ("ulong", self.millis, [])
 
         #Math
-        methods["abs"] = ("double", self.abs)
-        methods["constrain"] = ("double", self.constrain)
-        methods["map"] = ("int", self.map)
-        methods["max"] = ("double", self.max)
-        methods["min"] = ("double", self.min)
-        methods["pow"] = ("double", self.pow)
-        methods["sq"] = ("double", self.sq)
-        methods["sqrt"] = ("double", self.sqrt)
+        methods["abs"] = ("double", self.abs, ["int"])
+        methods["constrain"] = ("double", self.constrain, ["double", "double", "double"])
+        methods["map"] = ("int", self.map, ["int", "int", "int", "int", "int"])
+        methods["max"] = ("double", self.max, ["double", "double"])
+        methods["min"] = ("double", self.min, ["double", "double"])
+        methods["pow"] = ("double", self.pow, ["float", "float"])
+        methods["sq"] = ("double", self.sq, ["double"])
+        methods["sqrt"] = ("double", self.sqrt, ["double"])
 
         #Trigonometry
-        methods["cos"] = ("double", self.cos)
-        methods["sin"] = ("double", self.sin)
-        methods["tan"] = ("double", self.tan)
+        methods["cos"] = ("double", self.cos, ["float"])
+        methods["sin"] = ("double", self.sin, ["float"])
+        methods["tan"] = ("double", self.tan, ["float"])
 
         #Characters
-        methods["isAlpha"] = ("bool", self.is_alpha)
-        methods["isAlphaNumeric"] = ("bool", self.is_alpha_numeric)
-        methods["isAscii"] = ("bool", self.is_ascii)
-        methods["isControl"] = ("bool", self.is_control)
-        methods["isDigit"] = ("bool", self.is_digit)
-        methods["isGraph"] = ("bool", self.is_graph)
-        methods["isHexadecimalDigit"] = ("bool", self.is_hexadecimal_digit)
-        methods["isLowerCase"] = ("bool", self.is_lower_case)
-        methods["isPrintable"] = ("bool", self.is_printable)
-        methods["isPunct"] = ("bool", self.is_punct)
-        methods["isSpace"] = ("bool", self.is_space)
-        methods["isUpperCase"] = ("bool", self.is_upper_case)
-        methods["isWhiteSpace"] = ("bool", self.is_whitespace)
+        methods["isAlpha"] = ("bool", self.is_alpha, ["char"])
+        methods["isAlphaNumeric"] = ("bool", self.is_alpha_numeric, ["char"])
+        methods["isAscii"] = ("bool", self.is_ascii, ["char"])
+        methods["isControl"] = ("bool", self.is_control, ["char"])
+        methods["isDigit"] = ("bool", self.is_digit, ["char"])
+        methods["isGraph"] = ("bool", self.is_graph, ["char"])
+        methods["isHexadecimalDigit"] = ("bool", self.is_hexadecimal_digit, ["char"])
+        methods["isLowerCase"] = ("bool", self.is_lower_case, ["char"])
+        methods["isPrintable"] = ("bool", self.is_printable, ["char"])
+        methods["isPunct"] = ("bool", self.is_punct, ["char"])
+        methods["isSpace"] = ("bool", self.is_space, ["char"])
+        methods["isUpperCase"] = ("bool", self.is_upper_case, ["char"])
+        methods["isWhiteSpace"] = ("bool", self.is_whitespace, ["char"])
         
         #Random Numbers
-        methods["random"] = ("long", self.random)
-        methods["randomSeed"] = ("void", self.random_seed)
+        methods["random"] = ("long", self.random, ["int, int"]) #Caution, inverse order for two params
+        methods["randomSeed"] = ("void", self.random_seed, []) #Not implemented
 
         #Bits and bytes
-        methods["bit"] = ("int", self.bit)
-        methods["bitClear"] = ("int", self.bit_clear)
-        methods["bitRead"] = ("int", self.bit_read)
-        methods["bitSet"] = ("void", self.bit_set)
-        methods["bitWrite"] = ("void", self.bit_write)
-        methods["highByte"] = ("byte", self.high_byte)
-        methods["lowByte"] = ("byte", self.low_byte)
+        methods["bit"] = ("int", self.bit, ["int"])
+        methods["bitClear"] = ("int", self.bit_clear, ["int", "int"])
+        methods["bitRead"] = ("int", self.bit_read, ["int", "int"])
+        methods["bitSet"] = ("void", self.bit_set, ["int", "int"])
+        methods["bitWrite"] = ("void", self.bit_write, ["int", "int", "int"])
+        methods["highByte"] = ("byte", self.high_byte, ["double"])
+        methods["lowByte"] = ("byte", self.low_byte, ["double"])
 
         #External Interrupts
-        methods["attachInterrupt"] = ("void", self.attach_interrupt)
-        methods["detachInterrupt"] = ("void", self.detach_interrupt)
+        methods["attachInterrupt"] = ("void", self.attach_interrupt, []) #Not implemented
+        methods["detachInterrupt"] = ("void", self.detach_interrupt, []) #Not implemented
+
+        #Interrupts
+        methods["interrupts"] = ("void", self.interrupts, []) #Not implemented
+        methods["noInterrupts"] = ("void", self.no_interrupts, []) #Not implemented
         return methods
 
     # Digital I/O
@@ -825,27 +829,27 @@ class Serial:
             A dict with the methods
         """
         methods = {}
-        methods["if(Serial)"] = ("bool", self.if_serial)
-        methods["available"] = ("int", self.available)
-        methods["availableForWrite"] = ("int", self.available_for_write)
-        methods["begin"] = ("void", self.begin)
-        methods["end"] = ("void", self.end)
-        methods["find"] = ("bool", self.find)
-        methods["findUntil"] = ("bool", self.find_until)
-        methods["flush"] = ("void", self.flush)
-        methods["parseFloat"] = ("float", self.parse_float)
-        methods["parseInt"] = ("long", self.parse_int)
-        methods["peek"] = ("int", self.peek)
-        methods["print"] = ("size_t", self.print)
-        methods["println"] = ("size_t", self.println)
-        methods["read"] = ("int", self.read)
-        methods["readBytes"] = ("size_t", self.read_bytes)
-        methods["readBytesUntil"] = ("size_t", self.read_bytes_until)
-        methods["readString"] = ("string", self.read_string)
-        methods["readStringUntil"] = ("string", self.read_string_until)
-        methods["setTimeout"] = ("void", self.set_timeout)
-        methods["write"] = ("size_t", self.write)
-        methods["serialEvent"] = ("void", self.serial_event)
+        methods["if(Serial)"] = ("bool", self.if_serial, []) #Not implemented
+        methods["available"] = ("int", self.available, [])
+        methods["availableForWrite"] = ("int", self.available_for_write, []) #Not implemented
+        methods["begin"] = ("void", self.begin, ["long"])
+        methods["end"] = ("void", self.end, []) #Not implemented
+        methods["find"] = ("bool", self.find, []) #Not implemented
+        methods["findUntil"] = ("bool", self.find_until, []) #Not implemented
+        methods["flush"] = ("void", self.flush, []) #Not implemented
+        methods["parseFloat"] = ("float", self.parse_float, []) #Not implemented
+        methods["parseInt"] = ("long", self.parse_int, []) #Not implemented
+        methods["peek"] = ("int", self.peek, []) #Not implemented
+        methods["print"] = ("size_t", self.print, [])
+        methods["println"] = ("size_t", self.println, [])
+        methods["read"] = ("int", self.read, [])
+        methods["readBytes"] = ("size_t", self.read_bytes, []) #Not implemented
+        methods["readBytesUntil"] = ("size_t", self.read_bytes_until, []) #Not implemented
+        methods["readString"] = ("string", self.read_string, []) #Not implemented
+        methods["readStringUntil"] = ("string", self.read_string_until, []) #Not implemented
+        methods["setTimeout"] = ("void", self.set_timeout, []) #Not implemented
+        methods["write"] = ("size_t", self.write, []) #Not implemented
+        methods["serialEvent"] = ("void", self.serial_event, []) #Not implemented
         return methods
 
     def if_serial(self):
