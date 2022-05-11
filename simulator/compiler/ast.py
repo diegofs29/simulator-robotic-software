@@ -378,11 +378,12 @@ class IDTypeNode(TypeNode):
 
 class FunctionNode(ASTNode):
 
-    def __init__(self, type, name, args=None, sentences=None):
+    def __init__(self, type, name, args=None, opt_args=None, sentences=None):
         super().__init__()
         self.type = type
         self.name = name
         self.args = args
+        self.opt_args = opt_args
         self.sentences = sentences
 
     def accept(self, visitor, param):

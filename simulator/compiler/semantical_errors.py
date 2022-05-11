@@ -402,51 +402,71 @@ class SemanticAnalyzer(ASTVisitor):
         return None
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
-        definition = None
+        definition = func = None
+        user_defined = found_func = False
         if isinstance(function_call.name, MemberAccessNode):
             function_call.name.accept(self, param)
             lib = function_call.name.element.type.type_name
-            method = function_call.name.member.value
-            found_func = self.library_manager.find(lib, method)
-            if found_func != None:
-                func_type = found_func[0]
-                f_type = self.__parse_type(func_type)
-                function_call.type = f_type
-                function_call.name.member.type = f_type
-                function_call.name.member.function = function_call.function
-            else:
-                self.add_error("Declaración", function_call,
-                                "La función no se ha declarado")
+            method = function_call.name.member
+            func = self.library_manager.find(lib, method.value)
+            found_func = func != None
         else:
             if function_call.name.value in self.functions:
                 definition = self.functions[function_call.name.value]
+                found_func = True
+                user_defined = True
             else:
-                func_from_lib = False
-                for lib in self.library_manager.get_libraries():
-                    found_func = self.library_manager.find(lib, function_call.name.value)
-                    if found_func != None:
-                        func_from_lib = True
-                        func_type = found_func[0]
-                        f_type = self.__parse_type(func_type)
-                        function_call.type = f_type
-                        function_call.name.type = f_type
-                        function_call.name.function = function_call.function
-                if not func_from_lib:
-                    self.add_error("Declaración", function_call,
-                                "La función no se ha declarado")
+                method = function_call.name
+                for l in self.library_manager.get_libraries():
+                    lib = l
+                    func = self.library_manager.find(l, method.value)
+                    if func != None:
+                        found_func = True
+                        break
+        if not found_func:
+            self.add_error("Declaración", function_call,
+                        "La función no se ha declarado")
+
+        if not user_defined and func != None:
+            func_type = func[0]
+            f_type = self.__parse_type(func_type)
+            function_call.type = f_type
+            method.type = f_type
+            method.function = function_call.function
+            decls = []
+            opt_decls = []
+            for i in range(len(func[2])):
+                is_optional = False
+                str_arg_type = func[2][i]
+                if str_arg_type[0] == '(' and str_arg_type[-1] == ')':
+                    is_optional = True
+                    str_arg_type = str_arg_type[1:-1]
+                arg_type = self.__parse_type(str_arg_type)
+                char = chr(97 + i)
+                decl = DeclarationNode(arg_type, char)
+                if not is_optional:
+                    decls.append(decl)
+                else:
+                    opt_decls.append(decl)
+            definition = FunctionNode(f_type, lib + '.' + method.value, args=decls, opt_args=opt_decls)
+
         if definition != None:
             if function_call.parameters != None:
-                if len(function_call.parameters) == len(definition.args):
+                if definition.args == None:
+                    self.add_error("Parámetros", function_call,
+                               "La definición no contiene parámetros")
+                elif len(function_call.parameters) == len(definition.args):
                     for i in range(0, len(function_call.parameters)):
+                        function_call.parameters[i].function = function_call.function
                         function_call.parameters[i].accept(self, param)
                         if self.check_type(function_call.parameters[i].type, type(definition.args[i].type)):
                             self.manage_types(
                                 function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
-            else:
-                self.add_error("Parámetros", function_call,
+                else:
+                    self.add_error("Parámetros", function_call,
                                "El número de parámetros no coincide con los de la definición")
         return None
-    
+
     def __parse_type(self, func_type):
         """
         Parses type from text to its corresponding class type

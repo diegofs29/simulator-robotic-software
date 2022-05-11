@@ -213,7 +213,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.sentences != None:
             for sent in ctx.sentences:
                 sentences.append(self.visit(sent))
-        node = FunctionNode(v_type, f_name, args, sentences)
+        node = FunctionNode(v_type, f_name, args=args, sentences=sentences)
         self.__add_line_info(node, ctx)
         return node
 
