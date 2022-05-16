@@ -1,4 +1,4 @@
-from simulator.compiler.libraries import LibraryManager
+from simulator.libraries.libraries import LibraryManager
 from simulator.compiler.ast import *
 from simulator.compiler.ast_visitor import ASTVisitor
 from simulator.console.console import Error
@@ -6,11 +6,10 @@ from simulator.console.console import Error
 
 class Semantic:
 
-    def __init__(self, console):
-        self.console = console
+    def __init__(self, library_manager):
+        self.library_manager = library_manager
 
     def execute(self, ast):
-        self.library_manager = LibraryManager(self.console)
         decl = DeclarationAnalyzer(self.library_manager)
         decl.visit_program(ast, None)
         self.errors = decl.errors
