@@ -16,6 +16,7 @@ class Servo:
         Constructor for Servo class
         """
         self.board = board
+        self.servo = None
         self.min = 544
         self.max = 2400
         self.speed = 90
@@ -55,12 +56,13 @@ class Servo:
         """
         servo = self.board.get_pin_element(pin)
         if servo != None:
+            self.servo = servo
             servo.min = min
             servo.max = max
             return self.OK
         return self.ERROR
         
-    def write(self, servo: elems.Servo, angle):
+    def write(self, angle):
         """
         Writes speed to servo.
         Our Servos, being rotation ones, will have their speed set by this
@@ -71,9 +73,9 @@ class Servo:
             servo: the servo to write to
             angle: the value to write [0-180]
         """
-        servo.value = angle
+        self.servo.value = angle
 
-    def write_microseconds(self, servo: elems.Servo, us):
+    def write_microseconds(self, us):
         """
         Writes speed to servo in microseconds.
         This method will work exactly the same way as write does (because our
@@ -82,9 +84,12 @@ class Servo:
             servo: the servo to write to
             us: the value of the parameter in microseconds (int)
         """
-        servo.value = us
+        if self.servo != None:
+            self.servo.value = us
+            return self.OK
+        return self.ERROR
 
-    def read(self, servo: elems.Servo):
+    def read(self):
         """
         Reads the angle of the servo (being the last value passed to write)
         Arguments:
@@ -92,9 +97,11 @@ class Servo:
         Returns:
             The angle of the servo from 0 to 180 degrees
         """
-        return servo.value
+        if self.servo != None:
+            return self.servo.value
+        return None
 
-    def attached(self, servo: elems.Servo):
+    def attached(self):
         """
         Checks wether the Servo variable is attached or not
         Arguments:
@@ -102,12 +109,17 @@ class Servo:
         Returns:
             True if attached to pin, False if else
         """
-        return servo.pin != -1
+        if self.servo != None:
+            return self.servo.pin != -1
+        return False
 
-    def detach(self, servo: elems.Servo):
+    def detach(self):
         """
         Detach the Servo variable from its pin
         Arguments:
             servo: the servo to detach
         """
-        servo.pin = -1
+        if self.servo != None:
+            self.servo.pin = -1
+            return self.OK
+        return self.ERROR

@@ -25,6 +25,10 @@ class CodeGenerator(ASTVisitor):
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')
+        self.write_to_script("import simulator.libraries.standard as standard")
+        self.write_endl()
+        self.write_to_script("import simulator.libraries.serial as serial")
+        self.write_endl()
         for include in program.includes:
             include.accept(self, param)
             self.write_endl()

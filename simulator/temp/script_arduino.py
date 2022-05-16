@@ -1,3 +1,5 @@
+import simulator.libraries.standard as standard
+import simulator.libraries.serial as serial
 import simulator.libraries.servo as servo
 
 
