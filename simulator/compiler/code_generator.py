@@ -12,6 +12,9 @@ import simulator.libraries.libraries as libraries
 
 class CodeGenerator(ASTVisitor):
 
+    VARIABLE = 1
+    FUNCTION_CALL = 2
+
     continue_line = False
 
     def __init__(self, library_manager):
@@ -21,7 +24,7 @@ class CodeGenerator(ASTVisitor):
         is visitor.
         """
         self.script_tabs = 0
-        self.library_manager = library_manager
+        self.library_manager: libraries.LibraryManager = library_manager
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')
@@ -351,12 +354,27 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_id(self, id_node: IDNode, param):
-        self.write_to_script(id_node.value)
+        if param == None:
+            self.write_to_script(id_node.value)
+        else:
+            if param == self.FUNCTION_CALL:
+                method = None
+                lib = None
+                for key in self.library_manager.library_methods:
+                    lib = key
+                    method = self.library_manager.find(key, id_node.value)
+                    if method != None:
+                        method = method[1]
+                        break
+                if method != None:
+                    self.write_to_script("{}.{}".format(str(lib).lower(), method))
+                else:
+                    self.write_to_script(id_node.value)
         return None
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
         if function_call.name != None:
-            function_call.name.accept(self, param)
+            function_call.name.accept(self, self.FUNCTION_CALL)
         self.write_to_script("(")
         for i in range(0, len(function_call.parameters)):
             if i > 0:
@@ -367,10 +385,14 @@ class CodeGenerator(ASTVisitor):
 
     def visit_member_access(self, member_access: MemberAccessNode, param):
         if member_access.element != None:
-            member_access.element.accept(self, param)
-        self.write_to_script(".")
+            elem = member_access.element.value
         if member_access.member != None:
-            member_access.member.accept(self, param)
+            method = member_access.member.value
+            for key in self.library_manager.library_methods:
+                found_method = self.library_manager.find(key, method)
+                if found_method != None:
+                    self.write_to_script("{}.{}".format(elem, found_method[1]))
+                    break
 
     def visit_return(self, return_p: ReturnNode, param):
         self.write_to_script("return ")

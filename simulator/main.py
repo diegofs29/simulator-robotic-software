@@ -1,6 +1,6 @@
+import tkinter as tk
 import simulator.compiler.transpiler as transpiler
 import simulator.console.console as console
-import tkinter as tk
 import simulator.robots.robots as robots
 import simulator.files.files_reader as filesr
 

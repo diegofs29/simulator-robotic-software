@@ -15,18 +15,18 @@ pinServoIzq = 8
 global_arr_3d = [[1, 2, 3], [4, 5, 6], [7, 8, 8], [10, 11, 12]], [[13, 14, 15], [16, 17, 18], [19, 20, 21], [22, 23, 24]]
 
 def setup():
-	pinMode(pinIrDer, 0)
-	pinMode(pinIrIzq, 0)
+	standard.pin_mode(pinIrDer, 0)
+	standard.pin_mode(pinIrIzq, 0)
 	servoIzq.attach(pinServoIzq)
 	servoDer.attach(pinServoDer)
 
 def loop():
-	if digitalRead(pinIrIzq) == LINEA and digitalRead(pinIrDer) == LINEA:
+	if standard.digital_read(pinIrIzq) == LINEA and standard.digital_read(pinIrDer) == LINEA:
 		avanzar(90)
-	elif digitalRead(pinIrIzq) == NO_LINEA and digitalRead(pinIrDer) == NO_LINEA:
+	elif standard.digital_read(pinIrIzq) == NO_LINEA and standard.digital_read(pinIrDer) == NO_LINEA:
 		espiral()
 		izquierda(30)
-	elif digitalRead(pinIrDer) == NO_LINEA:
+	elif standard.digital_read(pinIrDer) == NO_LINEA:
 		derecha(30)
 	else:
 		izquierda(30)
@@ -57,16 +57,16 @@ def espiral():
 	tiempoEspiral = 1000
 	while perdido:
 		avanzar(90)
-		inicioCuentaTiempo = millis()
-		while millis() - inicioCuentaTiempo <= tiempoEspiral:
-			if digitalRead(pinIrIzq) == LINEA or digitalRead(pinIrDer) == LINEA:
+		inicioCuentaTiempo = standard.millis()
+		while standard.millis() - inicioCuentaTiempo <= tiempoEspiral:
+			if standard.digital_read(pinIrIzq) == LINEA or standard.digital_read(pinIrDer) == LINEA:
 				perdido = False
 				detener()
 				break
 		if perdido:
 			tiempoEspiral += 1000
 			derecha(30)
-			delay(850)
+			standard.delay(850)
 
 def izquierda(v):
 	velocidad = 90 - v
