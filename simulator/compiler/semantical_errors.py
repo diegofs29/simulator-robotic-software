@@ -443,26 +443,29 @@ class SemanticAnalyzer(ASTVisitor):
 
         # Manage parameters
         if definition != None:
-            if function_call.parameters != None:
-                if (
-                    len(function_call.parameters) == len(definition.args) or
-                    len(function_call.parameters) == len(definition.args) + len(definition.opt_args)
-                ):
-                    for i in range(0, len(function_call.parameters)):
-                        function_call.parameters[i].function = function_call.function
-                        function_call.parameters[i].accept(self, param)
-                        is_wrong_type = False
-                        if i < len(definition.args):
-                            is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.args[i].type))
-                        else:
-                            is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.opt_args[i].type))
-                        if is_wrong_type:
-                            self.manage_types(
-                                function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
-                else:
-                    self.add_error("Parámetros", function_call,
-                               "El número de parámetros no coincide con los de la definición")
+            self.__check_parameters(function_call, definition, param)
         return None
+
+    def __check_parameters(self, function_call, definition, param):
+        if function_call.parameters != None:
+            if (
+                len(function_call.parameters) == len(definition.args) or
+                    len(function_call.parameters) == len(definition.args) + len(definition.opt_args)
+            ):
+                for i in range(0, len(function_call.parameters)):
+                    function_call.parameters[i].function = function_call.function
+                    function_call.parameters[i].accept(self, param)
+                    is_wrong_type = False
+                    if i < len(definition.args):
+                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.args[i].type))
+                    else:
+                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.opt_args[i].type))
+                    if is_wrong_type:
+                        self.manage_types(
+                                function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
+            else:
+                self.add_error("Parámetros", function_call,
+                               "El número de parámetros no coincide con los de la definición")
 
     def __create_function(self, function_call, lib_func, func_name):
         """
