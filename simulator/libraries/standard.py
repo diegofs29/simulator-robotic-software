@@ -24,10 +24,10 @@ NOT_IMPL_WARNING = -2
 board: boards.Board = None
 start = time.time()
 
-def get_name(self):
+def get_name():
     return "Standard"
 
-def get_methods(self):
+def get_methods():
     """
     Returns the methods of the library as a dict, whose
     key is the naming in Arduino and whose value is the
@@ -171,7 +171,7 @@ def analog_read(pin):
         return board.read(pin)
     return None
 
-def analog_reference(self):
+def analog_reference():
     """
     Should configure the reference voltage. As it is not
     necessary for the purpose of the simulator, it is not
@@ -196,20 +196,20 @@ def analog_write(pin, value):
     return ERROR
 
 # Zero, Due & MKR Family
-def analog_read_resolution(self):
+def analog_read_resolution():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def analog_write_resolution(self):
+def analog_write_resolution():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
 # Advanced I/O
-def no_tone(self):
+def no_tone():
     """
     Not needed (not implemented)
     """
@@ -226,25 +226,25 @@ def pulse_in(pin, value):
     """
     return board.read_pulse(pin, value)
 
-def pulse_in_long(self):
+def pulse_in_long():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def shift_in(self):
+def shift_in():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def shift_out(self):
+def shift_out():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def tone(self):
+def tone():
     """
     Not needed (not implemented)
     """
@@ -267,7 +267,7 @@ def delay_microseconds(us):
     """
     time.sleep(us / 1000000) # sleep works in seconds
 
-def micros(self):
+def micros():
     """
     Returns the number of microseconds since the Arduino board 
     began running the current program
@@ -276,7 +276,7 @@ def micros(self):
     diff = now - start
     return int(diff * 1000000)
 
-def millis(self):
+def millis():
     """
     Returns the number of milliseconds since the Arduino board 
     began running the current program
@@ -579,7 +579,7 @@ def random(max, min=0):
     """
     return random.randint(min, max - 1)
 
-def random_seed(self):
+def random_seed():
     """
     Not needed (not implemented)
     """
@@ -664,26 +664,26 @@ def low_byte(x):
     return (x & 0xff00) >> 8
 
 # External Interrupts
-def attach_interrupt(self):
+def attach_interrupt():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def detach_interrupt(self):
+def detach_interrupt():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
 # Interrupts
-def interrupts(self):
+def interrupts():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
-def no_interrupts(self):
+def no_interrupts():
     """
     Not needed (not implemented)
     """

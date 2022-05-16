@@ -6,8 +6,8 @@ Those libraries are:
     - Serial
     - Servo
 """
-import simulator.console.console as console
-import simulator.robots.robots as robots
+import simulator.libraries.standard as std
+import simulator.libraries.serial as serial
 
 
 class LibraryManager:
@@ -21,13 +21,13 @@ class LibraryManager:
         Constructor for library manager
         """
         self.library_methods = {
-            libs[0].get_name(): libs[0].get_methods(),
-            libs[1].get_name(): libs[1].get_methods()
+            std.get_name(): std.get_methods(),
+            serial.get_name(): serial.get_methods()
         }
         self.libraries = {
-            libs[0].get_name(): libs[0],
-            libs[1].get_name(): libs[1],
-            libs[2].get_name(): libs[2]
+            std.get_name(): std,
+            serial.get_name(): serial,
+            libs[0].get_name(): libs[0]
         }
     
     def get_libraries(self):

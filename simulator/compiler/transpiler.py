@@ -30,8 +30,6 @@ class Compiler:
         lib_creator.set_robot(robot)
         lib_manager = LibraryManager(
             [
-                lib_creator.create_standard(),
-                lib_creator.create_serial(),
                 lib_creator.create_servo()
             ]
         )

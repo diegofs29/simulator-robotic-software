@@ -11,11 +11,11 @@ class Servo:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, board: boards.Board):
+    def __init__(self):
         """
         Constructor for Servo class
         """
-        self.board = board
+        self.board = None
         self.servo = None
         self.min = 544
         self.max = 2400
@@ -41,6 +41,12 @@ class Servo:
         methods["detach"] = ("void", "detach", [])
         return methods
 
+    def set_board(self, board: boards.Board):
+        """
+        Sets the board that the robot is using
+        """
+        self.board = board
+
     def attach(self, pin, min=544, max=2400):
         """
         Attaches the servo to a pin
@@ -54,7 +60,9 @@ class Servo:
         Returns:
             OK if servo attached to pin correctly, ERROR if else
         """
-        servo = self.board.get_pin_element(pin)
+        servo = None
+        if self.board != None:
+            servo = self.board.get_pin_element(pin)
         if servo != None:
             self.servo = servo
             servo.min = min

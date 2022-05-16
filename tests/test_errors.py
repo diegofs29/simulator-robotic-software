@@ -6,6 +6,8 @@ from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 from simulator.compiler.error_listener import CompilerErrorListener
 from simulator.compiler.semantical_errors import Semantic
+from simulator.libraries.libraries import LibraryManager
+import simulator.libraries.library_creator as library_creator
 
 
 class TestBaseErrors(unittest.TestCase):
@@ -21,7 +23,13 @@ class TestBaseErrors(unittest.TestCase):
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        semantic = Semantic(None)
+        lib_creator = library_creator.LibraryCreator(None)
+        lib_manager = LibraryManager(
+            [
+                lib_creator.create_servo()
+            ]
+        )
+        semantic = Semantic(lib_manager)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
         if len(self.syntax_errors) < 1:
