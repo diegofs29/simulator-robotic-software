@@ -26,8 +26,8 @@ class Standard:
         """
         Constructor for Standard class
         """
-        self.start = time.time()
         self.board = board
+        self.start = time.time()
 
     def get_name(self):
         return "Standard"
@@ -42,83 +42,83 @@ class Standard:
         """
         methods = {}
         #Digital I/O
-        methods["digitalRead"] = ("int", self.digital_read, ["int"])
-        methods["digitalWrite"] = ("void", self.digital_write, ["int", "int"])
-        methods["pinMode"] = ("void", self.pin_mode, ["int", "int"])
+        methods["digitalRead"] = ("int", "digital_read", ["int"])
+        methods["digitalWrite"] = ("void", "digital_write", ["int", "int"])
+        methods["pinMode"] = ("void", "pin_mode", ["int", "int"])
 
         #Analog I/O
-        methods["analogRead"] = ("int", self.analog_read, ["int"])
-        methods["analogReference"] = ("void", self.analog_reference, []) #Not implemented
-        methods["analogWrite"] = ("void", self.analog_write, ["int", "int"])
+        methods["analogRead"] = ("int", "analog_read", ["int"])
+        methods["analogReference"] = ("void", "analog_reference", []) #Not implemented
+        methods["analogWrite"] = ("void", "analog_write", ["int", "int"])
 
         #Zero, Due & MKR Family
-        methods["analogReadResolution"] = ("void", self.analog_read_resolution, []) #Not implemented
-        methods["analogWriteResolution"] = ("void", self.analog_write_resolution, []) #Not implemented
+        methods["analogReadResolution"] = ("void", "analog_read_resolution", []) #Not implemented
+        methods["analogWriteResolution"] = ("void", "analog_write_resolution", []) #Not implemented
 
         #Advanced I/O
-        methods["noTone"] = ("void", self.no_tone, []) #Not implemented
-        methods["pulseIn"] = ("long", self.pulse_in, ["int", "int"])
-        methods["pulseInLong"] = ("long", self.pulse_in_long, []) #Not implemented
-        methods["shiftIn"] = ("byte", self.shift_in, []) #Not implemented
-        methods["shiftOut"] = ("void", self.shift_out, []) #Not implemented
-        methods["tone"] = ("void", self.tone, []) #Not implemented
+        methods["noTone"] = ("void", "no_tone", []) #Not implemented
+        methods["pulseIn"] = ("long", "pulse_in", ["int", "int"])
+        methods["pulseInLong"] = ("long", "pulse_in_long", []) #Not implemented
+        methods["shiftIn"] = ("byte", "shift_in", []) #Not implemented
+        methods["shiftOut"] = ("void", "shift_out", []) #Not implemented
+        methods["tone"] = ("void", "tone", []) #Not implemented
 
         #Time
-        methods["delay"] = ("void", self.delay, ["long"])
-        methods["delayMicroseconds"] = ("void", self.delay_microseconds, ["uint"])
-        methods["micros"] = ("ulong", self.micros, [])
-        methods["millis"] = ("ulong", self.millis, [])
+        methods["delay"] = ("void", "delay", ["long"])
+        methods["delayMicroseconds"] = ("void", "delay_microseconds", ["uint"])
+        methods["micros"] = ("ulong", "micros", [])
+        methods["millis"] = ("ulong", "millis", [])
 
         #Math
-        methods["abs"] = ("double", self.abs, ["int"])
-        methods["constrain"] = ("double", self.constrain, ["double", "double", "double"])
-        methods["map"] = ("int", self.map, ["int", "int", "int", "int", "int"])
-        methods["max"] = ("double", self.max, ["double", "double"])
-        methods["min"] = ("double", self.min, ["double", "double"])
-        methods["pow"] = ("double", self.pow, ["float", "float"])
-        methods["sq"] = ("double", self.sq, ["double"])
-        methods["sqrt"] = ("double", self.sqrt, ["double"])
+        methods["abs"] = ("double", "abs", ["int"])
+        methods["constrain"] = ("double", "constrain", ["double", "double", "double"])
+        methods["map"] = ("int", "map", ["int", "int", "int", "int", "int"])
+        methods["max"] = ("double", "max", ["double", "double"])
+        methods["min"] = ("double", "min", ["double", "double"])
+        methods["pow"] = ("double", "pow", ["float", "float"])
+        methods["sq"] = ("double", "sq", ["double"])
+        methods["sqrt"] = ("double", "sqrt", ["double"])
 
         #Trigonometry
-        methods["cos"] = ("double", self.cos, ["float"])
-        methods["sin"] = ("double", self.sin, ["float"])
-        methods["tan"] = ("double", self.tan, ["float"])
+        methods["cos"] = ("double", "cos", ["float"])
+        methods["sin"] = ("double", "sin", ["float"])
+        methods["tan"] = ("double", "tan", ["float"])
 
         #Characters
-        methods["isAlpha"] = ("bool", self.is_alpha, ["char"])
-        methods["isAlphaNumeric"] = ("bool", self.is_alpha_numeric, ["char"])
-        methods["isAscii"] = ("bool", self.is_ascii, ["char"])
-        methods["isControl"] = ("bool", self.is_control, ["char"])
-        methods["isDigit"] = ("bool", self.is_digit, ["char"])
-        methods["isGraph"] = ("bool", self.is_graph, ["char"])
-        methods["isHexadecimalDigit"] = ("bool", self.is_hexadecimal_digit, ["char"])
-        methods["isLowerCase"] = ("bool", self.is_lower_case, ["char"])
-        methods["isPrintable"] = ("bool", self.is_printable, ["char"])
-        methods["isPunct"] = ("bool", self.is_punct, ["char"])
-        methods["isSpace"] = ("bool", self.is_space, ["char"])
-        methods["isUpperCase"] = ("bool", self.is_upper_case, ["char"])
-        methods["isWhiteSpace"] = ("bool", self.is_whitespace, ["char"])
+        methods["isAlpha"] = ("bool", "is_alpha", ["char"])
+        methods["isAlphaNumeric"] = ("bool", "is_alpha_numeric", ["char"])
+        methods["isAscii"] = ("bool", "is_ascii", ["char"])
+        methods["isControl"] = ("bool", "is_control", ["char"])
+        methods["isDigit"] = ("bool", "is_digit", ["char"])
+        methods["isGraph"] = ("bool", "is_graph", ["char"])
+        methods["isHexadecimalDigit"] = ("bool", "is_hexadecimal_digit", ["char"])
+        methods["isLowerCase"] = ("bool", "is_lower_case", ["char"])
+        methods["isPrintable"] = ("bool", "is_printable", ["char"])
+        methods["isPunct"] = ("bool", "is_punct", ["char"])
+        methods["isSpace"] = ("bool", "is_space", ["char"])
+        methods["isUpperCase"] = ("bool", "is_upper_case", ["char"])
+        methods["isWhiteSpace"] = ("bool", "is_whitespace", ["char"])
         
         #Random Numbers
-        methods["random"] = ("long", self.random, ["int, int"]) #Caution, inverse order for two params
-        methods["randomSeed"] = ("void", self.random_seed, []) #Not implemented
+        methods["random"] = ("long", "random", ["int, int"]) #Caution, inverse order for two params
+        methods["randomSeed"] = ("void", "random_seed", []) #Not implemented
 
         #Bits and bytes
-        methods["bit"] = ("int", self.bit, ["int"])
-        methods["bitClear"] = ("int", self.bit_clear, ["int", "int"])
-        methods["bitRead"] = ("int", self.bit_read, ["int", "int"])
-        methods["bitSet"] = ("void", self.bit_set, ["int", "int"])
-        methods["bitWrite"] = ("void", self.bit_write, ["int", "int", "int"])
-        methods["highByte"] = ("byte", self.high_byte, ["double"])
-        methods["lowByte"] = ("byte", self.low_byte, ["double"])
+        methods["bit"] = ("int", "bit", ["int"])
+        methods["bitClear"] = ("int", "bit_clear", ["int", "int"])
+        methods["bitRead"] = ("int", "bit_read", ["int", "int"])
+        methods["bitSet"] = ("void", "bit_set", ["int", "int"])
+        methods["bitWrite"] = ("void", "bit_write", ["int", "int", "int"])
+        methods["highByte"] = ("byte", "high_byte", ["double"])
+        methods["lowByte"] = ("byte", "low_byte", ["double"])
 
         #External Interrupts
-        methods["attachInterrupt"] = ("void", self.attach_interrupt, []) #Not implemented
-        methods["detachInterrupt"] = ("void", self.detach_interrupt, []) #Not implemented
+        methods["attachInterrupt"] = ("void", "attach_interrupt", []) #Not implemented
+        methods["detachInterrupt"] = ("void", "detach_interrupt", []) #Not implemented
 
         #Interrupts
-        methods["interrupts"] = ("void", self.interrupts, []) #Not implemented
-        methods["noInterrupts"] = ("void", self.no_interrupts, []) #Not implemented
+        methods["interrupts"] = ("void", "interrupts", []) #Not implemented
+        methods["noInterrupts"] = ("void", "no_interrupts", []) #Not implemented
         return methods
 
     # Digital I/O

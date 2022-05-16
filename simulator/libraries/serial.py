@@ -1,4 +1,5 @@
 import simulator.console.console as console
+import simulator.robots.boards as boards
 
 
 class Serial:
@@ -12,12 +13,13 @@ class Serial:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, console: console.Console):
+    def __init__(self, board: boards.Board, console: console.Console):
         """
         Constructor for Serial
         Arguments:
             console: the console to write into
         """
+        self.board = board
         self.console = console
 
     def get_name(self):
@@ -32,27 +34,27 @@ class Serial:
             A dict with the methods
         """
         methods = {}
-        methods["if(Serial)"] = ("bool", self.if_serial, []) #Not implemented
-        methods["available"] = ("int", self.available, [])
-        methods["availableForWrite"] = ("int", self.available_for_write, []) #Not implemented
-        methods["begin"] = ("void", self.begin, ["long"])
-        methods["end"] = ("void", self.end, []) #Not implemented
-        methods["find"] = ("bool", self.find, []) #Not implemented
-        methods["findUntil"] = ("bool", self.find_until, []) #Not implemented
-        methods["flush"] = ("void", self.flush, []) #Not implemented
-        methods["parseFloat"] = ("float", self.parse_float, []) #Not implemented
-        methods["parseInt"] = ("long", self.parse_int, []) #Not implemented
-        methods["peek"] = ("int", self.peek, []) #Not implemented
-        methods["print"] = ("size_t", self.print, [])
-        methods["println"] = ("size_t", self.println, [])
-        methods["read"] = ("int", self.read, [])
-        methods["readBytes"] = ("size_t", self.read_bytes, []) #Not implemented
-        methods["readBytesUntil"] = ("size_t", self.read_bytes_until, []) #Not implemented
-        methods["readString"] = ("string", self.read_string, []) #Not implemented
-        methods["readStringUntil"] = ("string", self.read_string_until, []) #Not implemented
-        methods["setTimeout"] = ("void", self.set_timeout, []) #Not implemented
-        methods["write"] = ("size_t", self.write, []) #Not implemented
-        methods["serialEvent"] = ("void", self.serial_event, []) #Not implemented
+        methods["if(Serial)"] = ("bool", "if_serial", []) #Not implemented
+        methods["available"] = ("int", "available", [])
+        methods["availableForWrite"] = ("int", "available_for_write", []) #Not implemented
+        methods["begin"] = ("void", "begin", ["long"])
+        methods["end"] = ("void", "end", []) #Not implemented
+        methods["find"] = ("bool", "find", []) #Not implemented
+        methods["findUntil"] = ("bool", "find_until", []) #Not implemented
+        methods["flush"] = ("void", "flush", []) #Not implemented
+        methods["parseFloat"] = ("float", "parse_float", []) #Not implemented
+        methods["parseInt"] = ("long", "parse_int", []) #Not implemented
+        methods["peek"] = ("int", "peek", []) #Not implemented
+        methods["print"] = ("size_t", "print", [])
+        methods["println"] = ("size_t", "println", [])
+        methods["read"] = ("int", "read", [])
+        methods["readBytes"] = ("size_t", "read_bytes", []) #Not implemented
+        methods["readBytesUntil"] = ("size_t", "read_bytes_until", []) #Not implemented
+        methods["readString"] = ("string", "read_string", []) #Not implemented
+        methods["readStringUntil"] = ("string", "read_string_until", []) #Not implemented
+        methods["setTimeout"] = ("void", "set_timeout", []) #Not implemented
+        methods["write"] = ("size_t", "write", []) #Not implemented
+        methods["serialEvent"] = ("void", "serial_event", []) #Not implemented
         return methods
 
     def if_serial(self):

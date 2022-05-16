@@ -3,8 +3,8 @@ import simulator.libraries.servo as servo
 
 NO_LINEA = 0
 LINEA = 1
-servoIzq = servo.Servo()
-servoDer = servo.Servo()
+servoIzq: servo.Servo = None
+servoDer: servo.Servo = None
 pinAnalog = 14
 pinIrDer = 3
 pinIrIzq = 2

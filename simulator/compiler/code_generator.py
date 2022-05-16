@@ -82,7 +82,7 @@ class CodeGenerator(ASTVisitor):
     def visit_id_type(self, id_type: IDTypeNode, param):
         lib = str(id_type.type_name).lower()
         used_class = id_type.type_name
-        self.write_to_script(" = {}.{}()".format(lib, used_class))
+        self.write_to_script(": {}.{} = None".format(lib, used_class))
         return None
 
     def visit_function(self, function: FunctionNode, param):

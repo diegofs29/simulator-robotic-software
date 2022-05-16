@@ -1,4 +1,5 @@
 import simulator.robots.elements as elems
+import simulator.robots.boards as boards
 
 
 class Servo:
@@ -6,11 +7,15 @@ class Servo:
     Servo class, represents the movement of a real servo
     """
 
-    def __init__(self):
+    OK = 0
+    ERROR = -1
+    NOT_IMPL_WARNING = -2
+
+    def __init__(self, board: boards.Board):
         """
         Constructor for Servo class
         """
-        self.pin = -1
+        self.board = board
         self.min = 544
         self.max = 2400
         self.speed = 90
@@ -27,15 +32,15 @@ class Servo:
             A dict with the methods
         """
         methods = {}
-        methods["attach"] = ("void", self.attach, ['int', '(int)', '(int)'])
-        methods["write"] = ("void", self.write, ['int'])
-        methods["writeMicroseconds"] = ("void", self.write_microseconds, ['int'])
-        methods["read"] = ("int", self.read, [])
-        methods["attached"] = ("bool", self.attached, [])
-        methods["detach"] = ("void", self.detach, [])
+        methods["attach"] = ("void", "attach", ['int', '(int)', '(int)'])
+        methods["write"] = ("void", "write", ['int'])
+        methods["writeMicroseconds"] = ("void", "write_microseconds", ['int'])
+        methods["read"] = ("int", "read", [])
+        methods["attached"] = ("bool", "attached", [])
+        methods["detach"] = ("void", "detach", [])
         return methods
 
-    def attach(self, servo: elems.Servo, pin, min=544, max=2400):
+    def attach(self, pin, min=544, max=2400):
         """
         Attaches the servo to a pin
         Arguments:
@@ -45,10 +50,15 @@ class Servo:
             the servo (default = 544)
             max: pulse width corresponging with the max angel on the 
             the servo (default = 2400)
+        Returns:
+            OK if servo attached to pin correctly, ERROR if else
         """
-        servo.pin = pin
-        servo.min = min
-        servo.max = max
+        servo = self.board.get_pin_element(pin)
+        if servo != None:
+            servo.min = min
+            servo.max = max
+            return self.OK
+        return self.ERROR
         
     def write(self, servo: elems.Servo, angle):
         """

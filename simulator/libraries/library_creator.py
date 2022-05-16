@@ -16,10 +16,10 @@ class LibraryCreator:
         return None
 
     def create_serial(self):
-        return serial.Serial(self.console)
+        return serial.Serial(self.robot.board, self.console)
 
     def create_servo(self):
-        return servo.Servo()
+        return servo.Servo(self.robot.board)
 
     def set_robot(self, robot: robots.Robot):
         self.robot = robot

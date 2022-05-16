@@ -11,6 +11,19 @@ class Board:
         self.pins = {}
         self.used_pins = {}
 
+    def get_pin_element(self, pin):
+        """
+        Gets the element attached to a pin
+        Arguments:
+            pin: the pin from which we want to get the element
+        Returns:
+            The element attached to the pin or None if there is none
+            attached
+        """
+        if pin in self.used_pins:
+            return self.used_pins[pin]["element"]
+        return None
+
     def get_digital_pins(self):
         """
         Returns:
