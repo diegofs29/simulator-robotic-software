@@ -46,8 +46,12 @@ class DeclarationAnalyzer(ASTVisitor):
     def visit_function(self, function: FunctionNode, param):
         if function.type != None:
             function.type.accept(self, param)
-        if function.args != None:
+        if len(function.args) > 0:
             for arg in function.args:
+                arg.set_function(function)
+                arg.accept(self, param)
+        if len(function.opt_args) > 0:
+            for arg in function.opt_args:
                 arg.set_function(function)
                 arg.accept(self, param)
         if function.sentences != None:
@@ -222,8 +226,11 @@ class SemanticAnalyzer(ASTVisitor):
         has_returned = False
         if function.type != None:
             function.type.accept(self, param)
-        if function.args != None:
+        if len(function.args) > 0:
             for arg in function.args:
+                arg.accept(self, param)
+        if len(function.opt_args) > 0:
+            for arg in function.opt_args:
                 arg.accept(self, param)
         if function.sentences != None:
             for sent in function.sentences:
@@ -404,6 +411,8 @@ class SemanticAnalyzer(ASTVisitor):
     def visit_function_call(self, function_call: FunctionCallNode, param):
         definition = func = None
         user_defined = found_func = False
+
+        # Find function that is being called
         if isinstance(function_call.name, MemberAccessNode):
             function_call.name.accept(self, param)
             lib = function_call.name.element.type.type_name
@@ -411,12 +420,12 @@ class SemanticAnalyzer(ASTVisitor):
             func = self.library_manager.find(lib, method.value)
             found_func = func != None
         else:
+            method = function_call.name
             if function_call.name.value in self.functions:
-                definition = self.functions[function_call.name.value]
+                definition = self.functions[method.value]
                 found_func = True
                 user_defined = True
             else:
-                method = function_call.name
                 for l in self.library_manager.get_libraries():
                     lib = l
                     func = self.library_manager.find(l, method.value)
@@ -427,45 +436,66 @@ class SemanticAnalyzer(ASTVisitor):
             self.add_error("Declaración", function_call,
                         "La función no se ha declarado")
 
+        # Create function node in case is a library function
         if not user_defined and func != None:
-            func_type = func[0]
-            f_type = self.__parse_type(func_type)
-            function_call.type = f_type
-            method.type = f_type
-            method.function = function_call.function
-            decls = []
-            opt_decls = []
-            for i in range(len(func[2])):
-                is_optional = False
-                str_arg_type = func[2][i]
-                if str_arg_type[0] == '(' and str_arg_type[-1] == ')':
-                    is_optional = True
-                    str_arg_type = str_arg_type[1:-1]
-                arg_type = self.__parse_type(str_arg_type)
-                char = chr(97 + i)
-                decl = DeclarationNode(arg_type, char)
-                if not is_optional:
-                    decls.append(decl)
-                else:
-                    opt_decls.append(decl)
-            definition = FunctionNode(f_type, lib + '.' + method.value, args=decls, opt_args=opt_decls)
+            func_name = lib + '.' + method.value
+            definition = self.__create_function(function_call, func, func_name)
 
+        # Manage parameters
         if definition != None:
             if function_call.parameters != None:
-                if definition.args == None:
-                    self.add_error("Parámetros", function_call,
-                               "La definición no contiene parámetros")
-                elif len(function_call.parameters) == len(definition.args):
+                if (
+                    len(function_call.parameters) == len(definition.args) or
+                    len(function_call.parameters) == len(definition.args) + len(definition.opt_args)
+                ):
                     for i in range(0, len(function_call.parameters)):
                         function_call.parameters[i].function = function_call.function
                         function_call.parameters[i].accept(self, param)
-                        if self.check_type(function_call.parameters[i].type, type(definition.args[i].type)):
+                        is_wrong_type = False
+                        if i < len(definition.args):
+                            is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.args[i].type))
+                        else:
+                            is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.opt_args[i].type))
+                        if is_wrong_type:
                             self.manage_types(
                                 function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
                 else:
                     self.add_error("Parámetros", function_call,
                                "El número de parámetros no coincide con los de la definición")
         return None
+
+    def __create_function(self, function_call, lib_func, func_name):
+        """
+        Creates a FunctionNode in case the found function is one that
+        is defined on the external libraries.
+        Arguments:
+            function_call: the function call node
+            lib_func: the function found on the library
+            func_name: the name of the function (including object if
+            is needed to call the function) 
+        Returns:
+            A FunctionNode with the corresponding values
+        """
+        func_type = lib_func[0]
+        f_type = self.__parse_type(func_type)
+        function_call.type = f_type
+        decls = []
+        opt_decls = []
+        for i in range(len(lib_func[2])):
+            is_optional = False
+            str_arg_type = lib_func[2][i]
+            if str_arg_type[0] == '(' and str_arg_type[-1] == ')':
+                is_optional = True
+                str_arg_type = str_arg_type[1:-1]
+            arg_type = self.__parse_type(str_arg_type)
+            char = chr(97 + i)
+            decl = DeclarationNode(arg_type, char)
+            if not is_optional:
+                decls.append(decl)
+            else:
+                opt_decls.append(decl)
+        definition = FunctionNode(f_type, func_name, args=decls, opt_args=opt_decls)
+        return definition
 
     def __parse_type(self, func_type):
         """
