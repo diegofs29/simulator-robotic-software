@@ -2,7 +2,7 @@ import string
 import time
 import random
 from math import cos, sin, sqrt, tan
-import simulator.robots.robots as robots
+import simulator.robots.boards as boards
 
 
 class Standard:
@@ -22,14 +22,14 @@ class Standard:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, board: robots.Board):
+    def __init__(self, board: boards.Board):
         """
         Constructor for Standard class
         """
         self.start = time.time()
         self.board = board
 
-    def get_name():
+    def get_name(self):
         return "Standard"
 
     def get_methods(self):

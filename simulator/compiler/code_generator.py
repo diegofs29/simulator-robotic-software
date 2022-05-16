@@ -14,14 +14,14 @@ class CodeGenerator(ASTVisitor):
 
     continue_line = False
 
-    def __init__(self, console):
+    def __init__(self, library_manager):
         """
         Constructor for code generator.
         Uses the ASTVisitor implementation. The pattern used
         is visitor.
         """
         self.script_tabs = 0
-        self.library_manager = libraries.LibraryManager(console)
+        self.library_manager = library_manager
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')

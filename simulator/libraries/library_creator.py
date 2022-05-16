@@ -1,4 +1,8 @@
 import simulator.console.console as console
+import simulator.robots.robots as robots
+import simulator.libraries.standard as std
+import simulator.libraries.serial as serial
+import simulator.libraries.servo as servo
 
 
 class LibraryCreator:
@@ -7,10 +11,15 @@ class LibraryCreator:
         self.console = console
 
     def create_standard(self):
-        pass
+        if self.robot != None:
+            return std.Standard(self.robot.board)
+        return None
 
     def create_serial(self):
-        pass
+        return serial.Serial(self.console)
 
     def create_servo(self):
-        pass
+        return servo.Servo()
+
+    def set_robot(self, robot: robots.Robot):
+        self.robot = robot

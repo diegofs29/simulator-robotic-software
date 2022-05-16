@@ -6,6 +6,8 @@ from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 from simulator.compiler.error_listener import CompilerErrorListener
 from simulator.compiler.semantical_errors import Semantic
 from simulator.compiler.code_generator import CodeGenerator
+from simulator.libraries.libraries import LibraryManager
+import simulator.libraries.library_creator as library_creator
 
 
 class Compiler:
@@ -13,7 +15,7 @@ class Compiler:
     def __init__(self, console):
         self.console = console
 
-    def transpile(self, file):
+    def transpile(self, file, robot):
         input = FileStream(fileName=file, encoding="utf-8")
         lexer = ArduinoLexer(input)
         error_listener = CompilerErrorListener(False)
@@ -24,8 +26,17 @@ class Compiler:
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        semantic = Semantic(self.console)
-        code_generator = CodeGenerator(self.console)
+        lib_creator = library_creator.LibraryCreator(self.console)
+        lib_creator.set_robot(robot)
+        lib_manager = LibraryManager(
+            [
+                lib_creator.create_standard(),
+                lib_creator.create_serial(),
+                lib_creator.create_servo()
+            ]
+        )
+        semantic = Semantic(lib_manager)
+        code_generator = CodeGenerator(lib_manager)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
         if len(self.syntax_errors) < 1:

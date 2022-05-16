@@ -20,7 +20,7 @@ class Serial:
         """
         self.console = console
 
-    def get_name():
+    def get_name(self):
         return "Serial"
 
     def get_methods(self):

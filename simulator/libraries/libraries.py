@@ -16,7 +16,7 @@ class LibraryManager:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, *libs):
+    def __init__(self, libs):
         """
         Constructor for library manager
         """

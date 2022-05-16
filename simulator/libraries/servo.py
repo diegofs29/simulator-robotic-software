@@ -1,4 +1,4 @@
-import simulator.robots.robots as robots
+import simulator.robots.elements as elems
 
 
 class Servo:
@@ -15,7 +15,7 @@ class Servo:
         self.max = 2400
         self.speed = 90
 
-    def get_name():
+    def get_name(self):
         return "Servo"
 
     def get_methods(self):
@@ -35,7 +35,7 @@ class Servo:
         methods["detach"] = ("void", self.detach, [])
         return methods
 
-    def attach(self, servo: robots.Servo, pin, min=544, max=2400):
+    def attach(self, servo: elems.Servo, pin, min=544, max=2400):
         """
         Attaches the servo to a pin
         Arguments:
@@ -50,7 +50,7 @@ class Servo:
         servo.min = min
         servo.max = max
         
-    def write(self, servo: robots.Servo, angle):
+    def write(self, servo: elems.Servo, angle):
         """
         Writes speed to servo.
         Our Servos, being rotation ones, will have their speed set by this
@@ -63,7 +63,7 @@ class Servo:
         """
         servo.value = angle
 
-    def write_microseconds(self, servo: robots.Servo, us):
+    def write_microseconds(self, servo: elems.Servo, us):
         """
         Writes speed to servo in microseconds.
         This method will work exactly the same way as write does (because our
@@ -74,7 +74,7 @@ class Servo:
         """
         servo.value = us
 
-    def read(self, servo: robots.Servo):
+    def read(self, servo: elems.Servo):
         """
         Reads the angle of the servo (being the last value passed to write)
         Arguments:
@@ -84,7 +84,7 @@ class Servo:
         """
         return servo.value
 
-    def attached(self, servo: robots.Servo):
+    def attached(self, servo: elems.Servo):
         """
         Checks wether the Servo variable is attached or not
         Arguments:
@@ -94,7 +94,7 @@ class Servo:
         """
         return servo.pin != -1
 
-    def detach(self, servo: robots.Servo):
+    def detach(self, servo: elems.Servo):
         """
         Detach the Servo variable from its pin
         Arguments:
