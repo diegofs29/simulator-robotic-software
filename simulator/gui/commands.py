@@ -1,4 +1,6 @@
+import importlib
 import simulator.compiler.transpiler as transpiler
+import simulator.console.console as console
 
 
 class Command:
@@ -10,25 +12,34 @@ class Command:
         pass
 
 
-class ExecuteCode(Command):
+class Compile(Command):
 
-    def __init__(self, console):
-        self.transpiler = transpiler.Transpiler(console)
+    def __init__(self, cons):
+        self.cons: console.Console = cons
 
     def execute(self):
-        return super().execute()
+        errors = transpiler.transpile()
+        if len(errors) > 1:
+            self.print_errors(errors)
 
-    def transpile(self):
-        """
-        Transpiles the programmed code
-        """
-        if self.robot != None:
-            self.transpiler.transpile()
+    def print_errors(self, errors):
+        for error in errors:
+            self.cons.write_error(error.to_string())
 
-    def set_robot(self, robot):
-        """
-        Sets the robot to compile for
-        Arguments:
-            robot: the robot to set
-        """
-        self.robot = robot
+
+class Setup(Command):
+
+    def __init__(self):
+        self.module = importlib.import_module('script_arduino', 'simulator.temp')
+
+    def execute(self):
+        self.module.setup()
+
+
+class Loop(Command):
+
+    def __init__(self):
+        self.module = importlib.import_module('script_arduino', 'simulator.temp')
+
+    def execute(self):
+        self.module.loop()
