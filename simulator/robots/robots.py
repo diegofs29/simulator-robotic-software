@@ -13,6 +13,12 @@ class Robot:
     def __init__(self, board):
         self.board = board
 
+    def get_data(self):
+        pass
+
+    def assign_pins(self):
+        pass
+
 
 class MobileRobot(Robot):
 
@@ -38,6 +44,30 @@ class MobileRobot(Robot):
         self.sound = elements.UltrasoundSensor()
 
         self.assign_pins(pins)
+
+    def get_data(self):
+        data = None
+        if len(self.light_sensors) == 2:
+            data = {
+                "servo_left": self.servo_left.pin,
+                "servo_right": self.servo_right.pin,
+                "light_left": self.light_sensors[0].pin,
+                "light_right": self.light_sensors[1].pin,
+                "sound_trig": self.sound.pin_trig,
+                "sound_echo": self.sound.pin_echo
+            }
+        else:
+            data = {
+                "servo_left": self.servo_left.pin,
+                "servo_right": self.servo_right.pin,
+                "light_mleft": self.light_sensors[0].pin,
+                "light_left": self.light_sensors[1].pin,
+                "light_right": self.light_sensors[2].pin,
+                "light_mright": self.light_sensors[3].pin,
+                "sound_trig": self.sound.pin_trig,
+                "sound_echo": self.sound.pin_echo
+            }
+        return data
 
     def assign_pins(self, pins):
         """
@@ -230,6 +260,16 @@ class LinearActuator(Robot):
         self.joystick = elements.Joystick()
 
         self.assign_pins(pins)
+
+    def get_data(self):
+        return {
+            "button_left": self.button_left.pin,
+            "button_right": self.button_right.pin,
+            "servo": self.servo.pin,
+            "button_joystick": self.joystick.pinb,
+            "joystick_x": self.joystick.pinx,
+            "joystick_y": self.joystick.piny
+        }
 
     def assign_pins(self, pins):
         """

@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import simulator.gui.layers as layers
-import simulator.console.console as console
+import simulator.gui.model as model
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -29,9 +28,9 @@ class MainApplication(tk.Tk):
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
         self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
 
-        self.console = console.Console(self.console_frame.console)
-        self.robot_layer: layers.Layer = self.select_robot()
-        self.configure_layer()
+        self.identifier = None
+        self.model = model.RobotsModel(self)
+        self.prepare_model()
         self.keys_used = True
 
         self.config(menu=self.menu_bar)
@@ -43,7 +42,6 @@ class MainApplication(tk.Tk):
             "s": False,
             "d": False
         }
-        self.identifier = None
 
         self.tools_frame.pack(fill=tk.X)
         self.vertical_pane.pack(fill="both", expand=True)
@@ -57,44 +55,65 @@ class MainApplication(tk.Tk):
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
 
+    def prepare_model(self):
+        self.__update_robot()
+        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+        self.model.configure_console(self.console_frame.console)
+        self.__update_track()
+
+    def execute(self):
+        self.model.execute()
+
+    def stop(self):
+        self.model.stop()
+
     def open_pin_configuration(self):
         """
         Top level window to configure pins connected to the
         Arduino board
         """
         robot = self.selector_bar.robot_selector.current()
-        conf_win = PinConfigurationWindow(self, robot, self)
+        PinConfigurationWindow(self, robot, self)
 
-    def configure_layer(self):
-        self.robot_layer.set_canvas(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
-        self.drawing_frame.change_zoom_label()
+    def zoom_in(self):
+        self.model.zoom_in()
+
+    def zoom_out(self):
+        self.model.zoom_out()
+        
+    def change_zoom_label(self, zoom_level):
+        self.drawing_frame.change_zoom_label(zoom_level)
 
     def change_robot(self, event):
-        self.stop_move()
-        self.robot_layer = self.select_robot()
-        self.configure_layer()
+        self.__update_robot()
+        self.__update_track() #Needed to set the circuit of the layer
+
+    def __update_robot(self):
+        robot = self.selector_bar.robot_selector.current()
+        self.model.change_robot(robot)
+        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
 
     def change_track(self, event):
-        self.stop_move()
-        circuit = self.selector_bar.track_selector.current()
-        self.robot_layer.set_circuit(circuit)
-        self.configure_layer()
+        self.__update_track()
 
-    def select_robot(self):
+    def __update_track(self):
+        circuit = self.selector_bar.track_selector.current()
         robot = self.selector_bar.robot_selector.current()
-        if robot == 0:
+        if robot == 0 or robot == 1:
+            self.model.change_circuit(circuit)
+        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+
+    def show_circuit_selector(self, showing):
+        if showing:
             self.selector_bar.recover_circuit_selector()
-            self.drawing_frame.hide_joystick()
-            return layers.MoblileRobotLayer(2, self.selector_bar.track_selector.current())
-        elif robot == 1:
-            self.selector_bar.recover_circuit_selector()
-            self.drawing_frame.hide_joystick()
-            return layers.MoblileRobotLayer(4, self.selector_bar.track_selector.current())
-        elif robot == 2:
+        else:
             self.selector_bar.hide_circuit_selector()
+    
+    def show_joystick(self, showing):
+        if showing:
             self.drawing_frame.show_joystick()
-            return layers.LinearActuatorLayer()
-        return None
+        else:
+            self.drawing_frame.hide_joystick()
 
     def key_press(self, event):
         pressed_key = event.char
@@ -106,27 +125,25 @@ class MainApplication(tk.Tk):
         if pressed_key in self.move_WASD:
             self.move_WASD[pressed_key] = False
 
-    def move(self):
-        self.robot_layer.move(self.keys_used, self.move_WASD)
-        self.identifier = self.after(10, self.move)
-
-    def stop_move(self):
-        self.robot_layer.stop()
-        self.abort_after()
-
     def abort_after(self):
         if self.identifier is not None:
             self.after_cancel(self.identifier)
 
     def console_filter(self):
-        msg_filters = []
+        msg_filters = {}
         if self.console_frame.output.get() == 1:
-            msg_filters.append('info')
+            msg_filters['info'] = True
+        else:
+            msg_filters['info'] = False
         if self.console_frame.warning.get() == 1:
-            msg_filters.append('warning')
+            msg_filters['warning'] = True
+        else:
+            msg_filters['warning'] = False
         if self.console_frame.error.get() == 1:
-            msg_filters.append('error')
-        self.console.filter_messages(*msg_filters)
+            msg_filters['error'] = True
+        else:
+            msg_filters['error'] = False
+        self.model.filter_console(msg_filters)
 
     def toggle_keys(self):
         self.keys_used = not self.keys_used
@@ -199,62 +216,63 @@ class PinConfigurationWindow(tk.Toplevel):
 
     def commit_data(self):
         robot = self.application.robot_layer.robot
+        pin_data = {}
         if 'servo_left' in self.data:
             value = self.entry_pin_se1.get()
             if self.data['servo_left'] != value:
-                robot.set_servo_left(value)
+                pin_data['servo_left'] = value
         if 'servo_right' in self.data:
             value = self.entry_pin_se2.get()
             if self.data['servo_right'] != value:
-                robot.set_servo_right(value)
+                pin_data['servo_right'] = value
         if 'light_mleft' in self.data:
             value = self.entry_pin_l1.get()
             if self.data['light_mleft'] != value:
-                robot.set_light_mleft(value)
+                pin_data['light_mleft'] = value
         if 'light_left' in self.data:
             value = self.entry_pin_l2.get()
             if self.data['light_left'] != value:
-                robot.set_light_left(value)
+                pin_data['light_left'] = value
         if 'light_right' in self.data:
             value = self.entry_pin_l3.get()
             if self.data['light_right'] != value:
-                robot.set_light_right(value)
+                pin_data['light_right'] = value
         if 'light_mright' in self.data:
             value = self.entry_pin_l4.get()
             if self.data['light_mright'] != value:
-                robot.set_light_mright(value)
+                pin_data['light_mright'] = value
         if 'sound_trig' in self.data:
             value = self.entry_pin_so1.get()
             if self.data['sound_trig'] != value:
-                robot.set_sound_trig(value)
+                pin_data['sound_trig'] = value
         if 'sound_echo' in self.data:
             value = self.entry_pin_so2.get()
             if self.data['sound_echo'] != value:
-                robot.set_sound_echo(value)
+                pin_data['sound_echo'] = value
         if 'button_left' in self.data:
             value = self.entry_pin_bt1.get()
             if self.data['button_left'] != value:
-                robot.set_button_left(value)
+                pin_data['button_left'] = value
         if 'button_right' in self.data:
             value = self.entry_pin_bt2.get()
             if self.data['button_right'] != value:
-                robot.set_button_right(value)
+                pin_data['button_right'] = value
         if 'servo' in self.data:
             value = self.entry_pin_aservo.get()
             if self.data['servo'] != value:
-                robot.set_servo(value)
+                pin_data['servo'] = value
         if 'button_joystick' in self.data:
             value = self.entry_pin_joystick.get()
             if self.data['button_joystick'] != value:
-                robot.set_joystick_button(value)
+                pin_data['button_joystick'] = value
         if 'joystick_x' in self.data:
             value = self.entry_pin_joystick_x.get()
             if self.data['joystick_x'] != value:
-                robot.set_joystick_x(value)
+                pin_data['joystick_x'] = value
         if 'joystick_y' in self.data:
             value = self.entry_pin_joystick_y.get()
             if self.data['joystick_y'] != value:
-                robot.set_joystick_y(value)
+                pin_data['joystick_y'] = value
         self.destroy()
 
     def show_for_mobile2(self):
@@ -436,8 +454,8 @@ class DrawingFrame(tk.Frame):
         self.canvas.bind("<ButtonPress-1>", self.scroll_start)
         self.canvas.bind("<B1-Motion>", self.scroll_move)
         self.canvas.bind("<MouseWheel>", self.zoom)
-        self.zoom_in_button.configure(command=self.zoom_in)
-        self.zoom_out_button.configure(command=self.zoom_out)
+        self.zoom_in_button.configure(command=self.application.zoom_in)
+        self.zoom_out_button.configure(command=self.application.zoom_out)
         self.key_movement.select()
 
         self.zoom_in_button.grid(row=0, column=0, padx=5, pady=5)
@@ -461,20 +479,12 @@ class DrawingFrame(tk.Frame):
 
     def zoom(self, event):
         if event.delta == -120:
-            self.zoom_out()
+            self.application.model.zoom_out()
         elif event.delta == 120:
-            self.zoom_in()
+            self.application.model.zoom_in()
 
-    def zoom_in(self):
-        self.application.robot_layer.zoom_in()
-        self.change_zoom_label()
-
-    def zoom_out(self):
-        self.application.robot_layer.zoom_out()
-        self.change_zoom_label()
-
-    def change_zoom_label(self):
-        self.zoom_label.configure(text="{}%".format(self.application.robot_layer.zoom_percent))
+    def change_zoom_label(self, zoom_level):
+        self.zoom_label.configure(text="{}%".format(zoom_level))
 
     def show_joystick(self):
         self.joystick_frame.pack(anchor="center", fill=tk.X)
@@ -527,16 +537,16 @@ class JoystickFrame(tk.Frame):
         self.j_button.grid(row=1, column=5, padx=10)
 
     def __updatex(self, event):
-        self.application.robot_layer.robot.joystick.dx = self.x_dir.get()
+        self.application.model.update_joystick('dx', self.x_dir.get())
 
     def __updatey(self, event):
-        self.application.robot_layer.robot.joystick.dy = self.y_dir.get()
+        self.application.model.update_joystick('dy', self.y_dir.get())
 
     def __pressb(self, event):
-        self.application.robot_layer.robot.joystick.value = 1
+        self.application.model.update_joystick('button', 1)
 
     def __releaseb(self, event):
-        self.application.robot_layer.robot.joystick.value = 0
+        self.application.model.update_joystick('button', 0)
 
 
 class EditorFrame(tk.Frame):
@@ -674,7 +684,7 @@ class ConsoleFrame(tk.Frame):
         self.console_frame.pack(fill=tk.BOTH, expand=True)
     
     def __send_input(self):
-        self.application.console.input(self.input_entry.get())
+        self.application.model.send_input(self.input_entry.get())
 
 
 class ButtonBar(tk.Frame):
@@ -786,13 +796,10 @@ class ButtonBar(tk.Frame):
         self.import_button.grid(row=0, column=2, padx=5, pady=5)
 
     def execute(self):
-        self.application.abort_after()
-        self.application.robot_layer.execute()
-        self.application.move()
+        self.application.execute()
 
     def stop(self):
-        self.application.robot_layer.stop()
-        self.application.stop_move()
+        self.application.stop()
 
     def __load_images(self):
         self.exec_img = tk.PhotoImage(file="buttons/exec.png")

@@ -105,13 +105,11 @@ class Layer:
 
 class MoblileRobotLayer(Layer):
 
-    def __init__(self, n_light_sens, circuit_opt):
+    def __init__(self, n_light_sens):
         """
         Constructor for MobileRobotLayer
         Arguments:
             n_light_sens: the number of light sensors
-            circuit_opt: a number that specifies the chosen
-            circuit
         """
         super().__init__()
         self.hud = huds.MobileHUD()
@@ -120,7 +118,6 @@ class MoblileRobotLayer(Layer):
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
 
         self.n_sens = n_light_sens
-        self.set_circuit(circuit_opt)
 
         self.is_rotating = False
         self.is_moving = False
