@@ -1,57 +1,57 @@
 from antlr4 import *
 from simulator.compiler.ArduinoLexer import ArduinoLexer
 from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import *
-from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
-from simulator.compiler.error_listener import CompilerErrorListener
-from simulator.compiler.semantical_errors import Semantic
-from simulator.compiler.code_generator import CodeGenerator
-from simulator.libraries.libraries import LibraryManager
+import simulator.compiler.ast_builder_visitor as ast_builder_visitor
+import simulator.compiler.error_listener as error_listener
+import simulator.compiler.semantical_errors as semantical_analysis
+import simulator.compiler.code_generator as code_generator
+import simulator.libraries.libraries as libraries
 import simulator.libraries.library_creator as library_creator
+import simulator.console.console as console
 
 
-class Compiler:
+class Transpiler:
 
-    def __init__(self, console):
-        self.console = console
+    def __init__(self, cons):
+        self.cons: console.Console = cons
 
-    def transpile(self, file, robot):
-        input = FileStream(fileName=file, encoding="utf-8")
+    def transpile(self, code, robot):
+        input = InputStream(code, encoding="utf-8")
         lexer = ArduinoLexer(input)
-        error_listener = CompilerErrorListener(False)
+        listener = error_listener.CompilerErrorListener(False)
         lexer.removeErrorListeners()
-        lexer.addErrorListener(error_listener)
+        lexer.addErrorListener(listener)
         stream = CommonTokenStream(lexer)
         parser = ArduinoParser(stream)
         parser.removeErrorListeners()
-        parser.addErrorListener(error_listener)
-        visitor = ASTBuilderVisitor()
-        lib_creator = library_creator.LibraryCreator(self.console)
+        parser.addErrorListener(listener)
+        visitor = ast_builder_visitor.ASTBuilderVisitor()
+        lib_creator = library_creator.LibraryCreator(self.cons)
         lib_creator.set_robot(robot)
-        lib_manager = LibraryManager(
+        lib_manager = libraries.LibraryManager(
             [
                 lib_creator.create_servo()
             ]
         )
-        semantic = Semantic(lib_manager)
-        code_generator = CodeGenerator(lib_manager)
+        sem_analysis = semantical_analysis.Semantic(lib_manager)
+        code_gen = code_generator.CodeGenerator(lib_manager)
         tree = parser.program()
-        self.syntax_errors = error_listener.errors
+        self.syntax_errors = listener.errors
         if len(self.syntax_errors) < 1:
             self.ast = visitor.visit(tree)
-            semantic.execute(self.ast)
+            sem_analysis.execute(self.ast)
         else:
             self.print_errors(self.syntax_errors)
         try:
-            self.semantic_errors = semantic.errors
+            self.semantic_errors = sem_analysis.errors
         except AttributeError:
             pass
         else:
             if len(self.semantic_errors) < 1:
-                code_generator.visit_program(self.ast, None)
+                code_gen.visit_program(self.ast, None)
             else:
                 self.print_errors(self.semantic_errors)
                 
     def print_errors(self, errors):
         for error in errors:
-            print(error.to_string())
+            self.cons.write_error(error.to_string())

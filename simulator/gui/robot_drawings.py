@@ -1,5 +1,7 @@
+import imp
 from math import cos, pi, sin
-import drawing
+import simulator.gui.drawing as drawing
+
 
 class RobotDrawing:
 

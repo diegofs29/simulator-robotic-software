@@ -1,6 +1,6 @@
-import drawing
-import robot_drawings
-import huds
+import simulator.gui.drawing as drawing
+import simulator.gui.robot_drawings as robot_drawings
+import simulator.gui.huds as huds
 import simulator.robots.robots as robots
 import simulator.files.files_reader as filesr
 
@@ -48,7 +48,7 @@ class Layer:
         self.drawing.zoom_out()
         self._zoom_config()
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Moves the robot that is being used
         Arguments:
@@ -56,7 +56,6 @@ class Layer:
             or not (False)
             move_WASD: a map that specifies if any of the keys WASD is being
             pressed
-            move_dir: a map that specifies if arrow keys are being pressed
         """
         pass
 
@@ -126,7 +125,7 @@ class MoblileRobotLayer(Layer):
         self.is_rotating = False
         self.is_moving = False
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Move method of the layer. Moves the robot and rotates it
         """
@@ -368,7 +367,7 @@ class LinearActuatorLayer(Layer):
         self.robot = robots.LinearActuator(self.robot_data)
         self.robot_drawing = robot_drawings.LinearActuatorDrawing(self.drawing)
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Move method of the layer. Moves the block of the
         linear actuator

@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import layers
+import simulator.gui.layers as layers
 import simulator.console.console as console
 
 DARK_BLUE = "#006468"
@@ -42,12 +42,6 @@ class MainApplication(tk.Tk):
             "a": False,
             "s": False,
             "d": False
-        }
-        self.move_dir = {
-            "up": False,
-            "down": False,
-            "left": False,
-            "right": False
         }
         self.identifier = None
 
@@ -113,7 +107,7 @@ class MainApplication(tk.Tk):
             self.move_WASD[pressed_key] = False
 
     def move(self):
-        self.robot_layer.move(self.keys_used, self.move_WASD, self.move_dir)
+        self.robot_layer.move(self.keys_used, self.move_WASD)
         self.identifier = self.after(10, self.move)
 
     def stop_move(self):
@@ -886,12 +880,3 @@ class SelectorBar(tk.Frame):
             self.lb_track.grid(row=0, column=2)
         if not self.track_selector.winfo_ismapped():
             self.track_selector.grid(row=0, column=3, padx=(5, 10))
-
-
-def main():
-    app = MainApplication()
-    app.mainloop()
-
-
-if __name__ == "__main__":
-    main()
