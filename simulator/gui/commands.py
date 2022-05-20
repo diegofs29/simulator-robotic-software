@@ -33,7 +33,7 @@ class Compile(Command):
 
     def execute(self):
         errors = transpiler.transpile(self.model.get_code(), self.model.robot_layer.robot)
-        if len(errors) > 1:
+        if len(errors) > 0:
             self.print_errors(errors)
             return False
         return True
