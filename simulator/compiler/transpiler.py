@@ -7,12 +7,11 @@ import simulator.compiler.semantical_errors as semantical_analysis
 import simulator.compiler.code_generator as code_generator
 import simulator.libraries.libraries as libraries
 import simulator.libraries.library_creator as library_creator
-import simulator.console.console as console
 
 
-def transpile(self, code, robot):
+def transpile(code, robot):
     errors = []
-    input = InputStream(code, encoding="utf-8")
+    input = InputStream(code)
 
     lexer = ArduinoLexer(input)
     listener = error_listener.CompilerErrorListener(False)
@@ -26,7 +25,7 @@ def transpile(self, code, robot):
 
     visitor = ast_builder_visitor.ASTBuilderVisitor()
 
-    lib_creator = library_creator.LibraryCreator(self.cons)
+    lib_creator = library_creator.LibraryCreator()
     lib_creator.set_robot(robot)
     lib_manager = libraries.LibraryManager(
         [
@@ -40,14 +39,14 @@ def transpile(self, code, robot):
     tree = parser.program()
     errors.extend(listener.errors)
     if len(errors) < 1:
-        self.ast = visitor.visit(tree)
-        sem_analysis.execute(self.ast)
+        ast = visitor.visit(tree)
+        sem_analysis.execute(ast)
         try:
             errors.extend(sem_analysis.errors)
         except AttributeError:
             pass
         else:
             if len(errors) < 1:
-                code_gen.visit_program(self.ast, None)
+                code_gen.visit_program(ast, None)
             
     return errors

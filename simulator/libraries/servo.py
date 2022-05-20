@@ -1,4 +1,3 @@
-import simulator.robots.elements as elems
 import simulator.robots.boards as boards
 
 
@@ -11,11 +10,11 @@ class Servo:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self):
+    def __init__(self, board=None):
         """
         Constructor for Servo class
         """
-        self.board = None
+        self.board = board
         self.servo = None
         self.min = 544
         self.max = 2400

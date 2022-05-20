@@ -164,6 +164,7 @@ class DefineMacroNode(Sentence):
 
     def __init__(self, macro_name, expr=None, elements=[]):
         super().__init__()
+        self.type = None
         self.macro_name = macro_name
         self.expr = expr
         self.elements = elements

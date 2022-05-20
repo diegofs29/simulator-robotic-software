@@ -37,8 +37,8 @@ def get_methods():
     methods["parseFloat"] = ("float", "parse_float", []) #Not implemented
     methods["parseInt"] = ("long", "parse_int", []) #Not implemented
     methods["peek"] = ("int", "peek", []) #Not implemented
-    methods["print"] = ("size_t", "print", [])
-    methods["println"] = ("size_t", "println", [])
+    methods["print"] = ("size_t", "print", ["any"])
+    methods["println"] = ("size_t", "println", ["(any)"])
     methods["read"] = ("int", "read", [])
     methods["readBytes"] = ("size_t", "read_bytes", []) #Not implemented
     methods["readBytesUntil"] = ("size_t", "read_bytes_until", []) #Not implemented
@@ -147,7 +147,7 @@ def println(val):
     Arguments:
         val: the value
     """
-    cons.write_output(val + '\n')
+    cons.write_output(str(val) + '\n')
 
 def read():
     """

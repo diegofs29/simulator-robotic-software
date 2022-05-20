@@ -1,5 +1,6 @@
 import imp
 from math import cos, pi, sin
+from turtle import width
 import simulator.gui.drawing as drawing
 
 
@@ -325,7 +326,6 @@ class MobileRobotDrawing(RobotDrawing):
         vx = -vel * cos(angle)
         vy = vel * sin(angle)
         if self.__update_coords(vx, vy):
-            self.drawing.canvas.delete('prueba')
             self.drawing.move_image("robot", self.x, self.y)
             i = 1
             for sens in self.sensors["light"]:
@@ -612,6 +612,10 @@ class Circuit:
                     "group": "circuit"
                 }
             )
+        """
+        self.drawing.canvas.create_rectangle(100, 100, 600, 600)
+        self.drawing.canvas.create_arc(100, 100, 600, 600, width=300*self.drawing.scale, style="arc", extent=180)
+        self.drawing.canvas.create_arc(600, 600, 100, 1200, width=300, style="arc")"""
     
     def __create_straight(self, x, y, width, height):
         """

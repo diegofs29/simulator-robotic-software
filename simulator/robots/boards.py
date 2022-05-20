@@ -1,8 +1,8 @@
 class Board:
 
-    INPUT = "input"
-    OUTPUT = "output"
-    INPUT_PULLUP = "input_pullup"
+    INPUT = 0
+    OUTPUT = 1
+    INPUT_PULLUP = 2
 
     def __init__(self):
         """
@@ -138,7 +138,7 @@ class Board:
             The value of the output or None if pin not input
         """
         if self.__is_used_pin(pin):
-            if self.used_pins[pin]["mode"] == self.INPUT:
+            if self.used_pins[pin]["mode"] == self.INPUT or self.used_pins[pin]["mode"] == self.INPUT_PULLUP:
                 return self.used_pins[pin]["element"].get_value(pin)
         return None
 
@@ -209,9 +209,9 @@ class ArduinoUno(Board):
         communication)
         """
         super().__init__()
-        self.pins["digital"] = list(map(lambda x: str(x), range(2, 14)))
-        self.pins["analog"] = list(map(lambda x: "A{}".format(x), range(0, 6)))
-        self.pins["txrx"] = ["0", "1"]
+        self.pins["digital"] = list(map(lambda x: x, range(2, 14)))
+        self.pins["analog"] = list(map(lambda x: x, range(14, 20)))
+        self.pins["txrx"] = [0, 1]
 
 
 class BQzumBT328(Board):
@@ -227,6 +227,6 @@ class BQzumBT328(Board):
         communication)
         """
         super().__init__()
-        self.pins["digital"] = list(map(lambda x: str(x), range(2, 14)))
-        self.pins["analog"] = list(map(lambda x: "A{}".format(x), range(0, 6)))
-        self.pins["txrx"] = ["0", "1"]
+        self.pins["digital"] = list(map(lambda x: x, range(2, 14)))
+        self.pins["analog"] = list(map(lambda x: x, range(14, 20)))
+        self.pins["txrx"] = [0, 1]

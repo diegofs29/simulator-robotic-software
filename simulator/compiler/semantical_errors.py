@@ -213,7 +213,11 @@ class SemanticAnalyzer(ASTVisitor):
         definition = self.__get_declaration(id_node)
         id_node.set_definition(definition)
         if definition != None:
+            if isinstance(definition, DefineMacroNode):
+                definition.type = definition.expr.type
             id_node.set_type(id_node.definition.type)
+        elif id_node.value in self.library_manager.library_methods:
+            pass
         else:
             self.add_error("Declaración", id_node,
                            "La variable no está declarada")
@@ -414,7 +418,9 @@ class SemanticAnalyzer(ASTVisitor):
         # Find function that is being called
         if isinstance(function_call.name, MemberAccessNode):
             function_call.name.accept(self, param)
-            lib = function_call.name.element.type.type_name
+            lib = function_call.name.element.value
+            if function_call.name.element.type != None:
+                lib = function_call.name.element.type.type_name
             method = function_call.name.member
             func = self.library_manager.find(lib, method.value)
             found_func = func != None
@@ -425,12 +431,10 @@ class SemanticAnalyzer(ASTVisitor):
                 found_func = True
                 user_defined = True
             else:
-                for l in self.library_manager.get_libraries():
-                    lib = l
-                    func = self.library_manager.find(l, method.value)
-                    if func != None:
-                        found_func = True
-                        break
+                lib = "Standard"
+                func = self.library_manager.find(lib, method.value)
+                if func != None:
+                    found_func = True
         if not found_func:
             self.add_error("Declaración", function_call,
                         "La función no se ha declarado")
@@ -454,11 +458,19 @@ class SemanticAnalyzer(ASTVisitor):
                 for i in range(0, len(function_call.parameters)):
                     function_call.parameters[i].function = function_call.function
                     function_call.parameters[i].accept(self, param)
+                    type_to_check = None
                     is_wrong_type = False
                     if i < len(definition.args):
-                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.args[i].type))
+                        type_to_check = definition.args[i].type
                     else:
-                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(definition.opt_args[i].type))
+                        type_to_check = definition.opt_args[i].type
+                    not_any = True
+                    if type(type_to_check) == IDTypeNode:
+                        if type_to_check.type_name == 'any':
+                            is_wrong_type = False
+                            not_any = False
+                    if not_any:
+                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(type_to_check))
                     if is_wrong_type:
                         self.manage_types(
                                 function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")

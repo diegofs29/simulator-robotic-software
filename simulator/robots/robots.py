@@ -19,6 +19,11 @@ class Robot:
     def assign_pins(self):
         pass
 
+    def parse_pin(self, pin):
+        if str(pin[0]).lower() == 'a':
+            return int(pin[1]) + 14
+        return int(pin[0])
+
 
 class MobileRobot(Robot):
 
@@ -78,7 +83,7 @@ class MobileRobot(Robot):
         """
         for pin in pins:
             name = pin[0]
-            pin = pin[1]
+            pin = self.parse_pin(pin[1])
             if name == "servo left":
                 self.set_servo_left(pin)
             elif name == "servo right":
@@ -280,7 +285,7 @@ class LinearActuator(Robot):
         """
         for pin in pins:
             name = pin[0]
-            pin = pin[1]
+            pin = self.parse_pin(pin[1])
             if name == "servo":
                 self.set_servo(pin)
             elif name == "button joystick":
@@ -372,7 +377,7 @@ class LinearActuator(Robot):
             if self.board.attach_pin(pin, self.joystick):
                 self.joystick.piny = pin
 
-    def detach_joystick_x(self):
+    def detach_joystick_y(self):
         """
         Detaches joystick (y) from board
         """

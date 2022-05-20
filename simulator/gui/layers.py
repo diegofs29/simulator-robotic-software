@@ -1,3 +1,4 @@
+import random
 import simulator.gui.drawing as drawing
 import simulator.gui.robot_drawings as robot_drawings
 import simulator.gui.huds as huds
@@ -167,9 +168,7 @@ class MoblileRobotLayer(Layer):
         map_tuple = self.rdr.parse_circuit(circuit_name)
         straights = map_tuple[0]
         obstacles = map_tuple[1]
-        self.circuit = None
-        if len(straights) > 0:
-            self.circuit = robot_drawings.Circuit(straights, self.drawing)
+        self.circuit = robot_drawings.Circuit(straights, self.drawing)
         self.obstacle = None
         if len(obstacles) > 0:
             self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
@@ -220,16 +219,16 @@ class MoblileRobotLayer(Layer):
         da = 0
         #self.robot.servo_left.value = 0
         #self.robot.servo_right.value = 0
-        v_i = int((self.robot.servo_left.get_value() - 90) / 10)
-        v_r = int((self.robot.servo_right.get_value() - 90) / 10)
+        v_i = int((self.robot.servo_left.get_value() - 90) / 10) * -1
+        v_r = int((self.robot.servo_right.get_value() - 90) / 10) * -1
         rotates = False
         if v_i >= 0 and v_r >= 0:
             if v_i != 0 or v_r != 0:
-                da = -5
+                da = random.randint(3, 9)
                 rotates = True
         if v_i <= 0 and v_r <= 0:
             if v_i != 0 or v_r != 0:
-                da = 5
+                da = random.randint(3, 9)
                 rotates = True
         if abs(v_i) == abs(v_r) and not rotates:
             if v_i > 0:
@@ -402,7 +401,6 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        self.robot.servo.value = 0
         v_s = int((self.robot.servo.value - 90) / 10)
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:

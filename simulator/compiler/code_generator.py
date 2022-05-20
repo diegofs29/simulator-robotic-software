@@ -30,7 +30,7 @@ class CodeGenerator(ASTVisitor):
         self.script = open("simulator/temp/script_arduino.py", 'w')
         self.write_to_script("import simulator.libraries.standard as standard")
         self.write_endl()
-        self.write_to_script("import simulator.libraries.serial as serial")
+        self.write_to_script("import simulator.libraries.serial as Serial")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)
@@ -43,8 +43,8 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_include(self, program: IncludeNode, param):
-        imported = str(program.file_name[:-2]).lower()
-        library = "simulator.libraries.{}".format(imported)
+        imported = str(program.file_name[:-2])
+        library = "simulator.libraries.{}".format(str(imported).lower())
         self.library_manager.add_library(library)
         self.write_to_script("import {} as {}".format(library, imported))
 
@@ -87,9 +87,9 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_id_type(self, id_type: IDTypeNode, param):
-        lib = str(id_type.type_name).lower()
+        lib = str(id_type.type_name)
         used_class = id_type.type_name
-        self.write_to_script(": {}.{} = servo.Servo()".format(lib, used_class))
+        self.write_to_script(" = {}.{}(standard.board)".format(lib, used_class))
         return None
 
     def visit_function(self, function: FunctionNode, param):
@@ -194,16 +194,18 @@ class CodeGenerator(ASTVisitor):
 
         if len(conditional_sentence.else_expr) > 0:
             increases = True
+            else_written = False
             self.write_endl()
             for i in range(0, len(conditional_sentence.else_expr)):
                 else_sent = conditional_sentence.else_expr[i]
                 if isinstance(else_sent, ConditionalSentenceNode):
                     self.write_to_script("el")
                     increases = False
-                else:
+                elif not else_written:
                     self.write_to_script("else:")
                     self.write_endl()
                     self.increase_tab()
+                    else_written = True
                 else_sent.accept(self, param)
                 if i + 1 < len(conditional_sentence.else_expr):
                     self.write_endl()
@@ -342,11 +344,11 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_char(self, char_node: CharNode, param):
-        self.write_to_script(char_node.value)
+        self.write_to_script("'{}'".format(char_node.value))
         return None
 
     def visit_string(self, string_node: StringNode, param):
-        self.write_to_script(string_node.value)
+        self.write_to_script("\"{}\"".format(string_node.value))
         return None
 
     def visit_boolean(self, boolean_node: BooleanNode, param):
