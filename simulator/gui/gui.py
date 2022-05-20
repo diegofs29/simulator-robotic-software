@@ -524,10 +524,10 @@ class JoystickFrame(tk.Frame):
         self.application.model.update_joystick('dy', self.y_dir.get())
 
     def __pressb(self, event):
-        self.application.model.update_joystick('button', 1)
+        self.application.model.update_joystick('button', 0)
 
     def __releaseb(self, event):
-        self.application.model.update_joystick('button', 0)
+        self.application.model.update_joystick('button', 1)
 
 
 class EditorFrame(tk.Frame):

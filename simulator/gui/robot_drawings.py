@@ -77,6 +77,7 @@ class LinearActuatorDrawing(RobotDrawing):
         Arguments:
             vel: the determined velocity
         """
+        vel = vel
         if (not self.hit) and vel != 0:
             if self.but_right.pressed:
                 self.but_right.stop_press()
@@ -124,7 +125,7 @@ class LinearActuatorDrawing(RobotDrawing):
         self.but_right = self.ActuatorButton(
             "assets/button-hit.png", 
             "assets/button-no-hit.png",
-            self.x + 880, self.y - 185
+            self.x + 875, self.y - 185
         )
         self.block = self.Block(
             "assets/mobile-part.png",

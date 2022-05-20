@@ -78,7 +78,7 @@ class Button(Element):
         Constructor for button
         """
         self.pin = -1
-        self.value = 0
+        self.value = 1
 
     def set_value(self, pin, value):
         if value == 1 or value == 0:
@@ -102,9 +102,9 @@ class Joystick(Element):
         self.pinx = -1
         self.piny = -1
         self.pinb = -1
-        self.dx = 0
-        self.dy = 0
-        self.value = 0
+        self.dx = 500
+        self.dy = 500
+        self.value = 1
 
     def get_value(self, pin):
         """

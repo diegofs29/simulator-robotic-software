@@ -401,15 +401,20 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        v_s = int((self.robot.servo.value - 90) / 10)
+        v_s = int((self.robot.servo.value - 90) / 10) * -1
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:
                 v = v_s
-            self.__hit_right(v == 0)
+            else:
+                self.__hit_right(True)
         if v_s < 0:
             if self.robot_drawing.block.x > 508:
                 v = v_s
-            self.__hit_left(v == 0)
+            else:
+                self.__hit_left(True)
+        if v != 0:
+            self.__hit_left(False)
+            self.__hit_right(False)
         return v
 
     def __hit_left(self, has_hit):
@@ -421,10 +426,10 @@ class LinearActuatorLayer(Layer):
         """
         if has_hit:
             self.robot_drawing.hit = True
-            self.robot.button_left.value = 1
+            self.robot.button_left.value = 0
         else:
             self.robot_drawing.hit = False
-            self.robot.button_left.value = 0
+            self.robot.button_left.value = 1
 
     def __hit_right(self, has_hit):
         """
@@ -435,7 +440,7 @@ class LinearActuatorLayer(Layer):
         """
         if has_hit:
             self.robot_drawing.hit = True
-            self.robot.button_right.value = 1
+            self.robot.button_right.value = 0
         else:
             self.robot_drawing.hit = False
-            self.robot.button_right.value = 0
+            self.robot.button_right.value = 1

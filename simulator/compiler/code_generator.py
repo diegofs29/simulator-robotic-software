@@ -25,6 +25,7 @@ class CodeGenerator(ASTVisitor):
         """
         self.script_tabs = 0
         self.library_manager: libraries.LibraryManager = library_manager
+        self.globals = []
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')
@@ -62,11 +63,12 @@ class CodeGenerator(ASTVisitor):
 
     def visit_declaration(self, declaration: DeclarationNode, param):
         self.write_to_script(declaration.var_name)
-        if declaration.type != None:
-            declaration.type.accept(self, param)
+        self.globals.append(declaration.var_name)
         if declaration.expr != None:
             self.write_to_script(" = ")
             declaration.expr.accept(self, param)
+        elif declaration.type != None:
+            declaration.type.accept(self, param)
         return None
 
     def visit_array_declaration(self, array_declaration: ArrayDeclarationNode, param):
@@ -84,6 +86,62 @@ class CodeGenerator(ASTVisitor):
             define_macro.expr.accept(self, param)
         if len(define_macro.elements) > 0:
             self.visit_array_elements(define_macro.elements, param)
+        return None
+    
+    def visit_boolean_type(self, boolean_type: BooleanTypeNode, param):
+        self.write_to_script(" = False")
+        return None
+
+    def visit_byte_type(self, byte_type: ByteTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_char_type(self, char_type: CharTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_double_type(self, double_type: DoubleTypeNode, param):
+        self.write_to_script(" = 0.0")
+        return None
+
+    def visit_float_type(self, float_type: FloatTypeNode, param):
+        self.write_to_script(" = 0.0")
+        return None
+
+    def visit_int_type(self, int_type: IntTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_long_type(self, long_type: LongTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_short_type(self, short_type: ShortTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_size_t_type(self, size_t_type: Size_tTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_string_type(self, string: StringTypeNode, param):
+        self.write_to_script("")
+        return None
+
+    def visit_u_int_type(self, u_int_type: UIntTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_u_char_type(self, u_char_type: UCharTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_u_long_type(self, u_long_type: ULongTypeNode, param):
+        self.write_to_script(" = 0")
+        return None
+
+    def visit_word_type(self, word_type: WordTypeNode, param):
+        self.write_to_script(" = 0")
         return None
 
     def visit_id_type(self, id_type: IDTypeNode, param):
@@ -103,6 +161,10 @@ class CodeGenerator(ASTVisitor):
         self.write_endl()
 
         self.increase_tab()
+        for variable in self.globals:
+            self.write_to_script("global {}".format(variable))
+            self.write_endl()
+
         for sent in function.sentences:
             sent.accept(self, param)
             self.write_endl()
@@ -184,8 +246,6 @@ class CodeGenerator(ASTVisitor):
         increases = True
         for i in range(0, len(conditional_sentence.if_expr)):
             if_sent = conditional_sentence.if_expr[i]
-            if isinstance(if_sent, ConditionalSentenceNode):
-                increases = False
             if_sent.accept(self, param)
             if i + 1 < len(conditional_sentence.if_expr):
                 self.write_endl()
