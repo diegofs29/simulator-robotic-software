@@ -101,68 +101,77 @@
             "name": "circuit",
             "parts": [
                 {
+                    "type": "straight",
                     "orient": "x",
                     "dist": 5000
                 },
                 {
+                    "type": "turn",
+                    "starting_angle": 90,
+                    "angle": -90,
+                    "bounding_len": 500
+                },
+                {
+                    "type": "straight",
                     "orient": "y",
-                    "dist": 1000
+                    "dist": 1500
                 }, 
                 {
-                    "orient": "x",
-                    "dist": -370
+                    "type": "turn",
+                    "starting_angle": 0,
+                    "angle": -90,
+                    "bounding_len": 2000
                 },
                 {
-                    "orient": "y",
-                    "dist": 1000
-                },
-                {
-                    "orient":"x",
-                    "dist": 370
-                },
-                {
-                    "orient": "y",
-                    "dist": 1000
-                },
-                {
+                    "type": "straight",
                     "orient": "x",
                     "dist": -2000
                 },
                 {
-                    "orient": "y",
-                    "dist": -500
+                    "type": "turn",
+                    "starting_angle": 180,
+                    "angle": 90,
+                    "bounding_len": 2000
                 },
                 {
+                    "type": "turn",
+                    "starting_angle": 90,
+                    "angle": 90,
+                    "bounding_len": 750
+                },
+                {
+                    "type": "straight",
                     "orient": "x",
-                    "dist": -1250
+                    "dist": 1000
                 },
                 {
-                    "orient": "y",
-                    "dist": -1000
+                    "type": "turn",
+                    "starting_angle": 270,
+                    "angle": 90,
+                    "bounding_len": 750
                 },
                 {
+                    "type": "turn",
+                    "starting_angle": 0,
+                    "angle": 90,
+                    "bounding_len": 750
+                },
+                {
+                    "type": "straight",
                     "orient": "x",
-                    "dist": 750
+                    "dist": -2600
                 },
                 {
-                    "orient": "y",
-                    "dist": -750
-                }, 
-                {
-                    "orient": "x",
-                    "dist": -1750
+                    "type": "turn",
+                    "starting_angle": 180,
+                    "angle": 90,
+                    "bounding_len": 676
                 },
                 {
-                    "orient": "y",
-                    "dist": 750
-                },
-                {
-                    "orient": "x",
-                    "dist": -750
-                }, 
-                {
-                    "orient": "y",
-                    "dist": -1500
+                    "type": "turn",
+                    "starting_angle": 180,
+                    "angle": -90,
+                    "bounding_len": 676
                 }
             ],
             "obstacles": [

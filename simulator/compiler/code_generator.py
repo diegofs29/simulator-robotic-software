@@ -63,7 +63,8 @@ class CodeGenerator(ASTVisitor):
 
     def visit_declaration(self, declaration: DeclarationNode, param):
         self.write_to_script(declaration.var_name)
-        self.globals.append(declaration.var_name)
+        if declaration.function == None:
+            self.globals.append(declaration.var_name)
         if declaration.expr != None:
             self.write_to_script(" = ")
             declaration.expr.accept(self, param)
@@ -156,7 +157,9 @@ class CodeGenerator(ASTVisitor):
             function.type.accept(self, param)
 
         self.write_to_script("(")
-        self.visit_children(function.args, param)
+        for arg in function.args:
+            arg.set_function(function)
+            arg.accept(self, param)
         self.write_to_script("):")
         self.write_endl()
 
@@ -165,9 +168,12 @@ class CodeGenerator(ASTVisitor):
             self.write_to_script("global {}".format(variable))
             self.write_endl()
 
-        for sent in function.sentences:
-            sent.accept(self, param)
-            self.write_endl()
+        if len(function.sentences) > 0:
+            for sent in function.sentences:
+                sent.accept(self, param)
+                self.write_endl()
+        else:
+            self.write_no_sentence()
         self.decrease_tab()
 
         return None
@@ -180,11 +186,15 @@ class CodeGenerator(ASTVisitor):
         self.write_endl()
 
         self.increase_tab()
-        for i in range(0, len(while_p.sentences)):
-            sent = while_p.sentences[i]
-            sent.accept(self, param)
-            if i + 1 < len(while_p.sentences):
-                self.write_endl()
+        n_sents = len(while_p.sentences)
+        if n_sents > 0:
+            for i in range(0, n_sents):
+                sent = while_p.sentences[i]
+                sent.accept(self, param)
+                if i + 1 < n_sents:
+                    self.write_endl()
+        else:
+            self.write_no_sentence()
         self.decrease_tab()
 
         return None
@@ -193,11 +203,15 @@ class CodeGenerator(ASTVisitor):
         self.write_to_script("while True:")
         self.write_endl()
         self.increase_tab()
-        for i in range(0, len(do_while.sentences)):
-            sent = do_while.sentences[i]
-            sent.accept(self, param)
-            if i + 1 < len(do_while.sentences):
-                self.write_endl()
+        n_sents = len(do_while.sentences)
+        if n_sents > 0:
+            for i in range(0, n_sents):
+                sent = do_while.sentences[i]
+                sent.accept(self, param)
+                if i + 1 < n_sents:
+                    self.write_endl()
+        else:
+            self.write_no_sentence()
         
         self.write_to_script("if ")
         if do_while.expression != None:
@@ -226,11 +240,15 @@ class CodeGenerator(ASTVisitor):
         self.write_endl()
 
         self.increase_tab()
-        for i in range(0, len(for_p.sentences)):
-            sent = for_p.sentences[i]
-            sent.accept(self, param)
-            if i + 1 < len(for_p.sentences):
-                self.write_endl()
+        n_sents = len(for_p.sentences)
+        if n_sents > 0:
+            for i in range(0, n_sents):
+                sent = for_p.sentences[i]
+                sent.accept(self, param)
+                if i + 1 < n_sents:
+                    self.write_endl()
+        else:
+            self.write_no_sentence()
         self.decrease_tab()
 
         return None
@@ -244,19 +262,24 @@ class CodeGenerator(ASTVisitor):
 
         self.increase_tab()
         increases = True
-        for i in range(0, len(conditional_sentence.if_expr)):
-            if_sent = conditional_sentence.if_expr[i]
-            if_sent.accept(self, param)
-            if i + 1 < len(conditional_sentence.if_expr):
-                self.write_endl()
+        n_ifs = len(conditional_sentence.if_expr)
+        if n_ifs > 0:
+            for i in range(0, n_ifs):
+                if_sent = conditional_sentence.if_expr[i]
+                if_sent.accept(self, param)
+                if i + 1 < n_ifs:
+                    self.write_endl()
+        else:
+            self.write_no_sentence()
         if increases:
             self.decrease_tab()
 
-        if len(conditional_sentence.else_expr) > 0:
-            increases = True
+        increases = True
+        n_elses = len(conditional_sentence.else_expr)
+        if n_elses > 0:
             else_written = False
             self.write_endl()
-            for i in range(0, len(conditional_sentence.else_expr)):
+            for i in range(0, n_elses):
                 else_sent = conditional_sentence.else_expr[i]
                 if isinstance(else_sent, ConditionalSentenceNode):
                     self.write_to_script("el")
@@ -267,7 +290,7 @@ class CodeGenerator(ASTVisitor):
                     self.increase_tab()
                     else_written = True
                 else_sent.accept(self, param)
-                if i + 1 < len(conditional_sentence.else_expr):
+                if i + 1 < n_elses:
                     self.write_endl()
             if increases:
                 self.decrease_tab()
@@ -282,9 +305,12 @@ class CodeGenerator(ASTVisitor):
         self.write_endl()
 
         self.increase_tab()
-        for case in switch_sentence.cases:
-            case.accept(self, param)
-            self.write_endl()
+        if len(switch_sentence.cases) > 0:
+            for case in switch_sentence.cases:
+                case.accept(self, param)
+                self.write_endl()
+        else:
+            self.write_no_sentence()
         self.decrease_tab()
 
         return None
@@ -297,9 +323,12 @@ class CodeGenerator(ASTVisitor):
         self.write_endl()
         
         self.increase_tab()
-        for sent in case.sentences:
-            sent.accept(self, param)
-            self.write_endl()
+        if len(case.sentences) > 0:
+            for sent in case.sentences:
+                sent.accept(self, param)
+                self.write_endl()
+        else:
+            self.write_no_sentence()
         self.decrease_tab()
 
         return None
@@ -510,6 +539,10 @@ class CodeGenerator(ASTVisitor):
         self.script.write("\n")
         #print()
         self.continue_line = False
+
+    def write_no_sentence(self):
+        self.write_to_script("pass")
+        self.write_endl()
 
     def increase_tab(self):
         """

@@ -542,9 +542,10 @@ class EditorFrame(tk.Frame):
         self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL,
                                  command=self.text.yview)
 
-        self.text.insert(tk.END, "La zona del código\n")
-        self.text.insert(tk.END, "La zona del código\n")
-        self.text.insert(tk.END, "La zona del código")
+        self.text.insert(tk.END, "void setup(){\n")
+        self.text.insert(tk.END, "}\n\n")
+        self.text.insert(tk.END, "void loop(){\n")
+        self.text.insert(tk.END, "}")
         self.line_bar.attach(self.text)
         self.text.config(xscrollcommand=self.sb_x.set,
                          yscrollcommand=self.sb_y.set)

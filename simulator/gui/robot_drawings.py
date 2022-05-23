@@ -1,6 +1,5 @@
-import imp
+from math import atan2, sqrt
 from math import cos, pi, sin
-from turtle import width
 import simulator.gui.drawing as drawing
 
 
@@ -560,16 +559,16 @@ class MobileRobotDrawing(RobotDrawing):
 
 class Circuit:
 
-    def __init__(self, straights, drawing: drawing.Drawing):
+    def __init__(self, parts, drawing: drawing.Drawing):
         """
         Constructor for Circuit
         Arguments:
-            straights: a list with the straights (map with
+            parts: a list with circuit*s parts (map with
             orientation: length)
             drawing: the drawing where the circuit is
             going to be represented
         """
-        self.straights = straights
+        self.parts = parts
         self.circuit_parts = []
         self.drawing = drawing
         self.ROAD_WIDTH = 300
@@ -578,45 +577,120 @@ class Circuit:
         """
         Creates and draws a circuit
         """
-        self.create_straights(self.straights)
+        self.create_straights()
         self.draw_circuit()
 
-    def create_straights(self, straight_lengths):
+    def create_straights(self):
         """
         Creates all the circuit pieces
-        Arguments:
-            straight_lengths: a dictionary whose keys are x
-            if the straight is horizontal or y if it's vertical
         """
-        x = 500
-        y = 500
-        for straight in straight_lengths:
-            if "x" in straight:
-                self.__create_straight(x, y, straight["x"], self.ROAD_WIDTH)
-                x += straight["x"]
-            elif "y" in straight:
-                self.__create_straight(x, y, self.ROAD_WIDTH, straight["y"])
-                y += straight["y"]
+        x = 700
+        y = 700
+        for part in self.parts:
+            if part['type'] == 'straight':
+                if "x" in part:
+                    self.__create_straight(x, y, part["x"], self.ROAD_WIDTH)
+                    x += part["x"]
+                elif "y" in part:
+                    self.__create_straight(x, y, self.ROAD_WIDTH, part["y"])
+                    y += part["y"]
+            elif part['type'] == 'turn':
+                x, y = self.__correct_turn_start(x, y, part)
+                self.__create_turn(x, y, part['bounding_len'], part['angle'], part['starting_angle'], self.ROAD_WIDTH)
+                x, y = self.__correct_turn_end(x, y, part)
+
+    def __correct_turn_start(self, xcoord, ycoord, turn):
+        """
+        Fixes the starting point of the turn
+        Arguments:
+            xcoord: the current x coord
+            ycoord: the current y coord
+            turn: the turn that is being fixed
+        """
+        x = xcoord
+        y = ycoord
+
+        start_angle = turn['starting_angle']
+        angle = turn['angle']
+
+        if start_angle == 0:
+            if angle > 0:
+                x -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+                y += turn['bounding_len'] - self.ROAD_WIDTH / 2
+            else: 
+                x -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+                y -= turn['bounding_len'] / 2
+        elif start_angle == 90:
+            if angle > 0:
+                x += self.ROAD_WIDTH / 2
+                y += turn['bounding_len'] / 2 + self.ROAD_WIDTH
+            else:
+                x -= self.ROAD_WIDTH
+                y += self.ROAD_WIDTH / 2
+        elif start_angle == 180:
+            if angle > 0:
+                x -= turn['bounding_len'] / 2 - self.ROAD_WIDTH
+                y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+            else:
+                x += self.ROAD_WIDTH / 2
+        if start_angle == 270:
+            if angle > 0:
+                x -= turn['bounding_len'] / 2
+                y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+            else:
+                x -= turn['bounding_len'] / 2 - self.ROAD_WIDTH 
+                y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+        return (x, y)
+
+    def __correct_turn_end(self, xcoord, ycoord, turn):
+        """
+        Fixes the starting point of the turn
+        Arguments:
+            xcoord: the current x coord
+            ycoord: the current y coord
+            turn: the turn that is being fixed
+        """
+        x = xcoord
+        y = ycoord
+
+        starting_angle = turn['starting_angle']
+        angle = turn['angle']
+
+        if starting_angle == 0:
+            if angle > 0:
+                x += self.ROAD_WIDTH / 2
+                y -= self.ROAD_WIDTH / 2
+            else:
+                x += turn['bounding_len'] / 2 - self.ROAD_WIDTH
+                y += turn['bounding_len'] - self.ROAD_WIDTH / 2
+        elif starting_angle == 90:
+            if angle > 0:
+                x += turn['bounding_len'] / 2
+                y -= self.ROAD_WIDTH / 2
+            else:
+                x += turn['bounding_len'] - self.ROAD_WIDTH / 2
+                y += turn['bounding_len'] / 2
+        elif starting_angle == 180:
+            if angle > 0:
+                x -= self.ROAD_WIDTH / 2
+            else:
+                x += turn['bounding_len'] / 2
+                y -= self.ROAD_WIDTH / 2
+        elif starting_angle == 270:
+            if angle > 0:
+                x += turn['bounding_len'] - self.ROAD_WIDTH / 2
+                y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
+            else:
+                x -= self.ROAD_WIDTH / 2
+                y += turn['bounding_len'] / 2 - self.ROAD_WIDTH / 2
+        return (x, y)
 
     def draw_circuit(self):
         """
         Draws the circuit
         """
         for part in self.circuit_parts:
-            self.drawing.draw_rectangle(
-                {
-                    "x": part.x,
-                    "y": part.y,
-                    "width": part.width,
-                    "height": part.height,
-                    "color": "black",
-                    "group": "circuit"
-                }
-            )
-        """
-        self.drawing.canvas.create_rectangle(100, 100, 600, 600)
-        self.drawing.canvas.create_arc(100, 100, 600, 600, width=300*self.drawing.scale, style="arc", extent=180)
-        self.drawing.canvas.create_arc(600, 600, 100, 1200, width=300, style="arc")"""
+            part.draw(self.drawing)
     
     def __create_straight(self, x, y, width, height):
         """
@@ -639,6 +713,20 @@ class Circuit:
             self.CircuitStraight(x, y, width, height)
         )
 
+    def __create_turn(self, x, y, bounding_len, angle, starting_angle, track_width):
+        """
+        Creates a turn
+        Arguments:
+            x: the x coordinate of the turn
+            y: the y coordinate of the turn
+            width: the length of turn's bounding box
+            angle: the angle that is covered by the turn
+            track_width: the width of the track
+        """
+        self.circuit_parts.append(
+            self.CircuitTurn(x, y, bounding_len, bounding_len, angle, starting_angle, track_width)
+        )
+
     def is_overlapping(self, x, y):
         """
         Checks if the coordinates are overlapping with the circuit
@@ -655,7 +743,32 @@ class Circuit:
                 break
         return overlap
 
-    class CircuitStraight:
+    class CircuitPart:
+        
+        def __init__(self, x, y):
+            """
+            Constructor for circuit straight
+            Arguments:
+                x: the x coordinate of the part
+                y: the y coordinate of the part
+            """
+            self.x = x
+            self.y = y
+
+        def draw(self, drawing: drawing.Drawing):
+            """
+            Draws the circuit part
+            """
+            pass
+
+        def check_overlap(self, x, y):
+            """
+            Checks if the point is overlapped with the
+            circuit
+            """
+            pass
+
+    class CircuitStraight(CircuitPart):
 
         def __init__(self, x, y, width, height):
             """
@@ -666,10 +779,21 @@ class Circuit:
                 width: the width of the straight
                 heigth: the height of the straight
             """
-            self.x = x
-            self.y = y
+            super().__init__(x, y)
             self.width = width
             self.height = height
+
+        def draw(self, drawing: drawing.Drawing):
+            drawing.draw_rectangle(
+                {
+                    "x": self.x,
+                    "y": self.y,
+                    "width": self.width,
+                    "height": self.height,
+                    "color": "black",
+                    "group": "circuit"
+                }
+            )
 
         def check_overlap(self, x, y):
             """
@@ -688,6 +812,77 @@ class Circuit:
                 )
             )
 
+    class CircuitTurn(CircuitPart):
+
+        def __init__(self, x, y, width, height, angle, starting_angle, track_width):
+            """
+            Constructor for circuit turns
+            Arguments:
+                x: the x coordinate of the turn
+                y: the y corrdinate of the turn
+                width: the width of the arc box
+                height: the height of the arc box
+                angle: the angle that is covered by the turn
+                starting_angle: the angle of start
+                track_width: the width of the turn
+            """
+            super().__init__(x, y)
+            self.width = width
+            self.height = height
+            self.angle = angle
+            self.starting_angle = starting_angle
+            if angle < 0:
+                self.angle = abs(angle)
+                self.starting_angle += angle
+                if self.starting_angle < 0:
+                    self.starting_angle += 360
+            self.track_width = track_width
+            self.center = (x + width / 2, y + height / 2)
+            self.radius = sqrt((self.center[0] - x) ** 2)
+
+        def draw(self, drawing: drawing.Drawing):
+            drawing.draw_arc(
+                {
+                    "x": self.x, 
+                    "y": self.y, 
+                    "width": self.width, 
+                    "height": self.height, 
+                    "track_width": self.track_width, 
+                    "angle": self.angle, 
+                    "starting_angle": self.starting_angle,
+                    "group": "circuit"
+                }
+            )
+
+        def check_overlap(self, x, y):
+            """
+            Checks if the point is overlapped with the turn
+            """
+            r_in = self.radius - (self.track_width / 2)
+            r_out = self.radius + (self.track_width / 2)
+
+            dist = sqrt(((x - self.center[0]) ** 2) + ((y - self.center[1]) ** 2))
+
+            inside_arc = (
+                dist >= r_in and
+                dist <= r_out
+            )
+
+            if inside_arc:
+                dx = x - self.center[0]
+                dy = y - self.center[1]
+                inside_angle = atan2(dy, dx) * (180 / pi)
+                if inside_angle < 0:
+                    inside_angle += 360
+                inside_angle = abs(inside_angle - 360)
+                end_angle = self.starting_angle + self.angle
+                if end_angle == 0:
+                    end_angle = 360
+                return (
+                    inside_angle and
+                    self.starting_angle <= inside_angle <= end_angle
+                )
+            return False
 
 class Obstacle:
 

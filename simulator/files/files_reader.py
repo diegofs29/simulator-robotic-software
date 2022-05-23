@@ -36,16 +36,16 @@ class RobotDataReader:
         Returns:
             A tuple with the straights and the obstacles
         """
-        straights = []
+        circuit_parts = []
         obstacles = []
         for circuit in self.circuits:
             if circuit_name == circuit['name']:
                 if circuit['name'] == circuit_name:
                     if 'parts' in circuit:
-                        straights = self.__read_straights(circuit['parts'])
+                        circuit_parts = self.__read_parts(circuit['parts'])
                     if 'obstacles' in circuit:
                         obstacles = self.__read_obstacles(circuit['obstacles'])
-        return (straights, obstacles)
+        return (circuit_parts, obstacles)
 
     def __name_from_opt(self, robot_opt):
         """
@@ -63,7 +63,7 @@ class RobotDataReader:
             return "actuator"
         return "mobile2"
 
-    def __read_straights(self, parts):
+    def __read_parts(self, parts):
         """
         Reads the straights from the file
         Arguments:
@@ -72,14 +72,25 @@ class RobotDataReader:
         Returns:
             A list with the straights orientation and length
         """
-        straights = []
+        circuit_parts = []
         for part in parts:
-            straights.append(
-                {
-                    part['orient']: part['dist']
-                }
-            )
-        return straights
+            if part['type'] == 'straight':
+                circuit_parts.append(
+                    {
+                        'type': part['type'],
+                        part['orient']: part['dist']
+                    }
+                )
+            elif part['type'] == 'turn':
+                circuit_parts.append(
+                    {
+                        'type': part['type'],
+                        'starting_angle': part['starting_angle'],
+                        'angle': part['angle'],
+                        'bounding_len': part['bounding_len']
+                    }
+                )
+        return circuit_parts
 
     def __read_obstacles(self, obstacles):
         """

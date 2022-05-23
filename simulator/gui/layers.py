@@ -219,8 +219,8 @@ class MoblileRobotLayer(Layer):
         da = 0
         #self.robot.servo_left.value = 0
         #self.robot.servo_right.value = 0
-        v_i = int((self.robot.servo_left.get_value() - 90) / 10) * -1
-        v_r = int((self.robot.servo_right.get_value() - 90) / 10) * -1
+        v_i = int((self.robot.servo_left.get_value() - 90) / 10)
+        v_r = int((self.robot.servo_right.get_value() - 90) / 10)
         rotates = False
         if v_i >= 0 and v_r >= 0:
             if v_i != 0 or v_r != 0:
@@ -228,13 +228,13 @@ class MoblileRobotLayer(Layer):
                 rotates = True
         if v_i <= 0 and v_r <= 0:
             if v_i != 0 or v_r != 0:
-                da = random.randint(3, 9)
+                da = random.randint(3, 9) * -1
                 rotates = True
         if abs(v_i) == abs(v_r) and not rotates:
             if v_i > 0:
-                v = -v_i
+                v = v_i
             if v_i < 0:
-                v = -v_i
+                v = v_i
         return v, da
 
     def __parse_circuit_opt(self, circuit_opt):
