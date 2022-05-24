@@ -103,7 +103,9 @@
                 {
                     "type": "straight",
                     "orient": "x",
-                    "dist": 5000
+                    "dist": 5000,
+                    "anchor next": "end",
+                    "save anchors": ""
                 },
                 {
                     "type": "turn",
@@ -114,7 +116,9 @@
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": 1500
+                    "dist": 1500,
+                    "anchor next": "end",
+                    "save anchors": ""
                 }, 
                 {
                     "type": "turn",
@@ -125,7 +129,9 @@
                 {
                     "type": "straight",
                     "orient": "x",
-                    "dist": -2000
+                    "dist": -2000,
+                    "anchor next": "end",
+                    "save anchors": ""
                 },
                 {
                     "type": "turn",
@@ -142,7 +148,9 @@
                 {
                     "type": "straight",
                     "orient": "x",
-                    "dist": 1000
+                    "dist": 1000,
+                    "anchor next": "end",
+                    "save anchors": ""
                 },
                 {
                     "type": "turn",
@@ -159,19 +167,21 @@
                 {
                     "type": "straight",
                     "orient": "x",
-                    "dist": -2600
+                    "dist": -2600,
+                    "anchor next": "end",
+                    "save anchors": ""
                 },
                 {
                     "type": "turn",
                     "starting_angle": 180,
                     "angle": 90,
-                    "bounding_len": 676
+                    "bounding_len": 645
                 },
                 {
                     "type": "turn",
                     "starting_angle": 180,
                     "angle": -90,
-                    "bounding_len": 676
+                    "bounding_len": 610
                 }
             ],
             "obstacles": [
@@ -186,25 +196,164 @@
         {
             "name": "labyrinth",
             "parts": [
-                
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 2000,
+                    "anchor next": "mid",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 3250,
+                    "anchor next": "mid save",
+                    "save anchors": "end 3/4"
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": -700,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 600,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -500,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 800,
+                    "anchor next": "end load",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -800,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": -500,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": -800,
+                    "anchor next": "end load",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": -800,
+                    "anchor next": "start load",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 800,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 250,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -250,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 125,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 250,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -250,
+                    "anchor next": "start",
+                    "save anchors": ""
+                }
             ]
         },
         {
             "name": "straight",
             "parts": [
-                
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 2000,
+                    "anchor next": "mid",
+                    "save anchors": ""
+                }
             ]
         },
         {
             "name": "obstacle",
             "parts": [
-                
+               
+            ],
+            "obstacles": [
+                {
+                    "x": 900,
+                    "y": 900,
+                    "width": 1000,
+                    "height": 700
+                }
             ]
         },
         {
             "name": "straight and obstacle",
             "parts": [
-                
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 2000,
+                    "anchor next": "mid",
+                    "save anchors": ""
+                }
+            ],
+            "obstacles": [
+                {
+                    "x": 900,
+                    "y": 1300,
+                    "width": 1000,
+                    "height": 700
+                }
             ]
         }
     ]

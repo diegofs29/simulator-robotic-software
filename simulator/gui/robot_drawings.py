@@ -571,7 +571,7 @@ class Circuit:
         self.parts = parts
         self.circuit_parts = []
         self.drawing = drawing
-        self.ROAD_WIDTH = 300
+        self.ROAD_WIDTH = 125
 
     def create_circuit(self):
         """
@@ -584,20 +584,88 @@ class Circuit:
         """
         Creates all the circuit pieces
         """
-        x = 700
-        y = 700
+        x = 550
+        y = 550
+        saved_coords = []
         for part in self.parts:
             if part['type'] == 'straight':
+                save = False
+                extend_saved = []
+                if 'load' in str(part['anchor']).split():
+                    x, y = saved_coords.pop()
                 if "x" in part:
                     self.__create_straight(x, y, part["x"], self.ROAD_WIDTH)
-                    x += part["x"]
+                    if part['save'] != '':
+                        extend_saved = self.__save_coords_x(x, y, part)
+                    x, save = self.__update_straight_x(x, part)
                 elif "y" in part:
                     self.__create_straight(x, y, self.ROAD_WIDTH, part["y"])
-                    y += part["y"]
+                    if part['save'] != '':
+                        extend_saved = self.__save_coords_y(x, y, part)
+                    y, save = self.__update_straight_y(y, part)
+                if save:
+                    saved_coords.extend(extend_saved)
+                    saved_coords.append((x, y))
             elif part['type'] == 'turn':
                 x, y = self.__correct_turn_start(x, y, part)
                 self.__create_turn(x, y, part['bounding_len'], part['angle'], part['starting_angle'], self.ROAD_WIDTH)
                 x, y = self.__correct_turn_end(x, y, part)
+
+    def __save_coords_x(self, x, y, part):
+        list_coords = []
+        list_pos = str(part['save']).split(" ")
+        for pos in list_pos:
+            cop_x = x
+            if pos == 'end':
+                cop_x += part["x"]
+            elif pos == 'mid':
+                cop_x += part["x"] / 2 - self.ROAD_WIDTH / 2
+            elif pos == '1/4':
+                cop_x += part["x"] / 4
+            elif pos == '3/4':
+                cop_x += part["x"] * 3 / 4
+            list_coords.append((cop_x, y))
+        return list_coords
+
+    def __save_coords_y(self, x, y, part):
+        list_coords = []
+        list_pos = str(part['save']).split(" ")
+        for pos in list_pos:
+            cop_y = y
+            if pos == 'end':
+                cop_y += part["y"]
+            elif pos == 'mid':
+                cop_y += part["y"] / 2 - self.ROAD_WIDTH / 2
+            elif pos == '1/4':
+                cop_y += part["y"] / 4
+            elif pos == '3/4':
+                cop_y += part["y"] * 3 / 4
+            list_coords.append((x, cop_y))
+        return list_coords
+
+    def __update_straight_x(self, x, part):
+        position, save = self.__split_anchor(part)
+        if position == 'end':
+            x += part["x"]
+        elif position == 'mid':
+            x += part["x"] / 2 - self.ROAD_WIDTH / 2
+        return x, save
+
+    def __update_straight_y(self, y, part):
+        position, save = self.__split_anchor(part)
+        if position == 'end':
+            y += part["y"]
+        elif position == 'mid':
+            y += part["y"] / 2 - self.ROAD_WIDTH / 2
+        return y, save
+
+    def __split_anchor(self, part):
+        anchor_split = str(part['anchor']).split(" ")
+        position = anchor_split[0]
+        save = False
+        if 'save' in anchor_split:
+            save = True
+        return position, save
 
     def __correct_turn_start(self, xcoord, ycoord, turn):
         """
@@ -623,9 +691,9 @@ class Circuit:
         elif start_angle == 90:
             if angle > 0:
                 x += self.ROAD_WIDTH / 2
-                y += turn['bounding_len'] / 2 + self.ROAD_WIDTH
+                y -= turn['bounding_len'] / 2
             else:
-                x -= self.ROAD_WIDTH
+                x -= turn['bounding_len'] / 2
                 y += self.ROAD_WIDTH / 2
         elif start_angle == 180:
             if angle > 0:
@@ -633,6 +701,7 @@ class Circuit:
                 y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
             else:
                 x += self.ROAD_WIDTH / 2
+                y -= turn['bounding_len'] / 2
         if start_angle == 270:
             if angle > 0:
                 x -= turn['bounding_len'] / 2
@@ -658,7 +727,7 @@ class Circuit:
 
         if starting_angle == 0:
             if angle > 0:
-                x += self.ROAD_WIDTH / 2
+                x += turn['bounding_len'] / 2 - self.ROAD_WIDTH / 2
                 y -= self.ROAD_WIDTH / 2
             else:
                 x += turn['bounding_len'] / 2 - self.ROAD_WIDTH
@@ -673,6 +742,7 @@ class Circuit:
         elif starting_angle == 180:
             if angle > 0:
                 x -= self.ROAD_WIDTH / 2
+                y += turn['bounding_len'] / 2
             else:
                 x += turn['bounding_len'] / 2
                 y -= self.ROAD_WIDTH / 2

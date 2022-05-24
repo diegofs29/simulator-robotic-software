@@ -40,11 +40,10 @@ class RobotDataReader:
         obstacles = []
         for circuit in self.circuits:
             if circuit_name == circuit['name']:
-                if circuit['name'] == circuit_name:
-                    if 'parts' in circuit:
-                        circuit_parts = self.__read_parts(circuit['parts'])
-                    if 'obstacles' in circuit:
-                        obstacles = self.__read_obstacles(circuit['obstacles'])
+                if 'parts' in circuit:
+                    circuit_parts = self.__read_parts(circuit['parts'])
+                if 'obstacles' in circuit:
+                    obstacles = self.__read_obstacles(circuit['obstacles'])
         return (circuit_parts, obstacles)
 
     def __name_from_opt(self, robot_opt):
@@ -78,7 +77,9 @@ class RobotDataReader:
                 circuit_parts.append(
                     {
                         'type': part['type'],
-                        part['orient']: part['dist']
+                        'anchor': part['anchor next'],
+                        part['orient']: part['dist'],
+                        'save': part['save anchors']
                     }
                 )
             elif part['type'] == 'turn':

@@ -19,24 +19,17 @@ void setup() {
 
  servoIzq.attach(pinServoIzq);
  servoDer.attach(pinServoDer);
-
 }
 
 void loop() {
  if(digitalRead(pinIrIzq) == LINEA && digitalRead(pinIrDer) == LINEA){
-  Serial.print("a");
   avanzar(90);
-  /*
  } else if(digitalRead(pinIrIzq) == NO_LINEA && digitalRead(pinIrDer) == NO_LINEA){
-  //espiral();
-  Serial.print("i");
+  espiral();
   izquierda(30);
-  */
  } else if(digitalRead(pinIrDer) == NO_LINEA){
-  Serial.print("d");
   derecha(30);
  } else {
-  Serial.print("i");
   izquierda(30);
  }
 }
@@ -66,7 +59,6 @@ void derecha(int v){
   servoIzq.write(velocidad);
 }
 
-/*
 void espiral(){
   boolean perdido = true;
   int tiempoEspiral = 1000;
@@ -87,7 +79,6 @@ void espiral(){
     }
   }
 }
-*/
 
 void izquierda(int v){
   int velocidad = 90 - v;
