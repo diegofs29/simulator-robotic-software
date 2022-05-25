@@ -1,8 +1,8 @@
-from compiler import parse_grammar
-
+import simulator.gui.gui as gui
 
 def main():
-    parse_grammar.parse_grammar("tests/grammar-tests/ejemploBreakContinue.txt")
+    app = gui.MainApplication()
+    app.mainloop()
 
 if __name__ == '__main__':
     main()

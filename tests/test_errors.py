@@ -5,7 +5,9 @@ from simulator.compiler.ArduinoParser import ArduinoParser
 from simulator.compiler.ast import *
 from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
 from simulator.compiler.error_listener import CompilerErrorListener
-from simulator.compiler.semantical_errors import Semantic, SemanticAnalyzer
+from simulator.compiler.semantical_errors import Semantic
+from simulator.libraries.libraries import LibraryManager
+import simulator.libraries.library_creator as library_creator
 
 
 class TestBaseErrors(unittest.TestCase):
@@ -21,7 +23,13 @@ class TestBaseErrors(unittest.TestCase):
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        semantic = Semantic()
+        lib_creator = library_creator.LibraryCreator(None)
+        lib_manager = LibraryManager(
+            [
+                lib_creator.create_servo()
+            ]
+        )
+        semantic = Semantic(lib_manager)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
         if len(self.syntax_errors) < 1:
@@ -238,6 +246,47 @@ class TestArrayAccessErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[23].message, "El índice sobrepasa el tamaño del array")
 
 
+class TestLibraryFunctionErrors(TestBaseErrors):
+
+    file = "tests/error-tests/library-function.txt"
+
+    def test_number_of_errors(self):
+        self.assertEqual(len(self.semantic_errors), 5)
+
+    def test_r_types(self):
+        self.assertEqual(self.semantic_errors[0].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[1].r_type, "Parámetros")
+        self.assertEqual(self.semantic_errors[2].r_type, "Declaración")
+        self.assertEqual(self.semantic_errors[3].r_type, "Parámetros")
+        self.assertEqual(self.semantic_errors[4].r_type, "Tipos")
+
+    def test_error_messages(self):
+        self.assertEqual(self.semantic_errors[0].message, "La función no se ha declarado")
+        self.assertEqual(self.semantic_errors[1].message, "El número de parámetros no coincide con los de la definición")
+        self.assertEqual(self.semantic_errors[2].message, "La función no se ha declarado")
+        self.assertEqual(self.semantic_errors[3].message, "El número de parámetros no coincide con los de la definición")
+        self.assertEqual(self.semantic_errors[4].message, "El tipo del parámetro y del valor no coincide")
+
+
 class TestPositiveCases(TestBaseErrors):
 
-    pass
+    file = "tests/error-tests/mobile-ok.txt"
+
+    def test_number_of_errors(self):
+        self.assertEqual(len(self.semantic_errors), 0)
+
+        self.file = "tests/error-tests/labyrinth-ok.txt"
+        self.setUp()
+        self.assertEqual(len(self.semantic_errors), 0)
+
+        self.file = "tests/error-tests/pruebas-ok.txt"
+        self.setUp()
+        self.assertEqual(len(self.semantic_errors), 0)
+
+        self.file = "tests/error-tests/blinking-ok.txt"
+        self.setUp()
+        self.assertEqual(len(self.semantic_errors), 0)
+
+        self.file = "tests/error-tests/mixed-ok.txt"
+        self.setUp()
+        self.assertEqual(len(self.semantic_errors), 0)

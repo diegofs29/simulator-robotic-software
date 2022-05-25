@@ -36,6 +36,7 @@ class ASTVisitor:
     def visit_define_macro(self, define_macro: DefineMacroNode, param):
         if define_macro.expr != None:
             define_macro.expr.accept(self, param)
+        self.visit_array_elements(define_macro.elements, param)
         return None
 
     def visit_boolean_type(self, boolean_type: BooleanTypeNode, param):
@@ -89,8 +90,8 @@ class ASTVisitor:
     def visit_function(self, function: FunctionNode, param):
         if function.type != None:
             function.type.accept(self, param)
-        self.visit_children(function.args, param, param)
-        self.visit_children(function.sentences, param, param)
+        self.visit_children(function.args, param)
+        self.visit_children(function.sentences, param)
         return None
 
     def visit_while(self, while_p: WhileNode, param):
@@ -223,6 +224,8 @@ class ASTVisitor:
         return None
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
+        if function_call.name != None:
+            function_call.name.accept(self, param)
         self.visit_children(function_call.parameters, param)
         return None
 

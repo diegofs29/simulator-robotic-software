@@ -107,6 +107,8 @@ class ArrayDeclarationNode(Sentence):
         self.is_static = is_static
         if not (len(self.size) < 1 and (self.elements == [] or self.elements == None)):
             self.__fix_array()
+        if self.elements == None:
+            self.elements = []
 
     def accept(self, visitor, param):
         return visitor.visit_array_declaration(self, param)
@@ -164,6 +166,7 @@ class DefineMacroNode(Sentence):
 
     def __init__(self, macro_name, expr=None, elements=[]):
         super().__init__()
+        self.type = None
         self.macro_name = macro_name
         self.expr = expr
         self.elements = elements
@@ -378,11 +381,12 @@ class IDTypeNode(TypeNode):
 
 class FunctionNode(ASTNode):
 
-    def __init__(self, type, name, args=None, sentences=None):
+    def __init__(self, type, name, args=[], opt_args=[], sentences=None):
         super().__init__()
         self.type = type
         self.name = name
         self.args = args
+        self.opt_args = opt_args
         self.sentences = sentences
 
     def accept(self, visitor, param):

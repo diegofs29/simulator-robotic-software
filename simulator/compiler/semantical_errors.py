@@ -1,15 +1,19 @@
-from .ast import *
-from .ast_visitor import ASTVisitor
+from simulator.libraries.libraries import LibraryManager
+from simulator.compiler.ast import *
+from simulator.compiler.ast_visitor import ASTVisitor
 from simulator.console.console import Error
 
 
 class Semantic:
 
+    def __init__(self, library_manager):
+        self.library_manager = library_manager
+
     def execute(self, ast):
-        decl = DeclarationAnalyzer()
+        decl = DeclarationAnalyzer(self.library_manager)
         decl.visit_program(ast, None)
         self.errors = decl.errors
-        semt = SemanticAnalyzer(
+        semt = SemanticAnalyzer(self.library_manager,
             decl.globals, decl.locals, decl.functions)
         semt.visit_program(ast, None)
         self.errors.extend(semt.errors)
@@ -17,7 +21,8 @@ class Semantic:
 
 class DeclarationAnalyzer(ASTVisitor):
 
-    def __init__(self):
+    def __init__(self, library_manager: LibraryManager):
+        self.library_manager = library_manager
         self.errors = []
         self.globals = {}
         self.locals = {}
@@ -32,19 +37,38 @@ class DeclarationAnalyzer(ASTVisitor):
             self.add_error("Declaración", program, "No hay función loop")
         return None
 
+    def visit_include(self, program: IncludeNode, param):
+        library = program.file_name
+        self.library_manager.add_library(library)
+        return None
+
     def visit_function(self, function: FunctionNode, param):
         if function.type != None:
             function.type.accept(self, param)
-        self.visit_children(function.args, param)
+        if len(function.args) > 0:
+            for arg in function.args:
+                arg.set_function(function)
+                arg.accept(self, param)
+        if len(function.opt_args) > 0:
+            for arg in function.opt_args:
+                arg.set_function(function)
+                arg.accept(self, param)
         if function.sentences != None:
             for sent in function.sentences:
                 sent.set_function(function)
                 sent.accept(self, param)
         if not function.name in self.functions:
-            self.functions[function.name] = function
+            self.functions[function.name] = [function]
         else:
-            self.add_error("Declaración", function,
-                           "La función ya ha sido declarada")
+            is_repeated = False
+            for func in self.functions[function.name]:
+                if len(function.args) == len(func.args):
+                    is_repeated = True
+            if not is_repeated:
+                self.functions[function.name].append(function)
+            else:
+                self.add_error("Declaración", function,
+                            "La función ya ha sido declarada")
         return None
 
     def visit_declaration(self, declaration: DeclarationNode, param):
@@ -117,8 +141,9 @@ class DeclarationAnalyzer(ASTVisitor):
 
 class SemanticAnalyzer(ASTVisitor):
 
-    def __init__(self, globals, locals, functions):
+    def __init__(self, library_manager: LibraryManager, globals, locals, functions):
         self.errors = []
+        self.library_manager = library_manager
         self.globals = globals
         self.locals = locals
         self.functions = functions
@@ -126,22 +151,26 @@ class SemanticAnalyzer(ASTVisitor):
                                 DoubleTypeNode, ByteTypeNode,
                                 ShortTypeNode, LongTypeNode,
                                 CharTypeNode, BooleanTypeNode,
-                                Size_tTypeNode, WordTypeNode]
+                                Size_tTypeNode, WordTypeNode,
+                                ULongTypeNode, UIntTypeNode,
+                                UCharTypeNode]
         self.integer_types = [IntTypeNode, ByteTypeNode,
                               ShortTypeNode, LongTypeNode,
                               CharTypeNode, BooleanTypeNode,
-                              Size_tTypeNode, WordTypeNode]
+                              Size_tTypeNode, WordTypeNode,
+                              ULongTypeNode, UIntTypeNode,
+                              UCharTypeNode]
 
     def visit_program(self, program: ProgramNode, param):
         self.visit_children(program.includes, param)
         self.visit_children(program.code, param)
         if "setup" in self.functions:
-            setup = self.functions["setup"]
+            setup = self.functions["setup"][0]
             if self.check_type(setup.type, VoidTypeNode):
                 self.add_error("Tipo de función setup", program,
                                "La función setup debe ser de tipo void")
         if "loop" in self.functions:
-            setup = self.functions["loop"]
+            setup = self.functions["loop"][0]
             if self.check_type(setup.type, VoidTypeNode):
                 self.add_error("Tipo de función loop", program,
                                "La función loop debe ser de tipo void")
@@ -191,7 +220,11 @@ class SemanticAnalyzer(ASTVisitor):
         definition = self.__get_declaration(id_node)
         id_node.set_definition(definition)
         if definition != None:
+            if isinstance(definition, DefineMacroNode):
+                definition.type = definition.expr.type
             id_node.set_type(id_node.definition.type)
+        elif id_node.value in self.library_manager.library_methods:
+            pass
         else:
             self.add_error("Declaración", id_node,
                            "La variable no está declarada")
@@ -203,8 +236,11 @@ class SemanticAnalyzer(ASTVisitor):
         has_returned = False
         if function.type != None:
             function.type.accept(self, param)
-        if function.args != None:
+        if len(function.args) > 0:
             for arg in function.args:
+                arg.accept(self, param)
+        if len(function.opt_args) > 0:
+            for arg in function.opt_args:
                 arg.accept(self, param)
         if function.sentences != None:
             for sent in function.sentences:
@@ -222,7 +258,14 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ReturnNode):
                     has_returned = True
         if not function.name in self.functions:
-            self.functions[function.name] = function
+            self.functions[function.name] = [function]
+        else:
+            is_repeated = False
+            for func in self.functions[function.name]:
+                if len(function.args) == len(func.args):
+                    is_repeated = True
+            if not is_repeated:
+                self.functions[function.name].append(function)
         return None
 
     def visit_declaration(self, declaration: DeclarationNode, param):
@@ -313,7 +356,7 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ContinueNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Continue debe usarse en bucles")
-                if isinstance(sent, BreakNode):
+                if isinstance(sent, BreakNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Break debe usarse en bucles o en case switch")
         if conditional_sentence.else_expr != None:
@@ -323,7 +366,7 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ContinueNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Continue debe usarse en bucles")
-                if isinstance(sent, BreakNode):
+                if isinstance(sent, BreakNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Break debe usarse en bucles o en case switch")
         if self.check_in_types(conditional_sentence.condition.type, self.integer_types):
@@ -383,24 +426,150 @@ class SemanticAnalyzer(ASTVisitor):
         return None
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
-        definition = None
-        if function_call.name.value in self.functions:
-            definition = self.functions[function_call.name.value]
+        definition = func = None
+        user_defined = found_func = False
+
+        # Find function that is being called
+        if isinstance(function_call.name, MemberAccessNode):
+            function_call.name.accept(self, param)
+            lib = function_call.name.element.value
+            if function_call.name.element.type != None:
+                lib = function_call.name.element.type.type_name
+            method = function_call.name.member
+            func = self.library_manager.find(lib, method.value)
+            found_func = func != None
         else:
-            self.add_error("Declaración", function_call,
-                           "La función no se ha declarado")
-        if definition != None:
-            if function_call.parameters != None:
-                if len(function_call.parameters) == len(definition.args):
-                    for i in range(0, len(function_call.parameters)):
-                        function_call.parameters[i].accept(self, param)
-                        if self.check_type(function_call.parameters[i].type, type(definition.args[i].type)):
-                            self.manage_types(
-                                function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
+            method = function_call.name
+            if function_call.name.value in self.functions:
+                definition = self.functions[method.value]
+                found_func = True
+                user_defined = True
             else:
-                self.add_error("Parámetros", function_call,
-                               "El número de parámetros no coincide con los de la definición")
+                lib = "Standard"
+                func = self.library_manager.find(lib, method.value)
+                if func != None:
+                    found_func = True
+        if not found_func:
+            self.add_error("Declaración", function_call,
+                        "La función no se ha declarado")
+
+        # Create function node in case is a library function
+        if not user_defined and func != None:
+            func_name = lib + '.' + method.value
+            definition = [self.__create_function(function_call, func, func_name)]
+
+        # Manage parameters
+        if definition != None and function_call.parameters != None:
+            self.__check_parameters(function_call, definition, param)
         return None
+
+    def __check_parameters(self, function_call, definitions, param):
+        n_params_correct = False
+        definition = None
+        for d in definitions:
+            if (
+                len(function_call.parameters) == len(d.args) or
+                    len(function_call.parameters) == len(d.args) + len(d.opt_args)
+            ):
+                n_params_correct = True
+                definition = d
+        if not n_params_correct:
+            self.add_error("Parámetros", function_call,
+                            "El número de parámetros no coincide con los de la definición")
+        if definition != None:
+            for i in range(0, len(function_call.parameters)):
+                function_call.parameters[i].function = function_call.function
+                function_call.parameters[i].accept(self, param)
+                type_to_check = None
+                is_wrong_type = False
+                if i < len(definition.args):
+                    type_to_check = definition.args[i].type
+                else:
+                    type_to_check = definition.opt_args[i].type
+                not_any = True
+                if type(type_to_check) == IDTypeNode:
+                    if type_to_check.type_name == 'any':
+                        is_wrong_type = False
+                        not_any = False
+                if not_any:
+                    is_wrong_type = self.check_type(function_call.parameters[i].type, type(type_to_check))
+                if is_wrong_type:
+                    self.manage_types(
+                            function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
+
+    def __create_function(self, function_call, lib_func, func_name):
+        """
+        Creates a FunctionNode in case the found function is one that
+        is defined on the external libraries.
+        Arguments:
+            function_call: the function call node
+            lib_func: the function found on the library
+            func_name: the name of the function (including object if
+            is needed to call the function) 
+        Returns:
+            A FunctionNode with the corresponding values
+        """
+        func_type = lib_func[0]
+        f_type = self.__parse_type(func_type)
+        function_call.type = f_type
+        decls = []
+        opt_decls = []
+        for i in range(len(lib_func[2])):
+            is_optional = False
+            str_arg_type = lib_func[2][i]
+            if str_arg_type[0] == '(' and str_arg_type[-1] == ')':
+                is_optional = True
+                str_arg_type = str_arg_type[1:-1]
+            arg_type = self.__parse_type(str_arg_type)
+            char = chr(97 + i)
+            decl = DeclarationNode(arg_type, char)
+            if not is_optional:
+                decls.append(decl)
+            else:
+                opt_decls.append(decl)
+        definition = FunctionNode(f_type, func_name, args=decls, opt_args=opt_decls)
+        return definition
+
+    def __parse_type(self, func_type):
+        """
+        Parses type from text to its corresponding class type
+        Arguments:
+            func_type: the type (string) to parse
+        Returns:
+            The type class to create
+        """
+        if func_type == 'bool':
+            return BooleanTypeNode()
+        elif func_type == 'byte':
+            return ByteTypeNode()
+        elif func_type == 'char':
+            return CharTypeNode()
+        elif func_type == 'double':
+            return DoubleTypeNode()
+        elif func_type == 'float':
+            return FloatTypeNode()
+        elif func_type == 'int':
+            return IntTypeNode()
+        elif func_type == 'long':
+            return LongTypeNode()
+        elif func_type == 'short':
+            return ShortTypeNode()
+        elif func_type == 'size_t':
+            return Size_tTypeNode()
+        elif func_type == 'string':
+            return StringTypeNode()
+        elif func_type == 'uint':
+            return UIntTypeNode()
+        elif func_type == 'uchar':
+            return UCharTypeNode()
+        elif func_type == 'ulong':
+            return ULongTypeNode()
+        elif func_type == 'void':
+            return VoidTypeNode()
+        elif func_type == 'word':
+            return WordTypeNode()
+        else:
+            return IDTypeNode(func_type)
 
     def visit_inc_dec_expression(self, inc_dec_expression: IncDecExpressionNode, param):
         if inc_dec_expression.var != None:

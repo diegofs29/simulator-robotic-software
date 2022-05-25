@@ -112,6 +112,25 @@ class Drawing:
         group = form["group"]
         self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
 
+    def draw_arc(self, form: dict):
+        """
+        Draws an arc given some measurements
+        Arguments:
+            form: a dictionary whose elements are the x and y
+            coordinates, the width and height of the bounding of
+            the arc, the width of the arc, the angle of the arc 
+            and the group (tag of tkinter)
+        """
+        x = int(form["x"] * self.scale)
+        y = int(form["y"] * self.scale) + self.hud_h
+        width = int(form["width"] * self.scale)
+        height = int(form["height"] * self.scale)
+        track_width = int(form["track_width"]* self.scale)
+        starting_angle = form["starting_angle"]
+        angle = form["angle"]
+        group = form["group"]
+        self.canvas.create_arc(x, y, x + width, y + height, width=track_width, style="arc", start=starting_angle, extent=angle, tags=group)
+
     def zoom_in(self):
         """
         Zooms in the scale and updates the drawing

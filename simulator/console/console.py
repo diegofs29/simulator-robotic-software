@@ -83,6 +83,9 @@ class Console:
         self.text_widget.tag_config('error', foreground='red')
 
         self.begin(4000000)
+        #self.__test()
+
+    def __test(self):
         err = Error("prueba error", 1, 10, "error errorado")
         war = Warning("prueba advertencia", 2, 15, "advertencia advertida")
         self.write_output("informacion informada")
@@ -156,13 +159,13 @@ class Console:
         Arguments:
             message: the message to write
         """
-        d_time = (time() * 1000) - self.curr_time
-        if self.serial_started and d_time >= self.speed:
-            m_type = 'info'
-            self.__insert_text(message, m_type)
-            self.logger.write_log(m_type, message)
-            self.messages.append((m_type, message))
-            self.curr_time = time() * 1000
+        m_type = 'info'
+        self.text_widget.config(state=tk.NORMAL)
+        self.text_widget.insert(tk.END, message, m_type)
+        self.text_widget.see("end")
+        self.text_widget.config(state=tk.DISABLED)
+        self.logger.write_log(m_type, message)
+        self.messages.append((m_type, message))
 
     def write_error(self, error_msg: Error):
         """
@@ -213,6 +216,7 @@ class Console:
         """
         self.text_widget.config(state=tk.NORMAL)
         self.text_widget.insert(tk.END, message + "\n", tag)
+        self.text_widget.see("end")
         self.text_widget.config(state=tk.DISABLED)
 
 

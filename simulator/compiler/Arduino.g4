@@ -117,6 +117,12 @@ assignment
 expression 
        : 'true'
        | 'false'
+       | LOW
+       | HIGH
+       | ANALOG_PIN
+       | INPUT
+       | INPUT_PULLUP
+       | OUTPUT
        | HEX_CONST
        | OCTAL_CONST
        | BINARY_CONST

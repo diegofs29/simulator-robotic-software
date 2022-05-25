@@ -213,7 +213,7 @@ class ASTBuilderVisitor(ArduinoVisitor):
         if ctx.sentences != None:
             for sent in ctx.sentences:
                 sentences.append(self.visit(sent))
-        node = FunctionNode(v_type, f_name, args, sentences)
+        node = FunctionNode(v_type, f_name, args=args, sentences=sentences)
         self.__add_line_info(node, ctx)
         return node
 
@@ -397,6 +397,18 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = BooleanNode(True)
         elif ctx.getText() == "false":
             node = BooleanNode(False)
+        if ctx.LOW() != None:
+            node = IntNode(0)
+        if ctx.HIGH() != None:
+            node = IntNode(1)
+        if ctx.ANALOG_PIN() != None:
+            node = IntNode(14 + int(ctx.ANALOG_PIN().getText()[-1]))
+        if ctx.INPUT() != None:
+            node = HexNode(int('0x0', 16))
+        if ctx.OUTPUT() != None:
+            node = HexNode(int('0x1', 16))
+        if ctx.INPUT_PULLUP() != None:
+            node = HexNode(int('0x2', 16))
         if ctx.HEX_CONST() != None:
             node = HexNode(int(ctx.HEX_CONST().getText(), 16))
         if ctx.OCTAL_CONST() != None:

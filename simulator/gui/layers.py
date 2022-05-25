@@ -1,7 +1,9 @@
-import drawing
-import robot_drawings
-import huds
+import random
+import simulator.gui.drawing as drawing
+import simulator.gui.robot_drawings as robot_drawings
+import simulator.gui.huds as huds
 import simulator.robots.robots as robots
+import simulator.files.files_reader as filesr
 
 class Layer:
 
@@ -15,6 +17,8 @@ class Layer:
         self.robot_drawing: robot_drawings.RobotDrawing = None
         self._zoom_percentage()
         self.is_drawing = False
+
+        self.rdr = filesr.RobotDataReader()
 
     def execute(self):
         """
@@ -45,7 +49,7 @@ class Layer:
         self.drawing.zoom_out()
         self._zoom_config()
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Moves the robot that is being used
         Arguments:
@@ -53,7 +57,6 @@ class Layer:
             or not (False)
             move_WASD: a map that specifies if any of the keys WASD is being
             pressed
-            move_dir: a map that specifies if arrow keys are being pressed
         """
         pass
 
@@ -106,18 +109,21 @@ class MoblileRobotLayer(Layer):
     def __init__(self, n_light_sens):
         """
         Constructor for MobileRobotLayer
+        Arguments:
+            n_light_sens: the number of light sensors
         """
         super().__init__()
         self.hud = huds.MobileHUD()
-        self.robot = robots.MobileRobot(n_light_sens)
+        self.robot_data = self.rdr.parse_robot(0 if n_light_sens == 2 else 1)
+        self.robot = robots.MobileRobot(n_light_sens, self.robot_data)
         self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
-        self.circuit = robot_drawings.Circuit(self.drawing)
-        self.obstacle = robot_drawings.Obstacle(700, 3000, 600, 450, self.drawing)
+
+        self.n_sens = n_light_sens
 
         self.is_rotating = False
         self.is_moving = False
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Move method of the layer. Moves the robot and rotates it
         """
@@ -147,8 +153,34 @@ class MoblileRobotLayer(Layer):
             self.robot_drawing.change_angle(da)
 
         #Overlapping check
-        self.__check_circuit_overlap()  
-        self.__detect_obstacle()
+        if self.circuit != None:
+            self.__check_circuit_overlap()
+        if self.obstacle != None: 
+            self.__detect_obstacle()
+
+    def set_circuit(self, circuit_opt):
+        """
+        Changes the circuit
+        Arguments: 
+            circuit_opt: the number of the chosen circuit
+        """
+        circuit_name = self.__parse_circuit_opt(circuit_opt)
+        map_tuple = self.rdr.parse_circuit(circuit_name)
+        straights = map_tuple[0]
+        obstacles = map_tuple[1]
+        self.circuit = robot_drawings.Circuit(straights, self.drawing)
+        self.obstacle = None
+        if len(obstacles) > 0:
+            self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
+        self.reset_robot()
+    
+    def reset_robot(self):
+        """
+        Resets the robot
+        """
+        self.hud = huds.MobileHUD()
+        self.robot = robots.MobileRobot(self.n_sens, self.robot_data)
+        self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, self.n_sens)
 
     def __move_keys(self, movement):
         """
@@ -161,9 +193,9 @@ class MoblileRobotLayer(Layer):
         da = 0
         if not self.is_rotating:
             if movement["w"] == True:
-                v = -10
+                v = -20
             if movement["s"] == True:
-                v = 10
+                v = 20
             if v != 0:
                 self.is_moving = True
             else:
@@ -192,18 +224,38 @@ class MoblileRobotLayer(Layer):
         rotates = False
         if v_i >= 0 and v_r >= 0:
             if v_i != 0 or v_r != 0:
-                da = -5
+                da = 5
                 rotates = True
         if v_i <= 0 and v_r <= 0:
             if v_i != 0 or v_r != 0:
-                da = 5
+                da = -5
                 rotates = True
         if abs(v_i) == abs(v_r) and not rotates:
             if v_i > 0:
-                v = -v_i
+                v = v_i * 2
             if v_i < 0:
-                v = -v_i
+                v = v_i * 2
         return v, da
+
+    def __parse_circuit_opt(self, circuit_opt):
+        """
+        Parses the option chosen for the circuit
+        Arguments:
+            circuit_opt: the number which specifies the option
+        Returns:
+            A string with the corresponding name
+        """
+        if circuit_opt == 0:
+            return "circuit"
+        elif circuit_opt == 1:
+            return "labyrinth"
+        elif circuit_opt == 2:
+            return "straight"
+        elif circuit_opt == 3:
+            return "obstacle"
+        elif circuit_opt == 4:
+            return "straight and obstacle"
+        return "circuit"
 
     def _drawing_config(self):
         """
@@ -225,13 +277,15 @@ class MoblileRobotLayer(Layer):
         """
         Creates and draws the circuit in the canvas
         """
-        self.circuit.create_circuit()
+        if self.circuit != None:
+            self.circuit.create_circuit()
 
     def __create_obstacle(self):
         """
         Draws the obstacle in the canvas
         """
-        self.obstacle.draw()
+        if self.obstacle != None:
+            self.obstacle.draw()
 
     def __check_circuit_overlap(self):
         """
@@ -263,6 +317,8 @@ class MoblileRobotLayer(Layer):
         Returns:
             True if collides, False if else
         """
+        if self.obstacle == None:
+            return False
         return (
             x + self.robot_drawing.width / 2 >= self.obstacle.x and
             y + self.robot_drawing.height / 2 >= self.obstacle.y and
@@ -303,10 +359,11 @@ class LinearActuatorLayer(Layer):
         """
         super().__init__()
         self.hud = huds.ActuatorHUD()
-        self.robot = robots.LinearActuator()
+        self.robot_data = self.rdr.parse_robot(2)
+        self.robot = robots.LinearActuator(self.robot_data)
         self.robot_drawing = robot_drawings.LinearActuatorDrawing(self.drawing)
 
-    def move(self, using_keys, move_WASD, move_dir):
+    def move(self, using_keys, move_WASD):
         """
         Move method of the layer. Moves the block of the
         linear actuator
@@ -316,7 +373,6 @@ class LinearActuatorLayer(Layer):
         if using_keys:
             v = self.__move_keys(move_WASD)
         else:
-            self.__parse_joystick(move_dir)
             v = self.__move_code()
         self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
@@ -332,11 +388,11 @@ class LinearActuatorLayer(Layer):
         v = 0
         if movement["a"] == True:
             if self.robot_drawing.block.x > 508:
-                v -= 10
+                v -= 15
             self.__hit_left(v == 0)
         elif movement["d"] == True:
             if self.robot_drawing.block.x < 1912:
-                v += 10
+                v += 15
             self.__hit_right(v == 0)
         return v
 
@@ -345,40 +401,21 @@ class LinearActuatorLayer(Layer):
         Moves the robot using the programmed instructions
         """
         v = 0
-        #self.robot.servo.value = 0
-        v_s = int((self.robot.servo.value - 90) / 10)
+        v_s = int((self.robot.servo.value - 90) / 10) * -1
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:
-                v = v_s
-            self.__hit_right(v == 0)
+                v = v_s * 2
+            else:
+                self.__hit_right(True)
         if v_s < 0:
             if self.robot_drawing.block.x > 508:
-                v = v_s
-            self.__hit_left(v == 0)
+                v = v_s * 2
+            else:
+                self.__hit_left(True)
+        if v != 0:
+            self.__hit_left(False)
+            self.__hit_right(False)
         return v
-
-    def __parse_joystick(self, movement):
-        """
-        The direction keys will be used as joystick.
-        This method will parse the value of the joystick
-        knowing what direction keys are being pressed.
-        Arguments:
-            movement: a map with the direction keys and if
-            they are being pressed or not
-        """
-        dx = 500
-        dy = 500
-        if movement["up"] == True:
-            dy = 0
-        if movement["down"] == True:
-            dy = 1023
-        if movement["left"] == True:
-            dx = 0
-        if movement["right"] == True:
-            dx = 1023
-        #print("diff x: {}, diff y: {}".format(dx, dy))
-        self.robot.joystick.dx = dx
-        self.robot.joystick.dy = dy
 
     def __hit_left(self, has_hit):
         """
@@ -389,10 +426,10 @@ class LinearActuatorLayer(Layer):
         """
         if has_hit:
             self.robot_drawing.hit = True
-            self.robot.button_left.value = 1
+            self.robot.button_left.value = 0
         else:
             self.robot_drawing.hit = False
-            self.robot.button_left.value = 0
+            self.robot.button_left.value = 1
 
     def __hit_right(self, has_hit):
         """
@@ -403,7 +440,7 @@ class LinearActuatorLayer(Layer):
         """
         if has_hit:
             self.robot_drawing.hit = True
-            self.robot.button_right.value = 1
+            self.robot.button_right.value = 0
         else:
             self.robot_drawing.hit = False
-            self.robot.button_right.value = 0
+            self.robot.button_right.value = 1
