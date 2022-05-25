@@ -26,12 +26,15 @@ class CodeGenerator(ASTVisitor):
         self.script_tabs = 0
         self.library_manager: libraries.LibraryManager = library_manager
         self.globals = []
+        self.functions = {}
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')
         self.write_to_script("import simulator.libraries.standard as standard")
         self.write_endl()
         self.write_to_script("import simulator.libraries.serial as Serial")
+        self.write_endl()
+        self.write_to_script("import simulator.gui.screen_updater as screen_updater")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)
@@ -74,11 +77,11 @@ class CodeGenerator(ASTVisitor):
 
     def visit_array_declaration(self, array_declaration: ArrayDeclarationNode, param):
         self.write_to_script(array_declaration.var_name)
-        if array_declaration.type != None:
-            array_declaration.type.accept(self, param)
+        self.write_to_script(" = [")              
         if len(array_declaration.elements) > 0:
-            self.write_to_script(" = ")
             self.visit_array_elements(array_declaration.elements, param)
+        self.write_to_script("]")
+        self.write_endl()              
         return None
 
     def visit_define_macro(self, define_macro: DefineMacroNode, param):
@@ -152,7 +155,22 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_function(self, function: FunctionNode, param):
-        self.write_to_script("def {}".format(function.name))
+        if not function.name in self.functions:
+            self.write_to_script("def {}".format(function.name))
+            self.functions[function.name] = [
+                {
+                    'name': function.name,
+                    'nparams': len(function.args) + len(function.opt_args)
+                }
+            ]
+        else:
+            self.write_to_script("def {}{}".format(function.name, len(self.functions[function.name])))
+            self.functions[function.name].append(
+                {
+                    'name': str(function.name) + str(len(self.functions[function.name])),
+                    'nparams': len(function.args) + len(function.opt_args)
+                }
+            )
         if function.type != None:
             function.type.accept(self, param)
 
@@ -195,6 +213,9 @@ class CodeGenerator(ASTVisitor):
                     self.write_endl()
         else:
             self.write_no_sentence()
+        self.write_endl()
+        self.write_to_script("screen_updater.update()")
+        self.write_endl()
         self.decrease_tab()
 
         return None
@@ -212,6 +233,10 @@ class CodeGenerator(ASTVisitor):
                     self.write_endl()
         else:
             self.write_no_sentence()
+
+        self.write_endl()
+        self.write_to_script("screen_updater.update()")
+        self.write_endl()
         
         self.write_to_script("if ")
         if do_while.expression != None:
@@ -249,6 +274,9 @@ class CodeGenerator(ASTVisitor):
                     self.write_endl()
         else:
             self.write_no_sentence()
+        self.write_endl()
+        self.write_to_script("screen_updater.update()")
+        self.write_endl()
         self.decrease_tab()
 
         return None
@@ -344,27 +372,31 @@ class CodeGenerator(ASTVisitor):
     def visit_array_access(self, array_access: ArrayAccessNode, param):
         self.write_to_script(array_access.value)
         for index in array_access.indexes:
-            index.accept(self, param)
             self.write_to_script("[{}]".format(index.value))
         return None
 
     def visit_arithmetic_expression(self, arithmetic_expression: ArithmeticExpressionNode, param):
+        self.write_to_script("(")
         if arithmetic_expression.left != None:
             arithmetic_expression.left.accept(self, param)
         self.write_to_script(" {} ".format(arithmetic_expression.op))
         if arithmetic_expression.right != None:
             arithmetic_expression.right.accept(self, param)
+        self.write_to_script(")")
         return None
 
     def visit_comparision_expression(self, comparison_expression: ComparisonExpressionNode, param):
+        self.write_to_script("(")
         if comparison_expression.left != None:
             comparison_expression.left.accept(self, param)
         self.write_to_script(" {} ".format(comparison_expression.op))
         if comparison_expression.right != None:
             comparison_expression.right.accept(self, param)
+        self.write_to_script(")")
         return None
 
     def visit_boolean_expression(self, boolean_expression: BooleanExpressionNode, param):
+        self.write_to_script("(")
         if boolean_expression.left != None:
             boolean_expression.left.accept(self, param)
         if boolean_expression.op == "&&":
@@ -373,14 +405,17 @@ class CodeGenerator(ASTVisitor):
             self.write_to_script(" or ")
         if boolean_expression.right != None:
             boolean_expression.right.accept(self, param)
+        self.write_to_script(")")
         return None
 
     def visit_bitwise_expression(self, bitwise_expression: BitwiseExpressionNode, param):
+        self.write_to_script("(")
         if bitwise_expression.left != None:
             bitwise_expression.left.accept(self, param)
         self.write_to_script(" {} ".format(bitwise_expression.op))
         if bitwise_expression.right != None:
             bitwise_expression.right.accept(self, param)
+        self.write_to_script(")")
         return None
 
     def visit_compound_assigment(self, compound_asigment: CompoundAssignmentNode, param):
@@ -460,12 +495,19 @@ class CodeGenerator(ASTVisitor):
                 if method != None:
                     self.write_to_script("{}.{}".format(str(lib).lower(), method))
                 else:
-                    self.write_to_script(id_node.value)
+                    return id_node.value
         return None
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
         if function_call.name != None:
-            function_call.name.accept(self, self.FUNCTION_CALL)
+            name = function_call.name.accept(self, self.FUNCTION_CALL)
+            if name != None:
+                if name in self.functions:
+                    for f in self.functions[name]:
+                        if len(function_call.parameters) == f['nparams']:
+                            self.write_to_script(f['name'])
+                else:
+                    self.write_to_script(name)
         self.write_to_script("(")
         for i in range(0, len(function_call.parameters)):
             if i > 0:

@@ -1,6 +1,7 @@
 import simulator.gui.layers as layers
 import simulator.console.console as console
 import simulator.gui.commands as commands
+import simulator.gui.screen_updater as screen_updater
 
 
 class RobotsModel:
@@ -15,6 +16,8 @@ class RobotsModel:
         self.executing = False
 
     def execute(self):
+        screen_updater.layer = self.robot_layer
+        screen_updater.view = self.view
         self.view.abort_after()
         self.robot_layer.execute()
         if self.compile_command.execute():
@@ -23,8 +26,9 @@ class RobotsModel:
                 self.drawing_loop()
 
     def drawing_loop(self):
-        self.robot_layer.move(self.view.keys_used, self.view.move_WASD)
-        self.loop_command.execute()
+        screen_updater.update()
+        if not self.view.keys_used:
+            self.loop_command.execute()
         self.view.identifier = self.view.after(10, self.drawing_loop)
 
     def stop(self):

@@ -193,9 +193,9 @@ class MoblileRobotLayer(Layer):
         da = 0
         if not self.is_rotating:
             if movement["w"] == True:
-                v = -10
+                v = -20
             if movement["s"] == True:
-                v = 10
+                v = 20
             if v != 0:
                 self.is_moving = True
             else:
@@ -224,17 +224,17 @@ class MoblileRobotLayer(Layer):
         rotates = False
         if v_i >= 0 and v_r >= 0:
             if v_i != 0 or v_r != 0:
-                da = random.randint(3, 9)
+                da = 5
                 rotates = True
         if v_i <= 0 and v_r <= 0:
             if v_i != 0 or v_r != 0:
-                da = random.randint(3, 9) * -1
+                da = -5
                 rotates = True
         if abs(v_i) == abs(v_r) and not rotates:
             if v_i > 0:
-                v = v_i
+                v = v_i * 2
             if v_i < 0:
-                v = v_i
+                v = v_i * 2
         return v, da
 
     def __parse_circuit_opt(self, circuit_opt):
@@ -388,11 +388,11 @@ class LinearActuatorLayer(Layer):
         v = 0
         if movement["a"] == True:
             if self.robot_drawing.block.x > 508:
-                v -= 10
+                v -= 15
             self.__hit_left(v == 0)
         elif movement["d"] == True:
             if self.robot_drawing.block.x < 1912:
-                v += 10
+                v += 15
             self.__hit_right(v == 0)
         return v
 
@@ -404,12 +404,12 @@ class LinearActuatorLayer(Layer):
         v_s = int((self.robot.servo.value - 90) / 10) * -1
         if v_s > 0:
             if self.robot_drawing.block.x < 1912:
-                v = v_s
+                v = v_s * 2
             else:
                 self.__hit_right(True)
         if v_s < 0:
             if self.robot_drawing.block.x > 508:
-                v = v_s
+                v = v_s * 2
             else:
                 self.__hit_left(True)
         if v != 0:

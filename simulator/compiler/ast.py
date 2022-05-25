@@ -107,6 +107,8 @@ class ArrayDeclarationNode(Sentence):
         self.is_static = is_static
         if not (len(self.size) < 1 and (self.elements == [] or self.elements == None)):
             self.__fix_array()
+        if self.elements == None:
+            self.elements = []
 
     def accept(self, visitor, param):
         return visitor.visit_array_declaration(self, param)

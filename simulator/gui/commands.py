@@ -1,8 +1,9 @@
 import importlib
+import time
 import simulator.compiler.transpiler as transpiler
 import simulator.libraries.standard as standard
 import simulator.libraries.serial as serial
-import simulator.console.console as console
+import simulator.robots.robot_state as state
 
 
 class Command:
@@ -22,6 +23,7 @@ class Command:
 
     def prepare_exec(self):
         standard.board = self.model.robot_layer.robot.board
+        standard.state = state.State()
         serial.cons = self.model.console
         self.ready = True
 
@@ -54,7 +56,12 @@ class Setup(Command):
         if not self.ready:
             self.prepare_exec()
             importlib.reload(self.module)
-        self.module.setup()
+        curr_time_ns = time.time_ns()
+        if (
+            not standard.state.exec_time_us > curr_time_ns / 1000 and
+            not standard.state.exec_time_ms > curr_time_ns / 1000000
+        ):
+            self.module.setup()
         return True
 
     def __import_module(self):
@@ -70,7 +77,13 @@ class Loop(Command):
         self.__import_module()
         if not self.ready:
             self.prepare_exec()
-        self.module.loop()
+        curr_time_ns = time.time_ns()
+        if (
+            not standard.state.exec_time_us > curr_time_ns / 1000 and
+            not standard.state.exec_time_ms > curr_time_ns / 1000000 and
+            not standard.state.exited
+        ):
+            self.module.loop()
 
     def __import_module(self):
         self.module = importlib.import_module('simulator.temp.script_arduino')

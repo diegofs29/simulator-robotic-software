@@ -58,10 +58,17 @@ class DeclarationAnalyzer(ASTVisitor):
                 sent.set_function(function)
                 sent.accept(self, param)
         if not function.name in self.functions:
-            self.functions[function.name] = function   
+            self.functions[function.name] = [function]
         else:
-            self.add_error("Declaración", function,
-                           "La función ya ha sido declarada")
+            is_repeated = False
+            for func in self.functions[function.name]:
+                if len(function.args) == len(func.args):
+                    is_repeated = True
+            if not is_repeated:
+                self.functions[function.name].append(function)
+            else:
+                self.add_error("Declaración", function,
+                            "La función ya ha sido declarada")
         return None
 
     def visit_declaration(self, declaration: DeclarationNode, param):
@@ -158,12 +165,12 @@ class SemanticAnalyzer(ASTVisitor):
         self.visit_children(program.includes, param)
         self.visit_children(program.code, param)
         if "setup" in self.functions:
-            setup = self.functions["setup"]
+            setup = self.functions["setup"][0]
             if self.check_type(setup.type, VoidTypeNode):
                 self.add_error("Tipo de función setup", program,
                                "La función setup debe ser de tipo void")
         if "loop" in self.functions:
-            setup = self.functions["loop"]
+            setup = self.functions["loop"][0]
             if self.check_type(setup.type, VoidTypeNode):
                 self.add_error("Tipo de función loop", program,
                                "La función loop debe ser de tipo void")
@@ -251,7 +258,14 @@ class SemanticAnalyzer(ASTVisitor):
                 if isinstance(sent, ReturnNode):
                     has_returned = True
         if not function.name in self.functions:
-            self.functions[function.name] = function
+            self.functions[function.name] = [function]
+        else:
+            is_repeated = False
+            for func in self.functions[function.name]:
+                if len(function.args) == len(func.args):
+                    is_repeated = True
+            if not is_repeated:
+                self.functions[function.name].append(function)
         return None
 
     def visit_declaration(self, declaration: DeclarationNode, param):
@@ -442,41 +456,46 @@ class SemanticAnalyzer(ASTVisitor):
         # Create function node in case is a library function
         if not user_defined and func != None:
             func_name = lib + '.' + method.value
-            definition = self.__create_function(function_call, func, func_name)
+            definition = [self.__create_function(function_call, func, func_name)]
 
         # Manage parameters
-        if definition != None:
+        if definition != None and function_call.parameters != None:
             self.__check_parameters(function_call, definition, param)
         return None
 
-    def __check_parameters(self, function_call, definition, param):
-        if function_call.parameters != None:
+    def __check_parameters(self, function_call, definitions, param):
+        n_params_correct = False
+        definition = None
+        for d in definitions:
             if (
-                len(function_call.parameters) == len(definition.args) or
-                    len(function_call.parameters) == len(definition.args) + len(definition.opt_args)
+                len(function_call.parameters) == len(d.args) or
+                    len(function_call.parameters) == len(d.args) + len(d.opt_args)
             ):
-                for i in range(0, len(function_call.parameters)):
-                    function_call.parameters[i].function = function_call.function
-                    function_call.parameters[i].accept(self, param)
-                    type_to_check = None
-                    is_wrong_type = False
-                    if i < len(definition.args):
-                        type_to_check = definition.args[i].type
-                    else:
-                        type_to_check = definition.opt_args[i].type
-                    not_any = True
-                    if type(type_to_check) == IDTypeNode:
-                        if type_to_check.type_name == 'any':
-                            is_wrong_type = False
-                            not_any = False
-                    if not_any:
-                        is_wrong_type = self.check_type(function_call.parameters[i].type, type(type_to_check))
-                    if is_wrong_type:
-                        self.manage_types(
-                                function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
-            else:
-                self.add_error("Parámetros", function_call,
-                               "El número de parámetros no coincide con los de la definición")
+                n_params_correct = True
+                definition = d
+        if not n_params_correct:
+            self.add_error("Parámetros", function_call,
+                            "El número de parámetros no coincide con los de la definición")
+        if definition != None:
+            for i in range(0, len(function_call.parameters)):
+                function_call.parameters[i].function = function_call.function
+                function_call.parameters[i].accept(self, param)
+                type_to_check = None
+                is_wrong_type = False
+                if i < len(definition.args):
+                    type_to_check = definition.args[i].type
+                else:
+                    type_to_check = definition.opt_args[i].type
+                not_any = True
+                if type(type_to_check) == IDTypeNode:
+                    if type_to_check.type_name == 'any':
+                        is_wrong_type = False
+                        not_any = False
+                if not_any:
+                    is_wrong_type = self.check_type(function_call.parameters[i].type, type(type_to_check))
+                if is_wrong_type:
+                    self.manage_types(
+                            function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
 
     def __create_function(self, function_call, lib_func, func_name):
         """

@@ -22,7 +22,7 @@ class Robot:
     def parse_pin(self, pin):
         if str(pin[0]).lower() == 'a':
             return int(pin[1]) + 14
-        return int(pin[0])
+        return int(pin)
 
 
 class MobileRobot(Robot):

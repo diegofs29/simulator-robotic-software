@@ -8,6 +8,8 @@ import time
 import random
 from math import cos, sin, sqrt, tan
 import simulator.robots.boards as boards
+import simulator.robots.robot_state as robot_state
+import simulator.gui.screen_updater as screen_updater
 
 
 HIGH = 1
@@ -22,6 +24,7 @@ ERROR = -1
 NOT_IMPL_WARNING = -2
 
 board: boards.Board = None
+state: robot_state.State = None
 start = time.time()
 
 def get_name():
@@ -114,6 +117,9 @@ def get_methods():
     #Interrupts
     methods["interrupts"] = ("void", "interrupts", []) #Not implemented
     methods["noInterrupts"] = ("void", "no_interrupts", []) #Not implemented
+
+    #Others
+    methods["exit"] = ('void', "exit", ["int"])
     return methods
 
 # Digital I/O
@@ -257,7 +263,9 @@ def delay(ms):
     Arguments:
         ms: the number of milliseconds to pause
     """
-    time.sleep(ms / 1000) # sleep works in seconds
+    state.exec_time_ms = int(time.time_ns() / 1000000) + ms
+    while time.time_ns() / 1000000 < state.exec_time_ms:
+        screen_updater.update()
 
 def delay_microseconds(us):
     """
@@ -265,7 +273,7 @@ def delay_microseconds(us):
     Arguments:
         us: the number of microseconds to pause
     """
-    time.sleep(us / 1000000) # sleep works in seconds
+    state.exec_time_us = int(time.time_ns() / 1000) + us
 
 def micros():
     """
@@ -688,3 +696,12 @@ def no_interrupts():
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
+# Others
+def exit(n):
+    """
+    Finishes the program
+    Arguments:
+        n: an option
+    """
+    state.exited = True

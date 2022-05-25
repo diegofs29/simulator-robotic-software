@@ -75,7 +75,7 @@ void espiral(){
     if(perdido){
       tiempoEspiral += 1000;
       derecha(30);
-      delay(850);
+      delay(425);
     }
   }
 }

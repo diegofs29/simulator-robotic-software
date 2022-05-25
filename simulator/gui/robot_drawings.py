@@ -258,11 +258,11 @@ class MobileRobotDrawing(RobotDrawing):
         self.sensors["light"] = []
         init_diff = 30
         if self.n_light_sens == 4:
-            init_diff = 90
+            init_diff = 105
         for i in range(0, self.n_light_sens):
             self.sensors["light"].append(
                 self.LightSensor(
-                    self.x - init_diff + (60 * i),
+                    self.x - init_diff + (70 * i),
                     self.y - 110
                 )
             )
