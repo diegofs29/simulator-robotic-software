@@ -433,8 +433,12 @@ class SemanticAnalyzer(ASTVisitor):
         if isinstance(function_call.name, MemberAccessNode):
             function_call.name.accept(self, param)
             lib = function_call.name.element.value
-            if function_call.name.element.type != None:
-                lib = function_call.name.element.type.type_name
+            f_type = function_call.name.element.type
+            if f_type != None:
+                if type(f_type) == StringTypeNode:
+                    lib = "String"
+                else:
+                    lib = function_call.name.element.type.type_name
             method = function_call.name.member
             func = self.library_manager.find(lib, method.value)
             found_func = func != None

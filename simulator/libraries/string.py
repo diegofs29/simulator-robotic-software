@@ -8,7 +8,46 @@ OK = 0
 ERROR = -1
 NOT_IMPL_WARNING = -2
 
-def charAt(string, n):
+def get_name():
+    return "String"
+
+
+def get_methods():
+    """
+    Returns the methods of the library as a dict, whose
+    key is the naming in Arduino and whose value is the
+    corresponding method.
+    Returns:
+        A dict with the methods
+    """
+    methods = {}
+    methods["charAt"] = ("char", "char_at", ["int"])
+    methods["compareTo"] = ("int", "compare_to", ["string"])
+    methods["concat"] = ("string", "concat", ["any"])
+    methods["c_str"] = ("string", "c_str", [])
+    methods["endsWith"] = ("bool", "ends_with", ["string"])
+    methods["equals"] = ("bool", "equals", ["string"])
+    methods["equalsIgnoreCase"] = ("bool", "equals_ignore_case", ["string"])
+    methods["getBytes"] = ("byte", "get_bytes", [])
+    methods["indexOf"] = ("int", "index_of", ["char", "(int)"])
+    methods["lastIndexOf"] = ("int", "last_index_of", ["char", "(int)"])
+    methods["length"] = ("int", "length", [])
+    methods["remove"] = ("string", "remove", ["int", "(int)"])
+    methods["replace"] = ("string", "replace", ["string", "string"])
+    methods["reserve"] = ("void", "reserve", [])
+    methods["setCharAt"] = ("string", "set_char_at", ["int", "char"])
+    methods["startsWith"] = ("bool", "starts_with", ["string"])
+    methods["substring"] = ("string", "substring", ["int", "int"])
+    methods["toCharArray"] = ("char", "to_char_array", ["char", "int"])
+    methods["toDouble"] = ("double", "to_double", [])
+    methods["toInt"] = ("int", "to_int", [])
+    methods["toFloat"] = ("float", "to_float", [])
+    methods["toLowerCase"] = ("string", "to_lower_case", [])
+    methods["toUpperCase"] = ("string", "to_upper_case", [])
+    methods["trim"] = ("string", "trim", [])
+
+
+def char_at(string, n):
     """
     Access a particular character of the string
     Arguments:
@@ -18,7 +57,7 @@ def charAt(string, n):
     return string[n]
 
 
-def compareTo(string1, string2):
+def compare_to(string1, string2):
     """
     Compares two Strings, testing whether one comes 
     before or after the other, or whether they’re equal. 
@@ -55,7 +94,7 @@ def c_str(string):
     return string + '\0'
 
 
-def endsWith(string1, string2):
+def ends_with(string1, string2):
     """
     Tests wether or not string1 ends with the characters of
     string2
@@ -64,7 +103,7 @@ def endsWith(string1, string2):
         string2: the end characters to check
     """
     len_str2 = len(string2)
-    return string1[-len_str2:]
+    return string1[-len_str2:] == string2
 
 
 def equals(string1, string2):
@@ -77,7 +116,7 @@ def equals(string1, string2):
     return string1 == string2
 
 
-def equalsIgnoreCase(string1, string2):
+def equals_ignore_case(string1, string2):
     """
     Compares string1 with string2 for equality ignoring case
     sentitivity
@@ -88,14 +127,16 @@ def equalsIgnoreCase(string1, string2):
     return str(string1).lower() == str(string2).lower()
 
 
-def getBytes():
+def get_bytes(string):
     """
-    Not needed, not implemented
+    Copies the String’s characters to the supplied buffer.
+    Arguments:
+        string: a variable of type String.
     """
-    return NOT_IMPL_WARNING
+    return bytes(string, 'UTF-8')
 
 
-def indexOf(string, val, from_c=0):
+def index_of(string, val, from_c=0):
     """
     Locates a character or String within another String. By default, 
     searches from the beginning of the String, but can also start 
@@ -110,7 +151,7 @@ def indexOf(string, val, from_c=0):
     return str(str_temp).find(val)
 
 
-def lastIndexOf(string, val, from_c=-1):
+def last_index_of(string, val, from_c=-1):
     """
     Locates a character or String within another String. By default, 
     searches from the end of the String, but can also work backwards 
@@ -134,7 +175,7 @@ def length(string):
     return len(string)
 
 
-def remove(string, index, count=1):
+def remove(string, index, count=-1):
     """
     Modify in place a String removing chars from the provided 
     index to the end of the String or from the provided index 
@@ -145,7 +186,9 @@ def remove(string, index, count=1):
         count: number of characters to remove
     """
     str_1 = string[:index]
-    str_2 = string[count:]
+    str_2 = ""
+    if count != -1:
+        str_2 = string[count:]
     return str(str_1) + str(str_2)
 
 
@@ -169,7 +212,7 @@ def reserve():
     return NOT_IMPL_WARNING
 
 
-def setCharAt(string, index, c):
+def set_char_at(string, index, c):
     """
     Sets a character of the String.
     Arguments:
@@ -180,7 +223,7 @@ def setCharAt(string, index, c):
     return string[index:] + c + string[index+1:]
 
 
-def startsWith(string1, string2):
+def starts_with(string1, string2):
     """
     Check wether a string starts with the characters of another
     string
@@ -204,42 +247,51 @@ def substring(string, from_c, to_c=-1):
     return string[from_c: to_c] if to_c != -1 else string[from_c:]
 
 
-def toCharArray():
+def to_char_array(string):
     """
-    Not needed. Not implemented
+    Copies the String’s characters to the supplied buffer.
     """
-    return NOT_IMPL_WARNING
+    return list(string)
 
 
-def toDouble():
+def to_double(string):
     """
-    Not needed. Not implemented
+    Parses string to double
     """
-    return NOT_IMPL_WARNING
+    try:
+        return float(string)
+    except ValueError:
+        return 0.0
 
 
-def toInt():
+def to_int(string):
     """
-    Not needed. Not implemented
+    Parses string to int
     """
-    return NOT_IMPL_WARNING
+    try:
+        return int(string)
+    except ValueError:
+        return 0
 
 
-def toFloat():
+def to_float(string):
     """
-    Not needed. Not implemented
+    Parses string to float
     """
-    return NOT_IMPL_WARNING
+    try:
+        return float(string)
+    except ValueError:
+        return 0.0
 
 
-def toLowerCase(string):
+def to_lower_case(string):
     """
     Converts string to lower case
     """
     return str(string).lower()
 
 
-def toUpperCase(string):
+def to_upper_case(string):
     """
     Converts string to upper case
     """
