@@ -115,7 +115,7 @@ class TestGlobalDefinition(TestBaseAST):
         self.assertEqual(self.code[9].declaration.size[0], 3)
 
     def test_array_elements(self):
-        self.assertEqual(self.code[2].declaration.elements, None)
+        self.assertEqual(self.code[2].declaration.elements, [])
         self.assertEqual(
             list(
                 map(
@@ -951,7 +951,7 @@ class TestArrays(TestBaseAST):
         self.assertEqual(self.code[10].declaration.size, [2, 2, 3])
 
     def test_elements(self):
-        self.assertEqual(self.code[0].declaration.elements, None)
+        self.assertEqual(self.code[0].declaration.elements, [])
         self.assertEqual(
             list(
                 map(

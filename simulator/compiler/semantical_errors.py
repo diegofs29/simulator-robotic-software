@@ -596,8 +596,13 @@ class SemanticAnalyzer(ASTVisitor):
                     definition = self.locals[array_access.function.name][array_access.value]
         if definition != None:
             array_access.set_type(definition.type)
-            if len(definition.size) == len(array_access.indexes):
-                for i in range(0, len(array_access.indexes)):
+            definition_size = -1
+            if type(definition) == ArrayDeclarationNode:
+                definition_size = len(definition.size)
+            elif type(definition.type) == StringTypeNode:
+                definition_size = len(definition.expr.value)
+            if definition_size == len(array_access.indexes):
+                for i in range(0, definition_size):
                     if self.check_in_types(array_access.indexes[i].type, self.integer_types) and self.check_type(array_access.indexes[i].type, IDTypeNode):
                         self.add_error("Índice", array_access.indexes[i], "El tipo del índice debe ser int (o cualquiera que sea compatible)")
                     elif array_access.indexes[i].value >= definition.size[i]:
@@ -635,9 +640,16 @@ class SemanticAnalyzer(ASTVisitor):
         if arithmetic_expression.right != None:
             arithmetic_expression.right.set_function(arithmetic_expression.function)
             arithmetic_expression.right.accept(self, param)
+        error = False
         if self.check_in_types(arithmetic_expression.left.type, self.numerical_types) and self.check_in_types(arithmetic_expression.right.type, self.numerical_types):
+            if arithmetic_expression.op == '+':
+                if not type(arithmetic_expression.left.type) == type(arithmetic_expression.right.type) == StringTypeNode:
+                    error = True
+            else:
+                error = True
+        if error:
             self.add_error("Tipos", arithmetic_expression,
-                           "Las operaciones artiméticas deben ser entre números")
+                    "Las operaciones artiméticas deben ser entre números (salvo +, que también puede ser entre String)")
         arithmetic_expression.set_type(arithmetic_expression.left.type)
         return None
 
@@ -650,8 +662,9 @@ class SemanticAnalyzer(ASTVisitor):
             comparison_expression.right.accept(self, param)
         if self.check_type(comparison_expression.left.type, type(comparison_expression.right.type)):
             if self.check_in_types(comparison_expression.left.type, self.numerical_types) and self.check_in_types(comparison_expression.right.type, self.numerical_types):
-                self.add_error("Tipos", comparison_expression,
-                               "Los tipos de ambas expresiones deben coincidir o ser interoperables")
+                if not type(comparison_expression.left.type) == type(comparison_expression.right.type) == StringTypeNode:
+                    self.add_error("Tipos", comparison_expression,
+                                "Los tipos de ambas expresiones deben coincidir o ser interoperables")
         comparison_expression.set_type(BooleanTypeNode())
         return None
 
