@@ -60,7 +60,7 @@ class String:
 
     def __add__(self, string):
         if isinstance(string, String):
-            return self.string + string.string
+            return String(self.string + string.string)
         return self.string + str(string)
 
     def __iadd__(self, string):
@@ -68,7 +68,7 @@ class String:
             self.string += string.string
         else:
             self.string += str(string)
-        return self.string
+        return String(self.string)
 
     def __lt__(self, string):
         return self.string < string.string
@@ -272,7 +272,7 @@ class String:
         return self.string[from_c: to_c] if to_c != -1 else self.string[from_c:]
 
 
-    def to_char_array(self):
+    def to_char_array(self, buf, len):
         """
         Copies the String’s characters to the supplied buffer.
         """

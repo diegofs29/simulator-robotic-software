@@ -276,35 +276,14 @@
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": 250,
+                    "dist": 350,
                     "anchor next": "start",
                     "save anchors": ""
                 },
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": -250,
-                    "anchor next": "start",
-                    "save anchors": ""
-                },
-                {
-                    "type": "straight",
-                    "orient": "x",
-                    "dist": 125,
-                    "anchor next": "end",
-                    "save anchors": ""
-                },
-                {
-                    "type": "straight",
-                    "orient": "y",
-                    "dist": 250,
-                    "anchor next": "start",
-                    "save anchors": ""
-                },
-                {
-                    "type": "straight",
-                    "orient": "y",
-                    "dist": -250,
+                    "dist": -350,
                     "anchor next": "start",
                     "save anchors": ""
                 },
@@ -318,14 +297,14 @@
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": 250,
+                    "dist": 350,
                     "anchor next": "start",
                     "save anchors": ""
                 },
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": -250,
+                    "dist": -350,
                     "anchor next": "start",
                     "save anchors": ""
                 },
@@ -339,14 +318,77 @@
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": 250,
+                    "dist": 350,
                     "anchor next": "start",
                     "save anchors": ""
                 },
                 {
                     "type": "straight",
                     "orient": "y",
-                    "dist": -250,
+                    "dist": -350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 125,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 125,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "x",
+                    "dist": 125,
+                    "anchor next": "end",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": 350,
+                    "anchor next": "start",
+                    "save anchors": ""
+                },
+                {
+                    "type": "straight",
+                    "orient": "y",
+                    "dist": -350,
                     "anchor next": "start",
                     "save anchors": ""
                 }

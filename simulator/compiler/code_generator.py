@@ -27,9 +27,11 @@ class CodeGenerator(ASTVisitor):
         self.library_manager: libraries.LibraryManager = library_manager
         self.globals = []
         self.functions = {}
-        self.strings = {}
+        self.function_visitor = FunctionDefiner()
     
     def visit_program(self, program: ProgramNode, param):
+        self.function_visitor.visit_program(program, param)
+        self.functions = self.function_visitor.functions
         self.script = open("simulator/temp/script_arduino.py", 'w')
         self.write_to_script("import libraries.standard as standard")
         self.write_endl()
@@ -76,8 +78,6 @@ class CodeGenerator(ASTVisitor):
             declaration.expr.accept(self, param)
         elif declaration.type != None:
             declaration.type.accept(self, param)
-        if isinstance(declaration.type, StringTypeNode):
-            self.strings[declaration.var_name] = declaration
         return None
 
     def visit_array_declaration(self, array_declaration: ArrayDeclarationNode, param):
@@ -86,7 +86,9 @@ class CodeGenerator(ASTVisitor):
         if len(array_declaration.elements) > 0:
             self.visit_array_elements(array_declaration.elements, param)
         self.write_to_script("]")
-        self.write_endl()              
+        self.write_endl()
+        if array_declaration.function == None:
+            self.globals.append(array_declaration.var_name)   
         return None
 
     def visit_define_macro(self, define_macro: DefineMacroNode, param):
@@ -95,6 +97,8 @@ class CodeGenerator(ASTVisitor):
             define_macro.expr.accept(self, param)
         if len(define_macro.elements) > 0:
             self.visit_array_elements(define_macro.elements, param)
+        if define_macro.function == None:
+            self.globals.append[define_macro.macro_name]
         return None
     
     def visit_boolean_type(self, boolean_type: BooleanTypeNode, param):
@@ -160,22 +164,12 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_function(self, function: FunctionNode, param):
-        if not function.name in self.functions:
-            self.write_to_script("def {}".format(function.name))
-            self.functions[function.name] = [
-                {
-                    'name': function.name,
-                    'nparams': len(function.args) + len(function.opt_args)
-                }
-            ]
-        else:
-            self.write_to_script("def {}{}".format(function.name, len(self.functions[function.name])))
-            self.functions[function.name].append(
-                {
-                    'name': str(function.name) + str(len(self.functions[function.name])),
-                    'nparams': len(function.args) + len(function.opt_args)
-                }
-            )
+        for func in self.functions[function.name]:
+            nparams = func['nparams']
+            if nparams == len(function.args) + len(function.opt_args):
+                self.write_to_script("def {}".format(func['name']))
+                break
+        
         if function.type != None:
             function.type.accept(self, param)
 
@@ -606,3 +600,26 @@ class CodeGenerator(ASTVisitor):
         Decreases the intentation
         """
         self.script_tabs -= 1
+        
+
+class FunctionDefiner(ASTVisitor):
+
+    def __init__(self) -> None:
+        self.functions = {}
+
+    def visit_function(self, function: FunctionNode, param):
+        if not function.name in self.functions:
+            self.functions[function.name] = [
+                {
+                    'name': function.name,
+                    'nparams': len(function.args) + len(function.opt_args)
+                }
+            ]
+        else:
+            self.functions[function.name].append(
+                {
+                    'name': str(function.name) + str(len(self.functions[function.name])),
+                    'nparams': len(function.args) + len(function.opt_args)
+                }
+            )
+        return None
