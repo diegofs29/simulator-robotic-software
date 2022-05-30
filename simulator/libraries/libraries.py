@@ -6,7 +6,7 @@ Those libraries are:
     - Serial
     - Servo
 """
-import simulator.libraries.standard as std
+import libraries.standard as std
 import libraries.serial as serial
 import libraries.servo as servo
 import libraries.string as string

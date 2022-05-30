@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+import os
 from time import time
 import tkinter as tk
 
@@ -226,6 +227,10 @@ class Logger:
         """
         Constructor for logger
         """
+        try:
+            os.mkdir('logs')
+        except FileExistsError:
+            pass
         date = datetime.now().strftime("%d-%m-%Y")
         file_name = 'logs/log_{}.log'.format(date)
         logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
