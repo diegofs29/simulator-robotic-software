@@ -1,7 +1,7 @@
-import simulator.gui.layers as layers
-import simulator.console.console as console
-import simulator.gui.commands as commands
-import simulator.gui.screen_updater as screen_updater
+import gui.layers as layers
+import console.console as console
+import gui.commands as commands
+import gui.screen_updater as screen_updater
 
 
 class RobotsModel:

@@ -1,12 +1,11 @@
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer
-from simulator.compiler.ArduinoParser import ArduinoParser
-import simulator.compiler.ast_builder_visitor as ast_builder_visitor
-import simulator.compiler.error_listener as error_listener
-import simulator.compiler.semantical_errors as semantical_analysis
-import simulator.compiler.code_generator as code_generator
-import simulator.libraries.libraries as libraries
-import simulator.libraries.library_creator as library_creator
+from compiler.ArduinoLexer import ArduinoLexer
+from compiler.ArduinoParser import ArduinoParser
+import compiler.ast_builder_visitor as ast_builder_visitor
+import compiler.error_listener as error_listener
+import compiler.semantical_errors as semantical_analysis
+import compiler.code_generator as code_generator
+import libraries.libraries as libraries
 
 
 def transpile(code, robot):
@@ -25,13 +24,7 @@ def transpile(code, robot):
 
     visitor = ast_builder_visitor.ASTBuilderVisitor()
 
-    lib_creator = library_creator.LibraryCreator()
-    lib_creator.set_robot(robot)
-    lib_manager = libraries.LibraryManager(
-        [
-            lib_creator.create_servo()
-        ]
-    )
+    lib_manager = libraries.LibraryManager()
     sem_analysis = semantical_analysis.Semantic(lib_manager)
 
     code_gen = code_generator.CodeGenerator(lib_manager)

@@ -7,9 +7,9 @@ import string
 import time
 import random
 from math import cos, sin, sqrt, tan
-import simulator.robots.boards as boards
-import simulator.robots.robot_state as robot_state
-import simulator.gui.screen_updater as screen_updater
+import robots.boards as boards
+import robots.robot_state as robot_state
+import gui.screen_updater as screen_updater
 
 
 HIGH = 1
@@ -40,86 +40,86 @@ def get_methods():
     """
     methods = {}
     #Digital I/O
-    methods["digitalRead"] = ("int", "digital_read", ["int"])
-    methods["digitalWrite"] = ("void", "digital_write", ["int", "int"])
-    methods["pinMode"] = ("void", "pin_mode", ["int", "int"])
+    methods["digitalRead"] = ("int", "digital_read", ["int"], -1)
+    methods["digitalWrite"] = ("void", "digital_write", ["int", "int"], -1)
+    methods["pinMode"] = ("void", "pin_mode", ["int", "int"], -1)
 
     #Analog I/O
-    methods["analogRead"] = ("int", "analog_read", ["int"])
-    methods["analogReference"] = ("void", "analog_reference", []) #Not implemented
-    methods["analogWrite"] = ("void", "analog_write", ["int", "int"])
+    methods["analogRead"] = ("int", "analog_read", ["int"], -1)
+    methods["analogReference"] = ("void", "analog_reference", [], -1) #Not implemented
+    methods["analogWrite"] = ("void", "analog_write", ["int", "int"], -1)
 
     #Zero, Due & MKR Family
-    methods["analogReadResolution"] = ("void", "analog_read_resolution", []) #Not implemented
-    methods["analogWriteResolution"] = ("void", "analog_write_resolution", []) #Not implemented
+    methods["analogReadResolution"] = ("void", "analog_read_resolution", [], -1) #Not implemented
+    methods["analogWriteResolution"] = ("void", "analog_write_resolution", [], -1) #Not implemented
 
     #Advanced I/O
-    methods["noTone"] = ("void", "no_tone", []) #Not implemented
-    methods["pulseIn"] = ("long", "pulse_in", ["int", "int"])
-    methods["pulseInLong"] = ("long", "pulse_in_long", []) #Not implemented
-    methods["shiftIn"] = ("byte", "shift_in", []) #Not implemented
-    methods["shiftOut"] = ("void", "shift_out", []) #Not implemented
-    methods["tone"] = ("void", "tone", []) #Not implemented
+    methods["noTone"] = ("void", "no_tone", [], -1) #Not implemented
+    methods["pulseIn"] = ("long", "pulse_in", ["int", "int"], -1)
+    methods["pulseInLong"] = ("long", "pulse_in_long", [], -1) #Not implemented
+    methods["shiftIn"] = ("byte", "shift_in", [], -1) #Not implemented
+    methods["shiftOut"] = ("void", "shift_out", [], -1) #Not implemented
+    methods["tone"] = ("void", "tone", [], -1) #Not implemented
 
     #Time
-    methods["delay"] = ("void", "delay", ["long"])
-    methods["delayMicroseconds"] = ("void", "delay_microseconds", ["uint"])
-    methods["micros"] = ("ulong", "micros", [])
-    methods["millis"] = ("ulong", "millis", [])
+    methods["delay"] = ("void", "delay", ["long"], -1)
+    methods["delayMicroseconds"] = ("void", "delay_microseconds", ["uint"], -1)
+    methods["micros"] = ("ulong", "micros", [], -1)
+    methods["millis"] = ("ulong", "millis", [], -1)
 
     #Math
-    methods["abs"] = ("double", "abs", ["int"])
-    methods["constrain"] = ("double", "constrain", ["double", "double", "double"])
-    methods["map"] = ("int", "map", ["int", "int", "int", "int", "int"])
-    methods["max"] = ("double", "max", ["double", "double"])
-    methods["min"] = ("double", "min", ["double", "double"])
-    methods["pow"] = ("double", "pow", ["float", "float"])
-    methods["sq"] = ("double", "sq", ["double"])
-    methods["sqrt"] = ("double", "sqrt", ["double"])
+    methods["abs"] = ("double", "abs", ["int"], -1)
+    methods["constrain"] = ("double", "constrain", ["double", "double", "double"], -1)
+    methods["map"] = ("int", "map", ["int", "int", "int", "int", "int"], -1)
+    methods["max"] = ("double", "max", ["double", "double"], -1)
+    methods["min"] = ("double", "min", ["double", "double"], -1)
+    methods["pow"] = ("double", "pow", ["float", "float"], -1)
+    methods["sq"] = ("double", "sq", ["double"], -1)
+    methods["sqrt"] = ("double", "sqrt", ["double"], -1)
 
     #Trigonometry
-    methods["cos"] = ("double", "cos", ["float"])
-    methods["sin"] = ("double", "sin", ["float"])
-    methods["tan"] = ("double", "tan", ["float"])
+    methods["cos"] = ("double", "cos", ["float"], -1)
+    methods["sin"] = ("double", "sin", ["float"], -1)
+    methods["tan"] = ("double", "tan", ["float"], -1)
 
     #Characters
-    methods["isAlpha"] = ("bool", "is_alpha", ["char"])
-    methods["isAlphaNumeric"] = ("bool", "is_alpha_numeric", ["char"])
-    methods["isAscii"] = ("bool", "is_ascii", ["char"])
-    methods["isControl"] = ("bool", "is_control", ["char"])
-    methods["isDigit"] = ("bool", "is_digit", ["char"])
-    methods["isGraph"] = ("bool", "is_graph", ["char"])
-    methods["isHexadecimalDigit"] = ("bool", "is_hexadecimal_digit", ["char"])
-    methods["isLowerCase"] = ("bool", "is_lower_case", ["char"])
-    methods["isPrintable"] = ("bool", "is_printable", ["char"])
-    methods["isPunct"] = ("bool", "is_punct", ["char"])
-    methods["isSpace"] = ("bool", "is_space", ["char"])
-    methods["isUpperCase"] = ("bool", "is_upper_case", ["char"])
-    methods["isWhiteSpace"] = ("bool", "is_whitespace", ["char"])
+    methods["isAlpha"] = ("bool", "is_alpha", ["char"], -1)
+    methods["isAlphaNumeric"] = ("bool", "is_alpha_numeric", ["char"], -1)
+    methods["isAscii"] = ("bool", "is_ascii", ["char"], -1)
+    methods["isControl"] = ("bool", "is_control", ["char"], -1)
+    methods["isDigit"] = ("bool", "is_digit", ["char"], -1)
+    methods["isGraph"] = ("bool", "is_graph", ["char"], -1)
+    methods["isHexadecimalDigit"] = ("bool", "is_hexadecimal_digit", ["char"], -1)
+    methods["isLowerCase"] = ("bool", "is_lower_case", ["char"], -1)
+    methods["isPrintable"] = ("bool", "is_printable", ["char"], -1)
+    methods["isPunct"] = ("bool", "is_punct", ["char"], -1)
+    methods["isSpace"] = ("bool", "is_space", ["char"], -1)
+    methods["isUpperCase"] = ("bool", "is_upper_case", ["char"], -1)
+    methods["isWhiteSpace"] = ("bool", "is_whitespace", ["char"], -1)
     
     #Random Numbers
-    methods["random"] = ("long", "random", ["int, int"]) #Caution, inverse order for two params
-    methods["randomSeed"] = ("void", "random_seed", []) #Not implemented
+    methods["random"] = ("long", "random", ["int, int"], -1) #Caution, inverse order for two params
+    methods["randomSeed"] = ("void", "random_seed", [], -1) #Not implemented
 
     #Bits and bytes
-    methods["bit"] = ("int", "bit", ["int"])
-    methods["bitClear"] = ("int", "bit_clear", ["int", "int"])
-    methods["bitRead"] = ("int", "bit_read", ["int", "int"])
-    methods["bitSet"] = ("void", "bit_set", ["int", "int"])
-    methods["bitWrite"] = ("void", "bit_write", ["int", "int", "int"])
-    methods["highByte"] = ("byte", "high_byte", ["double"])
-    methods["lowByte"] = ("byte", "low_byte", ["double"])
+    methods["bit"] = ("int", "bit", ["int"], -1)
+    methods["bitClear"] = ("int", "bit_clear", ["int", "int"], -1)
+    methods["bitRead"] = ("int", "bit_read", ["int", "int"], -1)
+    methods["bitSet"] = ("void", "bit_set", ["int", "int"], -1)
+    methods["bitWrite"] = ("void", "bit_write", ["int", "int", "int"], -1)
+    methods["highByte"] = ("byte", "high_byte", ["double"], -1)
+    methods["lowByte"] = ("byte", "low_byte", ["double"], -1)
 
     #External Interrupts
-    methods["attachInterrupt"] = ("void", "attach_interrupt", []) #Not implemented
-    methods["detachInterrupt"] = ("void", "detach_interrupt", []) #Not implemented
+    methods["attachInterrupt"] = ("void", "attach_interrupt", [], -1) #Not implemented
+    methods["detachInterrupt"] = ("void", "detach_interrupt", [], -1) #Not implemented
 
     #Interrupts
-    methods["interrupts"] = ("void", "interrupts", []) #Not implemented
-    methods["noInterrupts"] = ("void", "no_interrupts", []) #Not implemented
+    methods["interrupts"] = ("void", "interrupts", [], -1) #Not implemented
+    methods["noInterrupts"] = ("void", "no_interrupts", [], -1) #Not implemented
 
     #Others
-    methods["exit"] = ('void', "exit", ["int"])
+    methods["exit"] = ('void', "exit", ["int"], -1)
     return methods
 
 # Digital I/O

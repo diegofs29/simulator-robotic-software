@@ -1,11 +1,11 @@
 import unittest
 
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer
-from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import *
-from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
-from simulator.compiler.error_listener import CompilerErrorListener
+from compiler.ArduinoLexer import ArduinoLexer
+from compiler.ArduinoParser import ArduinoParser
+from compiler.ast import *
+from compiler.ast_builder_visitor import ASTBuilderVisitor
+from compiler.error_listener import CompilerErrorListener
 
 
 class TestBaseAST(unittest.TestCase):

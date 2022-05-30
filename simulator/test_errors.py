@@ -1,13 +1,12 @@
 import unittest
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer
-from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import *
-from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
-from simulator.compiler.error_listener import CompilerErrorListener
-from simulator.compiler.semantical_errors import Semantic
-from simulator.libraries.libraries import LibraryManager
-import simulator.libraries.library_creator as library_creator
+from compiler.ArduinoLexer import ArduinoLexer
+from compiler.ArduinoParser import ArduinoParser
+from compiler.ast import *
+from compiler.ast_builder_visitor import ASTBuilderVisitor
+from compiler.error_listener import CompilerErrorListener
+from compiler.semantical_errors import Semantic
+from libraries.libraries import LibraryManager
 
 
 class TestBaseErrors(unittest.TestCase):
@@ -23,12 +22,7 @@ class TestBaseErrors(unittest.TestCase):
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        lib_creator = library_creator.LibraryCreator()
-        lib_manager = LibraryManager(
-            [
-                lib_creator.create_servo()
-            ]
-        )
+        lib_manager = LibraryManager()
         semantic = Semantic(lib_manager)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
