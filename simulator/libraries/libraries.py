@@ -7,7 +7,9 @@ Those libraries are:
     - Servo
 """
 import simulator.libraries.standard as std
-import simulator.libraries.serial as serial
+import libraries.serial as serial
+import libraries.servo as servo
+import libraries.string as string
 
 
 class LibraryManager:
@@ -16,18 +18,20 @@ class LibraryManager:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, libs):
+    def __init__(self):
         """
         Constructor for library manager
         """
         self.library_methods = {
             std.get_name(): std.get_methods(),
-            serial.get_name(): serial.get_methods()
+            serial.get_name(): serial.get_methods(),
+            string.get_name(): string.get_methods()
         }
         self.libraries = {
             std.get_name(): std,
             serial.get_name(): serial,
-            libs[0].get_name(): libs[0]
+            string.get_name(): string.get_methods(),
+            servo.get_name(): servo.get_methods()
         }
     
     def get_libraries(self):
@@ -62,7 +66,7 @@ class LibraryManager:
         """
         lib: str = library[0:-2]
         if lib in self.libraries:
-            self.library_methods[lib] = self.libraries[lib].get_methods()
+            self.library_methods[lib] = self.libraries[lib]
         else:
             return self.ERROR
         return self.OK

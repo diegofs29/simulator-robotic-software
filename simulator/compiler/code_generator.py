@@ -7,7 +7,7 @@ into a transpiler
 
 from .ast import *
 from .ast_visitor import ASTVisitor
-import simulator.libraries.libraries as libraries
+import libraries.libraries as libraries
 
 
 class CodeGenerator(ASTVisitor):
@@ -27,14 +27,17 @@ class CodeGenerator(ASTVisitor):
         self.library_manager: libraries.LibraryManager = library_manager
         self.globals = []
         self.functions = {}
+        self.strings = {}
     
     def visit_program(self, program: ProgramNode, param):
         self.script = open("simulator/temp/script_arduino.py", 'w')
-        self.write_to_script("import simulator.libraries.standard as standard")
+        self.write_to_script("import libraries.standard as standard")
         self.write_endl()
-        self.write_to_script("import simulator.libraries.serial as Serial")
+        self.write_to_script("import libraries.serial as Serial")
         self.write_endl()
-        self.write_to_script("import simulator.gui.screen_updater as screen_updater")
+        self.write_to_script("import libraries.string as String")
+        self.write_endl()
+        self.write_to_script("import gui.screen_updater as screen_updater")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)
@@ -48,7 +51,7 @@ class CodeGenerator(ASTVisitor):
 
     def visit_include(self, program: IncludeNode, param):
         imported = str(program.file_name[:-2])
-        library = "simulator.libraries.{}".format(str(imported).lower())
+        library = "libraries.{}".format(str(imported).lower())
         self.library_manager.add_library(library)
         self.write_to_script("import {} as {}".format(library, imported))
 
@@ -73,6 +76,8 @@ class CodeGenerator(ASTVisitor):
             declaration.expr.accept(self, param)
         elif declaration.type != None:
             declaration.type.accept(self, param)
+        if isinstance(declaration.type, StringTypeNode):
+            self.strings[declaration.var_name] = declaration
         return None
 
     def visit_array_declaration(self, array_declaration: ArrayDeclarationNode, param):
@@ -336,7 +341,6 @@ class CodeGenerator(ASTVisitor):
         if len(switch_sentence.cases) > 0:
             for case in switch_sentence.cases:
                 case.accept(self, param)
-                self.write_endl()
         else:
             self.write_no_sentence()
         self.decrease_tab()
@@ -353,8 +357,9 @@ class CodeGenerator(ASTVisitor):
         self.increase_tab()
         if len(case.sentences) > 0:
             for sent in case.sentences:
-                sent.accept(self, param)
-                self.write_endl()
+                if not isinstance(sent, BreakNode):
+                    sent.accept(self, param)
+                    self.write_endl()
         else:
             self.write_no_sentence()
         self.decrease_tab()
@@ -472,7 +477,7 @@ class CodeGenerator(ASTVisitor):
         return None
 
     def visit_string(self, string_node: StringNode, param):
-        self.write_to_script("\"{}\"".format(string_node.value))
+        self.write_to_script("String.String(\"{}\")".format(string_node.value))
         return None
 
     def visit_boolean(self, boolean_node: BooleanNode, param):
@@ -500,6 +505,7 @@ class CodeGenerator(ASTVisitor):
 
     def visit_function_call(self, function_call: FunctionCallNode, param):
         if function_call.name != None:
+            function_call.name.set_function_call(function_call)
             name = function_call.name.accept(self, self.FUNCTION_CALL)
             if name != None:
                 if name in self.functions:
@@ -524,8 +530,13 @@ class CodeGenerator(ASTVisitor):
             for key in self.library_manager.library_methods:
                 found_method = self.library_manager.find(key, method)
                 if found_method != None:
-                    self.write_to_script("{}.{}".format(elem, found_method[1]))
+                    if found_method[3] != -1:
+                        var = member_access.function_call.parameters[found_method[3]].value
+                        self.write_to_script("{} = {}.{}".format(var, elem, found_method[1]))
+                    else:
+                        self.write_to_script("{}.{}".format(elem, found_method[1]))
                     break
+        return None
 
     def visit_return(self, return_p: ReturnNode, param):
         self.write_to_script("return ")
@@ -571,7 +582,6 @@ class CodeGenerator(ASTVisitor):
                 tabs += "\t"
                 i += 1
         self.script.write("{}{}".format(tabs, sentence).rstrip('\n'))
-        #print("{}{}".format(tabs, sentence), end="")
         self.continue_line = True
 
     def write_endl(self):
@@ -579,7 +589,6 @@ class CodeGenerator(ASTVisitor):
         Writes an end line to the current line
         """
         self.script.write("\n")
-        #print()
         self.continue_line = False
 
     def write_no_sentence(self):

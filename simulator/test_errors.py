@@ -1,13 +1,12 @@
 import unittest
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer
-from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import *
-from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
-from simulator.compiler.error_listener import CompilerErrorListener
-from simulator.compiler.semantical_errors import Semantic
-from simulator.libraries.libraries import LibraryManager
-import simulator.libraries.library_creator as library_creator
+from compiler.ArduinoLexer import ArduinoLexer
+from compiler.ArduinoParser import ArduinoParser
+from compiler.ast import *
+from compiler.ast_builder_visitor import ASTBuilderVisitor
+from compiler.error_listener import CompilerErrorListener
+from compiler.semantical_errors import Semantic
+from libraries.libraries import LibraryManager
 
 
 class TestBaseErrors(unittest.TestCase):
@@ -23,12 +22,7 @@ class TestBaseErrors(unittest.TestCase):
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
         visitor = ASTBuilderVisitor()
-        lib_creator = library_creator.LibraryCreator(None)
-        lib_manager = LibraryManager(
-            [
-                lib_creator.create_servo()
-            ]
-        )
+        lib_manager = LibraryManager()
         semantic = Semantic(lib_manager)
         tree = parser.program()
         self.syntax_errors = error_listener.errors
@@ -96,13 +90,13 @@ class TestTypeErrors(TestBaseErrors):
     file = "tests/error-tests/types.txt"
 
     def test_number_of_errors(self):
-        self.assertEqual(len(self.semantic_errors), 31)
+        self.assertEqual(len(self.semantic_errors), 30)
 
     def test_r_type(self):
         for err in self.semantic_errors[:-2]:
             self.assertEqual(err.r_type, "Tipos")
-        self.assertEqual(self.semantic_errors[29].r_type, "Tipo de función setup")
-        self.assertEqual(self.semantic_errors[30].r_type, "Tipo de función loop")
+        self.assertEqual(self.semantic_errors[28].r_type, "Tipo de función setup")
+        self.assertEqual(self.semantic_errors[29].r_type, "Tipo de función loop")
 
     def test_error_message(self):
         self.assertEqual(self.semantic_errors[0].message, "El tipo de la variable es numérico, pero su valor no")
@@ -125,17 +119,16 @@ class TestTypeErrors(TestBaseErrors):
         self.assertEqual(self.semantic_errors[17].message, "La expresión no es de tipo numérico")
         self.assertEqual(self.semantic_errors[18].message, "La expresión debe ser tipo int o boolean")
         self.assertEqual(self.semantic_errors[19].message, "La expresión debe ser tipo int")
-        self.assertEqual(self.semantic_errors[20].message, "Las operaciones artiméticas deben ser entre números")
-        self.assertEqual(self.semantic_errors[21].message, "La expresión izquierda debe ser int o boolean")
-        self.assertEqual(self.semantic_errors[22].message, "La expresión derecha debe ser int o boolean")
-        self.assertEqual(self.semantic_errors[23].message, "El tipo de la izquierda debe ser numérico")
-        self.assertEqual(self.semantic_errors[24].message, "El tipo de la derecha debe ser numérico")
-        self.assertEqual(self.semantic_errors[25].message, "El tipo de la variable es numérico, pero su valor no")
-        self.assertEqual(self.semantic_errors[26].message, "El tipo de retorno y del valor no coincide")
-        self.assertEqual(self.semantic_errors[27].message, "Las funciones de tipo void no deben retornar valor")
-        self.assertEqual(self.semantic_errors[28].message, "Las funciones de tipo no void deben retornar valor")
-        self.assertEqual(self.semantic_errors[29].message, "La función setup debe ser de tipo void")
-        self.assertEqual(self.semantic_errors[30].message, "La función loop debe ser de tipo void")
+        self.assertEqual(self.semantic_errors[20].message, "La expresión izquierda debe ser int o boolean")
+        self.assertEqual(self.semantic_errors[21].message, "La expresión derecha debe ser int o boolean")
+        self.assertEqual(self.semantic_errors[22].message, "El tipo de la izquierda debe ser numérico")
+        self.assertEqual(self.semantic_errors[23].message, "El tipo de la derecha debe ser numérico")
+        self.assertEqual(self.semantic_errors[24].message, "El tipo de la variable es numérico, pero su valor no")
+        self.assertEqual(self.semantic_errors[25].message, "El tipo de retorno y del valor no coincide")
+        self.assertEqual(self.semantic_errors[26].message, "Las funciones de tipo void no deben retornar valor")
+        self.assertEqual(self.semantic_errors[27].message, "Las funciones de tipo no void deben retornar valor")
+        self.assertEqual(self.semantic_errors[28].message, "La función setup debe ser de tipo void")
+        self.assertEqual(self.semantic_errors[29].message, "La función loop debe ser de tipo void")
 
 
 class TestDeclarationErrors(TestBaseErrors):

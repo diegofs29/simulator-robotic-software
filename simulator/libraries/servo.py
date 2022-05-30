@@ -1,4 +1,25 @@
-import simulator.robots.boards as boards
+import robots.boards as boards
+
+def get_name():
+    return "Servo"
+
+def get_methods():
+    """
+    Returns the methods of the library as a dict, whose
+    key is the naming in Arduino and whose value is the
+    corresponding method.
+    Returns:
+        A dict with the methods
+    """
+    methods = {}
+    methods["attach"] = ("void", "attach", ['int', '(int)', '(int)'], -1)
+    methods["write"] = ("void", "write", ['int'], -1)
+    methods["writeMicroseconds"] = ("void", "write_microseconds", ['int'], -1)
+    methods["read"] = ("int", "read", [], -1)
+    methods["attached"] = ("bool", "attached", [], -1)
+    methods["detach"] = ("void", "detach", [], -1)
+    return methods
+
 
 
 class Servo:
@@ -19,26 +40,6 @@ class Servo:
         self.min = 544
         self.max = 2400
         self.speed = 90
-
-    def get_name(self):
-        return "Servo"
-
-    def get_methods(self):
-        """
-        Returns the methods of the library as a dict, whose
-        key is the naming in Arduino and whose value is the
-        corresponding method.
-        Returns:
-            A dict with the methods
-        """
-        methods = {}
-        methods["attach"] = ("void", "attach", ['int', '(int)', '(int)'])
-        methods["write"] = ("void", "write", ['int'])
-        methods["writeMicroseconds"] = ("void", "write_microseconds", ['int'])
-        methods["read"] = ("int", "read", [])
-        methods["attached"] = ("bool", "attached", [])
-        methods["detach"] = ("void", "detach", [])
-        return methods
 
     def set_board(self, board: boards.Board):
         """

@@ -1,4 +1,4 @@
-import simulator.gui.gui as gui
+import gui.gui as gui
 
 def main():
     app = gui.MainApplication()

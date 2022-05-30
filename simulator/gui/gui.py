@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import simulator.gui.model as model
+import gui.model as model
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -778,10 +778,14 @@ class ButtonBar(tk.Frame):
         self.import_button.grid(row=0, column=2, padx=5, pady=5)
 
     def execute(self):
+        self.execute_button.on_click()
         self.application.execute()
+        self.execute_button.on_click_finish()
 
     def stop(self):
+        self.stop_button.on_click()
         self.application.stop()
+        self.stop_button.on_click_finish()
 
     def __load_images(self):
         self.exec_img = tk.PhotoImage(file="buttons/exec.png")
@@ -827,8 +831,11 @@ class ImageButton(tk.Button):
         except AttributeError:
             pass
 
-    def on_click(self):  # A futuro si se quiere
+    def on_click(self):
         self.configure(image=self.images["yellow"])
+    
+    def on_click_finish(self):
+        self.configure(image=self.images["blue"])
 
     def set_tooltip_text(self, label: tk.Label, tooltip):
         self.label = label

@@ -4,8 +4,8 @@ Those being: Servos, board, sensors and inputs (button and
 joystick)
 """
 
-import simulator.robots.boards as boards
-import simulator.robots.elements as elements
+import robots.boards as boards
+import robots.elements as elements
 
 
 class Robot:

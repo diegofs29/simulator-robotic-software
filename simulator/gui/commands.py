@@ -1,9 +1,9 @@
 import importlib
 import time
-import simulator.compiler.transpiler as transpiler
-import simulator.libraries.standard as standard
-import simulator.libraries.serial as serial
-import simulator.robots.robot_state as state
+import compiler.transpiler as transpiler
+import libraries.standard as standard
+import libraries.serial as serial
+import robots.robot_state as state
 
 
 class Command:
@@ -65,7 +65,7 @@ class Setup(Command):
         return True
 
     def __import_module(self):
-        self.module = importlib.import_module('simulator.temp.script_arduino')
+        self.module = importlib.import_module('temp.script_arduino')
 
 
 class Loop(Command):
@@ -86,4 +86,4 @@ class Loop(Command):
             self.module.loop()
 
     def __import_module(self):
-        self.module = importlib.import_module('simulator.temp.script_arduino')
+        self.module = importlib.import_module('temp.script_arduino')

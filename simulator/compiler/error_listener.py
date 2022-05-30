@@ -1,6 +1,6 @@
+import console.console as console
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import *
-from simulator.console.console import Error
 
 
 class CompilerErrorListener(ErrorListener):
@@ -13,7 +13,7 @@ class CompilerErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         expected = self.__get_expected(recognizer)
         error_type, message = self.__handle_error(e, expected, offendingSymbol)
-        error = Error(error_type, line, column, message)
+        error = console.Error(error_type, line, column, message)
         if self.log_errors:
             print(error.to_string())
         self.errors.append(error)

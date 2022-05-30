@@ -1,9 +1,9 @@
 import random
-import simulator.gui.drawing as drawing
-import simulator.gui.robot_drawings as robot_drawings
-import simulator.gui.huds as huds
-import simulator.robots.robots as robots
-import simulator.files.files_reader as filesr
+import gui.drawing as drawing
+import gui.robot_drawings as robot_drawings
+import gui.huds as huds
+import robots.robots as robots
+import files.files_reader as filesr
 
 class Layer:
 

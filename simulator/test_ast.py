@@ -1,11 +1,11 @@
 import unittest
 
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer
-from simulator.compiler.ArduinoParser import ArduinoParser
-from simulator.compiler.ast import *
-from simulator.compiler.ast_builder_visitor import ASTBuilderVisitor
-from simulator.compiler.error_listener import CompilerErrorListener
+from compiler.ArduinoLexer import ArduinoLexer
+from compiler.ArduinoParser import ArduinoParser
+from compiler.ast import *
+from compiler.ast_builder_visitor import ASTBuilderVisitor
+from compiler.error_listener import CompilerErrorListener
 
 
 class TestBaseAST(unittest.TestCase):
@@ -115,7 +115,7 @@ class TestGlobalDefinition(TestBaseAST):
         self.assertEqual(self.code[9].declaration.size[0], 3)
 
     def test_array_elements(self):
-        self.assertEqual(self.code[2].declaration.elements, None)
+        self.assertEqual(self.code[2].declaration.elements, [])
         self.assertEqual(
             list(
                 map(
@@ -951,7 +951,7 @@ class TestArrays(TestBaseAST):
         self.assertEqual(self.code[10].declaration.size, [2, 2, 3])
 
     def test_elements(self):
-        self.assertEqual(self.code[0].declaration.elements, None)
+        self.assertEqual(self.code[0].declaration.elements, [])
         self.assertEqual(
             list(
                 map(

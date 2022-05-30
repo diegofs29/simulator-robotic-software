@@ -1,9 +1,9 @@
 import unittest
 
 from antlr4 import *
-from simulator.compiler.ArduinoLexer import ArduinoLexer 
-from simulator.compiler.ArduinoListenerTests import ArduinoListenerTests
-from simulator.compiler.ArduinoParser import ArduinoParser
+from compiler.ArduinoLexer import ArduinoLexer 
+from compiler.ArduinoListenerTests import ArduinoListenerTests
+from compiler.ArduinoParser import ArduinoParser
 
 
 class TestBase(unittest.TestCase):

@@ -4,8 +4,8 @@ the board and the computer (with the possibility of expansion
 into other devices not implemented)
 """
 
-import simulator.console.console as console
-import simulator.robots.boards as boards
+import console.console as console
+import robots.boards as boards
 
 
 OK = 0
@@ -26,27 +26,27 @@ def get_methods():
         A dict with the methods
     """
     methods = {}
-    methods["if(Serial)"] = ("bool", "if_serial", []) #Not implemented
-    methods["available"] = ("int", "available", [])
-    methods["availableForWrite"] = ("int", "available_for_write", []) #Not implemented
-    methods["begin"] = ("void", "begin", ["long"])
-    methods["end"] = ("void", "end", []) #Not implemented
-    methods["find"] = ("bool", "find", []) #Not implemented
-    methods["findUntil"] = ("bool", "find_until", []) #Not implemented
-    methods["flush"] = ("void", "flush", []) #Not implemented
-    methods["parseFloat"] = ("float", "parse_float", []) #Not implemented
-    methods["parseInt"] = ("long", "parse_int", []) #Not implemented
-    methods["peek"] = ("int", "peek", []) #Not implemented
-    methods["print"] = ("size_t", "print", ["any"])
-    methods["println"] = ("size_t", "println", ["(any)"])
-    methods["read"] = ("int", "read", [])
-    methods["readBytes"] = ("size_t", "read_bytes", []) #Not implemented
-    methods["readBytesUntil"] = ("size_t", "read_bytes_until", []) #Not implemented
-    methods["readString"] = ("string", "read_string", []) #Not implemented
-    methods["readStringUntil"] = ("string", "read_string_until", []) #Not implemented
-    methods["setTimeout"] = ("void", "set_timeout", []) #Not implemented
-    methods["write"] = ("size_t", "write", []) #Not implemented
-    methods["serialEvent"] = ("void", "serial_event", []) #Not implemented
+    methods["if(Serial)"] = ("bool", "if_serial", [], -1) #Not implemented
+    methods["available"] = ("int", "available", [], -1)
+    methods["availableForWrite"] = ("int", "available_for_write", [], -1) #Not implemented
+    methods["begin"] = ("void", "begin", ["long"], -1)
+    methods["end"] = ("void", "end", [], -1) #Not implemented
+    methods["find"] = ("bool", "find", [], -1) #Not implemented
+    methods["findUntil"] = ("bool", "find_until", [], -1) #Not implemented
+    methods["flush"] = ("void", "flush", [], -1) #Not implemented
+    methods["parseFloat"] = ("float", "parse_float", [], -1) #Not implemented
+    methods["parseInt"] = ("long", "parse_int", [], -1) #Not implemented
+    methods["peek"] = ("int", "peek", [], -1) #Not implemented
+    methods["print"] = ("size_t", "print", ["any"], -1)
+    methods["println"] = ("size_t", "println", ["(any)"], -1)
+    methods["read"] = ("int", "read", [], -1)
+    methods["readBytes"] = ("size_t", "read_bytes", [], -1) #Not implemented
+    methods["readBytesUntil"] = ("size_t", "read_bytes_until", [], -1) #Not implemented
+    methods["readString"] = ("string", "read_string", [], -1) #Not implemented
+    methods["readStringUntil"] = ("string", "read_string_until", [], -1) #Not implemented
+    methods["setTimeout"] = ("void", "set_timeout", [], -1) #Not implemented
+    methods["write"] = ("size_t", "write", [], -1) #Not implemented
+    methods["serialEvent"] = ("void", "serial_event", [], -1) #Not implemented
     return methods
 
 def if_serial():
