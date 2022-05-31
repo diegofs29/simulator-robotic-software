@@ -4,7 +4,7 @@ import gui.commands as commands
 import gui.screen_updater as screen_updater
 
 
-class RobotsModel:
+class RobotsController:
 
     def __init__(self, view):
         self.view = view

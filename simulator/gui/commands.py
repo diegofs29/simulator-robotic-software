@@ -8,8 +8,8 @@ import robots.robot_state as state
 
 class Command:
 
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, controller):
+        self.controller = controller
         self.ready = False
         
     def execute(self):
@@ -22,19 +22,19 @@ class Command:
         self.ready = False
 
     def prepare_exec(self):
-        standard.board = self.model.robot_layer.robot.board
+        standard.board = self.controller.robot_layer.robot.board
         standard.state = state.State()
-        serial.cons = self.model.console
+        serial.cons = self.controller.console
         self.ready = True
 
 
 class Compile(Command):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, controller):
+        super().__init__(controller)
 
     def execute(self):
-        errors = transpiler.transpile(self.model.get_code(), self.model.robot_layer.robot)
+        errors = transpiler.transpile(self.controller.get_code(), self.controller.robot_layer.robot)
         if len(errors) > 0:
             self.print_errors(errors)
             return False
@@ -42,13 +42,13 @@ class Compile(Command):
 
     def print_errors(self, errors):
         for error in errors:
-            self.model.console.write_error(error)
+            self.controller.console.write_error(error)
 
 
 class Setup(Command):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, controller):
+        super().__init__(controller)
         
 
     def execute(self):
@@ -70,8 +70,8 @@ class Setup(Command):
 
 class Loop(Command):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, controller):
+        super().__init__(controller)
 
     def execute(self):
         self.__import_module()
