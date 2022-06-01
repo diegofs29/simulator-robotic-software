@@ -1,6 +1,27 @@
 import json
 
 
+class FileManager:
+
+    def __init__(self):
+        """
+        Constructor for file manager
+        """
+        self.file = None
+
+    def open(self, file):
+        self.file = file
+        f = open(file)
+        return f.readlines()
+
+    def save(self, file=None, content=[]):
+        if file != None:
+            self.file = file
+        if self.file != None:
+            f = open(self.file, "w")
+            f.write("%s\n" % content)
+
+
 class RobotDataReader:
 
     def __init__(self):

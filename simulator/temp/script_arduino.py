@@ -13,9 +13,9 @@ LEFT = String.String("L")
 RIGHT = String.String("R")
 FORWARD = String.String("F")
 GOAL = String.String("G")
-TURN_AROUND_TIME = 1250
-QUARTER_BACK_TIME = 625
-EXTRA_FORWARD_TIME = 200
+TURN_AROUND_TIME = 1500
+QUARTER_BACK_TIME = 750
+EXTRA_FORWARD_TIME = 225
 MEMORY_SPACE = 100
 servoIzq = Servo.Servo(standard.board)
 servoDer = Servo.Servo(standard.board)
@@ -611,7 +611,7 @@ def finish():
 	stopMotor()
 	simplifyPath()
 	doPerfectPath()
-	standard.delay(1000)
+	standard.delay(10000)
 
 def simplifyPath():
 	global NO_LINEA

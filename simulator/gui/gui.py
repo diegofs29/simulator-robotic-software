@@ -1,7 +1,10 @@
 import re
 import tkinter as tk
+import tkinter.messagebox as messagebox
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 import tkinter.ttk as ttk
 import gui.controller as controller
+import files.files_reader as files
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -33,6 +36,7 @@ class MainApplication(tk.Tk):
         self.controller = controller.RobotsController(self)
         self.prepare_controller()
         self.keys_used = True
+        self.file_manager = files.FileManager()
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
@@ -76,10 +80,23 @@ class MainApplication(tk.Tk):
     def editor_redo(self):
         self.editor_frame.text.edit_redo()
 
+    def open_file(self):
+        self.editor_frame.text.delete("1.0", tk.END)
+        file = askopenfilename(filetypes=[("Arduino sketch", ".ino")])
+        content = self.file_manager.open(file)
+        for line in content:
+            self.editor_frame.text.insert(tk.END, f"{line}")
+
+    def save_file(self):
+        content = self.editor_frame.text.get("1.0", tk.END)
+        file = asksaveasfilename(defaultextension=".ino", filetypes=[("Arduino sketch", ".ino")])
+        if file != '':
+            self.file_manager.save(file, content)
+
     def get_code(self):
         return self.editor_frame.text.get("1.0", tk.END)
 
-    def open_pin_configuration(self):
+    def open_pin_configuration(self, event=None):
         """
         Top level window to configure pins connected to the
         Arduino board
@@ -161,6 +178,10 @@ class MainApplication(tk.Tk):
 
     def toggle_keys(self):
         self.keys_used = not self.keys_used
+
+    def close(self):
+        self.stop()
+        self.destroy()
 
 
 class PinConfigurationWindow(tk.Toplevel):
@@ -384,18 +405,44 @@ class MenuBar(tk.Menu):
 
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Menu.__init__(self, parent, *args, **kwargs)
+        self.application = application
 
-        self.add_cascade(label="Archivo")
+        file_menu = tk.Menu(self, tearoff=0)
+        file_menu.add_command(label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
+        file_menu.add_command(label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
+        file_menu.add_separator()
+        file_menu.add_command(label="Salir", command=self.check_if_exit)
+        self.add_cascade(label="Archivo", menu=file_menu)
 
-        self.add_cascade(label="Editar")
+        edit_menu = tk.Menu(self, tearoff=0)
+        edit_menu.add_command(label="Deshacer", command=application.editor_undo, accelerator="Ctrl+Z")
+        edit_menu.add_command(label="Rehacer", command=application.editor_redo, accelerator="Ctrl+Y")
+        self.add_cascade(label="Editar", menu=edit_menu)
 
         conf_menu = tk.Menu(self, tearoff=0)
-        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration)
+        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration, accelerator="Ctrl+,")
         self.add_cascade(label="Configurar", menu=conf_menu)
 
-        self.add_cascade(label="Ver")
+        help_menu = tk.Menu(self, tearoff=0)
+        help_menu.add_command(label="Acerca de", command=self.show_about)
+        self.add_cascade(label="Ayuda", menu=help_menu)
 
-        self.add_cascade(label="Ayuda")
+        self.bind_all("<Control-,>", application.open_pin_configuration)
+    
+    def check_if_exit(self):
+        if messagebox.askyesno('Salir', '¿Seguro que quieres salir? Se perderá el sketch si no está guardado'):
+            self.application.close()
+
+    def show_about(self):
+        messagebox.showinfo('Simulador de Software para robots', 
+                str(
+                    'Aplicación realizada como trabajo de fin de grado.\n' + 
+                    'Autor: Diego Fernández Suárez\n' +
+                    'Tutor: Cristian González García\n' +
+                    'Versión actual: b-0.1'
+                )
+            )
+
 
 
 class DrawingFrame(tk.Frame):
@@ -885,7 +932,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.save_file
         )
         self.import_button = ImageButton(
             self.utils_frame,
@@ -897,7 +945,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.open_file
         )
 
         self.execute_button.set_tooltip_text(self.tooltip_hover, "Ejecutar")
