@@ -20,13 +20,14 @@ class RobotsController:
         screen_updater.view = self.view
         self.view.abort_after()
         self.robot_layer.execute()
+        self.console.clear()
         if self.compile_command.execute():
             if self.setup_command.execute():
                 self.executing = True
                 self.drawing_loop()
 
     def drawing_loop(self):
-        screen_updater.update()
+        screen_updater.refresh()
         if not self.view.keys_used:
             self.loop_command.execute()
         self.view.identifier = self.view.after(10, self.drawing_loop)

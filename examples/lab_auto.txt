@@ -11,9 +11,9 @@ String RIGHT = "R";
 String FORWARD = "F";
 String GOAL = "G";
 
-int TURN_AROUND_TIME = 1300;
+int TURN_AROUND_TIME = 1250;
 int QUARTER_BACK_TIME = 625;
-int EXTRA_FORWARD_TIME = 225; // Este tiempo, si es alto, hace que se salte el cruce y que tenga problemas en la detección de la meta, si es bajo, da problemas de giro y detecta como meta cualquier cruce de 3/4
+int EXTRA_FORWARD_TIME = 200; // Este tiempo, si es alto, hace que se salte el cruce y que tenga problemas en la detección de la meta, si es bajo, da problemas de giro y detecta como meta cualquier cruce de 3/4
 int MEMORY_SPACE = 100;
 
 Servo servoIzq;

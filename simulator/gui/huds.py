@@ -19,6 +19,10 @@ class HUD:
         self.canvas.delete('all')
         self.set_text()
 
+    def reboot(self):
+        self.canvas.delete('all')
+        self.set_text()
+
     def set_text(self):
         """
         Shows the text of the data that the HUD is going to

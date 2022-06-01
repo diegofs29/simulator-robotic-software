@@ -265,7 +265,7 @@ def delay(ms):
     """
     state.exec_time_ms = int(time.time_ns() / 1000000) + ms
     while time.time_ns() / 1000000 < state.exec_time_ms:
-        screen_updater.update()
+        screen_updater.refresh()
 
 def delay_microseconds(us):
     """

@@ -213,7 +213,7 @@ class CodeGenerator(ASTVisitor):
         else:
             self.write_no_sentence()
         self.write_endl()
-        self.write_to_script("screen_updater.update()")
+        self.write_to_script("screen_updater.refresh()")
         self.write_endl()
         self.decrease_tab()
 

@@ -572,6 +572,7 @@ class EditorFrame(tk.Frame):
             tk.Text.__init__(self, *args, **kwargs)
 
             self.keywords = self.__get_keywords("assets/colors.txt")
+            self.comment_lines = []
 
             self._orig = self._w + "_orig"
             self.tk.call("rename", self._w, self._orig)
@@ -579,15 +580,23 @@ class EditorFrame(tk.Frame):
             self.__create_tags()
 
         def update_highlight(self):
-            self.__remove_tags()
-            for keyword in self.keywords:
-                if len(keyword) == 3:
-                    self.highlight_all_delimited(r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
-                elif keyword[0][0] == '\\' or keyword[0][0:2] == '//':
-                    self.highlight_all(r'%s' % keyword[0], keyword[1])
-                else:
-                    self.highlight_all(r'\b%s\b' % keyword[0], keyword[1])
-            self.after(1000, self.update_highlight)
+            def step():
+                i = 0
+                while True:
+                    keyword = self.keywords[i]
+                    if len(keyword) == 3:
+                        self.highlight_all_delimited(r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
+                    elif keyword[0][0] == '\\' or keyword[0][0:2] == '//':
+                        self.highlight_all(r'%s' % keyword[0], keyword[1])
+                    else:
+                        self.highlight_all(r'\b%s\b' % keyword[0], keyword[1])
+                    self.after(1, gen.__next__)
+                    i += 1
+                    if i == len(self.keywords):
+                        i = 0
+                    yield
+            gen = step()
+            gen.__next__()
 
         def highlight_all(self, pattern, tag):
             for match in self.search_re(pattern):
@@ -598,7 +607,31 @@ class EditorFrame(tk.Frame):
                 self.highlight(tag, match[0], match[1])
 
         def highlight(self, tag, start, end):
-            self.tag_add(tag, start, end)
+            is_comment = False
+            for comm in self.comment_lines:
+                comm_start = tuple(map(int, comm[0].split('.')))
+                comm_end = tuple(map(int, comm[1].split('.')))
+                fl_start = tuple(map(int, start.split('.')))
+                fl_end = tuple(map(int, end.split('.')))
+                if (
+                    comm_start[0] <= fl_start[0] <= comm_end[0] and
+                    comm_start[0] <= fl_end[0] <= comm_end[0]
+                ):
+                    finished = False
+                    if comm_start[0] == fl_start[0] or comm_end[0] == fl_start[0]:
+                        if comm_start[1] < fl_start[1] < comm_end[1]:
+                            finished = True
+                    elif comm_start[0] == fl_end[0] or comm_end[0] == fl_end[0]:
+                        if comm_start[1] < fl_end[1] < comm_end[1]:
+                            finished = True
+                    else:
+                        finished = True
+                    if finished:
+                        is_comment = True
+                        break
+            if not is_comment:
+                self.__remove_tags(start, end)
+                self.tag_add(tag, start, end)
 
         def search_re(self, pattern):
             """
@@ -641,6 +674,7 @@ class EditorFrame(tk.Frame):
                 if start != -1 and end != -1:
                     matches.append((start, end))
                     start = end = -1
+            self.comment_lines = matches
             return matches
 
         def _proxy(self, *args):
@@ -670,12 +704,12 @@ class EditorFrame(tk.Frame):
             self.tag_configure("gray", foreground="#95A5A6")
             self.tag_configure("dark", foreground="#434F54")
         
-        def __remove_tags(self):
-            self.tag_remove("blue", "1.0", tk.END)
-            self.tag_remove("orange", "1.0", tk.END)
-            self.tag_remove("green", "1.0", tk.END)
-            self.tag_remove("gray", "1.0", tk.END)
-            self.tag_remove("dark", "1.0", tk.END)
+        def __remove_tags(self, start, end):
+            self.tag_remove("blue", start, end)
+            self.tag_remove("orange", start, end)
+            self.tag_remove("green", start, end)
+            self.tag_remove("gray", start, end)
+            self.tag_remove("dark", start, end)
 
         def __get_keywords(self, file_name):
             keywords = []

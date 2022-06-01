@@ -206,7 +206,11 @@ class Console:
             if m[0] in msg_types:
                 self.__insert_text(m[1], m[0])
         self.text_widget.config(state=tk.DISABLED)
-            
+
+    def clear(self):
+        self.text_widget.config(state=tk.NORMAL)
+        self.text_widget.delete("1.0", tk.END) 
+        self.text_widget.config(state=tk.DISABLED)           
 
     def __insert_text(self, message, tag='info'):
         """
