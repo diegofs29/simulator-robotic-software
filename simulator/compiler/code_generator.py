@@ -5,12 +5,12 @@ into a transpiler
 """
 
 
-from .ast import *
-from .ast_visitor import ASTVisitor
+import compiler.ast as ast
+import compiler.ast_visitor as ast_visitor
 import libraries.libraries as libraries
 
 
-class CodeGenerator(ASTVisitor):
+class CodeGenerator(ast_visitor.ASTVisitor):
 
     VARIABLE = 1
     FUNCTION_CALL = 2
@@ -29,7 +29,7 @@ class CodeGenerator(ASTVisitor):
         self.functions = {}
         self.function_visitor = FunctionDefiner()
     
-    def visit_program(self, program: ProgramNode, param):
+    def visit_program(self, program: ast.ProgramNode, param):
         self.function_visitor.visit_program(program, param)
         self.functions = self.function_visitor.functions
         self.script = open("simulator/temp/script_arduino.py", 'w')
@@ -51,13 +51,13 @@ class CodeGenerator(ASTVisitor):
         self.script.close()
         return None
 
-    def visit_include(self, program: IncludeNode, param):
+    def visit_include(self, program: ast.IncludeNode, param):
         imported = str(program.file_name[:-2])
         library = "libraries.{}".format(str(imported).lower())
         self.library_manager.add_library(library)
         self.write_to_script("import {} as {}".format(library, imported))
 
-    def visit_program_code(self, program_code: ProgramCodeNode, param):
+    def visit_program_code(self, program_code: ast.ProgramCodeNode, param):
         if program_code.declaration != None:
             program_code.declaration.accept(self, param)
             self.write_endl()
@@ -69,7 +69,7 @@ class CodeGenerator(ASTVisitor):
             self.write_endl()
         return None
 
-    def visit_declaration(self, declaration: DeclarationNode, param):
+    def visit_declaration(self, declaration: ast.DeclarationNode, param):
         self.write_to_script(declaration.var_name)
         if declaration.function == None:
             self.globals.append(declaration.var_name)
@@ -80,7 +80,7 @@ class CodeGenerator(ASTVisitor):
             declaration.type.accept(self, param)
         return None
 
-    def visit_array_declaration(self, array_declaration: ArrayDeclarationNode, param):
+    def visit_array_declaration(self, array_declaration: ast.ArrayDeclarationNode, param):
         self.write_to_script(array_declaration.var_name)
         self.write_to_script(" = [")              
         if len(array_declaration.elements) > 0:
@@ -91,7 +91,7 @@ class CodeGenerator(ASTVisitor):
             self.globals.append(array_declaration.var_name)   
         return None
 
-    def visit_define_macro(self, define_macro: DefineMacroNode, param):
+    def visit_define_macro(self, define_macro: ast.DefineMacroNode, param):
         self.write_to_script("{} = ".format(define_macro.macro_name))
         if define_macro.expr != None:
             define_macro.expr.accept(self, param)
@@ -101,69 +101,69 @@ class CodeGenerator(ASTVisitor):
             self.globals.append[define_macro.macro_name]
         return None
     
-    def visit_boolean_type(self, boolean_type: BooleanTypeNode, param):
+    def visit_boolean_type(self, boolean_type: ast.BooleanTypeNode, param):
         self.write_to_script(" = False")
         return None
 
-    def visit_byte_type(self, byte_type: ByteTypeNode, param):
+    def visit_byte_type(self, byte_type: ast.ByteTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_char_type(self, char_type: CharTypeNode, param):
+    def visit_char_type(self, char_type: ast.CharTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_double_type(self, double_type: DoubleTypeNode, param):
+    def visit_double_type(self, double_type: ast.DoubleTypeNode, param):
         self.write_to_script(" = 0.0")
         return None
 
-    def visit_float_type(self, float_type: FloatTypeNode, param):
+    def visit_float_type(self, float_type: ast.FloatTypeNode, param):
         self.write_to_script(" = 0.0")
         return None
 
-    def visit_int_type(self, int_type: IntTypeNode, param):
+    def visit_int_type(self, int_type: ast.IntTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_long_type(self, long_type: LongTypeNode, param):
+    def visit_long_type(self, long_type: ast.LongTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_short_type(self, short_type: ShortTypeNode, param):
+    def visit_short_type(self, short_type: ast.ShortTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_size_t_type(self, size_t_type: Size_tTypeNode, param):
+    def visit_size_t_type(self, size_t_type: ast.Size_tTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_string_type(self, string: StringTypeNode, param):
+    def visit_string_type(self, string: ast.StringTypeNode, param):
         self.write_to_script("")
         return None
 
-    def visit_u_int_type(self, u_int_type: UIntTypeNode, param):
+    def visit_u_int_type(self, u_int_type: ast.UIntTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_u_char_type(self, u_char_type: UCharTypeNode, param):
+    def visit_u_char_type(self, u_char_type: ast.UCharTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_u_long_type(self, u_long_type: ULongTypeNode, param):
+    def visit_u_long_type(self, u_long_type: ast.ULongTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_word_type(self, word_type: WordTypeNode, param):
+    def visit_word_type(self, word_type: ast.WordTypeNode, param):
         self.write_to_script(" = 0")
         return None
 
-    def visit_id_type(self, id_type: IDTypeNode, param):
+    def visit_id_type(self, id_type: ast.IDTypeNode, param):
         lib = str(id_type.type_name)
         used_class = id_type.type_name
         self.write_to_script(" = {}.{}(standard.board)".format(lib, used_class))
         return None
 
-    def visit_function(self, function: FunctionNode, param):
+    def visit_function(self, function: ast.FunctionNode, param):
         for func in self.functions[function.name]:
             nparams = func['nparams']
             if nparams == len(function.args) + len(function.opt_args):
@@ -195,7 +195,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
 
-    def visit_while(self, while_p: WhileNode, param):
+    def visit_while(self, while_p: ast.WhileNode, param):
         self.write_to_script("while ")
         if while_p.expression != None:
             while_p.expression.accept(self, param)
@@ -219,7 +219,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
     
-    def visit_do_while(self, do_while: DoWhileNode, param):
+    def visit_do_while(self, do_while: ast.DoWhileNode, param):
         self.write_to_script("while True:")
         self.write_endl()
         self.increase_tab()
@@ -252,7 +252,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
 
-    def visit_for(self, for_p: ForNode, param):
+    def visit_for(self, for_p: ast.ForNode, param):
         self.write_to_script("for i in range(")
         if for_p.assignment != None:
             for_p.assignment.accept(self, param)
@@ -280,7 +280,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
     
-    def visit_conditional_sentence(self, conditional_sentence: ConditionalSentenceNode, param):
+    def visit_conditional_sentence(self, conditional_sentence: ast.ConditionalSentenceNode, param):
         self.write_to_script("if ")
         if conditional_sentence.condition != None:
             conditional_sentence.condition.accept(self, param)
@@ -308,7 +308,7 @@ class CodeGenerator(ASTVisitor):
             self.write_endl()
             for i in range(0, n_elses):
                 else_sent = conditional_sentence.else_expr[i]
-                if isinstance(else_sent, ConditionalSentenceNode):
+                if isinstance(else_sent, ast.ConditionalSentenceNode):
                     self.write_to_script("el")
                     increases = False
                 elif not else_written:
@@ -324,7 +324,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
 
-    def visit_switch_sentence(self, switch_sentence: SwitchSentenceNode, param):
+    def visit_switch_sentence(self, switch_sentence: ast.SwitchSentenceNode, param):
         self.write_to_script("match ")
         if switch_sentence.expression != None:
             switch_sentence.expression.accept(self, param)
@@ -341,7 +341,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
 
-    def visit_case(self, case: CaseNode, param):
+    def visit_case(self, case: ast.CaseNode, param):
         self.write_to_script("case ")
         if case.expression != None:
             case.expression.accept(self, param)
@@ -351,7 +351,7 @@ class CodeGenerator(ASTVisitor):
         self.increase_tab()
         if len(case.sentences) > 0:
             for sent in case.sentences:
-                if not isinstance(sent, BreakNode):
+                if not isinstance(sent, ast.BreakNode):
                     sent.accept(self, param)
                     self.write_endl()
         else:
@@ -360,7 +360,7 @@ class CodeGenerator(ASTVisitor):
 
         return None
 
-    def visit_assignment(self, assignment: AssignmentNode, param):
+    def visit_assignment(self, assignment: ast.AssignmentNode, param):
         if assignment.var != None:
             assignment.var.accept(self, param)
         self.write_to_script(" = ")
@@ -368,13 +368,13 @@ class CodeGenerator(ASTVisitor):
             assignment.expr.accept(self, param)
         return None
     
-    def visit_array_access(self, array_access: ArrayAccessNode, param):
+    def visit_array_access(self, array_access: ast.ArrayAccessNode, param):
         self.write_to_script(array_access.value)
         for index in array_access.indexes:
             self.write_to_script("[{}]".format(index.value))
         return None
 
-    def visit_arithmetic_expression(self, arithmetic_expression: ArithmeticExpressionNode, param):
+    def visit_arithmetic_expression(self, arithmetic_expression: ast.ArithmeticExpressionNode, param):
         self.write_to_script("(")
         if arithmetic_expression.left != None:
             arithmetic_expression.left.accept(self, param)
@@ -384,7 +384,7 @@ class CodeGenerator(ASTVisitor):
         self.write_to_script(")")
         return None
 
-    def visit_comparision_expression(self, comparison_expression: ComparisonExpressionNode, param):
+    def visit_comparision_expression(self, comparison_expression: ast.ComparisonExpressionNode, param):
         self.write_to_script("(")
         if comparison_expression.left != None:
             comparison_expression.left.accept(self, param)
@@ -394,7 +394,7 @@ class CodeGenerator(ASTVisitor):
         self.write_to_script(")")
         return None
 
-    def visit_boolean_expression(self, boolean_expression: BooleanExpressionNode, param):
+    def visit_boolean_expression(self, boolean_expression: ast.BooleanExpressionNode, param):
         self.write_to_script("(")
         if boolean_expression.left != None:
             boolean_expression.left.accept(self, param)
@@ -407,7 +407,7 @@ class CodeGenerator(ASTVisitor):
         self.write_to_script(")")
         return None
 
-    def visit_bitwise_expression(self, bitwise_expression: BitwiseExpressionNode, param):
+    def visit_bitwise_expression(self, bitwise_expression: ast.BitwiseExpressionNode, param):
         self.write_to_script("(")
         if bitwise_expression.left != None:
             bitwise_expression.left.accept(self, param)
@@ -417,7 +417,7 @@ class CodeGenerator(ASTVisitor):
         self.write_to_script(")")
         return None
 
-    def visit_compound_assigment(self, compound_asigment: CompoundAssignmentNode, param):
+    def visit_compound_assigment(self, compound_asigment: ast.CompoundAssignmentNode, param):
         if compound_asigment.left != None:
             compound_asigment.left.accept(self, param)
         self.write_to_script(" {} ".format(compound_asigment.op))
@@ -425,7 +425,7 @@ class CodeGenerator(ASTVisitor):
             compound_asigment.right.accept(self, param)
         return None
 
-    def visit_inc_dec_expression(self, inc_dec_expression: IncDecExpressionNode, param):
+    def visit_inc_dec_expression(self, inc_dec_expression: ast.IncDecExpressionNode, param):
         if inc_dec_expression.var != None:
             inc_dec_expression.var.accept(self, param)
         if inc_dec_expression.op == "++":
@@ -434,51 +434,51 @@ class CodeGenerator(ASTVisitor):
             self.write_to_script(" -= 1")
         return None
 
-    def visit_not_expression(self, not_expression: NotExpressionNode, param):
+    def visit_not_expression(self, not_expression: ast.NotExpressionNode, param):
         self.write_to_script("not ")
         if not_expression.expression != None:
             not_expression.expression.accept(self, param)
         return None
 
-    def visit_bit_not_expression(self, bit_not_expression: BitNotExpressionNode, param):
+    def visit_bit_not_expression(self, bit_not_expression: ast.BitNotExpressionNode, param):
         self.write_to_script("~ ")
         if bit_not_expression.expression != None:
             bit_not_expression.expression.accept(self, param)
         return None
 
-    def visit_int(self, int_node: IntNode, param):
+    def visit_int(self, int_node: ast.IntNode, param):
         self.write_to_script(int_node.value)
         return None
 
-    def visit_float(self, float_node: FloatNode, param):
+    def visit_float(self, float_node: ast.FloatNode, param):
         self.write_to_script(float_node.value)
         return None
 
-    def visit_hex(self, hex_node: HexNode, param):
+    def visit_hex(self, hex_node: ast.HexNode, param):
         self.write_to_script(hex_node.value)
         return None
 
-    def visit_octal(self, oct_node: OctalNode, param):
+    def visit_octal(self, oct_node: ast.OctalNode, param):
         self.write_to_script(oct_node.value)
         return None
 
-    def visit_binary(self, binary_node: BinaryNode, param):
+    def visit_binary(self, binary_node: ast.BinaryNode, param):
         self.write_to_script(binary_node.value)
         return None
 
-    def visit_char(self, char_node: CharNode, param):
+    def visit_char(self, char_node: ast.CharNode, param):
         self.write_to_script("'{}'".format(char_node.value))
         return None
 
-    def visit_string(self, string_node: StringNode, param):
+    def visit_string(self, string_node: ast.StringNode, param):
         self.write_to_script("String.String(\"{}\")".format(string_node.value))
         return None
 
-    def visit_boolean(self, boolean_node: BooleanNode, param):
+    def visit_boolean(self, boolean_node: ast.BooleanNode, param):
         self.write_to_script(boolean_node.value)
         return None
 
-    def visit_id(self, id_node: IDNode, param):
+    def visit_id(self, id_node: ast.IDNode, param):
         if param == None:
             self.write_to_script(id_node.value)
         else:
@@ -497,7 +497,7 @@ class CodeGenerator(ASTVisitor):
                     return id_node.value
         return None
 
-    def visit_function_call(self, function_call: FunctionCallNode, param):
+    def visit_function_call(self, function_call: ast.FunctionCallNode, param):
         if function_call.name != None:
             function_call.name.set_function_call(function_call)
             name = function_call.name.accept(self, self.FUNCTION_CALL)
@@ -509,14 +509,24 @@ class CodeGenerator(ASTVisitor):
                 else:
                     self.write_to_script(name)
         self.write_to_script("(")
-        for i in range(0, len(function_call.parameters)):
-            if i > 0:
-                self.write_to_script(", ")
-            function_call.parameters[i].accept(self, param)
-        self.write_to_script(")")
+        is_special = False
+        if isinstance(function_call.name, ast.IDNode):
+            if function_call.name.value == "random":
+                is_special = True
+                for i in range(len(function_call.parameters) - 1, -1, -1):
+                    function_call.parameters[i].accept(self, param)
+                    if i > 0:
+                        self.write_to_script(", ")
+                self.write_to_script(")")
+        if not is_special:
+            for i in range(0, len(function_call.parameters)):
+                if i > 0:
+                    self.write_to_script(", ")
+                function_call.parameters[i].accept(self, param)
+            self.write_to_script(")")
         return None
 
-    def visit_member_access(self, member_access: MemberAccessNode, param):
+    def visit_member_access(self, member_access: ast.MemberAccessNode, param):
         if member_access.element != None:
             elem = member_access.element.value
         if member_access.member != None:
@@ -532,16 +542,16 @@ class CodeGenerator(ASTVisitor):
                     break
         return None
 
-    def visit_return(self, return_p: ReturnNode, param):
+    def visit_return(self, return_p: ast.ReturnNode, param):
         self.write_to_script("return ")
         if return_p.expression != None:
             return_p.expression.accept(self, param)
 
-    def visit_break(self, break_p: BreakNode, param):
+    def visit_break(self, break_p: ast.BreakNode, param):
         self.write_to_script("break")
         return None
 
-    def visit_continue(self, continue_p: ContinueNode, param):
+    def visit_continue(self, continue_p: ast.ContinueNode, param):
         self.write_to_script("continue")
         return None
 
@@ -602,12 +612,12 @@ class CodeGenerator(ASTVisitor):
         self.script_tabs -= 1
         
 
-class FunctionDefiner(ASTVisitor):
+class FunctionDefiner(ast_visitor.ASTVisitor):
 
     def __init__(self) -> None:
         self.functions = {}
 
-    def visit_function(self, function: FunctionNode, param):
+    def visit_function(self, function: ast.FunctionNode, param):
         if not function.name in self.functions:
             self.functions[function.name] = [
                 {

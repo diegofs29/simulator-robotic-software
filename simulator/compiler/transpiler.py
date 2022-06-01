@@ -3,6 +3,7 @@ from compiler.ArduinoLexer import ArduinoLexer
 from compiler.ArduinoParser import ArduinoParser
 import compiler.ast_builder_visitor as ast_builder_visitor
 import compiler.error_listener as error_listener
+import compiler.warnings as warnings
 import compiler.semantical_errors as semantical_analysis
 import compiler.code_generator as code_generator
 import libraries.libraries as libraries
@@ -10,6 +11,7 @@ import libraries.libraries as libraries
 
 def transpile(code, robot):
     errors = []
+    warns = []
     input = InputStream(code)
 
     lexer = ArduinoLexer(input)
@@ -25,6 +27,7 @@ def transpile(code, robot):
     visitor = ast_builder_visitor.ASTBuilderVisitor()
 
     lib_manager = libraries.LibraryManager()
+    warning_analysis = warnings.WarningAnalyzer()
     sem_analysis = semantical_analysis.Semantic(lib_manager)
 
     code_gen = code_generator.CodeGenerator(lib_manager)
@@ -41,5 +44,7 @@ def transpile(code, robot):
         else:
             if len(errors) < 1:
                 code_gen.visit_program(ast, None)
-            
-    return errors
+                warning_analysis.visit_program(ast, None)
+                warns = warning_analysis.warnings
+
+    return warns, errors

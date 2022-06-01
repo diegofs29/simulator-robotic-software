@@ -20,6 +20,9 @@ def get_methods():
     methods["detach"] = ("void", "detach", [], -1)
     return methods
 
+def get_not_implemented():
+    return []
+
 
 
 class Servo:

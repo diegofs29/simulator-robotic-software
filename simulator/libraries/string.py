@@ -29,7 +29,7 @@ def get_methods():
     methods["length"] = ("int", "length", [], -1)
     methods["remove"] = ("void", "remove", ["int", "(int)"], -1)
     methods["replace"] = ("void", "replace", ["string", "string"], -1)
-    methods["reserve"] = ("void", "reserve", [], -1)
+    methods["reserve"] = ("void", "reserve", [], -1)    # not implemented
     methods["setCharAt"] = ("void", "set_char_at", ["int", "char"], -1)
     methods["startsWith"] = ("bool", "starts_with", ["string"], -1)
     methods["substring"] = ("string", "substring", ["int", "int"], -1)
@@ -41,6 +41,11 @@ def get_methods():
     methods["toUpperCase"] = ("string", "to_upper_case", [], -1)
     methods["trim"] = ("string", "trim", [], -1)
     return methods
+
+def get_not_implemented():
+    return [
+        "reserve"
+    ]
 
 
 class String:

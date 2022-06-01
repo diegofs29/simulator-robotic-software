@@ -70,6 +70,12 @@ class MainApplication(tk.Tk):
     def stop(self):
         self.controller.stop()
 
+    def editor_undo(self):
+        self.editor_frame.text.edit_undo()
+
+    def editor_redo(self):
+        self.editor_frame.text.edit_redo()
+
     def get_code(self):
         return self.editor_frame.text.get("1.0", tk.END)
 
@@ -536,7 +542,7 @@ class EditorFrame(tk.Frame):
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
-        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12))
+        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12), undo=True, autoseparators=True)
         self.line_bar = self.LineNumberBar(self, width=30, bg=BLUE, bd=0, highlightthickness=0)
         self.sb_x = tk.Scrollbar(self, orient=tk.HORIZONTAL,
                                  command=self.text.xview)
@@ -547,6 +553,7 @@ class EditorFrame(tk.Frame):
         self.text.insert(tk.END, "}\n\n")
         self.text.insert(tk.END, "void loop(){\n")
         self.text.insert(tk.END, "}")
+
         self.text.update_highlight()
         self.line_bar.attach(self.text)
         self.text.config(xscrollcommand=self.sb_x.set,
@@ -852,7 +859,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.editor_undo
         )
         self.redo_button = ImageButton(
             self.hist_frame,
@@ -864,7 +872,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.editor_redo
         )
         self.save_button = ImageButton(
             self.utils_frame,

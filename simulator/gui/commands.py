@@ -1,5 +1,6 @@
 import importlib
 import time
+import console.console as console
 import compiler.transpiler as transpiler
 import libraries.standard as standard
 import libraries.serial as serial
@@ -34,11 +35,18 @@ class Compile(Command):
         super().__init__(controller)
 
     def execute(self):
-        errors = transpiler.transpile(self.controller.get_code(), self.controller.robot_layer.robot)
+        warns, errors = transpiler.transpile(self.controller.get_code(), self.controller.robot_layer.robot)
+        if len(warns) > 0:
+            self.print_warnings(warns)
+            return True
         if len(errors) > 0:
             self.print_errors(errors)
             return False
         return True
+
+    def print_warnings(self, warnings):
+        for warning in warnings:
+            self.controller.console.write_warning(warning)
 
     def print_errors(self, errors):
         for error in errors:
@@ -61,7 +69,10 @@ class Setup(Command):
             not standard.state.exec_time_us > curr_time_ns / 1000 and
             not standard.state.exec_time_ms > curr_time_ns / 1000000
         ):
-            self.module.setup()
+            try:
+                self.module.setup()
+            except:
+                self.controller.console.write_error(console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
         return True
 
     def __import_module(self):
@@ -83,7 +94,10 @@ class Loop(Command):
             not standard.state.exec_time_ms > curr_time_ns / 1000000 and
             not standard.state.exited
         ):
-            self.module.loop()
+            try:
+                self.module.loop()
+            except:
+                self.controller.console.write_error(console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
 
     def __import_module(self):
         self.module = importlib.import_module('temp.script_arduino')

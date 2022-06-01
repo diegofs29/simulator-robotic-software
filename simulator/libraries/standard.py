@@ -98,7 +98,7 @@ def get_methods():
     methods["isWhiteSpace"] = ("bool", "is_whitespace", ["char"], -1)
     
     #Random Numbers
-    methods["random"] = ("long", "random", ["int, int"], -1) #Caution, inverse order for two params
+    methods["random"] = ("long", "random", ["int", "(int)"], -1) #Caution, inverse order for two params
     methods["randomSeed"] = ("void", "random_seed", [], -1) #Not implemented
 
     #Bits and bytes
@@ -121,6 +121,24 @@ def get_methods():
     #Others
     methods["exit"] = ('void', "exit", ["int"], -1)
     return methods
+
+def get_not_implemented():
+    return [
+        "analogReference",
+        "analogReadResolution",
+        "analogWriteResolution",
+        "noTone",
+        "pulseIn",
+        "pulseInLong",
+        "shiftIn",
+        "shiftOut",
+        "tone",
+        "randomSeed",
+        "attachInterrupt",
+        "detachInterrupt",
+        "interrupts",
+        "noInterrupts"
+    ]
 
 # Digital I/O
 def digital_read(pin):
