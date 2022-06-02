@@ -33,6 +33,7 @@ class Layer:
         Stops all the executing code and clears the canvas
         """
         self.drawing.empty_drawing()
+        self.hud.reboot()
         self.is_drawing = False
 
     def zoom_in(self):

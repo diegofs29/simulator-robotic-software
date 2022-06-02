@@ -1,6 +1,10 @@
+import re
 import tkinter as tk
+import tkinter.messagebox as messagebox
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 import tkinter.ttk as ttk
-import gui.model as model
+import gui.controller as controller
+import files.files_reader as files
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -29,9 +33,10 @@ class MainApplication(tk.Tk):
         self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
 
         self.identifier = None
-        self.model = model.RobotsModel(self)
-        self.prepare_model()
+        self.controller = controller.RobotsController(self)
+        self.prepare_controller()
         self.keys_used = True
+        self.file_manager = files.FileManager()
 
         self.config(menu=self.menu_bar)
         self.button_bar.pack(fill=tk.X, side="left")
@@ -55,24 +60,43 @@ class MainApplication(tk.Tk):
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
 
-    def prepare_model(self):
+    def prepare_controller(self):
         self.__update_robot() #call first so the robot_layer is created
-        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas) #call second so the canvas are initialized
-        self.model.configure_console(self.console_frame.console) #call third so the console is initialized
+        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas) #call second so the canvas are initialized
+        self.controller.configure_console(self.console_frame.console) #call third so the console is initialized
         self.__update_track() #call last so all the three elements that are configured before are initialized
         #if not, the track raises exception
 
     def execute(self):
         self.drawing_frame.canvas.focus_set()
-        self.model.execute()
+        self.controller.execute()
 
     def stop(self):
-        self.model.stop()
+        self.controller.stop()
+
+    def editor_undo(self):
+        self.editor_frame.text.edit_undo()
+
+    def editor_redo(self):
+        self.editor_frame.text.edit_redo()
+
+    def open_file(self):
+        self.editor_frame.text.delete("1.0", tk.END)
+        file = askopenfilename(filetypes=[("Arduino sketch", ".ino")])
+        content = self.file_manager.open(file)
+        for line in content:
+            self.editor_frame.text.insert(tk.END, f"{line}")
+
+    def save_file(self):
+        content = self.editor_frame.text.get("1.0", tk.END)
+        file = asksaveasfilename(defaultextension=".ino", filetypes=[("Arduino sketch", ".ino")])
+        if file != '':
+            self.file_manager.save(file, content)
 
     def get_code(self):
         return self.editor_frame.text.get("1.0", tk.END)
 
-    def open_pin_configuration(self):
+    def open_pin_configuration(self, event=None):
         """
         Top level window to configure pins connected to the
         Arduino board
@@ -81,34 +105,34 @@ class MainApplication(tk.Tk):
         PinConfigurationWindow(self, robot, self)
 
     def zoom_in(self):
-        self.model.zoom_in()
+        self.controller.zoom_in()
 
     def zoom_out(self):
-        self.model.zoom_out()
+        self.controller.zoom_out()
         
     def change_zoom_label(self, zoom_level):
         self.drawing_frame.change_zoom_label(zoom_level)
 
     def change_robot(self, event):
-        self.model.stop()
+        self.controller.stop()
         self.__update_robot()
         self.__update_track() #Needed to set the circuit of the layer
 
     def __update_robot(self):
         robot = self.selector_bar.robot_selector.current()
-        self.model.change_robot(robot)
-        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+        self.controller.change_robot(robot)
+        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
 
     def change_track(self, event):
-        self.model.stop()
+        self.controller.stop()
         self.__update_track()
 
     def __update_track(self):
         circuit = self.selector_bar.track_selector.current()
         robot = self.selector_bar.robot_selector.current()
         if robot == 0 or robot == 1:
-            self.model.change_circuit(circuit)
-        self.model.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+            self.controller.change_circuit(circuit)
+        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
 
     def show_circuit_selector(self, showing):
         if showing:
@@ -150,10 +174,14 @@ class MainApplication(tk.Tk):
             msg_filters['error'] = True
         else:
             msg_filters['error'] = False
-        self.model.filter_console(msg_filters)
+        self.controller.filter_console(msg_filters)
 
     def toggle_keys(self):
         self.keys_used = not self.keys_used
+
+    def close(self):
+        self.stop()
+        self.destroy()
 
 
 class PinConfigurationWindow(tk.Toplevel):
@@ -279,7 +307,7 @@ class PinConfigurationWindow(tk.Toplevel):
             value = self.entry_pin_joystick_y.get()
             if self.data['joystick_y'] != value:
                 pin_data['joystick_y'] = int(value)
-        self.application.model.save_pin_data(pin_data)
+        self.application.controller.save_pin_data(pin_data)
         self.destroy()
 
     def show_for_mobile2(self):
@@ -287,7 +315,7 @@ class PinConfigurationWindow(tk.Toplevel):
         Shows the window with the components needed to
         configure the mobile robot which has 2 light sensors
         """
-        self.data = self.application.model.get_pin_data()
+        self.data = self.application.controller.get_pin_data()
 
         self.lb_mobile.grid(row=0, column=0, sticky="w")
         self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
@@ -315,7 +343,7 @@ class PinConfigurationWindow(tk.Toplevel):
         Shows the window with the components needed to
         configure the mobile robot which has 4 light sensors
         """
-        self.data = self.application.model.get_pin_data()
+        self.data = self.application.controller.get_pin_data()
 
         self.lb_mobile.grid(row=0, column=0, sticky="w")
         self.lb_pin_servo1.grid(row=1, column=0, sticky="w")
@@ -349,7 +377,7 @@ class PinConfigurationWindow(tk.Toplevel):
         Shows the window with the components needed to
         configure the actuator
         """
-        self.data = self.application.model.get_pin_data()
+        self.data = self.application.controller.get_pin_data()
 
         self.lb_actuator.grid(row=0, column=0, sticky="w")
         self.lb_pin_bt1.grid(row=1, column=0, sticky="w")
@@ -377,18 +405,44 @@ class MenuBar(tk.Menu):
 
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Menu.__init__(self, parent, *args, **kwargs)
+        self.application = application
 
-        self.add_cascade(label="Archivo")
+        file_menu = tk.Menu(self, tearoff=0)
+        file_menu.add_command(label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
+        file_menu.add_command(label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
+        file_menu.add_separator()
+        file_menu.add_command(label="Salir", command=self.check_if_exit)
+        self.add_cascade(label="Archivo", menu=file_menu)
 
-        self.add_cascade(label="Editar")
+        edit_menu = tk.Menu(self, tearoff=0)
+        edit_menu.add_command(label="Deshacer", command=application.editor_undo, accelerator="Ctrl+Z")
+        edit_menu.add_command(label="Rehacer", command=application.editor_redo, accelerator="Ctrl+Y")
+        self.add_cascade(label="Editar", menu=edit_menu)
 
         conf_menu = tk.Menu(self, tearoff=0)
-        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration)
+        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration, accelerator="Ctrl+,")
         self.add_cascade(label="Configurar", menu=conf_menu)
 
-        self.add_cascade(label="Ver")
+        help_menu = tk.Menu(self, tearoff=0)
+        help_menu.add_command(label="Acerca de", command=self.show_about)
+        self.add_cascade(label="Ayuda", menu=help_menu)
 
-        self.add_cascade(label="Ayuda")
+        self.bind_all("<Control-,>", application.open_pin_configuration)
+    
+    def check_if_exit(self):
+        if messagebox.askyesno('Salir', '¿Seguro que quieres salir? Se perderá el sketch si no está guardado'):
+            self.application.close()
+
+    def show_about(self):
+        messagebox.showinfo('Simulador de Software para robots', 
+                str(
+                    'Aplicación realizada como trabajo de fin de grado.\n' + 
+                    'Autor: Diego Fernández Suárez\n' +
+                    'Tutor: Cristian González García\n' +
+                    'Versión actual: b-0.1'
+                )
+            )
+
 
 
 class DrawingFrame(tk.Frame):
@@ -460,9 +514,9 @@ class DrawingFrame(tk.Frame):
 
     def zoom(self, event):
         if event.delta == -120:
-            self.application.model.zoom_out()
+            self.application.controller.zoom_out()
         elif event.delta == 120:
-            self.application.model.zoom_in()
+            self.application.controller.zoom_in()
 
     def change_zoom_label(self, zoom_level):
         self.zoom_label.configure(text="{}%".format(zoom_level))
@@ -518,16 +572,16 @@ class JoystickFrame(tk.Frame):
         self.j_button.grid(row=1, column=5, padx=10)
 
     def __updatex(self, event):
-        self.application.model.update_joystick('dx', self.x_dir.get())
+        self.application.controller.update_joystick('dx', self.x_dir.get())
 
     def __updatey(self, event):
-        self.application.model.update_joystick('dy', self.y_dir.get())
+        self.application.controller.update_joystick('dy', self.y_dir.get())
 
     def __pressb(self, event):
-        self.application.model.update_joystick('button', 0)
+        self.application.controller.update_joystick('button', 0)
 
     def __releaseb(self, event):
-        self.application.model.update_joystick('button', 1)
+        self.application.controller.update_joystick('button', 1)
 
 
 class EditorFrame(tk.Frame):
@@ -535,7 +589,7 @@ class EditorFrame(tk.Frame):
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
-        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12))
+        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12), undo=True, autoseparators=True)
         self.line_bar = self.LineNumberBar(self, width=30, bg=BLUE, bd=0, highlightthickness=0)
         self.sb_x = tk.Scrollbar(self, orient=tk.HORIZONTAL,
                                  command=self.text.xview)
@@ -546,6 +600,8 @@ class EditorFrame(tk.Frame):
         self.text.insert(tk.END, "}\n\n")
         self.text.insert(tk.END, "void loop(){\n")
         self.text.insert(tk.END, "}")
+
+        self.text.update_highlight()
         self.line_bar.attach(self.text)
         self.text.config(xscrollcommand=self.sb_x.set,
                          yscrollcommand=self.sb_y.set)
@@ -569,9 +625,111 @@ class EditorFrame(tk.Frame):
         def __init__(self, *args, **kwargs):
             tk.Text.__init__(self, *args, **kwargs)
 
+            self.keywords = self.__get_keywords("assets/colors.txt")
+            self.comment_lines = []
+
             self._orig = self._w + "_orig"
             self.tk.call("rename", self._w, self._orig)
             self.tk.createcommand(self._w, self._proxy)
+            self.__create_tags()
+
+        def update_highlight(self):
+            def step():
+                i = 0
+                while True:
+                    keyword = self.keywords[i]
+                    if len(keyword) == 3:
+                        self.highlight_all_delimited(r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
+                    elif keyword[0][0] == '\\' or keyword[0][0:2] == '//':
+                        self.highlight_all(r'%s' % keyword[0], keyword[1])
+                    else:
+                        self.highlight_all(r'\b%s\b' % keyword[0], keyword[1])
+                    self.after(1, gen.__next__)
+                    i += 1
+                    if i == len(self.keywords):
+                        i = 0
+                    yield
+            gen = step()
+            gen.__next__()
+
+        def highlight_all(self, pattern, tag):
+            for match in self.search_re(pattern):
+                self.highlight(tag, match[0], match[1])
+
+        def highlight_all_delimited(self, pattern_s, pattern_e, tag):
+            for match in self.search_re_delimited(pattern_s, pattern_e):
+                self.highlight(tag, match[0], match[1])
+
+        def highlight(self, tag, start, end):
+            is_comment = False
+            for comm in self.comment_lines:
+                comm_start = tuple(map(int, comm[0].split('.')))
+                comm_end = tuple(map(int, comm[1].split('.')))
+                fl_start = tuple(map(int, start.split('.')))
+                fl_end = tuple(map(int, end.split('.')))
+                if (
+                    comm_start[0] <= fl_start[0] <= comm_end[0] and
+                    comm_start[0] <= fl_end[0] <= comm_end[0]
+                ):
+                    finished = False
+                    if comm_start[0] == fl_start[0] or comm_end[0] == fl_start[0]:
+                        if comm_start[1] < fl_start[1] < comm_end[1]:
+                            finished = True
+                    elif comm_start[0] == fl_end[0] or comm_end[0] == fl_end[0]:
+                        if comm_start[1] < fl_end[1] < comm_end[1]:
+                            finished = True
+                    else:
+                        finished = True
+                    if finished:
+                        is_comment = True
+                        break
+            if not is_comment:
+                self.__remove_tags(start, end)
+                self.tag_add(tag, start, end)
+
+        def search_re(self, pattern):
+            """
+            Uses the python re library to match patterns.
+
+            Arguments:
+                pattern - The pattern to match.
+            Return value:
+                A list of tuples containing the start and end indices of the matches.
+                e.g. [("0.4", "5.9"]
+            """
+            matches = []
+            text = self.get("1.0", tk.END).splitlines()
+            for i, line in enumerate(text):
+                for match in re.finditer(pattern, line):
+                    matches.append((f"{i + 1}.{match.start()}", f"{i + 1}.{match.end()}"))
+            return matches
+
+        def search_re_delimited(self, pattern_s, pattern_e):
+            """
+            Uses the python re library to match patterns.
+
+            Arguments:
+                pattern_s - The starting pattern to match.
+                pattern_e - The ending pattern to match.
+            Return value:
+                A list of tuples containing the start and end indices of the matches.
+                e.g. [("0.4", "5.9"]
+            """
+            matches = []
+            text = self.get("1.0", tk.END).splitlines()
+            start = end = -1
+            for i, line in enumerate(text):
+                for match in re.finditer(pattern_s, line):
+                    if start == -1:
+                        start = f"{i + 1}.{match.start()}"
+                for match in re.finditer(pattern_e, line):
+                    if end == -1:
+                        end = f"{i + 1}.{match.end()}"
+                if start != -1 and end != -1:
+                    matches.append((start, end))
+                    start = end = -1
+            self.comment_lines = matches
+            return matches
 
         def _proxy(self, *args):
             result = None
@@ -591,6 +749,38 @@ class EditorFrame(tk.Frame):
                 self.event_generate("<<Change>>", when="tail")
 
             return result
+
+        def __create_tags(self):
+            self.tag_configure("blue", foreground="#00979C")
+            self.tag_configure("strblue", foreground="#005C5F")
+            self.tag_configure("orange", foreground="#D35400")
+            self.tag_configure("green", foreground="#728E00")
+            self.tag_configure("gray", foreground="#95A5A6")
+            self.tag_configure("dark", foreground="#434F54")
+        
+        def __remove_tags(self, start, end):
+            self.tag_remove("blue", start, end)
+            self.tag_remove("orange", start, end)
+            self.tag_remove("green", start, end)
+            self.tag_remove("gray", start, end)
+            self.tag_remove("dark", start, end)
+
+        def __get_keywords(self, file_name):
+            keywords = []
+            file = open(file_name, "r")
+            lines = list(
+                filter(lambda line: line != '',
+                    map(lambda line: str(line).rstrip(), file.readlines())
+                )
+            )
+            for line in lines:
+                line_elems = line.split('\t')
+                if len(line_elems) == 2:
+                    keywords.append((line_elems[0], line_elems[1]))
+                elif len(line_elems) == 3:
+                    keywords.append((line_elems[0], line_elems[1], line_elems[2]))
+            return keywords
+
 
     class LineNumberBar(tk.Canvas):
 
@@ -666,7 +856,7 @@ class ConsoleFrame(tk.Frame):
         self.console_frame.pack(fill=tk.BOTH, expand=True)
     
     def __send_input(self):
-        self.application.model.send_input(self.input_entry.get())
+        self.application.controller.send_input(self.input_entry.get())
 
 
 class ButtonBar(tk.Frame):
@@ -716,7 +906,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.editor_undo
         )
         self.redo_button = ImageButton(
             self.hist_frame,
@@ -728,7 +919,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.editor_redo
         )
         self.save_button = ImageButton(
             self.utils_frame,
@@ -740,7 +932,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.save_file
         )
         self.import_button = ImageButton(
             self.utils_frame,
@@ -752,7 +945,8 @@ class ButtonBar(tk.Frame):
             },
             bg=kwargs["bg"],
             activebackground=DARK_BLUE,
-            bd=0
+            bd=0,
+            command=self.application.open_file
         )
 
         self.execute_button.set_tooltip_text(self.tooltip_hover, "Ejecutar")

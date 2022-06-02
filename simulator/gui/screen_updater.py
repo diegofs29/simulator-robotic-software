@@ -6,7 +6,7 @@ layer: layers.Layer = None
 last_update = 0
 view = None
 
-def update():
+def refresh():
     global layer
     global last_update
     global view

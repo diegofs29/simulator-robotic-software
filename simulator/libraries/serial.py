@@ -49,6 +49,26 @@ def get_methods():
     methods["serialEvent"] = ("void", "serial_event", [], -1) #Not implemented
     return methods
 
+def get_not_implemented():
+    return [
+        "if(Serial)",
+        "availableForWrite",
+        "end",
+        "find",
+        "findUntil",
+        "flush",
+        "parseFloat",
+        "parseInt",
+        "peek",
+        "readBytes",
+        "readBytesUntil",
+        "readString",
+        "readStringUntil",
+        "setTimeout",
+        "write",
+        "serialEvent"
+    ]
+
 def if_serial():
     """
     Not needed (not implemented)

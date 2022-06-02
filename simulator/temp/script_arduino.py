@@ -57,10 +57,13 @@ def setup():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	Serial.begin(9600)
 	standard.pin_mode(pinIrDer, 0)
 	standard.pin_mode(pinIrIzq, 0)
@@ -91,10 +94,13 @@ def loop():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	readIRSensor()
 	if scanPaths:
 		if (((irSensorValues[0] == NO_LINEA) and (irSensorValues[3] == NO_LINEA)) and ((irSensorValues[1] == LINEA) or (irSensorValues[2] == LINEA))):
@@ -104,7 +110,7 @@ def loop():
 		elif ((((irSensorValues[0] == LINEA) and (irSensorValues[1] == LINEA)) and (irSensorValues[2] == LINEA)) and (irSensorValues[3] == NO_LINEA)):
 			detectTurnLeft()
 		elif ((((irSensorValues[0] == NO_LINEA) and (irSensorValues[1] == LINEA)) and (irSensorValues[2] == LINEA)) and (irSensorValues[3] == LINEA)):
-			forwardMotor(EXTRA_FORWARD_TIME)
+			forwardMotor1(EXTRA_FORWARD_TIME)
 			readIRSensor()
 			memory.concat(RIGHT)
 			turnRight()
@@ -114,12 +120,12 @@ def loop():
 		if (((irSensorValues[0] == NO_LINEA) and (irSensorValues[3] == NO_LINEA)) and ((irSensorValues[1] == LINEA) or (irSensorValues[2] == LINEA))):
 			forward()
 		elif (((irSensorValues[0] == LINEA) or (irSensorValues[3] == LINEA)) and ((irSensorValues[1] == LINEA) and (irSensorValues[2] == LINEA))):
-			forwardMotor(EXTRA_FORWARD_TIME)
+			forwardMotor1(EXTRA_FORWARD_TIME)
 			match perfectPath[iteratorPath]:
 				case 'R':
 					turnRight()
 				case 'F':
-					forwardMotor(EXTRA_FORWARD_TIME)
+					forwardMotor1(EXTRA_FORWARD_TIME)
 				case 'L':
 					turnLeft()
 				case 'G':
@@ -151,10 +157,13 @@ def readIRSensor():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	irSensorValues[0] = standard.digital_read(pinIrIzqIzq)
 	irSensorValues[1] = standard.digital_read(pinIrIzq)
 	irSensorValues[2] = standard.digital_read(pinIrDer)
@@ -181,10 +190,13 @@ def forward():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	if ((standard.digital_read(pinIrIzq) == NO_LINEA) and (standard.digital_read(pinIrDer) == NO_LINEA)):
 		stopMotor()
 	elif ((standard.digital_read(pinIrIzq) == NO_LINEA) and (standard.digital_read(pinIrDer) == LINEA)):
@@ -217,10 +229,13 @@ def stopMotor():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	servoIzq.write(90)
 	servoDer.write(90)
 
@@ -245,10 +260,13 @@ def forwardMotor():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	servoIzq.write(0)
 	servoDer.write(180)
 
@@ -273,10 +291,13 @@ def forwardMotor1(xTime = 0):
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	forwardMotor()
 	standard.delay(xTime)
 	stopMotor()
@@ -302,10 +323,13 @@ def backwardMotor():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	servoIzq.write(180)
 	servoDer.write(0)
 
@@ -330,10 +354,13 @@ def backwardMotor1(xTime = 0):
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	backwardMotor()
 	standard.delay(xTime)
 
@@ -358,10 +385,13 @@ def turnAround():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	stopMotor()
 	memory.concat(BACKWARD)
 	servoIzq.write(0)
@@ -390,10 +420,13 @@ def detectTurnRight():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	stopMotor()
 	forwardMotor1(EXTRA_FORWARD_TIME)
 	stopMotor()
@@ -426,10 +459,13 @@ def turnRight():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	servoIzq.write(0)
 	servoDer.write(0)
 	standard.delay(QUARTER_BACK_TIME)
@@ -456,10 +492,13 @@ def detectTurnLeft():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	stopMotor()
 	forwardMotor1(EXTRA_FORWARD_TIME)
 	readIRSensor()
@@ -491,10 +530,13 @@ def turnLeft():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	servoIzq.write(180)
 	servoDer.write(180)
 	standard.delay(QUARTER_BACK_TIME)
@@ -521,10 +563,13 @@ def detectCrossOrGoal():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	stopMotor()
 	forwardMotor1(EXTRA_FORWARD_TIME)
 	readIRSensor()
@@ -556,10 +601,13 @@ def finish():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	stopMotor()
 	simplifyPath()
 	doPerfectPath()
@@ -586,10 +634,13 @@ def simplifyPath():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	startSize = memory.length()
 	oldMemory = memory.to_char_array(oldMemory, MEMORY_SPACE)
 	memory.replace(((RIGHT + BACKWARD) + RIGHT), FORWARD)
@@ -625,9 +676,12 @@ def doPerfectPath():
 	global pinIrDerDer
 	global pinServoDer
 	global pinServoIzq
+	global irSensorValues
 	global countGoal
 	global scanPaths
+	global perfectPath
 	global iteratorPath
 	global memory
+	global oldMemory
 	scanPaths = False
 	perfectPath = memory.to_char_array(perfectPath, MEMORY_SPACE)

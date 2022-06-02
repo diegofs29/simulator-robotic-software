@@ -29,7 +29,7 @@ def get_methods():
     methods["length"] = ("int", "length", [], -1)
     methods["remove"] = ("void", "remove", ["int", "(int)"], -1)
     methods["replace"] = ("void", "replace", ["string", "string"], -1)
-    methods["reserve"] = ("void", "reserve", [], -1)
+    methods["reserve"] = ("void", "reserve", [], -1)    # not implemented
     methods["setCharAt"] = ("void", "set_char_at", ["int", "char"], -1)
     methods["startsWith"] = ("bool", "starts_with", ["string"], -1)
     methods["substring"] = ("string", "substring", ["int", "int"], -1)
@@ -41,6 +41,11 @@ def get_methods():
     methods["toUpperCase"] = ("string", "to_upper_case", [], -1)
     methods["trim"] = ("string", "trim", [], -1)
     return methods
+
+def get_not_implemented():
+    return [
+        "reserve"
+    ]
 
 
 class String:
@@ -60,7 +65,7 @@ class String:
 
     def __add__(self, string):
         if isinstance(string, String):
-            return self.string + string.string
+            return String(self.string + string.string)
         return self.string + str(string)
 
     def __iadd__(self, string):
@@ -68,7 +73,7 @@ class String:
             self.string += string.string
         else:
             self.string += str(string)
-        return self.string
+        return String(self.string)
 
     def __lt__(self, string):
         return self.string < string.string
@@ -272,7 +277,7 @@ class String:
         return self.string[from_c: to_c] if to_c != -1 else self.string[from_c:]
 
 
-    def to_char_array(self):
+    def to_char_array(self, buf, len):
         """
         Copies the String’s characters to the supplied buffer.
         """
