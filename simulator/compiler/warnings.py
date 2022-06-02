@@ -43,7 +43,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         self.visit_children(function_call.parameters, param)
         f_name = ""
         if isinstance(function_call.name, ast.MemberAccessNode):
-            f_name = f"{function_call.name.element}.{function_call.name.member}"
+            f_name = function_call.name.member.value
         else:
             f_name = function_call.name.value
         message = ""

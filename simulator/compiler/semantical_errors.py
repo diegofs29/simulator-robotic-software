@@ -431,6 +431,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
 
         # Find function that is being called
         if isinstance(function_call.name, ast.MemberAccessNode):
+            function_call.name.element.set_function(function_call.function)
             function_call.name.accept(self, param)
             lib = function_call.name.element.value
             f_type = function_call.name.element.type
