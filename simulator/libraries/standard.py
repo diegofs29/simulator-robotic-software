@@ -5,7 +5,7 @@ at: https://www.arduino.cc/reference/en/
 
 import string
 import time
-import random
+import random as ran
 from math import cos, sin, sqrt, tan
 import robots.boards as boards
 import robots.robot_state as robot_state
@@ -151,7 +151,7 @@ def digital_read(pin):
     """
     if board.is_digital(pin):
         return board.read(pin)
-    return None
+    return ran.randint(0, 1)
 
 def digital_write(pin, value):
     """
@@ -193,7 +193,7 @@ def analog_read(pin):
     """
     if board.is_analog(pin):
         return board.read(pin)
-    return None
+    return ran.randint(0, 1023)
 
 def analog_reference():
     """
@@ -603,7 +603,7 @@ def random(max, min=0):
     Returns:
         The random number
     """
-    return random.randint(min, max - 1)
+    return ran.randint(min, max - 1)
 
 def random_seed():
     """

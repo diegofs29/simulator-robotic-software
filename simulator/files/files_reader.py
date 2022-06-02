@@ -11,7 +11,7 @@ class FileManager:
 
     def open(self, file):
         self.file = file
-        f = open(file)
+        f = open(file, encoding='utf-8')
         return f.readlines()
 
     def save(self, file=None, content=[]):

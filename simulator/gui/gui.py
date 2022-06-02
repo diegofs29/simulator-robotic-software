@@ -83,9 +83,10 @@ class MainApplication(tk.Tk):
     def open_file(self):
         self.editor_frame.text.delete("1.0", tk.END)
         file = askopenfilename(filetypes=[("Arduino sketch", ".ino")])
-        content = self.file_manager.open(file)
-        for line in content:
-            self.editor_frame.text.insert(tk.END, f"{line}")
+        if file != '':
+            content = self.file_manager.open(file)
+            for line in content:
+                self.editor_frame.text.insert(tk.END, f"{line}")
 
     def save_file(self):
         content = self.editor_frame.text.get("1.0", tk.END)

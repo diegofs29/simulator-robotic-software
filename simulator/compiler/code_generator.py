@@ -169,9 +169,6 @@ class CodeGenerator(ast_visitor.ASTVisitor):
             if nparams == len(function.args) + len(function.opt_args):
                 self.write_to_script("def {}".format(func['name']))
                 break
-        
-        if function.type != None:
-            function.type.accept(self, param)
 
         self.write_to_script("(")
         for arg in function.args:
