@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.messagebox as messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import tkinter.ttk as ttk
-import gui.controller as controller
+import graphics.controller as controller
 import files.files_reader as files
 
 DARK_BLUE = "#006468"

@@ -1,4 +1,4 @@
-import robots.boards as boards
+import robot_components.boards as boards
 
 def get_name():
     return "Servo"

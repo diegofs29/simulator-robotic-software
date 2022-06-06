@@ -1,6 +1,6 @@
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
-import console.console as console
+import output.console as console
 import libraries.serial as serial
 import libraries.servo as servo
 import libraries.standard as standard

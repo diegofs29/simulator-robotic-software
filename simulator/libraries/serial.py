@@ -4,8 +4,8 @@ the board and the computer (with the possibility of expansion
 into other devices not implemented)
 """
 
-import console.console as console
-import robots.boards as boards
+import output.console as console
+import robot_components.boards as boards
 
 
 OK = 0

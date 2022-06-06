@@ -6,7 +6,7 @@ import compiler.error_listener as error_listener
 import compiler.warnings as warnings
 import compiler.semantical_errors as semantical_analysis
 import compiler.code_generator as code_generator
-import libraries.libraries as libraries
+import libraries.libs as libraries
 
 
 def transpile(code, robot):

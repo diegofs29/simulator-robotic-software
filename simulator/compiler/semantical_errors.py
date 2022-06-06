@@ -1,5 +1,5 @@
-import libraries.libraries as libraries
-import console.console as console
+import libraries.libs as libraries
+import output.console as console
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 

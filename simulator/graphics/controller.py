@@ -1,7 +1,7 @@
-import gui.layers as layers
-import console.console as console
-import gui.commands as commands
-import gui.screen_updater as screen_updater
+import graphics.layers as layers
+import output.console as console
+import graphics.commands as commands
+import graphics.screen_updater as screen_updater
 
 
 class RobotsController:

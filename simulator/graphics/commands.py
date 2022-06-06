@@ -1,10 +1,10 @@
 import importlib
 import time
-import console.console as console
+import output.console as console
 import compiler.transpiler as transpiler
 import libraries.standard as standard
 import libraries.serial as serial
-import robots.robot_state as state
+import robot_components.robot_state as state
 
 
 class Command:
