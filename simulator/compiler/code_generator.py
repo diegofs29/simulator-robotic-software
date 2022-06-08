@@ -39,7 +39,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.write_endl()
         self.write_to_script("import libraries.string as String")
         self.write_endl()
-        self.write_to_script("import grapics.screen_updater as screen_updater")
+        self.write_to_script("import graphics.screen_updater as screen_updater")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)

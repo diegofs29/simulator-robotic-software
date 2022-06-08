@@ -1,6 +1,6 @@
 import graphics.layers as layers
 import output.console as console
-import graphics.commands as commands
+import compiler.commands as commands
 import graphics.screen_updater as screen_updater
 
 

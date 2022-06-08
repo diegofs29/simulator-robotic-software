@@ -1,10 +1,7 @@
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 import output.console as console
-import libraries.serial as serial
-import libraries.servo as servo
-import libraries.standard as standard
-import libraries.string as string
+import libraries.libs as libs
 
 
 class WarningAnalyzer(ast_visitor.ASTVisitor):
@@ -13,6 +10,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         self.warnings = []
         self.locals = {}
         self.globals = {}
+        self.lib_manager = libs.LibraryManager()
 
     def visit_declaration(self, declaration: ast.DeclarationNode, param):
         if declaration.type != None:
@@ -84,16 +82,9 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
                 lib_name = self.__lookfor_var(function_call.name.element.value, function_call.function).type.type_name
         else:
             f_name = function_call.name.value
-            lib_name = "standard"
-        message = ""
-        if lib_name == 'Serial' and f_name in serial.get_not_implemented():
-            message = f"La función {f_name} de Serial no está implementada, con lo que no cumplirá con su funcionalidad"
-        elif lib_name == 'Servo' and f_name in servo.get_not_implemented():
-            message = f"La función {f_name} de Servo no está implementada, con lo que no cumplirá con su funcionalidad"
-        elif lib_name == 'String' and f_name in string.get_not_implemented():
-            message = f"La función {f_name} de String no está implementada, con lo que no cumplirá con su funcionalidad"
-        elif lib_name == 'standard' and f_name in standard.get_not_implemented():
-            message = f"La función {f_name} de la librería standard no está implementada, con lo que no cumplirá con su funcionalidad"
+            lib_name = "Standard"
+        lib_name = lib_name[0].upper() + lib_name[1:]
+        message = self.lib_manager.not_implemented(lib_name, f_name)
         if message != "":
             self.warnings.append(console.Warning("No implementado", function_call.line, function_call.position, message))
         return None

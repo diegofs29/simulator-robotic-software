@@ -35,7 +35,7 @@ class Compile(Command):
         super().__init__(controller)
 
     def execute(self):
-        warns, errors = transpiler.transpile(self.controller.get_code(), self.controller.robot_layer.robot)
+        warns, errors = transpiler.transpile(self.controller.get_code())
         if len(errors) > 0:
             self.print_errors(errors)
             return False

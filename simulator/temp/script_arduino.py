@@ -67,19 +67,19 @@ def loop():
 		servoRight.write(0)
 	if ((((standard.digital_read(pinIrCentralIzq) == NO_LINE) and (standard.digital_read(pinIrCentralDer) == NO_LINE)) and (standard.digital_read(pinIrIzq) == NO_LINE)) and (standard.digital_read(pinIrDer) == NO_LINE)):
 		finCamino()
-	if (((standard.digital_read(pinIrCentralIzq) == LINE) and (standard.digital_read(pinIrCentralDer) == LINE)) and (standard.digital_read(pinIrDer) == LINE)):
-		servoLeft.write(0)
-		servoRight.write(0)
 	if (((standard.digital_read(pinIrCentralIzq) == LINE) and (standard.digital_read(pinIrCentralDer) == LINE)) and (standard.digital_read(pinIrIzq) == LINE)):
+		servoLeft.write(180)
+		servoRight.write(180)
+	if (((standard.digital_read(pinIrCentralIzq) == LINE) and (standard.digital_read(pinIrCentralDer) == LINE)) and (standard.digital_read(pinIrDer) == LINE)):
 		servoLeft.write(0)
 		servoRight.write(180)
 	if ((((standard.digital_read(pinIrCentralIzq) == LINE) and (standard.digital_read(pinIrCentralDer) == LINE)) and (standard.digital_read(pinIrIzq) == LINE)) and (standard.digital_read(pinIrDer) == LINE)):
 		servoLeft.write(0)
 		servoRight.write(180)
 		standard.delay(250)
-		servoLeft.write(20)
-		servoRight.write(20)
-		standard.delay(250)
+		servoLeft.write(180)
+		servoRight.write(180)
+		standard.delay(300)
 		if ((((standard.digital_read(pinIrCentralIzq) == LINE) and (standard.digital_read(pinIrCentralDer) == LINE)) and (standard.digital_read(pinIrIzq) == LINE)) and (standard.digital_read(pinIrDer) == LINE)):
 			servoLeft.write(0)
 			servoRight.write(180)
@@ -87,8 +87,8 @@ def loop():
 			servoLeft.write(90)
 			servoRight.write(90)
 			standard.delay(5000)
-		servoLeft.write(0)
-		servoRight.write(0)
+		servoLeft.write(180)
+		servoRight.write(180)
 
 def finCamino():
 	global NO_LINE

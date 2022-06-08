@@ -9,7 +9,7 @@ import compiler.code_generator as code_generator
 import libraries.libs as libraries
 
 
-def transpile(code, robot):
+def transpile(code):
     errors = []
     warns = []
     input = InputStream(code)

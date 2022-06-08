@@ -276,7 +276,7 @@ class ShortTypeNode(TypeNode):
         super().__init__()
 
     def accept(self, visitor, param):
-        return IntNode(0)
+        return visitor.visit_short_type()
 
     def default_array_value(self):
         return IntNode(0)

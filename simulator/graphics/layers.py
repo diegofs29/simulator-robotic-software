@@ -1,4 +1,3 @@
-import random
 import graphics.drawing as drawing
 import graphics.robot_drawings as robot_drawings
 import graphics.huds as huds
