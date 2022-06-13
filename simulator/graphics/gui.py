@@ -118,6 +118,9 @@ class MainApplication(tk.Tk):
         self.controller.stop()
         self.__update_robot()
         self.__update_track() #Needed to set the circuit of the layer
+        self.console_frame.console.config(state=tk.NORMAL)
+        self.console_frame.console.insert(tk.END, "Robot cambiado con éxito\n")
+        self.console_frame.console.config(state=tk.DISABLED)
 
     def __update_robot(self):
         robot = self.selector_bar.robot_selector.current()
@@ -409,6 +412,8 @@ class MenuBar(tk.Menu):
         self.application = application
 
         file_menu = tk.Menu(self, tearoff=0)
+        file_menu.add_command(label="Nuevo archivo", command=self.create_file, accelerator="Ctrl+O")
+        file_menu.add_separator()
         file_menu.add_command(label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
         file_menu.add_command(label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
         file_menu.add_separator()
@@ -429,6 +434,10 @@ class MenuBar(tk.Menu):
         self.add_cascade(label="Ayuda", menu=help_menu)
 
         self.bind_all("<Control-,>", application.open_pin_configuration)
+
+    def create_file(self):
+        if messagebox.askyesno('Nuevo archivo', '¿Seguro que quieres crear un nuevo archivo? Se perderá el sketch si no está guardado'):
+            self.application.editor_frame.create_file()
     
     def check_if_exit(self):
         if messagebox.askyesno('Salir', '¿Seguro que quieres salir? Se perderá el sketch si no está guardado'):
@@ -597,10 +606,7 @@ class EditorFrame(tk.Frame):
         self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL,
                                  command=self.text.yview)
 
-        self.text.insert(tk.END, "void setup(){\n")
-        self.text.insert(tk.END, "}\n\n")
-        self.text.insert(tk.END, "void loop(){\n")
-        self.text.insert(tk.END, "}")
+        self.create_file()
 
         self.text.update_highlight()
         self.line_bar.attach(self.text)
@@ -617,6 +623,13 @@ class EditorFrame(tk.Frame):
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+
+    def create_file(self):
+        self.text.delete("1.0", tk.END)
+        self.text.insert(tk.END, "void setup(){\n")
+        self.text.insert(tk.END, "}\n\n")
+        self.text.insert(tk.END, "void loop(){\n")
+        self.text.insert(tk.END, "}")
 
     def _on_change(self, event):
         self.line_bar.show_lines()

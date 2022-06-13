@@ -2,6 +2,7 @@ import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 import output.console as console
 import libraries.libs as libs
+import compiler.ast as ast
 
 
 class WarningAnalyzer(ast_visitor.ASTVisitor):
@@ -79,7 +80,11 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
             f_name = function_call.name.member.value
             lib_name = function_call.name.element.value
             if lib_name != 'Serial':
-                lib_name = self.__lookfor_var(function_call.name.element.value, function_call.function).type.type_name
+                lib_name = self.__lookfor_var(function_call.name.element.value, function_call.function).type
+                if isinstance(lib_name, ast.StringTypeNode):
+                    lib_name = 'String'
+                else:
+                    lib_name = lib_name.type_name
         else:
             f_name = function_call.name.value
             lib_name = "Standard"
