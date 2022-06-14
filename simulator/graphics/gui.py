@@ -5,6 +5,7 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 import tkinter.ttk as ttk
 import graphics.controller as controller
 import files.files_reader as files
+import subprocess
 
 DARK_BLUE = "#006468"
 BLUE = "#17a1a5"
@@ -430,6 +431,7 @@ class MenuBar(tk.Menu):
         self.add_cascade(label="Configurar", menu=conf_menu)
 
         help_menu = tk.Menu(self, tearoff=0)
+        help_menu.add_command(label="Manual de ayuda", command=self.__launch_help)
         help_menu.add_command(label="Acerca de", command=self.show_about)
         self.add_cascade(label="Ayuda", menu=help_menu)
 
@@ -437,6 +439,9 @@ class MenuBar(tk.Menu):
         self.bind_all("<Control-n>", self.create_file)
         self.bind_all("<Control-o>", application.open_file)
         self.bind_all("<Control-s>", application.save_file)
+
+    def __launch_help(self):
+        subprocess.Popen('manual-usuario.pdf', shell=True)
 
     def create_file(self, event=None):
         if messagebox.askyesno('Nuevo archivo', '¿Seguro que quieres crear un nuevo archivo? Se perderá el sketch si no está guardado'):
