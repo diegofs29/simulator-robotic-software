@@ -80,7 +80,7 @@ class MainApplication(tk.Tk):
     def editor_redo(self):
         self.editor_frame.text.edit_redo()
 
-    def open_file(self):
+    def open_file(self, event=None):
         self.editor_frame.text.delete("1.0", tk.END)
         file = askopenfilename(filetypes=[("Arduino sketch", ".ino")])
         if file != '':
@@ -88,7 +88,7 @@ class MainApplication(tk.Tk):
             for line in content:
                 self.editor_frame.text.insert(tk.END, f"{line}")
 
-    def save_file(self):
+    def save_file(self, event=None):
         content = self.editor_frame.text.get("1.0", tk.END)
         file = asksaveasfilename(defaultextension=".ino", filetypes=[("Arduino sketch", ".ino")])
         if file != '':
@@ -412,7 +412,7 @@ class MenuBar(tk.Menu):
         self.application = application
 
         file_menu = tk.Menu(self, tearoff=0)
-        file_menu.add_command(label="Nuevo archivo", command=self.create_file, accelerator="Ctrl+O")
+        file_menu.add_command(label="Nuevo archivo", command=self.create_file, accelerator="Ctrl+N")
         file_menu.add_separator()
         file_menu.add_command(label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
         file_menu.add_command(label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
@@ -434,8 +434,11 @@ class MenuBar(tk.Menu):
         self.add_cascade(label="Ayuda", menu=help_menu)
 
         self.bind_all("<Control-,>", application.open_pin_configuration)
+        self.bind_all("<Control-n>", self.create_file)
+        self.bind_all("<Control-o>", application.open_file)
+        self.bind_all("<Control-s>", application.save_file)
 
-    def create_file(self):
+    def create_file(self, event=None):
         if messagebox.askyesno('Nuevo archivo', '¿Seguro que quieres crear un nuevo archivo? Se perderá el sketch si no está guardado'):
             self.application.editor_frame.create_file()
     
