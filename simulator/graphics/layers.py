@@ -1,8 +1,7 @@
-import random
-import gui.drawing as drawing
-import gui.robot_drawings as robot_drawings
-import gui.huds as huds
-import robots.robots as robots
+import graphics.drawing as drawing
+import graphics.robot_drawings as robot_drawings
+import graphics.huds as huds
+import robot_components.robots as robots
 import files.files_reader as filesr
 
 class Layer:

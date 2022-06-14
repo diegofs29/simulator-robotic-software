@@ -1,10 +1,10 @@
 import importlib
 import time
-import console.console as console
+import output.console as console
 import compiler.transpiler as transpiler
 import libraries.standard as standard
 import libraries.serial as serial
-import robots.robot_state as state
+import robot_components.robot_state as state
 
 
 class Command:
@@ -35,13 +35,13 @@ class Compile(Command):
         super().__init__(controller)
 
     def execute(self):
-        warns, errors = transpiler.transpile(self.controller.get_code(), self.controller.robot_layer.robot)
-        if len(warns) > 0:
-            self.print_warnings(warns)
-            return True
+        warns, errors = transpiler.transpile(self.controller.get_code())
         if len(errors) > 0:
             self.print_errors(errors)
             return False
+        elif len(warns) > 0:
+            self.print_warnings(warns)
+            return True
         return True
 
     def print_warnings(self, warnings):
@@ -92,12 +92,13 @@ class Loop(Command):
         if (
             not standard.state.exec_time_us > curr_time_ns / 1000 and
             not standard.state.exec_time_ms > curr_time_ns / 1000000 and
-            not standard.state.exited
+            not standard.state.exited and self.controller.executing
         ):
             try:
                 self.module.loop()
             except:
                 self.controller.console.write_error(console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
+                self.controller.executing = False
 
     def __import_module(self):
         self.module = importlib.import_module('temp.script_arduino')

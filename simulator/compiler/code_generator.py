@@ -7,7 +7,7 @@ into a transpiler
 
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
-import libraries.libraries as libraries
+import libraries.libs as libraries
 
 
 class CodeGenerator(ast_visitor.ASTVisitor):
@@ -39,7 +39,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.write_endl()
         self.write_to_script("import libraries.string as String")
         self.write_endl()
-        self.write_to_script("import gui.screen_updater as screen_updater")
+        self.write_to_script("import graphics.screen_updater as screen_updater")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)
@@ -169,9 +169,6 @@ class CodeGenerator(ast_visitor.ASTVisitor):
             if nparams == len(function.args) + len(function.opt_args):
                 self.write_to_script("def {}".format(func['name']))
                 break
-        
-        if function.type != None:
-            function.type.accept(self, param)
 
         self.write_to_script("(")
         for arg in function.args:

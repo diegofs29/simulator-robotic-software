@@ -1,5 +1,5 @@
-import libraries.libraries as libraries
-import console.console as console
+import libraries.libs as libraries
+import output.console as console
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 
@@ -428,9 +428,11 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
     def visit_function_call(self, function_call: ast.FunctionCallNode, param):
         definition = func = None
         user_defined = found_func = False
+        implemented = True
 
         # Find function that is being called
         if isinstance(function_call.name, ast.MemberAccessNode):
+            function_call.name.element.set_function(function_call.function)
             function_call.name.accept(self, param)
             lib = function_call.name.element.value
             f_type = function_call.name.element.type
@@ -442,6 +444,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             method = function_call.name.member
             func = self.library_manager.find(lib, method.value)
             found_func = func != None
+            implemented = self.library_manager.not_implemented(lib, func) != ""
         else:
             method = function_call.name
             if function_call.name.value in self.functions:
@@ -453,6 +456,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                 func = self.library_manager.find(lib, method.value)
                 if func != None:
                     found_func = True
+                    implemented = self.library_manager.not_implemented(lib, func) != ""
         if not found_func:
             self.add_error("Declaración", function_call,
                         "La función no se ha declarado")
@@ -464,7 +468,8 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
 
         # Manage parameters
         if definition != None and function_call.parameters != None:
-            self.__check_parameters(function_call, definition, param)
+            if implemented:
+                self.__check_parameters(function_call, definition, param)
         return None
 
     def __check_parameters(self, function_call, definitions, param):

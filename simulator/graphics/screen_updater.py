@@ -1,5 +1,5 @@
 import time
-import gui.layers as layers
+import graphics.layers as layers
 
 
 layer: layers.Layer = None

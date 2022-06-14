@@ -6,7 +6,7 @@ from compiler.ast import *
 from compiler.ast_builder_visitor import ASTBuilderVisitor
 from compiler.error_listener import CompilerErrorListener
 from compiler.semantical_errors import Semantic
-from libraries.libraries import LibraryManager
+from libraries.libs import LibraryManager
 
 
 class TestBaseErrors(unittest.TestCase):

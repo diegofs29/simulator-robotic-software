@@ -1,4 +1,4 @@
-import gui.gui as gui
+import graphics.gui as gui
 
 def main():
     app = gui.MainApplication()
