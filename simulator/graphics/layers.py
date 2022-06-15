@@ -146,11 +146,11 @@ class MoblileRobotLayer(Layer):
             v = 0
             self.is_moving = False
         #Move or rotate
-        self.__hud_velocity()
         if not self.is_rotating:
             self.robot_drawing.move(v)
         if not self.is_moving:
             self.robot_drawing.change_angle(da)
+        self.__hud_velocity()
 
         #Overlapping check
         if self.circuit != None:
@@ -235,6 +235,14 @@ class MoblileRobotLayer(Layer):
                 v = v_i * 2
             if v_i < 0:
                 v = v_i * 2
+        if v != 0:
+            self.is_moving = True
+        else:
+            self.is_moving = False
+        if da != 0:
+            self.is_rotating = True
+        else:
+            self.is_rotating = False
         return v, da
 
     def __parse_circuit_opt(self, circuit_opt):

@@ -104,7 +104,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         if len(define_macro.elements) > 0:
             self.visit_array_elements(define_macro.elements, param)
         if define_macro.function == None:
-            self.globals.append[define_macro.macro_name]
+            self.globals.append(define_macro.macro_name)
         return None
     
     def visit_boolean_type(self, boolean_type: ast.BooleanTypeNode, param):
