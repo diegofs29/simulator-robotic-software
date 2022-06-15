@@ -444,7 +444,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             method = function_call.name.member
             func = self.library_manager.find(lib, method.value)
             found_func = func != None
-            implemented = self.library_manager.not_implemented(lib, func) != ""
+            implemented = self.__check_implemented(method.value, lib)
         else:
             method = function_call.name
             if function_call.name.value in self.functions:
@@ -456,7 +456,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                 func = self.library_manager.find(lib, method.value)
                 if func != None:
                     found_func = True
-                    implemented = self.library_manager.not_implemented(lib, func) != ""
+                    implemented = self.__check_implemented(method.value, lib)
         if not found_func:
             self.add_error("Declaración", function_call,
                         "La función no se ha declarado")
@@ -471,6 +471,13 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             if implemented:
                 self.__check_parameters(function_call, definition, param)
         return None
+
+    def __check_implemented(self, method, lib):
+        if method != None:
+            implemented = self.library_manager.not_implemented(lib, method) == ""
+        else:
+            implemented = False
+        return implemented
 
     def __check_parameters(self, function_call, definitions, param):
         n_params_correct = False
