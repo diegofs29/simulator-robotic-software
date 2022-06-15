@@ -259,59 +259,59 @@ class PinConfigurationWindow(tk.Toplevel):
         if 'servo_left' in self.data:
             value = self.entry_pin_se1.get()
             if self.data['servo_left'] != value:
-                pin_data['servo_left'] = int(value)
+                pin_data['servo_left'] = value
         if 'servo_right' in self.data:
             value = self.entry_pin_se2.get()
             if self.data['servo_right'] != value:
-                pin_data['servo_right'] = int(value)
+                pin_data['servo_right'] = value
         if 'light_mleft' in self.data:
             value = self.entry_pin_l1.get()
             if self.data['light_mleft'] != value:
-                pin_data['light_mleft'] = int(value)
+                pin_data['light_mleft'] = value
         if 'light_left' in self.data:
             value = self.entry_pin_l2.get()
             if self.data['light_left'] != value:
-                pin_data['light_left'] = int(value)
+                pin_data['light_left'] = value
         if 'light_right' in self.data:
             value = self.entry_pin_l3.get()
             if self.data['light_right'] != value:
-                pin_data['light_right'] = int(value)
+                pin_data['light_right'] = value
         if 'light_mright' in self.data:
             value = self.entry_pin_l4.get()
             if self.data['light_mright'] != value:
-                pin_data['light_mright'] = int(value)
+                pin_data['light_mright'] = value
         if 'sound_trig' in self.data:
             value = self.entry_pin_so1.get()
             if self.data['sound_trig'] != value:
-                pin_data['sound_trig'] = int(value)
+                pin_data['sound_trig'] = value
         if 'sound_echo' in self.data:
             value = self.entry_pin_so2.get()
             if self.data['sound_echo'] != value:
-                pin_data['sound_echo'] = int(value)
+                pin_data['sound_echo'] = value
         if 'button_left' in self.data:
             value = self.entry_pin_bt1.get()
             if self.data['button_left'] != value:
-                pin_data['button_left'] = int(value)
+                pin_data['button_left'] = value
         if 'button_right' in self.data:
             value = self.entry_pin_bt2.get()
             if self.data['button_right'] != value:
-                pin_data['button_right'] = int(value)
+                pin_data['button_right'] = value
         if 'servo' in self.data:
             value = self.entry_pin_aservo.get()
             if self.data['servo'] != value:
-                pin_data['servo'] = int(value)
+                pin_data['servo'] = value
         if 'button_joystick' in self.data:
             value = self.entry_pin_joystick.get()
             if self.data['button_joystick'] != value:
-                pin_data['button_joystick'] = int(value)
+                pin_data['button_joystick'] = value
         if 'joystick_x' in self.data:
             value = self.entry_pin_joystick_x.get()
             if self.data['joystick_x'] != value:
-                pin_data['joystick_x'] = int(value)
+                pin_data['joystick_x'] = value
         if 'joystick_y' in self.data:
             value = self.entry_pin_joystick_y.get()
             if self.data['joystick_y'] != value:
-                pin_data['joystick_y'] = int(value)
+                pin_data['joystick_y'] = value
         self.application.controller.save_pin_data(pin_data)
         self.destroy()
 

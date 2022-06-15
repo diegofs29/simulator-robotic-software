@@ -8,6 +8,7 @@ into a transpiler
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 import libraries.libs as libraries
+import os
 
 
 class CodeGenerator(ast_visitor.ASTVisitor):
@@ -28,11 +29,16 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.globals = []
         self.functions = {}
         self.function_visitor = FunctionDefiner()
+        try:
+            os.mkdir('temp')
+        except FileExistsError:
+            pass
+        open('temp/__init__.py', 'a').close()
     
     def visit_program(self, program: ast.ProgramNode, param):
         self.function_visitor.visit_program(program, param)
         self.functions = self.function_visitor.functions
-        self.script = open("simulator/temp/script_arduino.py", 'w')
+        self.script = open("temp/script_arduino.py", 'w')
         self.write_to_script("import libraries.standard as standard")
         self.write_endl()
         self.write_to_script("import libraries.serial as Serial")
@@ -98,7 +104,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         if len(define_macro.elements) > 0:
             self.visit_array_elements(define_macro.elements, param)
         if define_macro.function == None:
-            self.globals.append[define_macro.macro_name]
+            self.globals.append(define_macro.macro_name)
         return None
     
     def visit_boolean_type(self, boolean_type: ast.BooleanTypeNode, param):

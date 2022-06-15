@@ -80,11 +80,11 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
             f_name = function_call.name.member.value
             lib_name = function_call.name.element.value
             if lib_name != 'Serial':
-                lib_name = self.__lookfor_var(function_call.name.element.value, function_call.function).type
-                if isinstance(lib_name, ast.StringTypeNode):
+                name = function_call.name.element.type
+                if isinstance(name, ast.StringTypeNode):
                     lib_name = 'String'
                 else:
-                    lib_name = lib_name.type_name
+                    lib_name = name.type_name
         else:
             f_name = function_call.name.value
             lib_name = "Standard"
@@ -102,15 +102,3 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
                 self.locals[function.name] = {name: decl}
         else:
             self.globals[name] = decl
-
-    def __lookfor_var(self, name, function):
-        if function != None:
-            if function.name in self.locals:
-                if name in self.locals[function.name]:
-                    return self.locals[function.name][name]
-            elif name in self.globals:
-                return self.globals[name]
-        else:
-            if name in self.globals:
-                return self.globals[name]
-        return None

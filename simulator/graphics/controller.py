@@ -107,46 +107,46 @@ class RobotsController:
         self.__set_pins(robot, pin_data)
         if 'servo_left' in pin_data:
             robot.detach_servo_left()
-            robot.set_servo_left(pin_data['servo_left'])
+            robot.set_servo_left(robot.parse_pin(pin_data['servo_left']))
         if 'servo_right' in pin_data:
             robot.detach_servo_right()
-            robot.set_servo_right(pin_data['servo_right'])
+            robot.set_servo_right(robot.parse_pin(pin_data['servo_right']))
         if 'light_mleft' in pin_data:
             robot.detach_light_mleft()
-            robot.set_light_mleft(pin_data['light_mleft'])
+            robot.set_light_mleft(robot.parse_pin(pin_data['light_mleft']))
         if 'light_left' in pin_data:
             robot.detach_light_left()
-            robot.set_light_left(pin_data['light_left'])
+            robot.set_light_left(robot.parse_pin(pin_data['light_left']))
         if 'light_right' in pin_data:
             robot.detach_light_right()
-            robot.set_light_right(pin_data['light_right'])
+            robot.set_light_right(robot.parse_pin(pin_data['light_right']))
         if 'light_mright' in pin_data:
             robot.detach_light_mright()
-            robot.set_light_mright(pin_data['light_mright'])
+            robot.set_light_mright(robot.parse_pin(pin_data['light_mright']))
         if 'sound_trig' in pin_data:
             robot.detach_sound_trig()
-            robot.set_sound_trig(pin_data['sound_trig'])
+            robot.set_sound_trig(robot.parse_pin(pin_data['sound_trig']))
         if 'sound_echo' in pin_data:
             robot.detach_sound_echo()
-            robot.set_sound_echo(pin_data['sound_echo'])
+            robot.set_sound_echo(robot.parse_pin(pin_data['sound_echo']))
         if 'button_left' in pin_data:
             robot.detach_button_left()
-            robot.set_button_left(pin_data['button_left'])
+            robot.set_button_left(robot.parse_pin(pin_data['button_left']))
         if 'button_right' in pin_data:
             robot.detach_button_right()
-            robot.set_button_right(pin_data['button_right'])
+            robot.set_button_right(robot.parse_pin(pin_data['button_right']))
         if 'servo' in pin_data:
             robot.detach_servo()
-            robot.set_servo(pin_data['servo'])
+            robot.set_servo(robot.parse_pin(pin_data['servo']))
         if 'button_joystick' in pin_data:
             robot.detach_joystick_button()
-            robot.set_joystick_button(pin_data['button_joystick'])
+            robot.set_joystick_button(robot.parse_pin(pin_data['button_joystick']))
         if 'joystick_x' in pin_data:
             robot.detach_joystick_x()
-            robot.set_joystick_x(pin_data['joystick_x'])
+            robot.set_joystick_x(robot.parse_pin(pin_data['joystick_x']))
         if 'joystick_y' in pin_data:
             robot.detach_joystick_y()
-            robot.set_joystick_y(pin_data['joystick_y'])
+            robot.set_joystick_y(robot.parse_pin(pin_data['joystick_y']))
 
     def __detach_pins(self, robot, pin_data):
         """
