@@ -193,7 +193,7 @@ class Console:
         self.logger.write_log(m_type, message)
         self.messages.append((m_type, warning_msg.to_string()))
 
-    def filter_messages(self, *msg_types):
+    def filter_messages(self, msg_types):
         """
         Filters messages by type(s)
         Arguments:
@@ -210,7 +210,9 @@ class Console:
     def clear(self):
         self.text_widget.config(state=tk.NORMAL)
         self.text_widget.delete("1.0", tk.END) 
-        self.text_widget.config(state=tk.DISABLED)           
+        self.text_widget.config(state=tk.DISABLED)
+        self.messages = []
+        self.input_msgs = []     
 
     def __insert_text(self, message, tag='info'):
         """
