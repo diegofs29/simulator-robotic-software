@@ -222,3 +222,6 @@ class RobotsController:
 
     def get_code(self):
         return self.view.get_code()
+
+    def exit(self):
+        self.console.logger.close_log()

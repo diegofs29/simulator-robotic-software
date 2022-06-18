@@ -61,6 +61,7 @@ class MainApplication(tk.Tk):
 
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
+        self.protocol("WM_DELETE_WINDOW", self.close)
 
     def prepare_controller(self):
         self.__update_robot() #call first so the robot_layer is created
@@ -186,6 +187,7 @@ class MainApplication(tk.Tk):
         self.keys_used = not self.keys_used
 
     def close(self):
+        self.controller.exit()
         self.stop()
         self.destroy()
 
