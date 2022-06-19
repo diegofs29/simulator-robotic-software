@@ -55,7 +55,7 @@ class Compile(Command):
                 self.print_warnings(warns)
                 return True
             return True
-        except:
+        except Exception:
             self.controller.console.write_error(
                 console.Error("Error de compilación", 0, 0, "El sketch no se ha podido compilar correctamente"))
 
@@ -80,12 +80,12 @@ class Setup(Command):
             _import_module()
         curr_time_ns = time.time_ns()
         if (
-                not standard.state.exec_time_us > curr_time_ns / 1000 and
-                not standard.state.exec_time_ms > curr_time_ns / 1000000
+                not standard.state.exec_time_us > curr_time_ns / 1000
+                and not standard.state.exec_time_ms > curr_time_ns / 1000000
         ):
             try:
                 module.setup()
-            except:
+            except Exception:
                 self.controller.console.write_error(
                     console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
         return True
@@ -102,13 +102,13 @@ class Loop(Command):
             self.prepare_exec()
         curr_time_ns = time.time_ns()
         if (
-                not standard.state.exec_time_us > curr_time_ns / 1000 and
-                not standard.state.exec_time_ms > curr_time_ns / 1000000 and
-                not standard.state.exited and self.controller.executing
+                not standard.state.exec_time_us > curr_time_ns / 1000
+                and not standard.state.exec_time_ms > curr_time_ns / 1000000
+                and not standard.state.exited and self.controller.executing
         ):
             try:
                 module.loop()
-            except:
+            except Exception:
                 self.controller.console.write_error(
                     console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
                 self.controller.executing = False

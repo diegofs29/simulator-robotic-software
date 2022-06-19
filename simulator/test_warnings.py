@@ -71,9 +71,12 @@ class TestWarnings(TestBase):
         self.assertEqual("No implementado", self.warns[5].r_type)
 
     def test_error_msg(self):
-        self.assertEqual("No es recomendable el uso de bucles (do while), aunque sea correcto", self.warns[0].message)
-        self.assertEqual("No es recomendable el uso de bucles (for), aunque sea correcto", self.warns[1].message)
-        self.assertEqual("No es recomendable el uso de bucles (while), aunque sea correcto", self.warns[2].message)
+        self.assertEqual(
+            "No es recomendable el uso de bucles (do while), aunque sea correcto", self.warns[0].message)
+        self.assertEqual(
+            "No es recomendable el uso de bucles (for), aunque sea correcto", self.warns[1].message)
+        self.assertEqual(
+            "No es recomendable el uso de bucles (while), aunque sea correcto", self.warns[2].message)
         self.assertEqual(
             "La función reserve de String no está implementada, con lo que no cumplirá con su funcionalidad",
             self.warns[3].message)

@@ -86,7 +86,7 @@ def if_serial():
 
 def available():
     """
-    Get the number of bytes (characters) available for reading from 
+    Get the number of bytes (characters) available for reading from
     the serial port
     Returns:
         The number of bytes available to read

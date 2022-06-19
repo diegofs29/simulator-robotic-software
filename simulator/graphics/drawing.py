@@ -45,7 +45,7 @@ class Drawing:
         Arguments:
             element: a dict whose content is the x and y
             coordinates and the image (as Image instance)
-            group: the tag where the image is going to 
+            group: the tag where the image is going to
             be added to
         """
         image = self.__open_image(element["image"], group)
@@ -57,7 +57,7 @@ class Drawing:
         Arguments:
             element: a dict whose content is the x and y
             coordinates and the image (as Image instance)
-            group: the tag where the image is going to 
+            group: the tag where the image is going to
             be added to
         """
         self.canvas.delete(group)
@@ -121,7 +121,7 @@ class Drawing:
         Arguments:
             form: a dictionary whose elements are the x and y
             coordinates, the width and height of the bounding of
-            the arc, the width of the arc, the angle of the arc 
+            the arc, the width of the arc, the angle of the arc
             and the group (tag of tkinter)
         """
         x = int(form["x"] * self.scale)
@@ -203,7 +203,7 @@ class Drawing:
 
     def __open_image(self, image_path, group):
         image = None
-        if not group in self.images:
+        if group not in self.images:
             image = self.__get_image(image_path, group)
         elif not self.images[group]["path"] == image_path:
             image = self.__get_image(image_path, group)

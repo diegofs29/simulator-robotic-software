@@ -294,12 +294,14 @@ class TestFunctionCall(TestBaseAST):
 
     def test_name(self):
         self.assertEqual(self.code[0].function.sentences[0].name.value, "f")
-        self.assertEqual(self.code[0].function.sentences[1].name.value, "print")
+        self.assertEqual(
+            self.code[0].function.sentences[1].name.value, "print")
         self.assertEqual(
             self.code[0].function.sentences[2].name.member.value, "toUpperCase")
         self.assertEqual(
             self.code[0].function.sentences[3].name.member.value, "toLowerCase")
-        self.assertEqual(self.code[0].function.sentences[4].name.value, "params")
+        self.assertEqual(
+            self.code[0].function.sentences[4].name.value, "params")
 
     def test_parameters(self):
         self.assertEqual(
@@ -339,12 +341,18 @@ class TestFunctionCall(TestBaseAST):
         )
 
     def test_clase(self):
-        self.assertEqual(type(self.code[0].function.sentences[0]), FunctionCallNode)
-        self.assertEqual(type(self.code[0].function.sentences[1]), FunctionCallNode)
-        self.assertEqual(self.code[0].function.sentences[2].name.element.value, "mensaje")
-        self.assertEqual(self.code[0].function.sentences[3].name.element.element.value, "persona")
-        self.assertEqual(self.code[0].function.sentences[3].name.element.member.value, "nombre")
-        self.assertEqual(type(self.code[0].function.sentences[4]), FunctionCallNode)
+        self.assertEqual(
+            type(self.code[0].function.sentences[0]), FunctionCallNode)
+        self.assertEqual(
+            type(self.code[0].function.sentences[1]), FunctionCallNode)
+        self.assertEqual(
+            self.code[0].function.sentences[2].name.element.value, "mensaje")
+        self.assertEqual(
+            self.code[0].function.sentences[3].name.element.element.value, "persona")
+        self.assertEqual(
+            self.code[0].function.sentences[3].name.element.member.value, "nombre")
+        self.assertEqual(
+            type(self.code[0].function.sentences[4]), FunctionCallNode)
 
 
 class TestConditionals(TestBaseAST):
@@ -395,7 +403,7 @@ class TestConditionals(TestBaseAST):
             self.code[0].function.sentences[1].else_expr[0].name.value, "print"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None, True
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0] is not None, True
         )
         self.assertEqual(
             self.code[0].function.sentences[2].else_expr[0].else_expr[0].name.value, "prueba"
@@ -869,11 +877,11 @@ class TestBoolean(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[6].right.value, False)
         sent = self.code[0].function.sentences[7].right
         self.assertEqual(
-            str(sent.left.left.value) + sent.left.op +
-            str(sent.left.right.value)
+            str(sent.left.left.value) + sent.left.op
+            + str(sent.left.right.value)
             + sent.op
-            + str(sent.right.left.value) + sent.right.op +
-            str(sent.right.right.value),
+            + str(sent.right.left.value) + sent.right.op
+            + str(sent.right.right.value),
             "y!=0&&z<w"
         )
 

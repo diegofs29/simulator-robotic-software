@@ -10,7 +10,7 @@ class Element:
         """
         Gets the value (digital or analog) of the element
         Arguments:
-            pin: the pin to read (only needed in case the 
+            pin: the pin to read (only needed in case the
             element uses 2 or more pins)
         Returns:
             The value of the element

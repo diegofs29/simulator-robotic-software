@@ -105,9 +105,9 @@ class ArrayDeclarationNode(Sentence):
         self.elements = elements
         self.is_const = is_const
         self.is_static = is_static
-        if not (len(self.size) < 1 and (self.elements == [] or self.elements == None)):
+        if not (len(self.size) < 1 and (self.elements == [] or self.elements is None)):
             self.__fix_array()
-        if self.elements == None:
+        if self.elements is None:
             self.elements = []
 
     def accept(self, visitor, param):
@@ -116,7 +116,7 @@ class ArrayDeclarationNode(Sentence):
     def __fix_array(self):
         if len(self.size) < self.dimensions:
             self.__fix_size()
-        if self.elements != None:
+        if self.elements is not None:
             self.elements = self.__organize_array_elements(self.elements)
 
     def __fix_size(self):

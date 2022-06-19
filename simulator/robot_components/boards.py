@@ -47,7 +47,7 @@ class Board:
     def check_type(self, pin, type):
         """
         Checks if a pin is of the requested type
-        Arguments: 
+        Arguments:
             pin: the pin to check
             type: the requested type
         Returns:
@@ -104,10 +104,10 @@ class Board:
             True if attached, False if else
         """
         if (
-                pin in self.pins["analog"] or
-                pin in self.pins["digital"] or
-                pin in self.pins["txrx"]
-        ) and not pin in self.used_pins:
+                pin in self.pins["analog"]
+                or pin in self.pins["digital"]
+                or pin in self.pins["txrx"]
+        ) and pin not in self.used_pins:
             self.used_pins[pin] = {
                 "element": elem,
                 "mode": self.INPUT
@@ -200,7 +200,7 @@ class ArduinoUno(Board):
     def __init__(self):
         """
         Constructor for Arduino Uno board.
-        Includes the following pins as stated at: 
+        Includes the following pins as stated at:
         https://docs.arduino.cc/tutorials/uno-rev3/intro-to-board
         - Pins 2-13 are digital
         - Pins A0-A5 are analog
@@ -218,7 +218,7 @@ class BQzumBT328(Board):
     def __init__(self):
         """
         Constructor for Arduino Uno board.
-        Includes the following pins as stated at: 
+        Includes the following pins as stated at:
         https://aiglesias.com/?p=7314 (Spanish)
         - Pins 2-13 are digital
         - Pins A0-A5 are analog

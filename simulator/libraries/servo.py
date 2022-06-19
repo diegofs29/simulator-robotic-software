@@ -60,15 +60,15 @@ class Servo:
             pin: the number of the pin to be attached to
             min: pulse width corresponging with the minimun angle on
             the servo (default = 544)
-            max: pulse width corresponging with the max angel on the 
+            max: pulse width corresponging with the max angel on the
             the servo (default = 2400)
         Returns:
             OK if servo attached to pin correctly, ERROR if else
         """
         servo = None
-        if self.board != None:
+        if self.board is not None:
             servo = self.board.get_pin_element(pin)
-        if servo != None:
+        if servo is not None:
             self.servo = servo
             servo.min = min
             servo.max = max
@@ -97,7 +97,7 @@ class Servo:
             servo: the servo to write to
             us: the value of the parameter in microseconds (int)
         """
-        if self.servo != None:
+        if self.servo is not None:
             self.servo.value = us
             return self.OK
         return self.ERROR
@@ -110,7 +110,7 @@ class Servo:
         Returns:
             The angle of the servo from 0 to 180 degrees
         """
-        if self.servo != None:
+        if self.servo is not None:
             return self.servo.value
         return None
 
@@ -122,7 +122,7 @@ class Servo:
         Returns:
             True if attached to pin, False if else
         """
-        if self.servo != None:
+        if self.servo is not None:
             return self.servo.pin != -1
         return False
 
@@ -132,7 +132,7 @@ class Servo:
         Arguments:
             servo: the servo to detach
         """
-        if self.servo != None:
+        if self.servo is not None:
             self.servo.pin = -1
             return self.OK
         return self.ERROR

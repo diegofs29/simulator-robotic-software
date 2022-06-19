@@ -15,9 +15,9 @@ class FileManager:
         return f.readlines()
 
     def save(self, file=None, content=[]):
-        if file != None:
+        if file is not None:
             self.file = file
-        if self.file != None:
+        if self.file is not None:
             f = open(self.file, "w")
             f.write("%s\n" % content)
 

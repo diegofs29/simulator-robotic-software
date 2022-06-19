@@ -56,7 +56,7 @@ class RobotsController:
         self.console = console.Console(text_component)
 
     def change_robot(self, option):
-        if self.robot_layer != None:
+        if self.robot_layer is not None:
             self.stop()
         if option == 0:
             self.view.show_circuit_selector(True)
@@ -72,7 +72,7 @@ class RobotsController:
             self.robot_layer = layers.LinearActuatorLayer()
 
     def change_circuit(self, option):
-        if self.robot_layer != None:
+        if self.robot_layer is not None:
             self.stop()
         if isinstance(self.robot_layer, layers.MoblileRobotLayer):
             self.robot_layer.set_circuit(option)

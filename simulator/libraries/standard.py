@@ -324,7 +324,7 @@ def delay_microseconds(us):
 
 def micros():
     """
-    Returns the number of microseconds since the Arduino board 
+    Returns the number of microseconds since the Arduino board
     began running the current program
     """
     now = time.time()
@@ -334,7 +334,7 @@ def micros():
 
 def millis():
     """
-    Returns the number of milliseconds since the Arduino board 
+    Returns the number of milliseconds since the Arduino board
     began running the current program
     """
     now = time.time()
@@ -501,7 +501,7 @@ def is_alpha(this_char: str):
 
 def is_alpha_numeric(this_char: str):
     """
-    Analyse if a char is alphanumeric (that is a letter 
+    Analyse if a char is alphanumeric (that is a letter
     or a number)
     Arguments:
         this_char: the char to analyse
@@ -567,9 +567,9 @@ def is_hexadecimal_digit(this_char: str):
         True if hexadecimal, False if else
     """
     return (
-        '0' <= this_char <= '9' or
-        'a' <= this_char <= 'f' or
-        'A' <= this_char <= 'F'
+        '0' <= this_char <= '9'
+        or 'a' <= this_char <= 'f'
+        or 'A' <= this_char <= 'F'
     )
 
 
@@ -617,12 +617,12 @@ def is_space(this_char: str):
         True if white space, False if else
     """
     return (
-        this_char == '\f' or
-        this_char == '\n' or
-        this_char == '\r' or
-        this_char == '\t' or
-        this_char == '\v' or
-        this_char == ' '
+        this_char == '\f'
+        or this_char == '\n'
+        or this_char == '\r'
+        or this_char == '\t'
+        or this_char == '\v'
+        or this_char == ' '
     )
 
 

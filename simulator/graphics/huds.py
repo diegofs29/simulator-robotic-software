@@ -74,7 +74,7 @@ class MobileHUD(HUD):
     def __display_wheels(self, i, vel):
         """
         Displays arrows in the direction that the wheels are moving
-        and with a color that represents their velocity (blue fast, 
+        and with a color that represents their velocity (blue fast,
         yellow medium, red slow).
         Arguments:
             i: the index of the wheel
@@ -179,7 +179,7 @@ class ActuatorHUD(HUD):
 
     def set_direction(self, vel):
         """
-        Draws the direction arrows with the information 
+        Draws the direction arrows with the information
         of the velocity
         """
         self.canvas.delete('arr_img')

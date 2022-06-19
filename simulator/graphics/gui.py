@@ -539,12 +539,11 @@ class MenuBar(tk.Menu):
     def show_about(self, event=None):
         messagebox.showinfo('Simulador de Software para robots',
                             str(
-                                'Aplicación realizada como trabajo de fin de grado.\n' +
-                                'Autor: Diego Fernández Suárez\n' +
-                                'Tutor: Cristian González García\n' +
-                                'Versión actual: b-0.4'
-                            )
-                            )
+                                'Aplicación realizada como trabajo de fin de grado.\n'
+                                + 'Autor: Diego Fernández Suárez\n'
+                                + 'Tutor: Cristian González García\n'
+                                + 'Versión actual: b-0.4'
+                            ))
 
 
 class DrawingFrame(tk.Frame):
@@ -794,8 +793,8 @@ class EditorFrame(tk.Frame):
                 fl_start = tuple(map(int, start.split('.')))
                 fl_end = tuple(map(int, end.split('.')))
                 if (
-                        comm_start[0] <= fl_start[0] <= comm_end[0] and
-                        comm_start[0] <= fl_end[0] <= comm_end[0]
+                        comm_start[0] <= fl_start[0] <= comm_end[0]
+                        and comm_start[0] <= fl_end[0] <= comm_end[0]
                 ):
                     finished = False
                     if comm_start[0] == fl_start[0] or comm_end[0] == fl_start[0]:
@@ -866,13 +865,12 @@ class EditorFrame(tk.Frame):
             except Exception:
                 return result
 
-            if (args[0] in ("insert", "replace", "delete") or
-                args[0:3] == ("mark", "set", "insert") or
-                args[0:2] == ("xview", "moveto") or
-                args[0:2] == ("xview", "scroll") or
-                args[0:2] == ("yview", "moveto") or
-                args[0:2] == ("yview", "scroll")
-                ):
+            if (args[0] in ("insert", "replace", "delete")
+                    or args[0:3] == ("mark", "set", "insert")
+                    or args[0:2] == ("xview", "moveto")
+                    or args[0:2] == ("xview", "scroll")
+                    or args[0:2] == ("yview", "moveto")
+                    or args[0:2] == ("yview", "scroll")):
                 self.event_generate("<<Change>>", when="tail")
 
             return result

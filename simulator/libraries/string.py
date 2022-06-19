@@ -107,9 +107,9 @@ class String:
 
     def compare_to(self, string):
         """
-        Compares two Strings, testing whether one comes 
-        before or after the other, or whether they’re equal. 
-        The strings are compared character by character, 
+        Compares two Strings, testing whether one comes
+        before or after the other, or whether they’re equal.
+        The strings are compared character by character,
         using the ASCII values
         Arguments:
             string: the string to compare to
@@ -172,9 +172,9 @@ class String:
 
     def index_of(self, val, from_c=0):
         """
-        Locates a character or String within another String. By default, 
-        searches from the beginning of the String, but can also start 
-        from a given index, allowing for the locating of all instances 
+        Locates a character or String within another String. By default,
+        searches from the beginning of the String, but can also start
+        from a given index, allowing for the locating of all instances
         of the character or String.
         Arguments:
             val: the value to search for (char)
@@ -185,9 +185,9 @@ class String:
 
     def last_index_of(self, val, from_c=-1):
         """
-        Locates a character or String within another String. By default, 
-        searches from the end of the String, but can also work backwards 
-        from a given index, allowing for the locating of all instances 
+        Locates a character or String within another String. By default,
+        searches from the end of the String, but can also work backwards
+        from a given index, allowing for the locating of all instances
         of the character or String.
         Arguments:
             val: the value to search for (char)
@@ -204,8 +204,8 @@ class String:
 
     def remove(self, index, count=-1):
         """
-        Modify in place a String removing chars from the provided 
-        index to the end of the String or from the provided index 
+        Modify in place a String removing chars from the provided
+        index to the end of the String or from the provided index
         to index plus count.
         Arguments:
             index: the position of start (0-indexed)
@@ -219,8 +219,8 @@ class String:
 
     def replace(self, substring1, substring2):
         """
-        Replaces all instances of a given character with another character. 
-        You can also use replace to replace substrings of a String 
+        Replaces all instances of a given character with another character.
+        You can also use replace to replace substrings of a String
         with a different substring.
         Arguments:
             substring1: a string to be replaced

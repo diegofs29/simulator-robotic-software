@@ -335,7 +335,7 @@ class MobileRobotDrawing(RobotDrawing):
         """
         Changes robot's angle when turning
         Arguments:
-            d_angle: the number of degrees that the robot 
+            d_angle: the number of degrees that the robot
             is going to rotate. Can be + or -
         """
         self.vl = -d_angle * 50
@@ -495,7 +495,7 @@ class MobileRobotDrawing(RobotDrawing):
                     y: the y coordinate
                     image: the image to represent
             """
-            if self.img_shown != None:
+            if self.img_shown is not None:
                 return {
                     "x": self.x,
                     "y": self.y,
@@ -869,13 +869,11 @@ class Circuit:
             """
             return (
                 (
-                    x >= self.x and
-                    x <= self.x + self.width
-                )
-                and
-                (
-                    y >= self.y and
-                    y <= self.y + self.height
+                    x >= self.x
+                    and x <= self.x + self.width
+                ) and (
+                    y >= self.y
+                    and y <= self.y + self.height
                 )
             )
 
@@ -928,12 +926,14 @@ class Circuit:
             r_in = self.radius - (self.track_width / 2)
             r_out = self.radius + (self.track_width / 2)
 
-            dist = sqrt(((x - self.center[0]) ** 2) +
-                        ((y - self.center[1]) ** 2))
+            dist = sqrt(
+                ((x - self.center[0]) ** 2)
+                + ((y - self.center[1]) ** 2)
+            )
 
             inside_arc = (
-                dist >= r_in and
-                dist <= r_out
+                dist >= r_in
+                and dist <= r_out
             )
 
             if inside_arc:
@@ -947,8 +947,8 @@ class Circuit:
                 if end_angle == 0:
                     end_angle = 360
                 return (
-                    inside_angle and
-                    self.starting_angle <= inside_angle <= end_angle
+                    inside_angle
+                    and self.starting_angle <= inside_angle <= end_angle
                 )
             return False
 
@@ -996,7 +996,7 @@ class Obstacle:
             sx: the x coordinate of the sensor
             sy: the y coordinate of the sensor
             angle: the angle of the line (from ox)
-        Returns: 
+        Returns:
             True if is detected, False if else
         """
         # Abs coords of obstacle
@@ -1020,11 +1020,12 @@ class Obstacle:
             dist_y1 = "inf"
             dist_y2 = "inf"
 
-        #print("Dist x1: {}, dist x2: {}, dist y1: {}, dist y2: {}".format(dist_x1, dist_x2, dist_y1, dist_y2))
-
         # Point distance
-        def dy(d, r): return int(-sin(r) * d)
-        def dx(d, r): return int(cos(r) * d)
+        def dy(d, r):
+            return int(-sin(r) * d)
+
+        def dx(d, r):
+            return int(cos(r) * d)
 
         dist = -1
 
@@ -1063,6 +1064,6 @@ class Obstacle:
             True if inbounds, False if else
         """
         return (
-            self.x <= x <= (self.x + self.width) and
-            self.y <= y <= (self.y + self.height)
+            self.x <= x <= (self.x + self.width)
+            and self.y <= y <= (self.y + self.height)
         )

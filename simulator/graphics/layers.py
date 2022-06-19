@@ -139,12 +139,12 @@ class MoblileRobotLayer(Layer):
 
         future_p = self.robot_drawing.predict_movement(v)
         if (
-                v == 0 or
-                future_p[0] <= self.robot_drawing.width / 2 or
-                future_p[0] >= self.robot_drawing.drawing_width - self.robot_drawing.width / 2 or
-                future_p[1] <= self.robot_drawing.height / 2 or
-                future_p[1] >= self.robot_drawing.drawing_height - self.robot_drawing.height / 2 or
-                self.__check_obstacle_collision(future_p[0], future_p[1])
+            v == 0
+            or future_p[0] <= self.robot_drawing.width / 2
+            or future_p[0] >= self.robot_drawing.drawing_width - self.robot_drawing.width / 2
+            or future_p[1] <= self.robot_drawing.height / 2
+            or future_p[1] >= self.robot_drawing.drawing_height - self.robot_drawing.height / 2
+            or self.__check_obstacle_collision(future_p[0], future_p[1])
         ):
             v = 0
             self.is_moving = False
@@ -156,15 +156,15 @@ class MoblileRobotLayer(Layer):
         self.__hud_velocity()
 
         # Overlapping check
-        if self.circuit != None:
+        if self.circuit is not None:
             self.__check_circuit_overlap()
-        if self.obstacle != None:
+        if self.obstacle is not None:
             self.__detect_obstacle()
 
     def set_circuit(self, circuit_opt):
         """
         Changes the circuit
-        Arguments: 
+        Arguments:
             circuit_opt: the number of the chosen circuit
         """
         circuit_name = self.__parse_circuit_opt(circuit_opt)
@@ -196,18 +196,18 @@ class MoblileRobotLayer(Layer):
         v = 0
         da = 0
         if not self.is_rotating:
-            if movement["w"] == True:
+            if movement["w"]:
                 v = -20
-            if movement["s"] == True:
+            if movement["s"]:
                 v = 20
             if v != 0:
                 self.is_moving = True
             else:
                 self.is_moving = False
         if not self.is_moving:
-            if movement["a"] == True:
+            if movement["a"]:
                 da = 5
-            if movement["d"] == True:
+            if movement["d"]:
                 da = -5
             if da != 0:
                 self.is_rotating = True
@@ -289,14 +289,14 @@ class MoblileRobotLayer(Layer):
         """
         Creates and draws the circuit in the canvas
         """
-        if self.circuit != None:
+        if self.circuit is not None:
             self.circuit.create_circuit()
 
     def __create_obstacle(self):
         """
         Draws the obstacle in the canvas
         """
-        if self.obstacle != None:
+        if self.obstacle is not None:
             self.obstacle.draw()
 
     def __check_circuit_overlap(self):
@@ -329,14 +329,14 @@ class MoblileRobotLayer(Layer):
         Returns:
             True if collides, False if else
         """
-        if self.obstacle == None:
+        if self.obstacle is None:
             return False
         return (
-            x + self.robot_drawing.width / 2 >= self.obstacle.x and
-            y + self.robot_drawing.height / 2 >= self.obstacle.y and
-            x <= self.obstacle.x + (self.obstacle.width + self.robot_drawing.width / 2) and
-            y <= self.obstacle.y +
-            (self.obstacle.height + self.robot_drawing.height / 2)
+            x + self.robot_drawing.width / 2 >= self.obstacle.x
+            and y + self.robot_drawing.height / 2 >= self.obstacle.y
+            and x <= self.obstacle.x + (self.obstacle.width + self.robot_drawing.width / 2)
+            and y <= self.obstacle.y
+            + (self.obstacle.height + self.robot_drawing.height / 2)
         )
 
     def __detect_obstacle(self):
@@ -402,11 +402,11 @@ class LinearActuatorLayer(Layer):
             of the keys
         """
         v = 0
-        if movement["a"] == True:
+        if movement["a"]:
             if self.robot_drawing.block.x > 508:
                 v -= 15
             self.__hit_left(v == 0)
-        elif movement["d"] == True:
+        elif movement["d"]:
             if self.robot_drawing.block.x < 1912:
                 v += 15
             self.__hit_right(v == 0)

@@ -14,16 +14,16 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         self.lib_manager = libs.LibraryManager()
 
     def visit_declaration(self, declaration: ast.DeclarationNode, param):
-        if declaration.type != None:
+        if declaration.type is not None:
             declaration.type.accept(self, param)
-        if declaration.expr != None:
+        if declaration.expr is not None:
             declaration.expr.accept(self, param)
         self.add_declaration(declaration.function,
                              declaration.var_name, declaration)
         return None
 
     def visit_array_declaration(self, array_declaration: ast.ArrayDeclarationNode, param):
-        if array_declaration.type != None:
+        if array_declaration.type is not None:
             array_declaration.type.accept(self, param)
         self.visit_array_elements(array_declaration.elements, param)
         self.add_declaration(array_declaration.function,
@@ -31,7 +31,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         return None
 
     def visit_define_macro(self, define_macro: ast.DefineMacroNode, param):
-        if define_macro.expr != None:
+        if define_macro.expr is not None:
             define_macro.expr.accept(self, param)
         self.visit_array_elements(define_macro.elements, param)
         self.add_declaration(define_macro.function,
@@ -39,10 +39,10 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         return None
 
     def visit_function(self, function: ast.FunctionNode, param):
-        if function.type != None:
+        if function.type is not None:
             function.type.accept(self, param)
         self.visit_children(function.args, param)
-        if function.sentences != None:
+        if function.sentences is not None:
             for sent in function.sentences:
                 sent.set_function(function)
                 sent.accept(self, param)
@@ -51,7 +51,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
     def visit_while(self, while_p: ast.WhileNode, param):
         self.warnings.append(console.Warning("Uso", while_p.line, while_p.position,
                                              "No es recomendable el uso de bucles (while), aunque sea correcto"))
-        if while_p.expression != None:
+        if while_p.expression is not None:
             while_p.expression.accept(self, param)
         self.visit_children(while_p.sentences, param)
         return None
@@ -59,7 +59,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
     def visit_do_while(self, do_while: ast.DoWhileNode, param):
         self.warnings.append(console.Warning("Uso", do_while.line, do_while.position,
                                              "No es recomendable el uso de bucles (do while), aunque sea correcto"))
-        if do_while.expression != None:
+        if do_while.expression is not None:
             do_while.expression.accept(self, param)
         self.visit_children(do_while.sentences, param)
         return None
@@ -67,17 +67,17 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
     def visit_for(self, for_p: ast.ForNode, param):
         self.warnings.append(console.Warning("Uso", for_p.line, for_p.position,
                                              "No es recomendable el uso de bucles (for), aunque sea correcto"))
-        if for_p.assignment != None:
+        if for_p.assignment is not None:
             for_p.assignment.accept(self, param)
-        if for_p.condition != None:
+        if for_p.condition is not None:
             for_p.condition.accept(self, param)
-        if for_p.expression != None:
+        if for_p.expression is not None:
             for_p.expression.accept(self, param)
         self.visit_children(for_p.sentences, param)
         return None
 
     def visit_function_call(self, function_call: ast.FunctionCallNode, param):
-        if function_call.name != None:
+        if function_call.name is not None:
             function_call.name.accept(self, param)
         self.visit_children(function_call.parameters, param)
         f_name = ""
@@ -102,7 +102,7 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         return None
 
     def add_declaration(self, function, name, decl):
-        if function != None:
+        if function is not None:
             if function.name in self.locals:
                 self.locals[function.name][name] = decl
             else:

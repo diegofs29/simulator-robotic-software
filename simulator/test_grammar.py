@@ -90,7 +90,8 @@ class TestBreakContinue(TestBase):
     file = "tests/grammar-tests/ejemploBreakContinue.txt"
 
     def test_parsed(self):
-        self.read_results("tests/grammar-tests/outputs/outputBreakContinue.txt")
+        self.read_results(
+            "tests/grammar-tests/outputs/outputBreakContinue.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
@@ -114,7 +115,8 @@ class TestComparisonBool(TestBase):
     file = "tests/grammar-tests/ejemploComparisonBool.txt"
 
     def test_parsed(self):
-        self.read_results("tests/grammar-tests/outputs/outputComparisonBool.txt")
+        self.read_results(
+            "tests/grammar-tests/outputs/outputComparisonBool.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
@@ -138,7 +140,8 @@ class TestVariablesAsignacion(TestBase):
     file = "tests/grammar-tests/testVariablesAsignacion.txt"
 
     def test_parsed(self):
-        self.read_results("tests/grammar-tests/outputs/outputVariablesAsignacion.txt")
+        self.read_results(
+            "tests/grammar-tests/outputs/outputVariablesAsignacion.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
@@ -146,7 +149,8 @@ class TestFurtherSyntax(TestBase):
     file = "tests/grammar-tests/testFurtherSyntax.txt"
 
     def test_parsed(self):
-        self.read_results("tests/grammar-tests/outputs/outputFurtherSyntax.txt")
+        self.read_results(
+            "tests/grammar-tests/outputs/outputFurtherSyntax.txt")
         self.assertEqual(self.tokens, self.lines)
 
 
