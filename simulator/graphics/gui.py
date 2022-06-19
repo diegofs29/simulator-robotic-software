@@ -32,7 +32,8 @@ class MainApplication(tk.Tk):
         self.drawing_frame = DrawingFrame(
             self.horizontal_pane, self, bg=BLUE)
         self.editor_frame = EditorFrame(self.horizontal_pane, bg=BLUE)
-        self.console_frame = ConsoleFrame(self.vertical_pane, self, bg=DARK_BLUE)
+        self.console_frame = ConsoleFrame(
+            self.vertical_pane, self, bg=DARK_BLUE)
 
         self.identifier = None
         self.controller = controller.RobotsController(self)
@@ -56,19 +57,24 @@ class MainApplication(tk.Tk):
         self.horizontal_pane.add(
             self.drawing_frame, stretch="first", width=500, minsize=100)
         self.horizontal_pane.add(self.editor_frame, minsize=100)
-        self.vertical_pane.add(self.horizontal_pane, stretch="first", minsize=100)
-        self.vertical_pane.add(self.console_frame, stretch="never", height=200, minsize=100)
+        self.vertical_pane.add(self.horizontal_pane,
+                               stretch="first", minsize=100)
+        self.vertical_pane.add(
+            self.console_frame, stretch="never", height=200, minsize=100)
 
         self.bind("<KeyPress>", self.key_press)
         self.bind("<KeyRelease>", self.key_release)
         self.protocol("WM_DELETE_WINDOW", self.close)
 
     def prepare_controller(self):
-        self.__update_robot() #call first so the robot_layer is created
-        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas) #call second so the canvas are initialized
-        self.controller.configure_console(self.console_frame.console) #call third so the console is initialized
-        self.__update_track() #call last so all the three elements that are configured before are initialized
-        #if not, the track raises exception
+        self.__update_robot()  # call first so the robot_layer is created
+        self.controller.configure_layer(self.drawing_frame.canvas,
+                                        self.drawing_frame.hud_canvas)  # call second so the canvas are initialized
+        # call third so the console is initialized
+        self.controller.configure_console(self.console_frame.console)
+        # call last so all the three elements that are configured before are initialized
+        self.__update_track()
+        # if not, the track raises exception
 
     def execute(self):
         self.drawing_frame.canvas.focus_set()
@@ -93,7 +99,8 @@ class MainApplication(tk.Tk):
 
     def save_file(self, event=None):
         content = self.editor_frame.text.get("1.0", tk.END)
-        file = asksaveasfilename(defaultextension=".ino", filetypes=[("Arduino sketch", ".ino")])
+        file = asksaveasfilename(defaultextension=".ino", filetypes=[
+                                 ("Arduino sketch", ".ino")])
         if file != '':
             self.file_manager.save(file, content)
 
@@ -113,14 +120,14 @@ class MainApplication(tk.Tk):
 
     def zoom_out(self):
         self.controller.zoom_out()
-        
+
     def change_zoom_label(self, zoom_level):
         self.drawing_frame.change_zoom_label(zoom_level)
 
     def change_robot(self, event):
         self.controller.stop()
         self.__update_robot()
-        self.__update_track() #Needed to set the circuit of the layer
+        self.__update_track()  # Needed to set the circuit of the layer
         self.console_frame.console.config(state=tk.NORMAL)
         self.console_frame.console.insert(tk.END, "Robot cambiado con éxito\n")
         self.console_frame.console.config(state=tk.DISABLED)
@@ -128,7 +135,8 @@ class MainApplication(tk.Tk):
     def __update_robot(self):
         robot = self.selector_bar.robot_selector.current()
         self.controller.change_robot(robot)
-        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+        self.controller.configure_layer(
+            self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
 
     def change_track(self, event):
         self.controller.stop()
@@ -139,14 +147,15 @@ class MainApplication(tk.Tk):
         robot = self.selector_bar.robot_selector.current()
         if robot == 0 or robot == 1:
             self.controller.change_circuit(circuit)
-        self.controller.configure_layer(self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
+        self.controller.configure_layer(
+            self.drawing_frame.canvas, self.drawing_frame.hud_canvas)
 
     def show_circuit_selector(self, showing):
         if showing:
             self.selector_bar.recover_circuit_selector()
         else:
             self.selector_bar.hide_circuit_selector()
-    
+
     def show_joystick(self, showing):
         if showing:
             self.drawing_frame.show_joystick()
@@ -199,46 +208,62 @@ class PinConfigurationWindow(tk.Toplevel):
         self.focus_force()
         self.application = application
         self.data = {}
-        
+
         frame_content = tk.Frame(self)
         frame_buttons = tk.Frame(self)
         self.robot_option = robot_option
 
-        #Actuator
+        # Actuator
         self.lb_actuator = tk.Label(frame_content, text="Actuador lineal:")
-        self.lb_pin_bt1 = tk.Label(frame_content, text="Pin botón izquierdo:", underline=10)
+        self.lb_pin_bt1 = tk.Label(
+            frame_content, text="Pin botón izquierdo:", underline=10)
         self.entry_pin_bt1 = tk.Entry(frame_content)
-        self.lb_pin_bt2 = tk.Label(frame_content, text="Pin botón derecho:", underline=10)
+        self.lb_pin_bt2 = tk.Label(
+            frame_content, text="Pin botón derecho:", underline=10)
         self.entry_pin_bt2 = tk.Entry(frame_content)
-        self.lb_pin_joystick = tk.Label(frame_content, text="Pin botón Joystick:", underline=10)
+        self.lb_pin_joystick = tk.Label(
+            frame_content, text="Pin botón Joystick:", underline=10)
         self.entry_pin_joystick = tk.Entry(frame_content)
-        self.lb_pin_aservo = tk.Label(frame_content, text="Pin Servo:", underline=4)
+        self.lb_pin_aservo = tk.Label(
+            frame_content, text="Pin Servo:", underline=4)
         self.entry_pin_aservo = tk.Entry(frame_content)
-        self.lb_pin_joystick_x = tk.Label(frame_content, text="Pin Joystick (x):", underline=14)
+        self.lb_pin_joystick_x = tk.Label(
+            frame_content, text="Pin Joystick (x):", underline=14)
         self.entry_pin_joystick_x = tk.Entry(frame_content)
-        self.lb_pin_joystick_y = tk.Label(frame_content, text="Pin Joystick (y):", underline=14)
+        self.lb_pin_joystick_y = tk.Label(
+            frame_content, text="Pin Joystick (y):", underline=14)
         self.entry_pin_joystick_y = tk.Entry(frame_content)
 
         self.lb_mobile = tk.Label(frame_content, text="Robot móvil")
-        self.lb_pin_servo1 = tk.Label(frame_content, text="Pin servo izquierdo:", underline=10)
+        self.lb_pin_servo1 = tk.Label(
+            frame_content, text="Pin servo izquierdo:", underline=10)
         self.entry_pin_se1 = tk.Entry(frame_content)
-        self.lb_pin_servo2 = tk.Label(frame_content, text="Pin servo derecho:", underline=10)
+        self.lb_pin_servo2 = tk.Label(
+            frame_content, text="Pin servo derecho:", underline=10)
         self.entry_pin_se2 = tk.Entry(frame_content)
-        self.lb_pin_light2 = tk.Label(frame_content, text="Pin luz izquierda:", underline=9)
+        self.lb_pin_light2 = tk.Label(
+            frame_content, text="Pin luz izquierda:", underline=9)
         self.entry_pin_l2 = tk.Entry(frame_content)
-        self.lb_pin_light3 = tk.Label(frame_content, text="Pin luz derecha:", underline=10)
+        self.lb_pin_light3 = tk.Label(
+            frame_content, text="Pin luz derecha:", underline=10)
         self.entry_pin_l3 = tk.Entry(frame_content)
-        self.lb_pin_light1 = tk.Label(frame_content, text="Pin luz mas izquierda:", underline=14)
+        self.lb_pin_light1 = tk.Label(
+            frame_content, text="Pin luz mas izquierda:", underline=14)
         self.entry_pin_l1 = tk.Entry(frame_content)
-        self.lb_pin_light4 = tk.Label(frame_content, text="Pin luz mas derecha:", underline=17)
+        self.lb_pin_light4 = tk.Label(
+            frame_content, text="Pin luz mas derecha:", underline=17)
         self.entry_pin_l4 = tk.Entry(frame_content)
-        self.lb_pin_sound1 = tk.Label(frame_content, text="Pin trigger:", underline=4)
+        self.lb_pin_sound1 = tk.Label(
+            frame_content, text="Pin trigger:", underline=4)
         self.entry_pin_so1 = tk.Entry(frame_content)
-        self.lb_pin_sound2 = tk.Label(frame_content, text="Pin echo:", underline=4)
+        self.lb_pin_sound2 = tk.Label(
+            frame_content, text="Pin echo:", underline=4)
         self.entry_pin_so2 = tk.Entry(frame_content)
 
-        self.btn_accept = tk.Button(frame_buttons, text="Aceptar", command=self.commit_data, underline=0)
-        self.btn_cancel = tk.Button(frame_buttons, text="Cancelar", command=self.destroy, underline=0)
+        self.btn_accept = tk.Button(
+            frame_buttons, text="Aceptar", command=self.commit_data, underline=0)
+        self.btn_cancel = tk.Button(
+            frame_buttons, text="Cancelar", command=self.destroy, underline=0)
 
         if robot_option == 0:
             self.show_for_mobile2()
@@ -253,9 +278,11 @@ class PinConfigurationWindow(tk.Toplevel):
         frame_content.pack(padx=5, pady=5)
         frame_buttons.pack(anchor="se", padx=5, pady=5)
 
-        x = (parent.winfo_x() + (parent.winfo_width() / 2)) - (self.winfo_reqwidth() / 2)
-        y = (parent.winfo_y() + (parent.winfo_height() / 2)) - (self.winfo_reqheight() / 2)
-        self.geometry("+%d+%d" %(x, y))
+        x = (parent.winfo_x() + (parent.winfo_width() / 2)) - \
+            (self.winfo_reqwidth() / 2)
+        y = (parent.winfo_y() + (parent.winfo_height() / 2)) - \
+            (self.winfo_reqheight() / 2)
+        self.geometry("+%d+%d" % (x, y))
         self.resizable(False, False)
 
         self.bind("<Alt-a>", self.commit_data)
@@ -342,7 +369,7 @@ class PinConfigurationWindow(tk.Toplevel):
         self.entry_pin_so1.grid(row=4, column=1, sticky="w", padx=5)
         self.lb_pin_sound2.grid(row=4, column=2, sticky="w")
         self.entry_pin_so2.grid(row=4, column=3, sticky="w", padx=5)
-        
+
         self.entry_pin_se1.insert(tk.END, self.data["servo_left"])
         self.entry_pin_se2.insert(tk.END, self.data["servo_right"])
         self.entry_pin_l2.insert(tk.END, self.data["light_left"])
@@ -443,34 +470,47 @@ class MenuBar(tk.Menu):
         self.application = application
 
         file_menu = tk.Menu(self, tearoff=0)
-        file_menu.add_command(label="Nuevo archivo", command=self.create_file, accelerator="Ctrl+N")
+        file_menu.add_command(label="Nuevo archivo",
+                              command=self.create_file, accelerator="Ctrl+N")
         file_menu.add_separator()
-        file_menu.add_command(label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
-        file_menu.add_command(label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
+        file_menu.add_command(
+            label="Importar sketch", command=application.open_file, accelerator="Ctrl+O")
+        file_menu.add_command(
+            label="Guardar sketch", command=application.save_file, accelerator="Ctrl+S")
         file_menu.add_separator()
-        file_menu.add_command(label="Salir", command=self.check_if_exit, accelerator="Alt+F4")
+        file_menu.add_command(
+            label="Salir", command=self.check_if_exit, accelerator="Alt+F4")
         self.add_cascade(label="Archivo", menu=file_menu)
 
         edit_menu = tk.Menu(self, tearoff=0)
-        edit_menu.add_command(label="Deshacer", command=application.editor_undo, accelerator="Ctrl+Z")
-        edit_menu.add_command(label="Rehacer", command=application.editor_redo, accelerator="Ctrl+Y")
+        edit_menu.add_command(
+            label="Deshacer", command=application.editor_undo, accelerator="Ctrl+Z")
+        edit_menu.add_command(
+            label="Rehacer", command=application.editor_redo, accelerator="Ctrl+Y")
         self.add_cascade(label="Editar", menu=edit_menu)
 
         conf_menu = tk.Menu(self, tearoff=0)
-        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration, accelerator="Ctrl+P")
+        conf_menu.add_command(label="Configurar pines", command=application.open_pin_configuration,
+                              accelerator="Ctrl+P")
         self.add_cascade(label="Configurar", menu=conf_menu)
 
         exec_menu = tk.Menu(self, tearoff=0)
-        exec_menu.add_command(label="Ejecutar", command=application.execute, accelerator="F5")
-        exec_menu.add_command(label="Detener", command=application.stop, accelerator="Ctrl+F5")
+        exec_menu.add_command(
+            label="Ejecutar", command=application.execute, accelerator="F5")
+        exec_menu.add_command(
+            label="Detener", command=application.stop, accelerator="Ctrl+F5")
         exec_menu.add_separator()
-        exec_menu.add_command(label="Ampliar", command=lambda event: application.zoom_in(), accelerator="Ctrl++")
-        exec_menu.add_command(label="Reducir", command=lambda event: application.zoom_out(), accelerator="Ctrl+-")
+        exec_menu.add_command(
+            label="Ampliar", command=lambda event: application.zoom_in(), accelerator="Ctrl++")
+        exec_menu.add_command(
+            label="Reducir", command=lambda event: application.zoom_out(), accelerator="Ctrl+-")
         self.add_cascade(label="Ejecutar", menu=exec_menu)
 
         help_menu = tk.Menu(self, tearoff=0)
-        help_menu.add_command(label="Manual de ayuda", command=self.__launch_help, accelerator="Ctrl+H")
-        help_menu.add_command(label="Acerca de", command=self.show_about, accelerator="Ctrl+A")
+        help_menu.add_command(label="Manual de ayuda",
+                              command=self.__launch_help, accelerator="Ctrl+H")
+        help_menu.add_command(
+            label="Acerca de", command=self.show_about, accelerator="Ctrl+A")
         self.add_cascade(label="Ayuda", menu=help_menu)
 
         self.bind_all("<Control-p>", application.open_pin_configuration)
@@ -488,23 +528,23 @@ class MenuBar(tk.Menu):
         subprocess.Popen('manual-usuario.pdf', shell=True)
 
     def create_file(self, event=None):
-        if messagebox.askyesno('Nuevo archivo', '¿Seguro que quieres crear un nuevo archivo? Se perderá el sketch si no está guardado'):
+        if messagebox.askyesno('Nuevo archivo',
+                               '¿Seguro que quieres crear un nuevo archivo? Se perderá el sketch si no está guardado'):
             self.application.editor_frame.create_file()
-    
+
     def check_if_exit(self):
         if messagebox.askyesno('Salir', '¿Seguro que quieres salir? Se perderá el sketch si no está guardado'):
             self.application.close()
 
     def show_about(self, event=None):
-        messagebox.showinfo('Simulador de Software para robots', 
-                str(
-                    'Aplicación realizada como trabajo de fin de grado.\n' + 
-                    'Autor: Diego Fernández Suárez\n' +
-                    'Tutor: Cristian González García\n' +
-                    'Versión actual: b-0.4'
-                )
-            )
-
+        messagebox.showinfo('Simulador de Software para robots',
+                            str(
+                                'Aplicación realizada como trabajo de fin de grado.\n' +
+                                'Autor: Diego Fernández Suárez\n' +
+                                'Tutor: Cristian González García\n' +
+                                'Versión actual: b-0.4'
+                            )
+                            )
 
 
 class DrawingFrame(tk.Frame):
@@ -515,16 +555,20 @@ class DrawingFrame(tk.Frame):
         self.application = application
         self.__load_images()
 
-        self.hud_canvas = tk.Canvas(self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
+        self.hud_canvas = tk.Canvas(
+            self, height=100, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
 
         self.canvas_frame = tk.Frame(self, bg=BLUE)
         self.canvas = tk.Canvas(self.canvas_frame, bg="white", bd=1,
                                 relief=tk.SOLID, highlightthickness=0)
-        self.joystick_frame = JoystickFrame(self.canvas_frame, application, bg=DARK_BLUE, highlightthickness=1, highlightbackground="black")
+        self.joystick_frame = JoystickFrame(self.canvas_frame, application, bg=DARK_BLUE, highlightthickness=1,
+                                            highlightbackground="black")
 
         self.bottom_frame = tk.Frame(self, bg=BLUE)
-        self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white", font=("Consolas", 12),
-                                          bg=BLUE, activebackground=BLUE, selectcolor="black", command=application.toggle_keys, underline=0)       
+        self.key_movement = tk.Checkbutton(self.bottom_frame, text="Movimiento con el teclado", fg="white",
+                                           font=("Consolas", 12),
+                                           bg=BLUE, activebackground=BLUE, selectcolor="black",
+                                           command=application.toggle_keys, underline=0)
         self.zoom_frame = tk.Frame(self.bottom_frame, bg=BLUE)
         self.zoom_in_button = ImageButton(
             self.zoom_frame,
@@ -536,7 +580,8 @@ class DrawingFrame(tk.Frame):
             bg=BLUE,
             bd=0
         )
-        self.zoom_label = tk.Label(self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
+        self.zoom_label = tk.Label(
+            self.zoom_frame, bg=BLUE, fg="white", font=("Consolas", 12))
         self.zoom_out_button = ImageButton(
             self.zoom_frame,
             {
@@ -605,16 +650,22 @@ class DrawingFrame(tk.Frame):
 
 class JoystickFrame(tk.Frame):
 
-    def __init__(self, parent, application: MainApplication=None, *args, **kwargs):
+    def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.application = application
 
-        self.lb_joystick = tk.Label(self, text="Joystick", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
-        self.lb_x = tk.Label(self, text="X:", bg=DARK_BLUE, fg="white", font=("Consolas", 12))
-        self.x_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white", sliderrelief=tk.FLAT, highlightthickness=0)
-        self.lb_y = tk.Label(self, text="Y:", bg=DARK_BLUE, fg="white", font=("Consolas", 12))
-        self.y_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white", sliderrelief=tk.FLAT, highlightthickness=0)
-        self.j_button = tk.Button(self, text="Botón", bg=BLUE, bd=0, fg=DARK_BLUE, font=("Consolas", 13))
+        self.lb_joystick = tk.Label(
+            self, text="Joystick", bg=DARK_BLUE, fg="white", font=("Consolas", 13))
+        self.lb_x = tk.Label(self, text="X:", bg=DARK_BLUE,
+                             fg="white", font=("Consolas", 12))
+        self.x_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white",
+                              sliderrelief=tk.FLAT, highlightthickness=0)
+        self.lb_y = tk.Label(self, text="Y:", bg=DARK_BLUE,
+                             fg="white", font=("Consolas", 12))
+        self.y_dir = tk.Scale(self, from_=0, to=1023, orient=tk.HORIZONTAL, bg=DARK_BLUE, fg="white",
+                              sliderrelief=tk.FLAT, highlightthickness=0)
+        self.j_button = tk.Button(
+            self, text="Botón", bg=BLUE, bd=0, fg=DARK_BLUE, font=("Consolas", 13))
 
         self.x_dir.set(500)
         self.y_dir.set(500)
@@ -656,8 +707,10 @@ class EditorFrame(tk.Frame):
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
-        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12), undo=True, autoseparators=True)
-        self.line_bar = self.LineNumberBar(self, width=30, bg=BLUE, bd=0, highlightthickness=0)
+        self.text = self.TextEditor(self, bd=1, relief=tk.SOLID, wrap="none", font=("consolas", 12), undo=True,
+                                    autoseparators=True)
+        self.line_bar = self.LineNumberBar(
+            self, width=30, bg=BLUE, bd=0, highlightthickness=0)
         self.sb_x = tk.Scrollbar(self, orient=tk.HORIZONTAL,
                                  command=self.text.xview)
         self.sb_y = tk.Scrollbar(self, orient=tk.VERTICAL,
@@ -710,7 +763,8 @@ class EditorFrame(tk.Frame):
                 while True:
                     keyword = self.keywords[i]
                     if len(keyword) == 3:
-                        self.highlight_all_delimited(r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
+                        self.highlight_all_delimited(
+                            r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
                     elif keyword[0][0] == '\\' or keyword[0][0:2] == '//':
                         self.highlight_all(r'%s' % keyword[0], keyword[1])
                     else:
@@ -720,6 +774,7 @@ class EditorFrame(tk.Frame):
                     if i == len(self.keywords):
                         i = 0
                     yield
+
             gen = step()
             gen.__next__()
 
@@ -739,8 +794,8 @@ class EditorFrame(tk.Frame):
                 fl_start = tuple(map(int, start.split('.')))
                 fl_end = tuple(map(int, end.split('.')))
                 if (
-                    comm_start[0] <= fl_start[0] <= comm_end[0] and
-                    comm_start[0] <= fl_end[0] <= comm_end[0]
+                        comm_start[0] <= fl_start[0] <= comm_end[0] and
+                        comm_start[0] <= fl_end[0] <= comm_end[0]
                 ):
                     finished = False
                     if comm_start[0] == fl_start[0] or comm_end[0] == fl_start[0]:
@@ -772,7 +827,8 @@ class EditorFrame(tk.Frame):
             text = self.get("1.0", tk.END).splitlines()
             for i, line in enumerate(text):
                 for match in re.finditer(pattern, line):
-                    matches.append((f"{i + 1}.{match.start()}", f"{i + 1}.{match.end()}"))
+                    matches.append(
+                        (f"{i + 1}.{match.start()}", f"{i + 1}.{match.end()}"))
             return matches
 
         def search_re_delimited(self, pattern_s, pattern_e):
@@ -811,12 +867,12 @@ class EditorFrame(tk.Frame):
                 return result
 
             if (args[0] in ("insert", "replace", "delete") or
-                    args[0:3] == ("mark", "set", "insert") or
-                    args[0:2] == ("xview", "moveto") or
-                    args[0:2] == ("xview", "scroll") or
-                    args[0:2] == ("yview", "moveto") or
-                    args[0:2] == ("yview", "scroll")
-            ):
+                args[0:3] == ("mark", "set", "insert") or
+                args[0:2] == ("xview", "moveto") or
+                args[0:2] == ("xview", "scroll") or
+                args[0:2] == ("yview", "moveto") or
+                args[0:2] == ("yview", "scroll")
+                ):
                 self.event_generate("<<Change>>", when="tail")
 
             return result
@@ -828,7 +884,7 @@ class EditorFrame(tk.Frame):
             self.tag_configure("green", foreground="#728E00")
             self.tag_configure("gray", foreground="#95A5A6")
             self.tag_configure("dark", foreground="#434F54")
-        
+
         def __remove_tags(self, start, end):
             self.tag_remove("blue", start, end)
             self.tag_remove("orange", start, end)
@@ -841,17 +897,17 @@ class EditorFrame(tk.Frame):
             file = open(file_name, "r")
             lines = list(
                 filter(lambda line: line != '',
-                    map(lambda line: str(line).rstrip(), file.readlines())
-                )
+                       map(lambda line: str(line).rstrip(), file.readlines())
+                       )
             )
             for line in lines:
                 line_elems = line.split('\t')
                 if len(line_elems) == 2:
                     keywords.append((line_elems[0], line_elems[1]))
                 elif len(line_elems) == 3:
-                    keywords.append((line_elems[0], line_elems[1], line_elems[2]))
+                    keywords.append(
+                        (line_elems[0], line_elems[1], line_elems[2]))
             return keywords
-
 
     class LineNumberBar(tk.Canvas):
 
@@ -873,7 +929,8 @@ class EditorFrame(tk.Frame):
                 line = str(i).split(".")[0]
                 x = 28 - 9 * len(line)
                 y = dline[1]
-                self.create_text(x, y, anchor="nw", text=line, fill="white", font=('consolas', 12, 'bold'))
+                self.create_text(x, y, anchor="nw", text=line,
+                                 fill="white", font=('consolas', 12, 'bold'))
                 i = self.editor.index("%s+1line" % i)
 
 
@@ -888,24 +945,28 @@ class ConsoleFrame(tk.Frame):
         self.error = tk.IntVar()
 
         self.console_frame = tk.Frame(self, bg=DARK_BLUE)
-        self.console = tk.Text(self.console_frame, bd=1, relief=tk.SOLID, font=("consolas", 12), bg="black", fg="white")
-        self.sb_y = tk.Scrollbar(self.console_frame, orient=tk.VERTICAL, command=self.console.yview)
+        self.console = tk.Text(self.console_frame, bd=1, relief=tk.SOLID, font=(
+            "consolas", 12), bg="black", fg="white")
+        self.sb_y = tk.Scrollbar(
+            self.console_frame, orient=tk.VERTICAL, command=self.console.yview)
         self.filter_frame = tk.Frame(self, bg=DARK_BLUE, padx=10)
         self.check_out = tk.Checkbutton(self.filter_frame, text="Output", fg="white", font=("Consolas", 12),
-                                        bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
-                                        variable=self.output, onvalue=1, offvalue=0, 
+                                        bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black",
+                                        variable=self.output, onvalue=1, offvalue=0,
                                         command=application.console_filter, underline=1)
         self.check_warning = tk.Checkbutton(self.filter_frame, text="Warning", fg="white", font=("Consolas", 12),
                                             bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black",
-                                            variable=self.warning, onvalue=1, offvalue=0, 
+                                            variable=self.warning, onvalue=1, offvalue=0,
                                             command=application.console_filter, underline=0)
         self.check_error = tk.Checkbutton(self.filter_frame, text="Error", fg="white", font=("Consolas", 12),
-                                          bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black", 
-                                          variable=self.error, onvalue=1, offvalue=0, 
+                                          bg=DARK_BLUE, activebackground=DARK_BLUE, selectcolor="black",
+                                          variable=self.error, onvalue=1, offvalue=0,
                                           command=application.console_filter, underline=3)
         self.input_frame = tk.Frame(self, bg=DARK_BLUE)
-        self.input_entry = tk.Entry(self.input_frame, bd=1, relief=tk.SOLID, bg="black", insertbackground="white", fg="white", font=("Consolas", 12))
-        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, fg=DARK_BLUE, text="Enviar", font=("Consolas", 12), command=self.__send_input, underline=0)
+        self.input_entry = tk.Entry(self.input_frame, bd=1, relief=tk.SOLID, bg="black", insertbackground="white",
+                                    fg="white", font=("Consolas", 12))
+        self.input_button = tk.Button(self.input_frame, bd=0, bg=BLUE, fg=DARK_BLUE, text="Enviar",
+                                      font=("Consolas", 12), command=self.__send_input, underline=0)
 
         self.console.config(state=tk.DISABLED, yscrollcommand=self.sb_y.set)
         self.check_out.select()
@@ -945,7 +1006,7 @@ class ConsoleFrame(tk.Frame):
 
     def __filter(self):
         self.application.console_filter()
-    
+
     def __send_input(self):
         self.application.controller.send_input(self.input_entry.get())
 
@@ -959,14 +1020,14 @@ class ButtonBar(tk.Frame):
         self.exec_frame = tk.Frame(self, bg=kwargs["bg"])
         self.hist_frame = tk.Frame(self, bg=kwargs["bg"])
         self.utils_frame = tk.Frame(self, bg=kwargs["bg"])
-        self.tooltip_hover = tk.Label(self, bg=kwargs["bg"], font=("consolas", 12), fg="white")
+        self.tooltip_hover = tk.Label(
+            self, bg=kwargs["bg"], font=("consolas", 12), fg="white")
 
         self.__load_images()
 
         self.execute_button = ImageButton(
             self.exec_frame,
-            images=
-            {
+            images={
                 "blue": self.exec_img,
                 "white": self.exec_whi_img,
                 "yellow": self.exec_yel_img
@@ -977,8 +1038,7 @@ class ButtonBar(tk.Frame):
         )
         self.stop_button = ImageButton(
             self.exec_frame,
-            images=
-            {
+            images={
                 "blue": self.stop_img,
                 "white": self.stop_whi_img,
                 "yellow": self.stop_yel_img
@@ -989,8 +1049,7 @@ class ButtonBar(tk.Frame):
         )
         self.undo_button = ImageButton(
             self.hist_frame,
-            images=
-            {
+            images={
                 "blue": self.undo_img,
                 "white": self.undo_whi_img,
                 "yellow": self.undo_yel_img
@@ -1002,8 +1061,7 @@ class ButtonBar(tk.Frame):
         )
         self.redo_button = ImageButton(
             self.hist_frame,
-            images=
-            {
+            images={
                 "blue": self.redo_img,
                 "white": self.redo_whi_img,
                 "yellow": self.redo_yel_img
@@ -1015,8 +1073,7 @@ class ButtonBar(tk.Frame):
         )
         self.save_button = ImageButton(
             self.utils_frame,
-            images=
-            {
+            images={
                 "blue": self.save_img,
                 "white": self.save_whi_img,
                 "yellow": self.save_yel_img
@@ -1028,8 +1085,7 @@ class ButtonBar(tk.Frame):
         )
         self.import_button = ImageButton(
             self.utils_frame,
-            images=
-            {
+            images={
                 "blue": self.import_img,
                 "white": self.import_whi_img,
                 "yellow": self.import_yel_img
@@ -1118,7 +1174,7 @@ class ImageButton(tk.Button):
 
     def on_click(self):
         self.configure(image=self.images["yellow"])
-    
+
     def on_click_finish(self):
         self.configure(image=self.images["blue"])
 
@@ -1132,21 +1188,27 @@ class SelectorBar(tk.Frame):
     def __init__(self, parent, application: MainApplication = None, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
-        self.lb_robot = tk.Label(self, text="Robot:", bg=DARK_BLUE, fg="white", font=("Consolas", 13), underline=0)
+        self.lb_robot = tk.Label(self, text="Robot:", bg=DARK_BLUE, fg="white", font=(
+            "Consolas", 13), underline=0)
         self.robot_selector = ttk.Combobox(self, state="readonly")
-        self.lb_track = tk.Label(self, text="Circuito:", bg=DARK_BLUE, fg="white", font=("Consolas", 13), underline=1)
+        self.lb_track = tk.Label(self, text="Circuito:", bg=DARK_BLUE, fg="white", font=(
+            "Consolas", 13), underline=1)
         self.track_selector = ttk.Combobox(self, state="readonly")
 
-        self.robot_selector['values'] = ["Robot móvil (2 infrarrojos)", "Robot móvil (4 infrarrojos)", "Actuador lineal"]
+        self.robot_selector['values'] = ["Robot móvil (2 infrarrojos)", "Robot móvil (4 infrarrojos)",
+                                         "Actuador lineal"]
         self.robot_selector.current(0)
-        self.track_selector['values'] = ["Circuito", "Laberinto", "Recta", "Obstáculo", "Recta y obstáculo"]
+        self.track_selector['values'] = [
+            "Circuito", "Laberinto", "Recta", "Obstáculo", "Recta y obstáculo"]
         self.track_selector.current(0)
 
-        self.robot_selector.bind("<<ComboboxSelected>>", application.change_robot)
-        self.track_selector.bind("<<ComboboxSelected>>", application.change_track)
+        self.robot_selector.bind(
+            "<<ComboboxSelected>>", application.change_robot)
+        self.track_selector.bind(
+            "<<ComboboxSelected>>", application.change_track)
         application.bind("<Alt-r>", lambda event: self.robot_selector.focus())
         application.bind("<Alt-i>", lambda event: self.track_selector.focus())
-        
+
         self.lb_robot.grid(row=0, column=0)
         self.robot_selector.grid(row=0, column=1, padx=(5, 15))
         self.lb_track.grid(row=0, column=2)

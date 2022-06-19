@@ -146,14 +146,15 @@ class ArrayDeclarationNode(Sentence):
     def __organize_array_elements(self, current_elems, array_level=0):
         elems = []
         for i in range(0, self.size[array_level]):
-            if array_level < self.dimensions-1:
+            if array_level < self.dimensions - 1:
                 sub_elems = current_elems[i]
                 # implies its 2d but declared as 1d
                 if not isinstance(current_elems[i], list):
-                    total = reduce(lambda n, e: n*e, self.size[array_level+1:])
-                    sub_elems = current_elems[i*total:(i+1)*total]
+                    total = reduce(lambda n, e: n * e,
+                                   self.size[array_level + 1:])
+                    sub_elems = current_elems[i * total:(i + 1) * total]
                 elems.append(self.__organize_array_elements(
-                    sub_elems, array_level+1))
+                    sub_elems, array_level + 1))
             else:
                 if i < len(current_elems):
                     elems.append(current_elems[i])
@@ -282,6 +283,7 @@ class ShortTypeNode(TypeNode):
         return IntNode(0)
 
 
+# noinspection PyPep8Naming
 class Size_tTypeNode(TypeNode):
 
     def __init__(self):

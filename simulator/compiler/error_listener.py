@@ -3,6 +3,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import *
 
 
+# noinspection PyPep8Naming
 class CompilerErrorListener(ErrorListener):
 
     def __init__(self, log_errors=False):

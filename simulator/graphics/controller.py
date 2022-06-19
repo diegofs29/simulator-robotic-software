@@ -140,7 +140,8 @@ class RobotsController:
             robot.set_servo(robot.parse_pin(pin_data['servo']))
         if 'button_joystick' in pin_data:
             robot.detach_joystick_button()
-            robot.set_joystick_button(robot.parse_pin(pin_data['button_joystick']))
+            robot.set_joystick_button(
+                robot.parse_pin(pin_data['button_joystick']))
         if 'joystick_x' in pin_data:
             robot.detach_joystick_x()
             robot.set_joystick_x(robot.parse_pin(pin_data['joystick_x']))

@@ -14,7 +14,7 @@ class Semantic:
         decl.visit_program(ast, None)
         self.errors = decl.errors
         semt = SemanticAnalyzer(self.library_manager,
-            decl.globals, decl.locals, decl.functions)
+                                decl.globals, decl.locals, decl.functions)
         semt.visit_program(ast, None)
         self.errors.extend(semt.errors)
 
@@ -68,7 +68,7 @@ class DeclarationAnalyzer(ast_visitor.ASTVisitor):
                 self.functions[function.name].append(function)
             else:
                 self.add_error("Declaración", function,
-                            "La función ya ha sido declarada")
+                               "La función ya ha sido declarada")
         return None
 
     def visit_declaration(self, declaration: ast.DeclarationNode, param):
@@ -363,7 +363,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             for sent in conditional_sentence.else_expr:
                 sent.set_function(conditional_sentence.function)
                 sent.accept(self, param)
-                if isinstance(sent,ast. ContinueNode) and not conditional_sentence.is_loop_sent:
+                if isinstance(sent, ast.ContinueNode) and not conditional_sentence.is_loop_sent:
                     self.add_error("Mal uso de identificador", sent,
                                    "Continue debe usarse en bucles")
                 if isinstance(sent, ast.BreakNode) and not conditional_sentence.is_loop_sent:
@@ -391,7 +391,8 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                         switch_sentence.expression.value, switch_sentence.expression.function)
                     if self.check_type(definition.type, type(case_block.expression.type)):
                         self.add_error(
-                            "Tipos", case_block, "La sentencia case debe de tener una expresión del tipo marcado en switch")
+                            "Tipos", case_block,
+                            "La sentencia case debe de tener una expresión del tipo marcado en switch")
         return None
 
     def visit_assignment(self, assignment: ast.AssignmentNode, param):
@@ -404,10 +405,10 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
         if self.variable_defined(assignment.var.value, assignment.function):
             if self.check_modifiable(assignment.var):
                 self.add_error("No modificable", assignment,
-                                "La variable no se puede modificar. Puede que sea una constante")
+                               "La variable no se puede modificar. Puede que sea una constante")
             elif self.check_type(assignment.var.type, type(assignment.expr.type)):
                 self.manage_types(assignment.var.type,
-                                    assignment.expr.type, assignment, "El tipo de la variable")
+                                  assignment.expr.type, assignment, "El tipo de la variable")
         return None
 
     def visit_return(self, return_p: ast.ReturnNode, param):
@@ -459,7 +460,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                     implemented = self.__check_implemented(method.value, lib)
         if not found_func:
             self.add_error("Declaración", function_call,
-                        "La función no se ha declarado")
+                           "La función no se ha declarado")
 
         # Create function node in case is a library function
         if not user_defined and func != None:
@@ -484,14 +485,14 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
         definition = None
         for d in definitions:
             if (
-                len(function_call.parameters) == len(d.args) or
+                    len(function_call.parameters) == len(d.args) or
                     len(function_call.parameters) == len(d.args) + len(d.opt_args)
             ):
                 n_params_correct = True
                 definition = d
         if not n_params_correct:
             self.add_error("Parámetros", function_call,
-                            "El número de parámetros no coincide con los de la definición")
+                           "El número de parámetros no coincide con los de la definición")
         if definition != None:
             for i in range(0, len(function_call.parameters)):
                 function_call.parameters[i].function = function_call.function
@@ -511,7 +512,8 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                     is_wrong_type = self.check_type(function_call.parameters[i].type, type(type_to_check))
                 if is_wrong_type:
                     self.manage_types(
-                            function_call.parameters[i].type, definition.args[i].type, function_call, "El tipo del parámetro")
+                        function_call.parameters[i].type, definition.args[i].type, function_call,
+                        "El tipo del parámetro")
 
     def __create_function(self, function_call, lib_func, func_name):
         """
@@ -595,7 +597,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
         if self.variable_defined(inc_dec_expression.var.value, inc_dec_expression.function):
             if self.check_in_types(inc_dec_expression.var.type, self.numerical_types):
                 self.add_error("Tipos", inc_dec_expression,
-                            "La expresión no es de tipo numérico")
+                               "La expresión no es de tipo numérico")
         return None
 
     def visit_array_access(self, array_access: ast.ArrayAccessNode, param):
@@ -619,14 +621,17 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
                 definition_size = len(definition.expr.value)
             if definition_size == len(array_access.indexes):
                 for i in range(0, definition_size):
-                    if self.check_in_types(array_access.indexes[i].type, self.integer_types) and self.check_type(array_access.indexes[i].type, ast.IDTypeNode):
-                        self.add_error("Índice", array_access.indexes[i], "El tipo del índice debe ser int (o cualquiera que sea compatible)")
+                    if self.check_in_types(array_access.indexes[i].type, self.integer_types) and self.check_type(
+                            array_access.indexes[i].type, ast.IDTypeNode):
+                        self.add_error("Índice", array_access.indexes[i],
+                                       "El tipo del índice debe ser int (o cualquiera que sea compatible)")
                     else:
                         index = array_access.indexes[i].value
                         if isinstance(index, str):
                             index = self.__get_declaration(index, array_access.function).expr.value
                         if index >= definition.size[i]:
-                            self.add_error("Tamaños", array_access.indexes[i], "El índice sobrepasa el tamaño del array")
+                            self.add_error("Tamaños", array_access.indexes[i],
+                                           "El índice sobrepasa el tamaño del array")
         else:
             self.add_error("Declaración", array_access, "El array no está declarado")
         return None
@@ -636,7 +641,8 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             not_expression.expression.set_function(not_expression.function)
             not_expression.expression.accept(self, param)
         not_expression.set_type(ast.BooleanTypeNode())
-        if self.check_type(not_expression.expression.type, ast.BooleanTypeNode) or self.check_in_types(not_expression.expression.type, self.numerical_types):
+        if self.check_type(not_expression.expression.type, ast.BooleanTypeNode) or self.check_in_types(
+                not_expression.expression.type, self.numerical_types):
             self.add_error("Tipos", not_expression,
                            "La expresión debe ser tipo int o boolean")
         not_expression.set_type(not_expression.expression.type)
@@ -661,15 +667,17 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             arithmetic_expression.right.set_function(arithmetic_expression.function)
             arithmetic_expression.right.accept(self, param)
         error = False
-        if self.check_in_types(arithmetic_expression.left.type, self.numerical_types) and self.check_in_types(arithmetic_expression.right.type, self.numerical_types):
+        if self.check_in_types(arithmetic_expression.left.type, self.numerical_types) and self.check_in_types(
+                arithmetic_expression.right.type, self.numerical_types):
             if arithmetic_expression.op == '+':
-                if not type(arithmetic_expression.left.type) == type(arithmetic_expression.right.type) == ast.StringTypeNode:
+                if not type(arithmetic_expression.left.type) == type(
+                        arithmetic_expression.right.type) == ast.StringTypeNode:
                     error = True
             else:
                 error = True
         if error:
             self.add_error("Tipos", arithmetic_expression,
-                    "Las operaciones artiméticas deben ser entre números (salvo +, que también puede ser entre String)")
+                           "Las operaciones artiméticas deben ser entre números (salvo +, que también puede ser entre String)")
         arithmetic_expression.set_type(arithmetic_expression.left.type)
         return None
 
@@ -681,10 +689,12 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             comparison_expression.right.set_function(comparison_expression.function)
             comparison_expression.right.accept(self, param)
         if self.check_type(comparison_expression.left.type, type(comparison_expression.right.type)):
-            if self.check_in_types(comparison_expression.left.type, self.numerical_types) and self.check_in_types(comparison_expression.right.type, self.numerical_types):
-                if not type(comparison_expression.left.type) == type(comparison_expression.right.type) == ast.StringTypeNode:
+            if self.check_in_types(comparison_expression.left.type, self.numerical_types) and self.check_in_types(
+                    comparison_expression.right.type, self.numerical_types):
+                if not type(comparison_expression.left.type) == type(
+                        comparison_expression.right.type) == ast.StringTypeNode:
                     self.add_error("Tipos", comparison_expression,
-                                "Los tipos de ambas expresiones deben coincidir o ser interoperables")
+                                   "Los tipos de ambas expresiones deben coincidir o ser interoperables")
         comparison_expression.set_type(ast.BooleanTypeNode())
         return None
 
@@ -731,7 +741,7 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
         if self.variable_defined(compound_asigment.left.value, compound_asigment.function):
             if self.check_type(compound_asigment.left.type, type(compound_asigment.right.type)):
                 self.manage_types(compound_asigment.left.type, compound_asigment.right.type,
-                                compound_asigment, "El tipo de la variable")
+                                  compound_asigment, "El tipo de la variable")
         return None
 
     def manage_types(self, type_1, type_2, node, encabezado):

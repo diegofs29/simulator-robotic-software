@@ -47,9 +47,9 @@ class Servo(Element):
         The servo will be rotational.
         """
         self.pin = -1
-        self.min = 544 #default arduino value
-        self.max = 2400 #default arduino value
-        self.value = 90 #stopped (180 and 0 full speed)
+        self.min = 544  # default arduino value
+        self.max = 2400  # default arduino value
+        self.value = 90  # stopped (180 and 0 full speed)
 
     def set_value(self, pin, value):
         """
@@ -63,7 +63,7 @@ class Servo(Element):
             super().set_value(pin, value)
             return True
         return False
-    
+
     def get_pin_type(self):
         """
         Returns connection type needed for the pin
@@ -147,7 +147,7 @@ class Joystick(Element):
         Returns connection type needed for the x pin
         """
         return "analog"
-    
+
     def get_y_pin_type(self):
         """
         Returns connection type needed for the y pin

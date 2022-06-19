@@ -1,5 +1,4 @@
 class Board:
-
     INPUT = 0
     OUTPUT = 1
     INPUT_PULLUP = 2
@@ -105,9 +104,9 @@ class Board:
             True if attached, False if else
         """
         if (
-            pin in self.pins["analog"] or
-            pin in self.pins["digital"] or
-            pin in self.pins["txrx"]
+                pin in self.pins["analog"] or
+                pin in self.pins["digital"] or
+                pin in self.pins["txrx"]
         ) and not pin in self.used_pins:
             self.used_pins[pin] = {
                 "element": elem,

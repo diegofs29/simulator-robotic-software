@@ -165,7 +165,8 @@ class MobileRobot(Robot):
         Sets left light sensor attached to a pin
         and marks the pin as used at the board
         """
-        light = self.light_sensors[0] if len(self.light_sensors) == 2 else self.light_sensors[1]
+        light = self.light_sensors[0] if len(
+            self.light_sensors) == 2 else self.light_sensors[1]
         if self.board.check_type(pin, light.get_pin_type()):
             if self.board.attach_pin(pin, light):
                 light.pin = pin
@@ -174,7 +175,8 @@ class MobileRobot(Robot):
         """
         Detaches left light sensor from board
         """
-        light = self.light_sensors[0] if len(self.light_sensors) == 2 else self.light_sensors[1]
+        light = self.light_sensors[0] if len(
+            self.light_sensors) == 2 else self.light_sensors[1]
         self.board.detach_pin(light.pin)
         light.pin = -1
 
@@ -183,7 +185,8 @@ class MobileRobot(Robot):
         Sets right light sensor attached to a pin
         and marks the pin as used at the board
         """
-        light = self.light_sensors[1] if len(self.light_sensors) == 2 else self.light_sensors[2]
+        light = self.light_sensors[1] if len(
+            self.light_sensors) == 2 else self.light_sensors[2]
         if self.board.check_type(pin, light.get_pin_type()):
             if self.board.attach_pin(pin, light):
                 light.pin = pin
@@ -192,7 +195,8 @@ class MobileRobot(Robot):
         """
         Detaches right light sensor from board
         """
-        light = self.light_sensors[1] if len(self.light_sensors) == 2 else self.light_sensors[2]
+        light = self.light_sensors[1] if len(
+            self.light_sensors) == 2 else self.light_sensors[2]
         self.board.detach_pin(light.pin)
         light.pin = -1
 

@@ -7,15 +7,15 @@ import libraries.standard as standard
 import libraries.serial as serial
 import robot_components.robot_state as state
 
-
 module = None
 
+
 def _import_module():
-        global module
-        spec = importlib.util.spec_from_file_location('temp.script_arduino', 'temp/script_arduino.py')
-        module = importlib.util.module_from_spec(spec)
-        sys.modules['temp.script_arduino'] = module
-        spec.loader.exec_module(module)
+    global module
+    spec = importlib.util.spec_from_file_location('temp.script_arduino', 'temp/script_arduino.py')
+    module = importlib.util.module_from_spec(spec)
+    sys.modules['temp.script_arduino'] = module
+    spec.loader.exec_module(module)
 
 
 class Command:
@@ -23,7 +23,7 @@ class Command:
     def __init__(self, controller):
         self.controller = controller
         self.ready = False
-        
+
     def execute(self):
         """
         Executes a command object
@@ -56,7 +56,8 @@ class Compile(Command):
                 return True
             return True
         except:
-            self.controller.console.write_error(console.Error("Error de compilación", 0, 0, "El sketch no se ha podido compilar correctamente"))
+            self.controller.console.write_error(
+                console.Error("Error de compilación", 0, 0, "El sketch no se ha podido compilar correctamente"))
 
     def print_warnings(self, warnings):
         for warning in warnings:
@@ -71,7 +72,6 @@ class Setup(Command):
 
     def __init__(self, controller):
         super().__init__(controller)
-        
 
     def execute(self):
         global module
@@ -80,13 +80,14 @@ class Setup(Command):
             _import_module()
         curr_time_ns = time.time_ns()
         if (
-            not standard.state.exec_time_us > curr_time_ns / 1000 and
-            not standard.state.exec_time_ms > curr_time_ns / 1000000
+                not standard.state.exec_time_us > curr_time_ns / 1000 and
+                not standard.state.exec_time_ms > curr_time_ns / 1000000
         ):
             try:
                 module.setup()
             except:
-                self.controller.console.write_error(console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
+                self.controller.console.write_error(
+                    console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
         return True
 
 
@@ -101,12 +102,13 @@ class Loop(Command):
             self.prepare_exec()
         curr_time_ns = time.time_ns()
         if (
-            not standard.state.exec_time_us > curr_time_ns / 1000 and
-            not standard.state.exec_time_ms > curr_time_ns / 1000000 and
-            not standard.state.exited and self.controller.executing
+                not standard.state.exec_time_us > curr_time_ns / 1000 and
+                not standard.state.exec_time_ms > curr_time_ns / 1000000 and
+                not standard.state.exited and self.controller.executing
         ):
             try:
                 module.loop()
             except:
-                self.controller.console.write_error(console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
+                self.controller.console.write_error(
+                    console.Error("Error de ejecución", 0, 0, "El sketch no se ha podido ejecutar correctamente"))
                 self.controller.executing = False

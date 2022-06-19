@@ -13,7 +13,6 @@ import libraries.string as string
 
 
 class LibraryManager:
-    
     OK = 0
     ERROR = -1
     NOT_IMPL_WARNING = -2
@@ -38,7 +37,7 @@ class LibraryManager:
             serial.get_name(): serial.get_not_implemented(),
             string.get_name(): string.get_not_implemented(),
         }
-    
+
     def get_libraries(self):
         """
         Returns a list with the name of the libraries

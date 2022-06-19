@@ -3,6 +3,7 @@ String library from arduino. More details at:
 https://www.arduino.cc/reference/en/language/variables/data-types/stringobject/
 """
 
+
 def get_name():
     return "String"
 
@@ -22,14 +23,15 @@ def get_methods():
     methods["c_str"] = ("string", "c_str", [], -1)
     methods["endsWith"] = ("bool", "ends_with", ["string"], -1)
     methods["equals"] = ("bool", "equals", ["string"], -1)
-    methods["equalsIgnoreCase"] = ("bool", "equals_ignore_case", ["string"], -1)
+    methods["equalsIgnoreCase"] = (
+        "bool", "equals_ignore_case", ["string"], -1)
     methods["getBytes"] = ("byte", "get_bytes", [], -1)
     methods["indexOf"] = ("int", "index_of", ["char", "(int)"], -1)
     methods["lastIndexOf"] = ("int", "last_index_of", ["char", "(int)"], -1)
     methods["length"] = ("int", "length", [], -1)
     methods["remove"] = ("void", "remove", ["int", "(int)"], -1)
     methods["replace"] = ("void", "replace", ["string", "string"], -1)
-    methods["reserve"] = ("void", "reserve", [], -1)    # not implemented
+    methods["reserve"] = ("void", "reserve", [], -1)  # not implemented
     methods["setCharAt"] = ("void", "set_char_at", ["int", "char"], -1)
     methods["startsWith"] = ("bool", "starts_with", ["string"], -1)
     methods["substring"] = ("string", "substring", ["int", "int"], -1)
@@ -41,6 +43,7 @@ def get_methods():
     methods["toUpperCase"] = ("string", "to_upper_case", [], -1)
     methods["trim"] = ("string", "trim", [], -1)
     return methods
+
 
 def get_not_implemented():
     return [
@@ -57,7 +60,7 @@ class String:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, string = ""):
+    def __init__(self, string=""):
         self.string = string
 
     def __repr__(self) -> str:
@@ -102,7 +105,6 @@ class String:
         """
         return self.string[n]
 
-
     def compare_to(self, string):
         """
         Compares two Strings, testing whether one comes 
@@ -119,7 +121,6 @@ class String:
         else:
             return 1
 
-
     def concat(self, param):
         """
         Appends the parameter to a string
@@ -130,13 +131,11 @@ class String:
         self.string = str(self.string) + str(param)
         return True
 
-
     def c_str(self):
         """
         Converts the contents of a String as a C-style, null-terminated string
         """
         return self.string + '\0'
-
 
     def ends_with(self, string):
         """
@@ -148,7 +147,6 @@ class String:
         len_str2 = len(string.string)
         return self.string[-len_str2:] == string.string
 
-
     def equals(self, string):
         """
         Compares string1 with string for equality
@@ -156,7 +154,6 @@ class String:
             string: a string
         """
         return self.string == string.string
-
 
     def equals_ignore_case(self, string):
         """
@@ -167,13 +164,11 @@ class String:
         """
         return str(self.string).lower() == str(string.string).lower()
 
-
     def get_bytes(self):
         """
         Copies the String’s characters to the supplied buffer.
         """
         return bytes(self.string, 'UTF-8')
-
 
     def index_of(self, val, from_c=0):
         """
@@ -188,7 +183,6 @@ class String:
         str_temp = self.string[from_c:]
         return str(str_temp).find(val)
 
-
     def last_index_of(self, val, from_c=-1):
         """
         Locates a character or String within another String. By default, 
@@ -202,13 +196,11 @@ class String:
         str_temp = self.string[:from_c]
         return str(str_temp)[::-1].find(val)
 
-
     def length(self):
         """
         Returns the length of a given string
         """
         return len(self.string)
-
 
     def remove(self, index, count=-1):
         """
@@ -225,7 +217,6 @@ class String:
             str_2 = self.string[count:]
         self.string = str(str_1) + str(str_2)
 
-
     def replace(self, substring1, substring2):
         """
         Replaces all instances of a given character with another character. 
@@ -235,15 +226,14 @@ class String:
             substring1: a string to be replaced
             substring2: a string to replace
         """
-        self.string = str(self.string).replace(substring1.string, substring2.string)
-
+        self.string = str(self.string).replace(
+            substring1.string, substring2.string)
 
     def reserve(self):
         """
         Not needed. Not implemented
         """
         return self.NOT_IMPL_WARNING
-
 
     def set_char_at(self, index, c):
         """
@@ -252,8 +242,7 @@ class String:
             index: the index to set the char at
             c: the char to set
         """
-        self.string = self.string[index:] + c + self.string[index+1:]
-
+        self.string = self.string[index:] + c + self.string[index + 1:]
 
     def starts_with(self, string):
         """
@@ -266,7 +255,6 @@ class String:
         substr = self.string[:len_str2]
         return substr == string.string
 
-
     def substring(self, from_c, to_c=-1):
         """
         Creates a substring [from_c, to_c)
@@ -276,13 +264,11 @@ class String:
         """
         return self.string[from_c: to_c] if to_c != -1 else self.string[from_c:]
 
-
     def to_char_array(self, buf, len):
         """
         Copies the String’s characters to the supplied buffer.
         """
         return list(self.string)
-
 
     def to_double(self):
         """
@@ -293,7 +279,6 @@ class String:
         except ValueError:
             return 0.0
 
-
     def to_int(self):
         """
         Parses string to int
@@ -302,7 +287,6 @@ class String:
             return int(self.string)
         except ValueError:
             return 0
-
 
     def to_float(self):
         """
@@ -313,20 +297,17 @@ class String:
         except ValueError:
             return 0.0
 
-
     def to_lower_case(self):
         """
         Converts string to lower case
         """
         self.string = str(self.string).lower()
 
-
     def to_upper_case(self):
         """
         Converts string to upper case
         """
         self.string = str(self.string).upper()
-
 
     def trim(self):
         """

@@ -10,6 +10,7 @@ import compiler.semantical_errors as semantical_analysis
 import compiler.code_generator as code_generator
 import libraries.libs as libraries
 
+
 class TestBase(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -56,7 +57,6 @@ class TestBase(unittest.TestCase):
 
 
 class TestWarnings(TestBase):
-
     file = "tests/warning-tests/test.txt"
 
     def test_n_errors(self):
@@ -74,6 +74,11 @@ class TestWarnings(TestBase):
         self.assertEqual("No es recomendable el uso de bucles (do while), aunque sea correcto", self.warns[0].message)
         self.assertEqual("No es recomendable el uso de bucles (for), aunque sea correcto", self.warns[1].message)
         self.assertEqual("No es recomendable el uso de bucles (while), aunque sea correcto", self.warns[2].message)
-        self.assertEqual("La función reserve de String no está implementada, con lo que no cumplirá con su funcionalidad", self.warns[3].message)
-        self.assertEqual("La función randomSeed de Standard no está implementada, con lo que no cumplirá con su funcionalidad", self.warns[4].message)
-        self.assertEqual("La función write de Serial no está implementada, con lo que no cumplirá con su funcionalidad", self.warns[5].message)
+        self.assertEqual(
+            "La función reserve de String no está implementada, con lo que no cumplirá con su funcionalidad",
+            self.warns[3].message)
+        self.assertEqual(
+            "La función randomSeed de Standard no está implementada, con lo que no cumplirá con su funcionalidad",
+            self.warns[4].message)
+        self.assertEqual("La función write de Serial no está implementada, con lo que no cumplirá con su funcionalidad",
+                         self.warns[5].message)

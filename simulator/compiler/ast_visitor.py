@@ -1,5 +1,6 @@
 import compiler.ast as ast
 
+
 class ASTVisitor:
 
     def visit_program(self, program: ast.ProgramNode, param):

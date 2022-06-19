@@ -4,7 +4,6 @@ from the simulator's point of view. This makes the compiler
 into a transpiler
 """
 
-
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
 import libraries.libs as libraries
@@ -12,7 +11,6 @@ import os
 
 
 class CodeGenerator(ast_visitor.ASTVisitor):
-
     VARIABLE = 1
     FUNCTION_CALL = 2
 
@@ -34,7 +32,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         except FileExistsError:
             pass
         open('temp/__init__.py', 'a').close()
-    
+
     def visit_program(self, program: ast.ProgramNode, param):
         self.function_visitor.visit_program(program, param)
         self.functions = self.function_visitor.functions
@@ -45,7 +43,8 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.write_endl()
         self.write_to_script("import libraries.string as String")
         self.write_endl()
-        self.write_to_script("import graphics.screen_updater as screen_updater")
+        self.write_to_script(
+            "import graphics.screen_updater as screen_updater")
         self.write_endl()
         for include in program.includes:
             include.accept(self, param)
@@ -88,13 +87,13 @@ class CodeGenerator(ast_visitor.ASTVisitor):
 
     def visit_array_declaration(self, array_declaration: ast.ArrayDeclarationNode, param):
         self.write_to_script(array_declaration.var_name)
-        self.write_to_script(" = [")              
+        self.write_to_script(" = [")
         if len(array_declaration.elements) > 0:
             self.visit_array_elements(array_declaration.elements, param)
         self.write_to_script("]")
         self.write_endl()
         if array_declaration.function == None:
-            self.globals.append(array_declaration.var_name)   
+            self.globals.append(array_declaration.var_name)
         return None
 
     def visit_define_macro(self, define_macro: ast.DefineMacroNode, param):
@@ -106,7 +105,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         if define_macro.function == None:
             self.globals.append(define_macro.macro_name)
         return None
-    
+
     def visit_boolean_type(self, boolean_type: ast.BooleanTypeNode, param):
         self.write_to_script(" = False")
         return None
@@ -166,7 +165,8 @@ class CodeGenerator(ast_visitor.ASTVisitor):
     def visit_id_type(self, id_type: ast.IDTypeNode, param):
         lib = str(id_type.type_name)
         used_class = id_type.type_name
-        self.write_to_script(" = {}.{}(standard.board)".format(lib, used_class))
+        self.write_to_script(
+            " = {}.{}(standard.board)".format(lib, used_class))
         return None
 
     def visit_function(self, function: ast.FunctionNode, param):
@@ -221,7 +221,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.decrease_tab()
 
         return None
-    
+
     def visit_do_while(self, do_while: ast.DoWhileNode, param):
         self.write_to_script("while True:")
         self.write_endl()
@@ -239,7 +239,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.write_endl()
         self.write_to_script("screen_updater.update()")
         self.write_endl()
-        
+
         self.write_to_script("if ")
         if do_while.expression != None:
             do_while.expression.accept(self, param)
@@ -282,7 +282,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         self.decrease_tab()
 
         return None
-    
+
     def visit_conditional_sentence(self, conditional_sentence: ast.ConditionalSentenceNode, param):
         self.write_to_script("if ")
         if conditional_sentence.condition != None:
@@ -350,7 +350,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
             case.expression.accept(self, param)
         self.write_to_script(":")
         self.write_endl()
-        
+
         self.increase_tab()
         if len(case.sentences) > 0:
             for sent in case.sentences:
@@ -370,7 +370,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         if assignment.expr != None:
             assignment.expr.accept(self, param)
         return None
-    
+
     def visit_array_access(self, array_access: ast.ArrayAccessNode, param):
         self.write_to_script(array_access.value)
         for index in array_access.indexes:
@@ -495,7 +495,8 @@ class CodeGenerator(ast_visitor.ASTVisitor):
                         method = method[1]
                         break
                 if method != None:
-                    self.write_to_script("{}.{}".format(str(lib).lower(), method))
+                    self.write_to_script(
+                        "{}.{}".format(str(lib).lower(), method))
                 else:
                     return id_node.value
         return None
@@ -539,9 +540,11 @@ class CodeGenerator(ast_visitor.ASTVisitor):
                 if found_method != None:
                     if found_method[3] != -1:
                         var = member_access.function_call.parameters[found_method[3]].value
-                        self.write_to_script("{} = {}.{}".format(var, elem, found_method[1]))
+                        self.write_to_script("{} = {}.{}".format(
+                            var, elem, found_method[1]))
                     else:
-                        self.write_to_script("{}.{}".format(elem, found_method[1]))
+                        self.write_to_script(
+                            "{}.{}".format(elem, found_method[1]))
                     break
         return None
 
@@ -613,7 +616,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         Decreases the intentation
         """
         self.script_tabs -= 1
-        
+
 
 class FunctionDefiner(ast_visitor.ASTVisitor):
 

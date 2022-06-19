@@ -35,7 +35,8 @@ class Drawing:
         Deletes all the elements that have to be zoomed
         """
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
-        self.canvas.delete('robot', 'circuit', 'obstacle', 'light_1', 'light_2', 'light_3', 'light_4')
+        self.canvas.delete('robot', 'circuit', 'obstacle',
+                           'light_1', 'light_2', 'light_3', 'light_4')
         self.canvas.delete('prueba')
 
     def draw_image(self, element, group):
@@ -93,7 +94,8 @@ class Drawing:
         """
         self.canvas.delete(group)
         image = self.__open_image(element["image"], group)
-        rotated_img = self.images[element["image"]] = image.rotate(angle, expand=True)
+        rotated_img = self.images[element["image"]
+                                  ] = image.rotate(angle, expand=True)
         self.__add_to_canvas(element["x"], element["y"], rotated_img, group)
 
     def draw_rectangle(self, form: dict):
@@ -110,7 +112,8 @@ class Drawing:
         height = int(form["height"] * self.scale)
         color = form["color"]
         group = form["group"]
-        self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
+        self.canvas.create_rectangle(
+            x, y, x + width, y + height, fill=color, tags=group)
 
     def draw_arc(self, form: dict):
         """
@@ -125,11 +128,12 @@ class Drawing:
         y = int(form["y"] * self.scale) + self.hud_h
         width = int(form["width"] * self.scale)
         height = int(form["height"] * self.scale)
-        track_width = int(form["track_width"]* self.scale)
+        track_width = int(form["track_width"] * self.scale)
         starting_angle = form["starting_angle"]
         angle = form["angle"]
         group = form["group"]
-        self.canvas.create_arc(x, y, x + width, y + height, width=track_width, style="arc", start=starting_angle, extent=angle, tags=group)
+        self.canvas.create_arc(x, y, x + width, y + height, width=track_width, style="arc", start=starting_angle,
+                               extent=angle, tags=group)
 
     def zoom_in(self):
         """
@@ -165,7 +169,7 @@ class Drawing:
         self.width = width
         self.height = height
         self.__update_size()
-    
+
     def __update_size(self):
         """
         Updates the size of the canvas according
@@ -194,7 +198,8 @@ class Drawing:
             "y": scale_y,
             "image": ImageTk.PhotoImage(res_img)
         }
-        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
+        self.canvas.create_image(
+            scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
 
     def __open_image(self, image_path, group):
         image = None

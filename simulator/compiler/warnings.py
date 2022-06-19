@@ -18,21 +18,24 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
             declaration.type.accept(self, param)
         if declaration.expr != None:
             declaration.expr.accept(self, param)
-        self.add_declaration(declaration.function, declaration.var_name, declaration)
+        self.add_declaration(declaration.function,
+                             declaration.var_name, declaration)
         return None
 
     def visit_array_declaration(self, array_declaration: ast.ArrayDeclarationNode, param):
         if array_declaration.type != None:
             array_declaration.type.accept(self, param)
         self.visit_array_elements(array_declaration.elements, param)
-        self.add_declaration(array_declaration.function, array_declaration.var_name, array_declaration)
+        self.add_declaration(array_declaration.function,
+                             array_declaration.var_name, array_declaration)
         return None
 
     def visit_define_macro(self, define_macro: ast.DefineMacroNode, param):
         if define_macro.expr != None:
             define_macro.expr.accept(self, param)
         self.visit_array_elements(define_macro.elements, param)
-        self.add_declaration(define_macro.function, define_macro.macro_name, define_macro)
+        self.add_declaration(define_macro.function,
+                             define_macro.macro_name, define_macro)
         return None
 
     def visit_function(self, function: ast.FunctionNode, param):
@@ -46,21 +49,24 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         return None
 
     def visit_while(self, while_p: ast.WhileNode, param):
-        self.warnings.append(console.Warning("Uso", while_p.line, while_p.position, "No es recomendable el uso de bucles (while), aunque sea correcto"))
+        self.warnings.append(console.Warning("Uso", while_p.line, while_p.position,
+                                             "No es recomendable el uso de bucles (while), aunque sea correcto"))
         if while_p.expression != None:
             while_p.expression.accept(self, param)
         self.visit_children(while_p.sentences, param)
         return None
 
     def visit_do_while(self, do_while: ast.DoWhileNode, param):
-        self.warnings.append(console.Warning("Uso", do_while.line, do_while.position, "No es recomendable el uso de bucles (do while), aunque sea correcto"))
+        self.warnings.append(console.Warning("Uso", do_while.line, do_while.position,
+                                             "No es recomendable el uso de bucles (do while), aunque sea correcto"))
         if do_while.expression != None:
             do_while.expression.accept(self, param)
         self.visit_children(do_while.sentences, param)
         return None
 
     def visit_for(self, for_p: ast.ForNode, param):
-        self.warnings.append(console.Warning("Uso", for_p.line, for_p.position, "No es recomendable el uso de bucles (for), aunque sea correcto"))
+        self.warnings.append(console.Warning("Uso", for_p.line, for_p.position,
+                                             "No es recomendable el uso de bucles (for), aunque sea correcto"))
         if for_p.assignment != None:
             for_p.assignment.accept(self, param)
         if for_p.condition != None:
@@ -91,7 +97,8 @@ class WarningAnalyzer(ast_visitor.ASTVisitor):
         lib_name = lib_name[0].upper() + lib_name[1:]
         message = self.lib_manager.not_implemented(lib_name, f_name)
         if message != "":
-            self.warnings.append(console.Warning("No implementado", function_call.line, function_call.position, message))
+            self.warnings.append(
+                console.Warning("No implementado", function_call.line, function_call.position, message))
         return None
 
     def add_declaration(self, function, name, decl):

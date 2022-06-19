@@ -24,7 +24,6 @@ class TestBaseAST(unittest.TestCase):
 
 
 class TestInclude(TestBaseAST):
-
     file = "tests/file-tests/include.txt"
 
     def test_file_name(self):
@@ -36,7 +35,6 @@ class TestInclude(TestBaseAST):
 
 
 class TestGlobalDefinition(TestBaseAST):
-
     file = "tests/file-tests/g-def.txt"
 
     def setUp(self):
@@ -147,7 +145,6 @@ class TestGlobalDefinition(TestBaseAST):
 
 
 class TestFunctionDefinition(TestBaseAST):
-
     file = "tests/file-tests/f-def.txt"
 
     def setUp(self):
@@ -239,7 +236,6 @@ class TestFunctionDefinition(TestBaseAST):
 
 
 class TestTerminals(TestBaseAST):
-
     file = "tests/file-tests/terminals.txt"
 
     def setUp(self):
@@ -290,7 +286,6 @@ class TestTerminals(TestBaseAST):
 
 
 class TestFunctionCall(TestBaseAST):
-
     file = "tests/file-tests/f-calls.txt"
 
     def setUp(self):
@@ -353,7 +348,6 @@ class TestFunctionCall(TestBaseAST):
 
 
 class TestConditionals(TestBaseAST):
-
     file = "tests/file-tests/conditionals.txt"
 
     def setUp(self):
@@ -421,7 +415,6 @@ class TestConditionals(TestBaseAST):
 
 
 class TestBucles(TestBaseAST):
-
     file = "tests/file-tests/loops.txt"
 
     def setUp(self):
@@ -486,7 +479,6 @@ class TestBucles(TestBaseAST):
 
 
 class TestAsignations(TestBaseAST):
-
     file = "tests/file-tests/assignments.txt"
 
     def setUp(self):
@@ -534,7 +526,6 @@ class TestAsignations(TestBaseAST):
 
 
 class TestBitwise(TestBaseAST):
-
     file = "tests/file-tests/bitwise.txt"
 
     def setUp(self):
@@ -573,7 +564,6 @@ class TestBitwise(TestBaseAST):
 
 
 class TestLocalDefinition(TestBaseAST):
-
     file = "tests/file-tests/local-def.txt"
 
     def setUp(self):
@@ -757,7 +747,6 @@ class TestLocalDefinition(TestBaseAST):
 
 
 class TestIncDec(TestBaseAST):
-
     file = "tests/file-tests/incdec.txt"
 
     def setUp(self):
@@ -778,7 +767,6 @@ class TestIncDec(TestBaseAST):
 
 
 class TestSpecials(TestBaseAST):
-
     file = "tests/file-tests/specials.txt"
 
     def setUp(self):
@@ -800,7 +788,6 @@ class TestSpecials(TestBaseAST):
 
 
 class TestAritmetic(TestBaseAST):
-
     file = "tests/file-tests/aritmetics.txt"
 
     def setUp(self):
@@ -837,7 +824,6 @@ class TestAritmetic(TestBaseAST):
 
 
 class TestBoolean(TestBaseAST):
-
     file = "tests/file-tests/boolean.txt"
 
     def setUp(self):
@@ -893,7 +879,6 @@ class TestBoolean(TestBaseAST):
 
 
 class TestArrays(TestBaseAST):
-
     file = "tests/file-tests/arrays.txt"
 
     def setUp(self):
@@ -1020,7 +1005,6 @@ class TestArrays(TestBaseAST):
 
 
 class TestArrayAccess(TestBaseAST):
-
     file = "tests/file-tests/array-access.txt"
 
     def setUp(self):
