@@ -765,21 +765,28 @@ class EditorFrame(tk.Frame):
                     if len(keyword) == 3:
                         self.highlight_all_delimited(
                             r'%s' % keyword[0], r'%s' % keyword[1], keyword[2])
-                    elif keyword[0][0] == '\\' or keyword[0][0:2] == '//':
+                    elif keyword[0][0:2] == '\\"' or keyword[0][0:2] == "\\'":
+                        self.highlight_all(r'%s' % keyword[0], keyword[1], True)
+                    elif keyword[0][0] == '\\':
                         self.highlight_all(r'%s' % keyword[0], keyword[1])
+                    elif keyword[0][0:2] == '//':
+                        self.highlight_all(r'%s' % keyword[0], keyword[1], True)
                     else:
                         self.highlight_all(r'\b%s\b' % keyword[0], keyword[1])
                     self.after(1, gen.__next__)
                     i += 1
                     if i == len(self.keywords):
                         i = 0
+                        for match in self.comment_lines:
+                            self.__remove_tags(match[0], match[1])
+                        self.comment_lines = []
                     yield
 
             gen = step()
             gen.__next__()
 
-        def highlight_all(self, pattern, tag):
-            for match in self.search_re(pattern):
+        def highlight_all(self, pattern, tag, is_repaintable=False):
+            for match in self.search_re(pattern, is_repaintable):
                 self.highlight(tag, match[0], match[1])
 
         def highlight_all_delimited(self, pattern_s, pattern_e, tag):
@@ -798,12 +805,22 @@ class EditorFrame(tk.Frame):
                         and comm_start[0] <= fl_end[0] <= comm_end[0]
                 ):
                     finished = False
-                    if comm_start[0] == fl_start[0] or comm_end[0] == fl_start[0]:
-                        if comm_start[1] < fl_start[1] < comm_end[1]:
+                    if comm_start[0] == fl_start[0] == comm_end[0]:
+                        if fl_end[0] == fl_start[0]:
+                            finished = (
+                                comm_start[1] < fl_start[1] < comm_end[1]
+                                and comm_start [1] < fl_end[1] < comm_end[1]
+                            )
+                        else:
                             finished = True
-                    elif comm_start[0] == fl_end[0] or comm_end[0] == fl_end[0]:
-                        if comm_start[1] < fl_end[1] < comm_end[1]:
-                            finished = True
+                    elif comm_start[0] == fl_start[0]:
+                        finished = comm_start[1] < fl_start[1]
+                    elif comm_end[0] == fl_start[0]:
+                        finished = fl_start[1] < comm_end[1]
+                    elif comm_start[0] == fl_end[0]:
+                        finished = comm_start[1] < fl_end[1]
+                    elif comm_end[0] == fl_end[0]:
+                        finished = fl_end[1] < comm_end[1]
                     else:
                         finished = True
                     if finished:
@@ -813,7 +830,7 @@ class EditorFrame(tk.Frame):
                 self.__remove_tags(start, end)
                 self.tag_add(tag, start, end)
 
-        def search_re(self, pattern):
+        def search_re(self, pattern, is_repaintable):
             """
             Uses the python re library to match patterns.
 
@@ -829,6 +846,8 @@ class EditorFrame(tk.Frame):
                 for match in re.finditer(pattern, line):
                     matches.append(
                         (f"{i + 1}.{match.start()}", f"{i + 1}.{match.end()}"))
+            if is_repaintable:
+                self.comment_lines.extend(matches)
             return matches
 
         def search_re_delimited(self, pattern_s, pattern_e):
@@ -886,6 +905,7 @@ class EditorFrame(tk.Frame):
 
         def __remove_tags(self, start, end):
             self.tag_remove("blue", start, end)
+            self.tag_remove("strblue", start, end)
             self.tag_remove("orange", start, end)
             self.tag_remove("green", start, end)
             self.tag_remove("gray", start, end)
