@@ -2,6 +2,7 @@ import libraries.libs as libraries
 import output.console as console
 import compiler.ast as ast
 import compiler.ast_visitor as ast_visitor
+from simulator.compiler.ast import StringTypeNode, VoidTypeNode
 
 
 class Semantic:
@@ -588,6 +589,15 @@ class SemanticAnalyzer(ast_visitor.ASTVisitor):
             return ast.WordTypeNode()
         else:
             return ast.IDTypeNode(func_type)
+
+    def visit_conversion(self, conversion: ast.ConversionNode, param):
+        if conversion.conv_type is not None:
+            conversion.conv_type.accept(self, param)
+        if conversion.expr is not None:
+            conversion.expr.set_function(conversion.function)
+            conversion.expr.accept(self, param)
+        conversion.set_type(conversion.conv_type)
+        return None
 
     def visit_inc_dec_expression(self, inc_dec_expression: ast.IncDecExpressionNode, param):
         if inc_dec_expression.var is not None:

@@ -36,7 +36,7 @@ class CodeGenerator(ast_visitor.ASTVisitor):
     def visit_program(self, program: ast.ProgramNode, param):
         self.function_visitor.visit_program(program, param)
         self.functions = self.function_visitor.functions
-        self.script = open("temp/script_arduino.py", 'w')
+        self.script = open("temp/script_arduino.py", 'w', encoding='utf-8')
         self.write_to_script("import libraries.standard as standard")
         self.write_endl()
         self.write_to_script("import libraries.serial as Serial")
@@ -256,14 +256,22 @@ class CodeGenerator(ast_visitor.ASTVisitor):
         return None
 
     def visit_for(self, for_p: ast.ForNode, param):
-        self.write_to_script("for i in range(")
+        self.write_to_script(f"for {for_p.assignment.var_name} in range(")
         if for_p.assignment is not None:
-            for_p.assignment.accept(self, param)
+            self.write_to_script(for_p.assignment.expr.value)
+        self.write_to_script(", ")
         if for_p.condition is not None:
             for_p.condition.accept(self, param)
+        self.write_to_script(", ")
         if for_p.expression is not None:
-            for_p.expression.accept(self, param)
-        self.write_to_script(":")
+            if isinstance(for_p.expression, ast.IncDecExpressionNode):
+                if for_p.expression.op == '++':
+                    self.write_to_script(1)
+                else:
+                    self.write_to_script(-1)
+            else:
+                self.write_to_script(for_p.expression.right)
+        self.write_to_script("):")
         self.write_endl()
 
         self.increase_tab()

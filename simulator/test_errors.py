@@ -57,7 +57,7 @@ class TestSyntaxErrors(TestBaseErrors):
 
     def test_error_messages(self):
         self.assertEqual(self.syntax_errors[0].message,
-                         "El valor introducido en esta posición no es válido: int")
+                         "El valor introducido en esta posición no es válido: ;")
         self.assertEqual(self.syntax_errors[1].message,
                          "Falta(n) caracter(es): ';'")
         self.assertEqual(self.syntax_errors[2].message,

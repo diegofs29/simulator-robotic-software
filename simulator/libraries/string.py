@@ -60,7 +60,7 @@ class String:
     ERROR = -1
     NOT_IMPL_WARNING = -2
 
-    def __init__(self, string=""):
+    def __init__(self, string="", *args, **kwargs):
         self.string = string
 
     def __repr__(self) -> str:
