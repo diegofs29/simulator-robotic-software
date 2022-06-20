@@ -35,7 +35,8 @@ class Drawing:
         Deletes all the elements that have to be zoomed
         """
         self.canvas.delete('actuator', 'button_left', 'button_right', 'block')
-        self.canvas.delete('robot', 'circuit', 'obstacle', 'light_1', 'light_2', 'light_3', 'light_4')
+        self.canvas.delete('robot', 'circuit', 'obstacle',
+                           'light_1', 'light_2', 'light_3', 'light_4')
         self.canvas.delete('prueba')
 
     def draw_image(self, element, group):
@@ -44,7 +45,7 @@ class Drawing:
         Arguments:
             element: a dict whose content is the x and y
             coordinates and the image (as Image instance)
-            group: the tag where the image is going to 
+            group: the tag where the image is going to
             be added to
         """
         image = self.__open_image(element["image"], group)
@@ -56,7 +57,7 @@ class Drawing:
         Arguments:
             element: a dict whose content is the x and y
             coordinates and the image (as Image instance)
-            group: the tag where the image is going to 
+            group: the tag where the image is going to
             be added to
         """
         self.canvas.delete(group)
@@ -93,7 +94,8 @@ class Drawing:
         """
         self.canvas.delete(group)
         image = self.__open_image(element["image"], group)
-        rotated_img = self.images[element["image"]] = image.rotate(angle, expand=True)
+        rotated_img = self.images[element["image"]
+                                  ] = image.rotate(angle, expand=True)
         self.__add_to_canvas(element["x"], element["y"], rotated_img, group)
 
     def draw_rectangle(self, form: dict):
@@ -110,7 +112,8 @@ class Drawing:
         height = int(form["height"] * self.scale)
         color = form["color"]
         group = form["group"]
-        self.canvas.create_rectangle(x, y, x + width, y + height, fill=color, tags=group)
+        self.canvas.create_rectangle(
+            x, y, x + width, y + height, fill=color, tags=group)
 
     def draw_arc(self, form: dict):
         """
@@ -118,18 +121,19 @@ class Drawing:
         Arguments:
             form: a dictionary whose elements are the x and y
             coordinates, the width and height of the bounding of
-            the arc, the width of the arc, the angle of the arc 
+            the arc, the width of the arc, the angle of the arc
             and the group (tag of tkinter)
         """
         x = int(form["x"] * self.scale)
         y = int(form["y"] * self.scale) + self.hud_h
         width = int(form["width"] * self.scale)
         height = int(form["height"] * self.scale)
-        track_width = int(form["track_width"]* self.scale)
+        track_width = int(form["track_width"] * self.scale)
         starting_angle = form["starting_angle"]
         angle = form["angle"]
         group = form["group"]
-        self.canvas.create_arc(x, y, x + width, y + height, width=track_width, style="arc", start=starting_angle, extent=angle, tags=group)
+        self.canvas.create_arc(x, y, x + width, y + height, width=track_width, style="arc", start=starting_angle,
+                               extent=angle, tags=group)
 
     def zoom_in(self):
         """
@@ -165,7 +169,7 @@ class Drawing:
         self.width = width
         self.height = height
         self.__update_size()
-    
+
     def __update_size(self):
         """
         Updates the size of the canvas according
@@ -194,11 +198,12 @@ class Drawing:
             "y": scale_y,
             "image": ImageTk.PhotoImage(res_img)
         }
-        self.canvas.create_image(scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
+        self.canvas.create_image(
+            scale_x, scale_y, image=self.canvas_images[group]["image"], tags=group)
 
     def __open_image(self, image_path, group):
         image = None
-        if not group in self.images:
+        if group not in self.images:
             image = self.__get_image(image_path, group)
         elif not self.images[group]["path"] == image_path:
             image = self.__get_image(image_path, group)

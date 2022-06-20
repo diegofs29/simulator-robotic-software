@@ -135,6 +135,7 @@ expression
        | member_acc=expression '.' id_acc=ID
        | array_name=ID ('[' indexes+=expression ']')+
        | f_call=expression '(' args=parameter? ')'
+       | conv=conversion
        | expr=expression operator=('++'|'--')
        | operator=('++'|'--') expr=expression
        | operator=('!'|'~') expr=expression
@@ -149,6 +150,22 @@ expression
        | left=expression operator='&&' right=expression
        | left=expression operator='||' right=expression
        | left=expression operator=('%='|'&='|'*='|'+='|'-='|'/='|'^='|'|=') right=expression
+       ;
+
+conversion
+       : uc_type=('(unsigned int)'|'(unsigned long)') expr=expression
+       | '(' c_type=type_convert ')' expr=expression
+       | uc_type='String' '(' expr=expression ')'
+       | c_type=type_convert '(' expr=expression ')'
+       ;
+
+type_convert
+       : 'byte'
+       | 'char'
+       | 'float'
+       | 'int'
+       | 'long'
+       | 'word'
        ;
 
 parameter 

@@ -1,7 +1,9 @@
 import robot_components.boards as boards
 
+
 def get_name():
     return "Servo"
+
 
 def get_methods():
     """
@@ -20,9 +22,9 @@ def get_methods():
     methods["detach"] = ("void", "detach", [], -1)
     return methods
 
+
 def get_not_implemented():
     return []
-
 
 
 class Servo:
@@ -58,21 +60,21 @@ class Servo:
             pin: the number of the pin to be attached to
             min: pulse width corresponging with the minimun angle on
             the servo (default = 544)
-            max: pulse width corresponging with the max angel on the 
+            max: pulse width corresponging with the max angel on the
             the servo (default = 2400)
         Returns:
             OK if servo attached to pin correctly, ERROR if else
         """
         servo = None
-        if self.board != None:
+        if self.board is not None:
             servo = self.board.get_pin_element(pin)
-        if servo != None:
+        if servo is not None:
             self.servo = servo
             servo.min = min
             servo.max = max
             return self.OK
         return self.ERROR
-        
+
     def write(self, angle):
         """
         Writes speed to servo.
@@ -95,7 +97,7 @@ class Servo:
             servo: the servo to write to
             us: the value of the parameter in microseconds (int)
         """
-        if self.servo != None:
+        if self.servo is not None:
             self.servo.value = us
             return self.OK
         return self.ERROR
@@ -108,7 +110,7 @@ class Servo:
         Returns:
             The angle of the servo from 0 to 180 degrees
         """
-        if self.servo != None:
+        if self.servo is not None:
             return self.servo.value
         return None
 
@@ -120,7 +122,7 @@ class Servo:
         Returns:
             True if attached to pin, False if else
         """
-        if self.servo != None:
+        if self.servo is not None:
             return self.servo.pin != -1
         return False
 
@@ -130,7 +132,7 @@ class Servo:
         Arguments:
             servo: the servo to detach
         """
-        if self.servo != None:
+        if self.servo is not None:
             self.servo.pin = -1
             return self.OK
         return self.ERROR

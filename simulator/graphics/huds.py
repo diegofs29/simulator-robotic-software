@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
+
 class HUD:
 
     def __init__(self):
@@ -29,7 +30,7 @@ class HUD:
         show
         """
         pass
-    
+
 
 class MobileHUD(HUD):
 
@@ -46,11 +47,16 @@ class MobileHUD(HUD):
         """
         Sets the corresponding texts for the mobile robot
         """
-        self.canvas.create_text(5, 25, text="Rueda izquierda:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(5, 50, text="Rueda derecha:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(5, 75, text="En pista:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(250, 25, text="Detecta obstáculo:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(250, 50, text="└Distancia:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 25, text="Rueda izquierda:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 50, text="Rueda derecha:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 75, text="En pista:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 25, text="Detecta obstáculo:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(250, 50, text="└Distancia:", font=(
+            "Consolas", 13), anchor="w", fill="white")
 
     def set_wheel(self, vels):
         """
@@ -68,7 +74,7 @@ class MobileHUD(HUD):
     def __display_wheels(self, i, vel):
         """
         Displays arrows in the direction that the wheels are moving
-        and with a color that represents their velocity (blue fast, 
+        and with a color that represents their velocity (blue fast,
         yellow medium, red slow).
         Arguments:
             i: the index of the wheel
@@ -93,7 +99,7 @@ class MobileHUD(HUD):
             self.imgs.append(ImageTk.PhotoImage(self.mf))
         y = 25 + (25 * i)
         self.canvas.create_image(200, y, image=self.imgs[i], tags="arr_img")
-        
+
     def set_circuit(self, measurements):
         """
         Displays if the robot is on the circuit or outside it
@@ -110,7 +116,8 @@ class MobileHUD(HUD):
                 text += "Si"
             else:
                 text += "No"
-        self.canvas.create_text(100, 75, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="cir")
+        self.canvas.create_text(100, 75, text=text, font=(
+            "Consolas", 13), anchor="w", fill="white", tags="cir")
 
     def set_detect_obstacle(self, dists):
         """
@@ -130,8 +137,10 @@ class MobileHUD(HUD):
                 dist_text = str(dists[i] - 1)
             else:
                 text += "No"
-            self.canvas.create_text(360, 50 + (25 * i), text=dist_text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
-        self.canvas.create_text(425, 25, text=text, font=("Consolas", 13), anchor="w", tags="obs", fill="white")
+            self.canvas.create_text(360, 50 + (25 * i), text=dist_text, font=("Consolas", 13), anchor="w", tags="obs",
+                                    fill="white")
+        self.canvas.create_text(425, 25, text=text, font=(
+            "Consolas", 13), anchor="w", tags="obs", fill="white")
 
 
 class ActuatorHUD(HUD):
@@ -149,9 +158,12 @@ class ActuatorHUD(HUD):
         """
         Sets the corresponding texts for the linear actuator
         """
-        self.canvas.create_text(5, 25, text="Dirección de movimiento:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(5, 50, text="Botón izquierdo:", font=("Consolas", 13), anchor="w", fill="white")
-        self.canvas.create_text(5, 75, text="Botón derecho:", font=("Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 25, text="Dirección de movimiento:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 50, text="Botón izquierdo:", font=(
+            "Consolas", 13), anchor="w", fill="white")
+        self.canvas.create_text(5, 75, text="Botón derecho:", font=(
+            "Consolas", 13), anchor="w", fill="white")
 
     def set_pressed(self, but_states):
         """
@@ -162,11 +174,12 @@ class ActuatorHUD(HUD):
             text = "No pulsado"
             if but_states[i]:
                 text = "Pulsado"
-            self.canvas.create_text(150 + 20 * ((i + 1) % 2), 50 + 25 * i, text=text, font=("Consolas", 13), anchor="w", fill="white", tags="but_text")
+            self.canvas.create_text(150 + 20 * ((i + 1) % 2), 50 + 25 * i, text=text, font=("Consolas", 13), anchor="w",
+                                    fill="white", tags="but_text")
 
     def set_direction(self, vel):
         """
-        Draws the direction arrows with the information 
+        Draws the direction arrows with the information
         of the velocity
         """
         self.canvas.delete('arr_img')

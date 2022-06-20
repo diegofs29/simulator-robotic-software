@@ -105,9 +105,9 @@ class ArrayDeclarationNode(Sentence):
         self.elements = elements
         self.is_const = is_const
         self.is_static = is_static
-        if not (len(self.size) < 1 and (self.elements == [] or self.elements == None)):
+        if not (len(self.size) < 1 and (self.elements == [] or self.elements is None)):
             self.__fix_array()
-        if self.elements == None:
+        if self.elements is None:
             self.elements = []
 
     def accept(self, visitor, param):
@@ -116,7 +116,7 @@ class ArrayDeclarationNode(Sentence):
     def __fix_array(self):
         if len(self.size) < self.dimensions:
             self.__fix_size()
-        if self.elements != None:
+        if self.elements is not None:
             self.elements = self.__organize_array_elements(self.elements)
 
     def __fix_size(self):
@@ -146,14 +146,15 @@ class ArrayDeclarationNode(Sentence):
     def __organize_array_elements(self, current_elems, array_level=0):
         elems = []
         for i in range(0, self.size[array_level]):
-            if array_level < self.dimensions-1:
+            if array_level < self.dimensions - 1:
                 sub_elems = current_elems[i]
                 # implies its 2d but declared as 1d
                 if not isinstance(current_elems[i], list):
-                    total = reduce(lambda n, e: n*e, self.size[array_level+1:])
-                    sub_elems = current_elems[i*total:(i+1)*total]
+                    total = reduce(lambda n, e: n * e,
+                                   self.size[array_level + 1:])
+                    sub_elems = current_elems[i * total:(i + 1) * total]
                 elems.append(self.__organize_array_elements(
-                    sub_elems, array_level+1))
+                    sub_elems, array_level + 1))
             else:
                 if i < len(current_elems):
                     elems.append(current_elems[i])
@@ -282,6 +283,7 @@ class ShortTypeNode(TypeNode):
         return IntNode(0)
 
 
+# noinspection PyPep8Naming
 class Size_tTypeNode(TypeNode):
 
     def __init__(self):
@@ -687,6 +689,17 @@ class FunctionCallNode(Expression):
 
     def accept(self, visitor, param):
         return visitor.visit_function_call(self, param)
+
+
+class ConversionNode(Expression):
+
+    def __init__(self, conv_type, expr):
+        super().__init__()
+        self.conv_type = conv_type
+        self.expr = expr
+
+    def accept(self, visitor, param):
+        return visitor.visit_conversion(self, param)
 
 
 class ReturnNode(Sentence):

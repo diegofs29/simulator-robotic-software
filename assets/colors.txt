@@ -1,4 +1,7 @@
 /\*	\*/	gray
+\'(.?)\'	blue
+\"(.*)\"	strblue
+//(.*)	dark
 
 HIGH	blue
 LOW	blue
@@ -326,9 +329,6 @@ xor	green
 \#warning	green
 
 Servo	orange
-\'(.?)\'	blue
-\"(.*)\"	strblue
-//(.*)	dark
 
 Servo	orange
 

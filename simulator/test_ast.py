@@ -24,7 +24,6 @@ class TestBaseAST(unittest.TestCase):
 
 
 class TestInclude(TestBaseAST):
-
     file = "tests/file-tests/include.txt"
 
     def test_file_name(self):
@@ -36,7 +35,6 @@ class TestInclude(TestBaseAST):
 
 
 class TestGlobalDefinition(TestBaseAST):
-
     file = "tests/file-tests/g-def.txt"
 
     def setUp(self):
@@ -147,7 +145,6 @@ class TestGlobalDefinition(TestBaseAST):
 
 
 class TestFunctionDefinition(TestBaseAST):
-
     file = "tests/file-tests/f-def.txt"
 
     def setUp(self):
@@ -239,7 +236,6 @@ class TestFunctionDefinition(TestBaseAST):
 
 
 class TestTerminals(TestBaseAST):
-
     file = "tests/file-tests/terminals.txt"
 
     def setUp(self):
@@ -290,7 +286,6 @@ class TestTerminals(TestBaseAST):
 
 
 class TestFunctionCall(TestBaseAST):
-
     file = "tests/file-tests/f-calls.txt"
 
     def setUp(self):
@@ -299,12 +294,14 @@ class TestFunctionCall(TestBaseAST):
 
     def test_name(self):
         self.assertEqual(self.code[0].function.sentences[0].name.value, "f")
-        self.assertEqual(self.code[0].function.sentences[1].name.value, "print")
+        self.assertEqual(
+            self.code[0].function.sentences[1].name.value, "print")
         self.assertEqual(
             self.code[0].function.sentences[2].name.member.value, "toUpperCase")
         self.assertEqual(
             self.code[0].function.sentences[3].name.member.value, "toLowerCase")
-        self.assertEqual(self.code[0].function.sentences[4].name.value, "params")
+        self.assertEqual(
+            self.code[0].function.sentences[4].name.value, "params")
 
     def test_parameters(self):
         self.assertEqual(
@@ -344,16 +341,21 @@ class TestFunctionCall(TestBaseAST):
         )
 
     def test_clase(self):
-        self.assertEqual(type(self.code[0].function.sentences[0]), FunctionCallNode)
-        self.assertEqual(type(self.code[0].function.sentences[1]), FunctionCallNode)
-        self.assertEqual(self.code[0].function.sentences[2].name.element.value, "mensaje")
-        self.assertEqual(self.code[0].function.sentences[3].name.element.element.value, "persona")
-        self.assertEqual(self.code[0].function.sentences[3].name.element.member.value, "nombre")
-        self.assertEqual(type(self.code[0].function.sentences[4]), FunctionCallNode)
+        self.assertEqual(
+            type(self.code[0].function.sentences[0]), FunctionCallNode)
+        self.assertEqual(
+            type(self.code[0].function.sentences[1]), FunctionCallNode)
+        self.assertEqual(
+            self.code[0].function.sentences[2].name.element.value, "mensaje")
+        self.assertEqual(
+            self.code[0].function.sentences[3].name.element.element.value, "persona")
+        self.assertEqual(
+            self.code[0].function.sentences[3].name.element.member.value, "nombre")
+        self.assertEqual(
+            type(self.code[0].function.sentences[4]), FunctionCallNode)
 
 
 class TestConditionals(TestBaseAST):
-
     file = "tests/file-tests/conditionals.txt"
 
     def setUp(self):
@@ -401,7 +403,7 @@ class TestConditionals(TestBaseAST):
             self.code[0].function.sentences[1].else_expr[0].name.value, "print"
         )
         self.assertEqual(
-            self.code[0].function.sentences[2].else_expr[0].if_expr[0] != None, True
+            self.code[0].function.sentences[2].else_expr[0].if_expr[0] is not None, True
         )
         self.assertEqual(
             self.code[0].function.sentences[2].else_expr[0].else_expr[0].name.value, "prueba"
@@ -421,7 +423,6 @@ class TestConditionals(TestBaseAST):
 
 
 class TestBucles(TestBaseAST):
-
     file = "tests/file-tests/loops.txt"
 
     def setUp(self):
@@ -486,7 +487,6 @@ class TestBucles(TestBaseAST):
 
 
 class TestAsignations(TestBaseAST):
-
     file = "tests/file-tests/assignments.txt"
 
     def setUp(self):
@@ -534,7 +534,6 @@ class TestAsignations(TestBaseAST):
 
 
 class TestBitwise(TestBaseAST):
-
     file = "tests/file-tests/bitwise.txt"
 
     def setUp(self):
@@ -573,7 +572,6 @@ class TestBitwise(TestBaseAST):
 
 
 class TestLocalDefinition(TestBaseAST):
-
     file = "tests/file-tests/local-def.txt"
 
     def setUp(self):
@@ -757,7 +755,6 @@ class TestLocalDefinition(TestBaseAST):
 
 
 class TestIncDec(TestBaseAST):
-
     file = "tests/file-tests/incdec.txt"
 
     def setUp(self):
@@ -778,7 +775,6 @@ class TestIncDec(TestBaseAST):
 
 
 class TestSpecials(TestBaseAST):
-
     file = "tests/file-tests/specials.txt"
 
     def setUp(self):
@@ -800,7 +796,6 @@ class TestSpecials(TestBaseAST):
 
 
 class TestAritmetic(TestBaseAST):
-
     file = "tests/file-tests/aritmetics.txt"
 
     def setUp(self):
@@ -837,7 +832,6 @@ class TestAritmetic(TestBaseAST):
 
 
 class TestBoolean(TestBaseAST):
-
     file = "tests/file-tests/boolean.txt"
 
     def setUp(self):
@@ -883,17 +877,16 @@ class TestBoolean(TestBaseAST):
         self.assertEqual(self.code[0].function.sentences[6].right.value, False)
         sent = self.code[0].function.sentences[7].right
         self.assertEqual(
-            str(sent.left.left.value) + sent.left.op +
-            str(sent.left.right.value)
+            str(sent.left.left.value) + sent.left.op
+            + str(sent.left.right.value)
             + sent.op
-            + str(sent.right.left.value) + sent.right.op +
-            str(sent.right.right.value),
+            + str(sent.right.left.value) + sent.right.op
+            + str(sent.right.right.value),
             "y!=0&&z<w"
         )
 
 
 class TestArrays(TestBaseAST):
-
     file = "tests/file-tests/arrays.txt"
 
     def setUp(self):
@@ -1020,7 +1013,6 @@ class TestArrays(TestBaseAST):
 
 
 class TestArrayAccess(TestBaseAST):
-
     file = "tests/file-tests/array-access.txt"
 
     def setUp(self):
@@ -1048,3 +1040,135 @@ class TestArrayAccess(TestBaseAST):
             self.code[0].function.sentences[2].indexes[1].value, 0)
         self.assertEqual(
             self.code[0].function.sentences[2].indexes[2].value, 3)
+
+
+class TestConversion(TestBaseAST):
+    file = "tests/file-tests/conversions.txt"
+
+    def setUp(self):
+        super().setUp()
+        self.code = self.ast.code
+
+    def test_type(self):
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[0].conv_type,
+            UIntTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[1].conv_type,
+            ULongTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[2].conv_type,
+            ByteTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[3].conv_type,
+            CharTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[4].conv_type,
+            FloatTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[5].conv_type,
+            IntTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[6].conv_type,
+            LongTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[0].function.sentences[7].conv_type,
+            WordTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[0].parameters[0].right.conv_type,
+            StringTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[1].conv_type,
+            ByteTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[2].conv_type,
+            CharTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[3].conv_type,
+            FloatTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[4].conv_type,
+            IntTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[5].conv_type,
+            LongTypeNode)
+        )
+        self.assertTrue(
+            isinstance(self.code[1].function.sentences[6].conv_type,
+            WordTypeNode)
+        )
+
+    def test_expr(self):
+        self.assertEqual(
+            self.code[0].function.sentences[0].expr.value,
+            10
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[1].expr.value,
+            350
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[2].expr.value,
+            0
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[3].expr.value,
+            55
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[4].expr.value,
+            29
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[5].expr.value,
+            151
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[6].expr.value,
+            2487
+        )
+        self.assertEqual(
+            self.code[0].function.sentences[7].expr.value,
+            1456
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[0].parameters[0].left.value,
+            "Hola"
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[1].expr.value,
+            1
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[2].expr.value,
+            108
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[3].expr.value,
+            46468
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[4].expr.value,
+            69
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[5].expr.value,
+            1114
+        )
+        self.assertEqual(
+            self.code[1].function.sentences[6].expr.value,
+            6468
+        )

@@ -109,6 +109,16 @@ class ArduinoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ArduinoParser#conversion.
+    def visitConversion(self, ctx:ArduinoParser.ConversionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ArduinoParser#type_convert.
+    def visitType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ArduinoParser#parameter.
     def visitParameter(self, ctx:ArduinoParser.ParameterContext):
         return self.visitChildren(ctx)

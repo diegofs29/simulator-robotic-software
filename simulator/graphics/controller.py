@@ -56,7 +56,7 @@ class RobotsController:
         self.console = console.Console(text_component)
 
     def change_robot(self, option):
-        if self.robot_layer != None:
+        if self.robot_layer is not None:
             self.stop()
         if option == 0:
             self.view.show_circuit_selector(True)
@@ -72,7 +72,7 @@ class RobotsController:
             self.robot_layer = layers.LinearActuatorLayer()
 
     def change_circuit(self, option):
-        if self.robot_layer != None:
+        if self.robot_layer is not None:
             self.stop()
         if isinstance(self.robot_layer, layers.MoblileRobotLayer):
             self.robot_layer.set_circuit(option)
@@ -140,7 +140,8 @@ class RobotsController:
             robot.set_servo(robot.parse_pin(pin_data['servo']))
         if 'button_joystick' in pin_data:
             robot.detach_joystick_button()
-            robot.set_joystick_button(robot.parse_pin(pin_data['button_joystick']))
+            robot.set_joystick_button(
+                robot.parse_pin(pin_data['button_joystick']))
         if 'joystick_x' in pin_data:
             robot.detach_joystick_x()
             robot.set_joystick_x(robot.parse_pin(pin_data['joystick_x']))
@@ -222,3 +223,6 @@ class RobotsController:
 
     def get_code(self):
         return self.view.get_code()
+
+    def exit(self):
+        self.console.logger.close_log()

@@ -4,6 +4,7 @@ import graphics.huds as huds
 import robot_components.robots as robots
 import files.files_reader as filesr
 
+
 class Layer:
 
     def __init__(self):
@@ -26,7 +27,7 @@ class Layer:
         self._drawing_config()
         self.robot_drawing.draw()
         self.is_drawing = True
-        
+
     def stop(self):
         """
         Stops all the executing code and clears the canvas
@@ -68,7 +69,8 @@ class Layer:
             hud_canvas: the canvas of the hud
         """
         self.drawing.set_canvas(canvas)
-        self.drawing.set_size(self.robot_drawing.drawing_width, self.robot_drawing.drawing_height)
+        self.drawing.set_size(self.robot_drawing.drawing_width,
+                              self.robot_drawing.drawing_height)
         self.hud.set_canvas(hud_canvas)
 
     def _zoom_config(self):
@@ -116,7 +118,8 @@ class MoblileRobotLayer(Layer):
         self.hud = huds.MobileHUD()
         self.robot_data = self.rdr.parse_robot(0 if n_light_sens == 2 else 1)
         self.robot = robots.MobileRobot(n_light_sens, self.robot_data)
-        self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, n_light_sens)
+        self.robot_drawing = robot_drawings.MobileRobotDrawing(
+            self.drawing, n_light_sens)
 
         self.n_sens = n_light_sens
 
@@ -127,8 +130,8 @@ class MoblileRobotLayer(Layer):
         """
         Move method of the layer. Moves the robot and rotates it
         """
-        v = 0 #Velocity
-        da = 0 #Angle
+        v = 0  # Velocity
+        da = 0  # Angle
         if using_keys:
             v, da = self.__move_keys(move_WASD)
         else:
@@ -136,32 +139,32 @@ class MoblileRobotLayer(Layer):
 
         future_p = self.robot_drawing.predict_movement(v)
         if (
-            v == 0 or
-            future_p[0] <= self.robot_drawing.width / 2 or
-            future_p[0] >= self.robot_drawing.drawing_width - self.robot_drawing.width / 2 or
-            future_p[1] <= self.robot_drawing.height / 2 or
-            future_p[1] >= self.robot_drawing.drawing_height - self.robot_drawing.height / 2 or
-            self.__check_obstacle_collision(future_p[0], future_p[1])
+            v == 0
+            or future_p[0] <= self.robot_drawing.width / 2
+            or future_p[0] >= self.robot_drawing.drawing_width - self.robot_drawing.width / 2
+            or future_p[1] <= self.robot_drawing.height / 2
+            or future_p[1] >= self.robot_drawing.drawing_height - self.robot_drawing.height / 2
+            or self.__check_obstacle_collision(future_p[0], future_p[1])
         ):
             v = 0
             self.is_moving = False
-        #Move or rotate
+        # Move or rotate
         if not self.is_rotating:
             self.robot_drawing.move(v)
         if not self.is_moving:
             self.robot_drawing.change_angle(da)
         self.__hud_velocity()
 
-        #Overlapping check
-        if self.circuit != None:
+        # Overlapping check
+        if self.circuit is not None:
             self.__check_circuit_overlap()
-        if self.obstacle != None: 
+        if self.obstacle is not None:
             self.__detect_obstacle()
 
     def set_circuit(self, circuit_opt):
         """
         Changes the circuit
-        Arguments: 
+        Arguments:
             circuit_opt: the number of the chosen circuit
         """
         circuit_name = self.__parse_circuit_opt(circuit_opt)
@@ -173,14 +176,15 @@ class MoblileRobotLayer(Layer):
         if len(obstacles) > 0:
             self.obstacle = robot_drawings.Obstacle(obstacles[0], self.drawing)
         self.reset_robot()
-    
+
     def reset_robot(self):
         """
         Resets the robot
         """
         self.hud = huds.MobileHUD()
         self.robot = robots.MobileRobot(self.n_sens, self.robot_data)
-        self.robot_drawing = robot_drawings.MobileRobotDrawing(self.drawing, self.n_sens)
+        self.robot_drawing = robot_drawings.MobileRobotDrawing(
+            self.drawing, self.n_sens)
 
     def __move_keys(self, movement):
         """
@@ -192,18 +196,18 @@ class MoblileRobotLayer(Layer):
         v = 0
         da = 0
         if not self.is_rotating:
-            if movement["w"] == True:
+            if movement["w"]:
                 v = -20
-            if movement["s"] == True:
+            if movement["s"]:
                 v = 20
             if v != 0:
                 self.is_moving = True
             else:
                 self.is_moving = False
         if not self.is_moving:
-            if movement["a"] == True:
+            if movement["a"]:
                 da = 5
-            if movement["d"] == True:
+            if movement["d"]:
                 da = -5
             if da != 0:
                 self.is_rotating = True
@@ -217,8 +221,8 @@ class MoblileRobotLayer(Layer):
         """
         v = 0
         da = 0
-        #self.robot.servo_left.value = 0
-        #self.robot.servo_right.value = 0
+        # self.robot.servo_left.value = 0
+        # self.robot.servo_right.value = 0
         v_i = int((self.robot.servo_left.get_value() - 90) / 10)
         v_r = int((self.robot.servo_right.get_value() - 90) / 10)
         rotates = False
@@ -285,14 +289,14 @@ class MoblileRobotLayer(Layer):
         """
         Creates and draws the circuit in the canvas
         """
-        if self.circuit != None:
+        if self.circuit is not None:
             self.circuit.create_circuit()
 
     def __create_obstacle(self):
         """
         Draws the obstacle in the canvas
         """
-        if self.obstacle != None:
+        if self.obstacle is not None:
             self.obstacle.draw()
 
     def __check_circuit_overlap(self):
@@ -325,13 +329,14 @@ class MoblileRobotLayer(Layer):
         Returns:
             True if collides, False if else
         """
-        if self.obstacle == None:
+        if self.obstacle is None:
             return False
         return (
-            x + self.robot_drawing.width / 2 >= self.obstacle.x and
-            y + self.robot_drawing.height / 2 >= self.obstacle.y and
-            x <= self.obstacle.x + (self.obstacle.width + self.robot_drawing.width / 2) and
-            y <= self.obstacle.y + (self.obstacle.height + self.robot_drawing.height / 2) 
+            x + self.robot_drawing.width / 2 >= self.obstacle.x
+            and y + self.robot_drawing.height / 2 >= self.obstacle.y
+            and x <= self.obstacle.x + (self.obstacle.width + self.robot_drawing.width / 2)
+            and y <= self.obstacle.y
+            + (self.obstacle.height + self.robot_drawing.height / 2)
         )
 
     def __detect_obstacle(self):
@@ -341,7 +346,8 @@ class MoblileRobotLayer(Layer):
         to the hud, so it can be parsed
         """
         dists = []
-        dists.append(self.obstacle.calculate_distance(self.robot_drawing.sensors["sound"].x, self.robot_drawing.sensors["sound"].y, self.robot_drawing.angle))
+        dists.append(self.obstacle.calculate_distance(self.robot_drawing.sensors["sound"].x,
+                                                      self.robot_drawing.sensors["sound"].y, self.robot_drawing.angle))
         if dists[-1] != -1:
             self.robot_drawing.sensors["sound"].set_detect(True)
             self.robot.sound.value = 1
@@ -358,6 +364,7 @@ class MoblileRobotLayer(Layer):
         so it can be parsed
         """
         self.hud.set_wheel([self.robot_drawing.vl, self.robot_drawing.vr])
+
 
 class LinearActuatorLayer(Layer):
 
@@ -384,7 +391,8 @@ class LinearActuatorLayer(Layer):
             v = self.__move_code()
         self.robot_drawing.move(v)
         self.hud.set_direction(v * 25)
-        self.hud.set_pressed([self.robot_drawing.but_left.pressed, self.robot_drawing.but_right.pressed])
+        self.hud.set_pressed(
+            [self.robot_drawing.but_left.pressed, self.robot_drawing.but_right.pressed])
 
     def __move_keys(self, movement):
         """
@@ -394,11 +402,11 @@ class LinearActuatorLayer(Layer):
             of the keys
         """
         v = 0
-        if movement["a"] == True:
+        if movement["a"]:
             if self.robot_drawing.block.x > 508:
                 v -= 15
             self.__hit_left(v == 0)
-        elif movement["d"] == True:
+        elif movement["d"]:
             if self.robot_drawing.block.x < 1912:
                 v += 15
             self.__hit_right(v == 0)

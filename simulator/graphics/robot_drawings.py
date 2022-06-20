@@ -65,7 +65,7 @@ class LinearActuatorDrawing(RobotDrawing):
         self.height = 380
         self.hit = False
         self.direction = "stop"
-        
+
         self.create_robot()
 
     def move(self, vel):
@@ -103,7 +103,8 @@ class LinearActuatorDrawing(RobotDrawing):
         Redraws the buttons when they are changed
         """
         self.drawing.redraw_image(self.but_left.get_image(), "button_left")
-        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
+        self.drawing.rotate_image(
+            self.but_left.get_image(), 180, "button_left")
         self.drawing.redraw_image(self.but_right.get_image(), "button_right")
 
     def create_robot(self):
@@ -117,12 +118,12 @@ class LinearActuatorDrawing(RobotDrawing):
             "image": self.img_act
         }
         self.but_left = self.ActuatorButton(
-            "assets/button-hit.png", 
+            "assets/button-hit.png",
             "assets/button-no-hit.png",
             self.x - 960, self.y + 70
         )
         self.but_right = self.ActuatorButton(
-            "assets/button-hit.png", 
+            "assets/button-hit.png",
             "assets/button-no-hit.png",
             self.x + 875, self.y - 185
         )
@@ -137,10 +138,10 @@ class LinearActuatorDrawing(RobotDrawing):
         """
         self.drawing.draw_image(self.image, "actuator")
         self.drawing.draw_image(self.but_left.get_image(), "button_left")
-        self.drawing.rotate_image(self.but_left.get_image(), 180, "button_left")
+        self.drawing.rotate_image(
+            self.but_left.get_image(), 180, "button_left")
         self.drawing.draw_image(self.but_right.get_image(), "button_right")
         self.drawing.draw_image(self.block.get_image(), "block")
-
 
     class ActuatorElement:
 
@@ -164,7 +165,6 @@ class LinearActuatorDrawing(RobotDrawing):
                 "image": self.img_shown
             }
 
-
     class Block(ActuatorElement):
 
         def __init__(self, img_path, x, y):
@@ -178,7 +178,6 @@ class LinearActuatorDrawing(RobotDrawing):
             self.img_shown = img_path
             self.x = x
             self.y = y
-
 
     class ActuatorButton(ActuatorElement):
 
@@ -278,14 +277,14 @@ class MobileRobotDrawing(RobotDrawing):
         """
         self.drawing.draw_image(self.robot, "robot")
         self.drawing.rotate_image(
-                {
-                    "x": self.x,
-                    "y": self.y,
-                    "image": self.img_mobrob
-                },
-                self.angle - 90,
-                "robot"
-            )
+            {
+                "x": self.x,
+                "y": self.y,
+                "image": self.img_mobrob
+            },
+            self.angle - 90,
+            "robot"
+        )
         i = 1
         for sens in self.sensors["light"]:
             self.drawing.draw_image(sens.get_image(), "light_{}".format(i))
@@ -336,7 +335,7 @@ class MobileRobotDrawing(RobotDrawing):
         """
         Changes robot's angle when turning
         Arguments:
-            d_angle: the number of degrees that the robot 
+            d_angle: the number of degrees that the robot
             is going to rotate. Can be + or -
         """
         self.vl = -d_angle * 50
@@ -433,12 +432,11 @@ class MobileRobotDrawing(RobotDrawing):
             self.drawing.redraw_image(img, "light_{}".format(i))
             i += 1
         x, y = self.__rotate_center(
-                (self.sensors["sound"].real_x, self.sensors["sound"].real_y),
-                (self.x, self.y),
-                da
-            )
+            (self.sensors["sound"].real_x, self.sensors["sound"].real_y),
+            (self.x, self.y),
+            da
+        )
         self.sensors["sound"].change_coords(self.x + x, self.y + y)
-        
 
     def __rotate_center(self, tp, c, da):
         """
@@ -450,7 +448,7 @@ class MobileRobotDrawing(RobotDrawing):
         """
         abs_px = tp[0] - c[0]
         abs_py = tp[1] - c[1]
-        rads = da * (pi / 180) #degrees to radians
+        rads = da * (pi / 180)  # degrees to radians
 
         # Rotate
         cos_r = cos(rads)
@@ -459,7 +457,6 @@ class MobileRobotDrawing(RobotDrawing):
         y = (-abs_px * sin_r) + (abs_py * cos_r)
 
         return (x, y)
-
 
     class Sensor:
 
@@ -498,14 +495,13 @@ class MobileRobotDrawing(RobotDrawing):
                     y: the y coordinate
                     image: the image to represent
             """
-            if self.img_shown != None:
+            if self.img_shown is not None:
                 return {
                     "x": self.x,
                     "y": self.y,
                     "image": self.img_shown
                 }
             return None
-
 
     class LightSensor(Sensor):
 
@@ -526,13 +522,12 @@ class MobileRobotDrawing(RobotDrawing):
             Changes the sensor to light
             """
             self.img_shown = self.img_light
-            
+
         def dark(self):
             """
             Changes the sensor to dark
             """
             self.img_shown = self.img_dark
-
 
     class UltrasoundSensor(Sensor):
 
@@ -608,7 +603,8 @@ class Circuit:
                     saved_coords.append((x, y))
             elif part['type'] == 'turn':
                 x, y = self.__correct_turn_start(x, y, part)
-                self.__create_turn(x, y, part['bounding_len'], part['angle'], part['starting_angle'], self.ROAD_WIDTH)
+                self.__create_turn(
+                    x, y, part['bounding_len'], part['angle'], part['starting_angle'], self.ROAD_WIDTH)
                 x, y = self.__correct_turn_end(x, y, part)
 
     def __save_coords_x(self, x, y, part):
@@ -685,7 +681,7 @@ class Circuit:
             if angle > 0:
                 x -= turn['bounding_len'] - self.ROAD_WIDTH / 2
                 y += turn['bounding_len'] - self.ROAD_WIDTH / 2
-            else: 
+            else:
                 x -= turn['bounding_len'] - self.ROAD_WIDTH / 2
                 y -= turn['bounding_len'] / 2
         elif start_angle == 90:
@@ -707,7 +703,7 @@ class Circuit:
                 x -= turn['bounding_len'] / 2
                 y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
             else:
-                x -= turn['bounding_len'] / 2 - self.ROAD_WIDTH 
+                x -= turn['bounding_len'] / 2 - self.ROAD_WIDTH
                 y -= turn['bounding_len'] - self.ROAD_WIDTH / 2
         return (x, y)
 
@@ -761,7 +757,7 @@ class Circuit:
         """
         for part in self.circuit_parts:
             part.draw(self.drawing)
-    
+
     def __create_straight(self, x, y, width, height):
         """
         Creates a straight
@@ -794,7 +790,8 @@ class Circuit:
             track_width: the width of the track
         """
         self.circuit_parts.append(
-            self.CircuitTurn(x, y, bounding_len, bounding_len, angle, starting_angle, track_width)
+            self.CircuitTurn(x, y, bounding_len, bounding_len,
+                             angle, starting_angle, track_width)
         )
 
     def is_overlapping(self, x, y):
@@ -814,7 +811,7 @@ class Circuit:
         return overlap
 
     class CircuitPart:
-        
+
         def __init__(self, x, y):
             """
             Constructor for circuit straight
@@ -872,13 +869,11 @@ class Circuit:
             """
             return (
                 (
-                    x >= self.x and 
-                    x <= self.x + self.width
-                ) 
-                    and 
-                (
-                    y >= self.y and 
-                    y <= self.y + self.height
+                    x >= self.x
+                    and x <= self.x + self.width
+                ) and (
+                    y >= self.y
+                    and y <= self.y + self.height
                 )
             )
 
@@ -913,12 +908,12 @@ class Circuit:
         def draw(self, drawing: drawing.Drawing):
             drawing.draw_arc(
                 {
-                    "x": self.x, 
-                    "y": self.y, 
-                    "width": self.width, 
-                    "height": self.height, 
-                    "track_width": self.track_width, 
-                    "angle": self.angle, 
+                    "x": self.x,
+                    "y": self.y,
+                    "width": self.width,
+                    "height": self.height,
+                    "track_width": self.track_width,
+                    "angle": self.angle,
                     "starting_angle": self.starting_angle,
                     "group": "circuit"
                 }
@@ -931,11 +926,14 @@ class Circuit:
             r_in = self.radius - (self.track_width / 2)
             r_out = self.radius + (self.track_width / 2)
 
-            dist = sqrt(((x - self.center[0]) ** 2) + ((y - self.center[1]) ** 2))
+            dist = sqrt(
+                ((x - self.center[0]) ** 2)
+                + ((y - self.center[1]) ** 2)
+            )
 
             inside_arc = (
-                dist >= r_in and
-                dist <= r_out
+                dist >= r_in
+                and dist <= r_out
             )
 
             if inside_arc:
@@ -949,10 +947,11 @@ class Circuit:
                 if end_angle == 0:
                     end_angle = 360
                 return (
-                    inside_angle and
-                    self.starting_angle <= inside_angle <= end_angle
+                    inside_angle
+                    and self.starting_angle <= inside_angle <= end_angle
                 )
             return False
+
 
 class Obstacle:
 
@@ -997,7 +996,7 @@ class Obstacle:
             sx: the x coordinate of the sensor
             sy: the y coordinate of the sensor
             angle: the angle of the line (from ox)
-        Returns: 
+        Returns:
             True if is detected, False if else
         """
         # Abs coords of obstacle
@@ -1021,12 +1020,13 @@ class Obstacle:
             dist_y1 = "inf"
             dist_y2 = "inf"
 
-        #print("Dist x1: {}, dist x2: {}, dist y1: {}, dist y2: {}".format(dist_x1, dist_x2, dist_y1, dist_y2))
-        
         # Point distance
-        dy = lambda d, r: int(-sin(r) * d)
-        dx = lambda d, r: int(cos(r) * d)
-        
+        def dy(d, r):
+            return int(-sin(r) * d)
+
+        def dx(d, r):
+            return int(cos(r) * d)
+
         dist = -1
 
         # 10 coords in each point to ensure the fixed coord is inside
@@ -1050,7 +1050,7 @@ class Obstacle:
             if self.__check_inbounds(py2[0] + sx, py2[1] + sy - 10):
                 if dist == -1 or dist_y2 < dist:
                     dist = dist_y2
-        
+
         return dist
 
     def __check_inbounds(self, x, y):
@@ -1064,6 +1064,6 @@ class Obstacle:
             True if inbounds, False if else
         """
         return (
-            self.x <= x <= (self.x + self.width) and
-            self.y <= y <= (self.y + self.height)
+            self.x <= x <= (self.x + self.width)
+            and self.y <= y <= (self.y + self.height)
         )

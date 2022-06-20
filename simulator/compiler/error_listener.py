@@ -3,6 +3,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import *
 
 
+# noinspection PyPep8Naming
 class CompilerErrorListener(ErrorListener):
 
     def __init__(self, log_errors=False):
@@ -20,10 +21,10 @@ class CompilerErrorListener(ErrorListener):
 
     def __handle_error(self, e, expected, offending):
         error_type = message = ""
-        if e == None:
+        if e is None:
             error_type = "Sintaxis"
             message = "Falta(n) caracter(es)"
-            if expected != None and expected[0] != '{':
+            if expected is not None and expected[0] != '{':
                 message += ": {}".format(expected)
         elif type(e) == LexerNoViableAltException:
             error_type = "Léxico"

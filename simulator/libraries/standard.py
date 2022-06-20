@@ -11,7 +11,6 @@ import robot_components.boards as boards
 import robot_components.robot_state as robot_state
 import graphics.screen_updater as screen_updater
 
-
 HIGH = 1
 LOW = 0
 
@@ -27,8 +26,10 @@ board: boards.Board = None
 state: robot_state.State = None
 start = time.time()
 
+
 def get_name():
     return "Standard"
+
 
 def get_methods():
     """
@@ -39,37 +40,42 @@ def get_methods():
         A dict with the methods
     """
     methods = {}
-    #Digital I/O
+    # Digital I/O
     methods["digitalRead"] = ("int", "digital_read", ["int"], -1)
     methods["digitalWrite"] = ("void", "digital_write", ["int", "int"], -1)
     methods["pinMode"] = ("void", "pin_mode", ["int", "int"], -1)
 
-    #Analog I/O
+    # Analog I/O
     methods["analogRead"] = ("int", "analog_read", ["int"], -1)
-    methods["analogReference"] = ("void", "analog_reference", [], -1) #Not implemented
+    methods["analogReference"] = (
+        "void", "analog_reference", [], -1)  # Not implemented
     methods["analogWrite"] = ("void", "analog_write", ["int", "int"], -1)
 
-    #Zero, Due & MKR Family
-    methods["analogReadResolution"] = ("void", "analog_read_resolution", [], -1) #Not implemented
-    methods["analogWriteResolution"] = ("void", "analog_write_resolution", [], -1) #Not implemented
+    # Zero, Due & MKR Family
+    methods["analogReadResolution"] = (
+        "void", "analog_read_resolution", [], -1)  # Not implemented
+    methods["analogWriteResolution"] = (
+        "void", "analog_write_resolution", [], -1)  # Not implemented
 
-    #Advanced I/O
-    methods["noTone"] = ("void", "no_tone", [], -1) #Not implemented
+    # Advanced I/O
+    methods["noTone"] = ("void", "no_tone", [], -1)  # Not implemented
     methods["pulseIn"] = ("long", "pulse_in", ["int", "int"], -1)
-    methods["pulseInLong"] = ("long", "pulse_in_long", [], -1) #Not implemented
-    methods["shiftIn"] = ("byte", "shift_in", [], -1) #Not implemented
-    methods["shiftOut"] = ("void", "shift_out", [], -1) #Not implemented
-    methods["tone"] = ("void", "tone", [], -1) #Not implemented
+    methods["pulseInLong"] = ("long", "pulse_in_long",
+                              [], -1)  # Not implemented
+    methods["shiftIn"] = ("byte", "shift_in", [], -1)  # Not implemented
+    methods["shiftOut"] = ("void", "shift_out", [], -1)  # Not implemented
+    methods["tone"] = ("void", "tone", [], -1)  # Not implemented
 
-    #Time
+    # Time
     methods["delay"] = ("void", "delay", ["long"], -1)
     methods["delayMicroseconds"] = ("void", "delay_microseconds", ["uint"], -1)
     methods["micros"] = ("ulong", "micros", [], -1)
     methods["millis"] = ("ulong", "millis", [], -1)
 
-    #Math
+    # Math
     methods["abs"] = ("double", "abs", ["int"], -1)
-    methods["constrain"] = ("double", "constrain", ["double", "double", "double"], -1)
+    methods["constrain"] = ("double", "constrain", [
+                            "double", "double", "double"], -1)
     methods["map"] = ("int", "map", ["int", "int", "int", "int", "int"], -1)
     methods["max"] = ("double", "max", ["double", "double"], -1)
     methods["min"] = ("double", "min", ["double", "double"], -1)
@@ -77,31 +83,33 @@ def get_methods():
     methods["sq"] = ("double", "sq", ["double"], -1)
     methods["sqrt"] = ("double", "sqrt", ["double"], -1)
 
-    #Trigonometry
+    # Trigonometry
     methods["cos"] = ("double", "cos", ["float"], -1)
     methods["sin"] = ("double", "sin", ["float"], -1)
     methods["tan"] = ("double", "tan", ["float"], -1)
 
-    #Characters
+    # Characters
     methods["isAlpha"] = ("bool", "is_alpha", ["char"], -1)
     methods["isAlphaNumeric"] = ("bool", "is_alpha_numeric", ["char"], -1)
     methods["isAscii"] = ("bool", "is_ascii", ["char"], -1)
     methods["isControl"] = ("bool", "is_control", ["char"], -1)
     methods["isDigit"] = ("bool", "is_digit", ["char"], -1)
     methods["isGraph"] = ("bool", "is_graph", ["char"], -1)
-    methods["isHexadecimalDigit"] = ("bool", "is_hexadecimal_digit", ["char"], -1)
+    methods["isHexadecimalDigit"] = (
+        "bool", "is_hexadecimal_digit", ["char"], -1)
     methods["isLowerCase"] = ("bool", "is_lower_case", ["char"], -1)
     methods["isPrintable"] = ("bool", "is_printable", ["char"], -1)
     methods["isPunct"] = ("bool", "is_punct", ["char"], -1)
     methods["isSpace"] = ("bool", "is_space", ["char"], -1)
     methods["isUpperCase"] = ("bool", "is_upper_case", ["char"], -1)
     methods["isWhiteSpace"] = ("bool", "is_whitespace", ["char"], -1)
-    
-    #Random Numbers
-    methods["random"] = ("long", "random", ["int", "(int)"], -1) #Caution, inverse order for two params
-    methods["randomSeed"] = ("void", "random_seed", [], -1) #Not implemented
 
-    #Bits and bytes
+    # Random Numbers
+    # Caution, inverse order for two params
+    methods["random"] = ("long", "random", ["int", "(int)"], -1)
+    methods["randomSeed"] = ("void", "random_seed", [], -1)  # Not implemented
+
+    # Bits and bytes
     methods["bit"] = ("int", "bit", ["int"], -1)
     methods["bitClear"] = ("int", "bit_clear", ["int", "int"], -1)
     methods["bitRead"] = ("int", "bit_read", ["int", "int"], -1)
@@ -110,17 +118,21 @@ def get_methods():
     methods["highByte"] = ("byte", "high_byte", ["double"], -1)
     methods["lowByte"] = ("byte", "low_byte", ["double"], -1)
 
-    #External Interrupts
-    methods["attachInterrupt"] = ("void", "attach_interrupt", [], -1) #Not implemented
-    methods["detachInterrupt"] = ("void", "detach_interrupt", [], -1) #Not implemented
+    # External Interrupts
+    methods["attachInterrupt"] = (
+        "void", "attach_interrupt", [], -1)  # Not implemented
+    methods["detachInterrupt"] = (
+        "void", "detach_interrupt", [], -1)  # Not implemented
 
-    #Interrupts
-    methods["interrupts"] = ("void", "interrupts", [], -1) #Not implemented
-    methods["noInterrupts"] = ("void", "no_interrupts", [], -1) #Not implemented
+    # Interrupts
+    methods["interrupts"] = ("void", "interrupts", [], -1)  # Not implemented
+    methods["noInterrupts"] = (
+        "void", "no_interrupts", [], -1)  # Not implemented
 
-    #Others
+    # Others
     methods["exit"] = ('void', "exit", ["int"], -1)
     return methods
+
 
 def get_not_implemented():
     return [
@@ -140,6 +152,7 @@ def get_not_implemented():
         "noInterrupts"
     ]
 
+
 # Digital I/O
 def digital_read(pin):
     """
@@ -152,6 +165,7 @@ def digital_read(pin):
     if board.is_digital(pin):
         return board.read(pin)
     return ran.randint(0, 1)
+
 
 def digital_write(pin, value):
     """
@@ -167,6 +181,7 @@ def digital_write(pin, value):
             return OK
     return ERROR
 
+
 def pin_mode(pin, mode):
     """
     Configures the pin to behave as INPUT, OUTPUT or INPUT_PULLUP
@@ -180,6 +195,7 @@ def pin_mode(pin, mode):
         board.set_pin_mode(pin, mode)
         return OK
     return ERROR
+
 
 # Analog I/O
 def analog_read(pin):
@@ -195,6 +211,7 @@ def analog_read(pin):
         return board.read(pin)
     return ran.randint(0, 1023)
 
+
 def analog_reference():
     """
     Should configure the reference voltage. As it is not
@@ -204,6 +221,7 @@ def analog_reference():
         -2, as a warning of not implemented
     """
     return NOT_IMPL_WARNING
+
 
 def analog_write(pin, value):
     """
@@ -219,6 +237,7 @@ def analog_write(pin, value):
             return OK
     return ERROR
 
+
 # Zero, Due & MKR Family
 def analog_read_resolution():
     """
@@ -226,11 +245,13 @@ def analog_read_resolution():
     """
     return NOT_IMPL_WARNING
 
+
 def analog_write_resolution():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 # Advanced I/O
 def no_tone():
@@ -238,6 +259,7 @@ def no_tone():
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 def pulse_in(pin, value):
     """
@@ -250,11 +272,13 @@ def pulse_in(pin, value):
     """
     return board.read_pulse(pin, value)
 
+
 def pulse_in_long():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 def shift_in():
     """
@@ -262,17 +286,20 @@ def shift_in():
     """
     return NOT_IMPL_WARNING
 
+
 def shift_out():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
 
+
 def tone():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 # Time
 def delay(ms):
@@ -285,6 +312,7 @@ def delay(ms):
     while time.time_ns() / 1000000 < state.exec_time_ms:
         screen_updater.refresh()
 
+
 def delay_microseconds(us):
     """
     Pauses the program for the amount of time (in microseconds) specified
@@ -293,23 +321,26 @@ def delay_microseconds(us):
     """
     state.exec_time_us = int(time.time_ns() / 1000) + us
 
+
 def micros():
     """
-    Returns the number of microseconds since the Arduino board 
+    Returns the number of microseconds since the Arduino board
     began running the current program
     """
     now = time.time()
     diff = now - start
     return int(diff * 1000000)
 
+
 def millis():
     """
-    Returns the number of milliseconds since the Arduino board 
+    Returns the number of milliseconds since the Arduino board
     began running the current program
     """
     now = time.time()
     diff = now - start
     return int(diff * 1000)
+
 
 # Math
 def abs(x):
@@ -321,6 +352,7 @@ def abs(x):
         the absolute value
     """
     return abs(x)
+
 
 def constrain(x, a, b):
     """
@@ -338,6 +370,7 @@ def constrain(x, a, b):
         return a
     else:
         return b
+
 
 def map(value, from_low, from_high, to_low, to_high):
     """
@@ -360,6 +393,7 @@ def map(value, from_low, from_high, to_low, to_high):
     else:
         return (((value - from_low) * to_range) / from_range) + to_low
 
+
 def max(x, y):
     """
     Calculates the maximum between two numbers
@@ -371,6 +405,7 @@ def max(x, y):
     """
     return x if x > y else y
 
+
 def min(x, y):
     """
     Calculates the minimum between two numbers
@@ -381,6 +416,7 @@ def min(x, y):
         The lowest of the parameters
     """
     return x if x < y else y
+
 
 def pow(base, exponent):
     """
@@ -394,6 +430,7 @@ def pow(base, exponent):
     """
     return base ** exponent
 
+
 def sq(x):
     """
     Calculates the square of a number: the number multiplied by itself
@@ -404,6 +441,7 @@ def sq(x):
     """
     return x * x
 
+
 def sqrt(x):
     """
     Calculates the square root of a number
@@ -413,6 +451,7 @@ def sqrt(x):
         The square root of the number
     """
     return sqrt(x)
+
 
 # Trigonometry
 def cos(rad):
@@ -425,6 +464,7 @@ def cos(rad):
     """
     return cos(rad)
 
+
 def sin(rad):
     """
     Calculates the sine of an angle (in radians)
@@ -435,6 +475,7 @@ def sin(rad):
     """
     return sin(rad)
 
+
 def tan(rad):
     """
     Calculates the tangent of an angle (in radians)
@@ -444,6 +485,7 @@ def tan(rad):
         The tan of the angle [-1, 1]
     """
     return tan(rad)
+
 
 # Characters
 def is_alpha(this_char: str):
@@ -456,9 +498,10 @@ def is_alpha(this_char: str):
     """
     return this_char.isalpha()
 
+
 def is_alpha_numeric(this_char: str):
     """
-    Analyse if a char is alphanumeric (that is a letter 
+    Analyse if a char is alphanumeric (that is a letter
     or a number)
     Arguments:
         this_char: the char to analyse
@@ -466,6 +509,7 @@ def is_alpha_numeric(this_char: str):
         True if alphanumeric, False if else
     """
     return this_char.isalnum()
+
 
 def is_ascii(this_char: str):
     """
@@ -477,6 +521,7 @@ def is_ascii(this_char: str):
     """
     return this_char.isascii()
 
+
 def is_control(this_char: str):
     """
     Analyses if a char is a control character
@@ -487,6 +532,7 @@ def is_control(this_char: str):
     """
     return this_char.isprintable()
 
+
 def is_digit(this_char: str):
     """
     Analyses if a char is a digit (number)
@@ -496,6 +542,7 @@ def is_digit(this_char: str):
         True if digit, False if else
     """
     return this_char.isdigit()
+
 
 def is_graph(this_char: str):
     """
@@ -510,6 +557,7 @@ def is_graph(this_char: str):
         return False
     return this_char.isprintable()
 
+
 def is_hexadecimal_digit(this_char: str):
     """
     Analyse if a char is an hexadecimal digit (A-F, 0-9)
@@ -519,10 +567,11 @@ def is_hexadecimal_digit(this_char: str):
         True if hexadecimal, False if else
     """
     return (
-        '0' <= this_char <= '9' or
-        'a' <= this_char <= 'f' or
-        'A' <= this_char <= 'F'
+        '0' <= this_char <= '9'
+        or 'a' <= this_char <= 'f'
+        or 'A' <= this_char <= 'F'
     )
+
 
 def is_lower_case(this_char: str):
     """
@@ -534,6 +583,7 @@ def is_lower_case(this_char: str):
     """
     return this_char.islower()
 
+
 def is_printable(this_char: str):
     """
     Analyse if a char is printable
@@ -544,6 +594,7 @@ def is_printable(this_char: str):
     """
     return this_char.isprintable()
 
+
 def is_punct(this_char: str):
     """
     Analyse if a char is punctuation
@@ -553,6 +604,7 @@ def is_punct(this_char: str):
         True if is punctuation, False if else
     """
     return this_char in string.punctuation
+
 
 def is_space(this_char: str):
     """
@@ -565,13 +617,14 @@ def is_space(this_char: str):
         True if white space, False if else
     """
     return (
-        this_char == '\f' or
-        this_char == '\n' or
-        this_char == '\r' or
-        this_char == '\t' or
-        this_char == '\v' or
-        this_char == ' '
+        this_char == '\f'
+        or this_char == '\n'
+        or this_char == '\r'
+        or this_char == '\t'
+        or this_char == '\v'
+        or this_char == ' '
     )
+
 
 def is_upper_case(this_char: str):
     """
@@ -583,6 +636,7 @@ def is_upper_case(this_char: str):
     """
     return this_char.isupper()
 
+
 def is_whitespace(this_char: str):
     """
     Analyse if a char is a white space character
@@ -592,6 +646,7 @@ def is_whitespace(this_char: str):
         True if white space, False if else
     """
     return this_char.isspace()
+
 
 # Random Numbers
 def random(max, min=0):
@@ -605,11 +660,13 @@ def random(max, min=0):
     """
     return ran.randint(min, max - 1)
 
+
 def random_seed():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 # Bits and Bytes
 def bit(n):
@@ -622,6 +679,7 @@ def bit(n):
     """
     return 1 << n
 
+
 def bit_clear(x, n):
     """
     Clears a bit of a numeric value
@@ -632,6 +690,7 @@ def bit_clear(x, n):
         The value after the position n is cleared
     """
     return x & ~(1 << n)
+
 
 def bit_read(x, n):
     """
@@ -644,6 +703,7 @@ def bit_read(x, n):
     """
     return x & (1 << n)
 
+
 def bit_set(x, n):
     """
     Writes to 1 a bit of a number
@@ -655,6 +715,7 @@ def bit_set(x, n):
     """
     mask = 1 << n
     return (x & ~mask) | (1 << n)
+
 
 def bit_write(x, n, b):
     """
@@ -669,6 +730,7 @@ def bit_write(x, n, b):
     mask = 1 << n
     return (x & ~mask) | ((b << n) & mask)
 
+
 def high_byte(x):
     """
     Extracts the leftmost byte
@@ -678,6 +740,7 @@ def high_byte(x):
         The leftmost byte
     """
     return x & 0xff
+
 
 def low_byte(x):
     """
@@ -689,6 +752,7 @@ def low_byte(x):
     """
     return (x & 0xff00) >> 8
 
+
 # External Interrupts
 def attach_interrupt():
     """
@@ -696,11 +760,13 @@ def attach_interrupt():
     """
     return NOT_IMPL_WARNING
 
+
 def detach_interrupt():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 # Interrupts
 def interrupts():
@@ -709,11 +775,13 @@ def interrupts():
     """
     return NOT_IMPL_WARNING
 
+
 def no_interrupts():
     """
     Not needed (not implemented)
     """
     return NOT_IMPL_WARNING
+
 
 # Others
 def exit(n):

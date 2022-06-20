@@ -84,7 +84,7 @@ class Console:
         self.text_widget.tag_config('error', foreground='red')
 
         self.begin(4000000)
-        #self.__test()
+        # self.__test()
 
     def __test(self):
         err = Error("prueba error", 1, 10, "error errorado")
@@ -180,7 +180,6 @@ class Console:
         self.logger.write_log(m_type, message)
         self.messages.append((m_type, error_msg.to_string()))
 
-        
     def write_warning(self, warning_msg: Warning):
         """
         Writes a message indicating a warning
@@ -209,10 +208,10 @@ class Console:
 
     def clear(self):
         self.text_widget.config(state=tk.NORMAL)
-        self.text_widget.delete("1.0", tk.END) 
+        self.text_widget.delete("1.0", tk.END)
         self.text_widget.config(state=tk.DISABLED)
         self.messages = []
-        self.input_msgs = []     
+        self.input_msgs = []
 
     def __insert_text(self, message, tag='info'):
         """
@@ -239,7 +238,8 @@ class Logger:
             pass
         date = datetime.now().strftime("%d-%m-%Y")
         file_name = 'logs/log_{}.log'.format(date)
-        logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+        logging.basicConfig(filename=file_name, encoding='utf-8', level=logging.DEBUG,
+                            format='%(asctime)s - %(levelname)s: %(message)s')
         logging.info("Started simulator session")
 
     def write_log(self, m_type, message):
