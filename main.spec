@@ -5,14 +5,14 @@ block_cipher = None
 
 
 a = Analysis(
-    ['..\\SimuladorSoftwareRobots\\simulator\\main.py'],
-    pathex=['../SimuladorSoftwareRobots/simulator'],
+    ['simulator/main.py'],
+    pathex=['simulator'],
     binaries=[],
     datas=[
-        ('../SimuladorSoftwareRobots/buttons', 'buttons'), 
-        ('../SimuladorSoftwareRobots/assets', 'assets'),
-        ('../SimuladorSoftwareRobots/robot_data.json', '.'),
-        ('../SimuladorSoftwareRobots/manual-usuario.pdf', '.')
+        ('buttons', 'buttons'), 
+        ('assets', 'assets'),
+        ('robot_data.json', '.'),
+        ('manual-usuario.pdf', '.')
     ],
     hiddenimports=[],
     hookspath=[],
@@ -37,7 +37,7 @@ exe = EXE(
     strip=False,
     upx=True,
     console=True,
-    icon='../SimuladorSoftwareRobots/assets/applogo.ico',
+    icon='assets/applogo.ico',
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

@@ -6,3 +6,5 @@ attribute_grammar.txt
 temp/
 arduino-examples.zip
 examples/
+build/
+dist/
