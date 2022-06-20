@@ -212,6 +212,26 @@ class ArduinoListenerImpl(ArduinoListener):
     def exitExpression(self, ctx: ArduinoParser.ExpressionContext):
         self.print_exit()
 
+    # Enter a parse tree produced by ArduinoParser#conversion.
+    def enterConversion(self, ctx:ArduinoParser.ConversionContext):
+        self.print_enter("Conversion")
+        if ctx.uc_type is not None:
+            self.print_enter("Type Convert", False)
+            print(ctx.getText())
+
+    # Exit a parse tree produced by ArduinoParser#conversion.
+    def exitConversion(self, ctx:ArduinoParser.ConversionContext):
+        self.print_exit()
+
+    # Enter a parse tree produced by ArduinoParser#type_convert.
+    def enterType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        self.print_enter("Type Convert", False)
+        print(ctx.getText())
+
+    # Exit a parse tree produced by ArduinoParser#type_convert.
+    def exitType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        pass
+
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx: ArduinoParser.ParameterContext):
         self.print_enter("Parameter")

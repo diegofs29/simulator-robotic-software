@@ -77,7 +77,7 @@ class MainApplication(tk.Tk):
         # if not, the track raises exception
 
     def execute(self):
-        self.drawing_frame.canvas.focus_set()
+        self.drawing_frame.canvas.focus_force()
         self.controller.execute()
 
     def stop(self):
@@ -618,6 +618,7 @@ class DrawingFrame(tk.Frame):
         self.application.toggle_keys()
 
     def scroll_start(self, event):
+        self.canvas.focus_force()
         self.canvas.scan_mark(event.x, event.y)
 
     def scroll_move(self, event):

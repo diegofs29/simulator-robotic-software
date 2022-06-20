@@ -691,6 +691,17 @@ class FunctionCallNode(Expression):
         return visitor.visit_function_call(self, param)
 
 
+class ConversionNode(Expression):
+
+    def __init__(self, conv_type, expr):
+        super().__init__()
+        self.conv_type = conv_type
+        self.expr = expr
+
+    def accept(self, visitor, param):
+        return visitor.visit_conversion(self, param)
+
+
 class ReturnNode(Sentence):
 
     def __init__(self, expression=None):

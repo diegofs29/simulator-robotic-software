@@ -229,6 +229,13 @@ class ASTVisitor:
         self.visit_children(function_call.parameters, param)
         return None
 
+    def visit_conversion(self, conversion: ast.ConversionNode, param):
+        if conversion.conv_type is not None:
+            conversion.conv_type.accept(self, param)
+        if conversion.expr is not None:
+            conversion.expr.accept(self, param)
+        return None
+
     def visit_member_access(self, member_access: ast.MemberAccessNode, param):
         if member_access.element is not None:
             member_access.element.accept(self, param)

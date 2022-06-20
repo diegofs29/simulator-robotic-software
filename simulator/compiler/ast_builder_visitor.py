@@ -350,6 +350,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
             if ctx.args is not None:
                 args = self.visit(ctx.args)
             node = FunctionCallNode(name, args)
+        if ctx.conv is not None:
+            node = self.visit(ctx.conv)
         if ctx.operator is not None:
             left = right = expr = None
             op = ctx.operator
@@ -413,6 +415,40 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = StringNode(string_const)
         if ctx.ID() is not None and ctx.array_name is None and ctx.id_acc is None:
             node = IDNode(ctx.ID().getText())
+        self.__add_line_info(node, ctx)
+        return node
+
+    # Visit a parse tree produced by ArduinoParser#conversion.
+    def visitConversion(self, ctx:ArduinoParser.ConversionContext):
+        conv_type = expr = None
+        if ctx.uc_type is not None:
+            if ctx.uc_type == "(unsigned int)":
+                conv_type = UIntTypeNode()
+            elif ctx.uc_type == "(unsigned long)":
+                conv_type = ULongTypeNode()
+        if ctx.c_type is not None:
+            conv_type = self.visit(ctx.c_type)
+        node = ConversionNode(conv_type, expr)
+        self.__add_line_info(node, ctx)
+        return node
+
+    # Visit a parse tree produced by ArduinoParser#type_convert.
+    def visitType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        node = None
+        if ctx.getText() == 'byte':
+            node = ByteTypeNode()
+        elif ctx.getText() == 'char':
+            node = CharTypeNode()
+        elif ctx.getText() == 'float':
+            node = FloatTypeNode()
+        elif ctx.getText() == 'int':
+            node = IntTypeNode()
+        elif ctx.getText() == 'long':
+            node = LongTypeNode()
+        elif ctx.getText() == 'String':
+            node = StringTypeNode()
+        elif ctx.getText() == 'word':
+            node = WordTypeNode()
         self.__add_line_info(node, ctx)
         return node
 

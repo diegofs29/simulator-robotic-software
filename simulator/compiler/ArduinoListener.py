@@ -188,6 +188,24 @@ class ArduinoListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ArduinoParser#conversion.
+    def enterConversion(self, ctx:ArduinoParser.ConversionContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#conversion.
+    def exitConversion(self, ctx:ArduinoParser.ConversionContext):
+        pass
+
+
+    # Enter a parse tree produced by ArduinoParser#type_convert.
+    def enterType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        pass
+
+    # Exit a parse tree produced by ArduinoParser#type_convert.
+    def exitType_convert(self, ctx:ArduinoParser.Type_convertContext):
+        pass
+
+
     # Enter a parse tree produced by ArduinoParser#parameter.
     def enterParameter(self, ctx:ArduinoParser.ParameterContext):
         pass
