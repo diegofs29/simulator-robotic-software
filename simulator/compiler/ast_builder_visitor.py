@@ -422,14 +422,16 @@ class ASTBuilderVisitor(ArduinoVisitor):
     def visitConversion(self, ctx:ArduinoParser.ConversionContext):
         conv_type = expr = None
         if ctx.uc_type is not None:
-            if ctx.uc_type == "(unsigned int)":
+            if ctx.uc_type.text == "(unsigned int)":
                 conv_type = UIntTypeNode()
-            elif ctx.uc_type == "(unsigned long)":
+            elif ctx.uc_type.text == "(unsigned long)":
                 conv_type = ULongTypeNode()
-            elif ctx.getText() == 'String':
+            elif ctx.uc_type.text == 'String':
                 conv_type = StringTypeNode()
         if ctx.c_type is not None:
             conv_type = self.visit(ctx.c_type)
+        if ctx.expr is not None:
+            expr = self.visit(ctx.expr)
         node = ConversionNode(conv_type, expr)
         self.__add_line_info(node, ctx)
         return node
