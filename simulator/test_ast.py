@@ -1040,3 +1040,8 @@ class TestArrayAccess(TestBaseAST):
             self.code[0].function.sentences[2].indexes[1].value, 0)
         self.assertEqual(
             self.code[0].function.sentences[2].indexes[2].value, 3)
+
+
+class TestConversion(TestBaseAST):
+
+    file = "tests/file-tests/conversions.txt"

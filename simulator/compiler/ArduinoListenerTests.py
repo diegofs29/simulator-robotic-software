@@ -194,11 +194,11 @@ class ArduinoListenerTests(ArduinoListener):
     # Enter a parse tree produced by ArduinoParser#conversion.
     def enterConversion(self, ctx:ArduinoParser.ConversionContext):
         if ctx.expr is not None:
-            self.add_token("Conversion", ctx.expr.text)
+            self.add_token("Conversion", ctx.expr.getText())
         else:
             self.add_token("Conversion", ctx.getText())
         if ctx.uc_type is not None:
-            self.add_token("Var_type", str(ctx.uc_type.text))
+            self.add_token("Type_convert", str(ctx.uc_type.text))
 
     # Exit a parse tree produced by ArduinoParser#conversion.
     def exitConversion(self, ctx:ArduinoParser.ConversionContext):
@@ -206,7 +206,7 @@ class ArduinoListenerTests(ArduinoListener):
 
     # Enter a parse tree produced by ArduinoParser#type_convert.
     def enterType_convert(self, ctx:ArduinoParser.Type_convertContext):
-        self.add_token("Var_type", str(ctx.getText()))
+        self.add_token("Type_convert", str(ctx.getText()))
 
     # Exit a parse tree produced by ArduinoParser#type_convert.
     def exitType_convert(self, ctx:ArduinoParser.Type_convertContext):

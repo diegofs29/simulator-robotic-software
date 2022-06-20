@@ -216,10 +216,10 @@ class PinConfigurationWindow(tk.Toplevel):
         # Actuator
         self.lb_actuator = tk.Label(frame_content, text="Actuador lineal:")
         self.lb_pin_bt1 = tk.Label(
-            frame_content, text="Pin botón izquierdo:", underline=10)
+            frame_content, text="Pin final izquierdo:", underline=10)
         self.entry_pin_bt1 = tk.Entry(frame_content)
         self.lb_pin_bt2 = tk.Label(
-            frame_content, text="Pin botón derecho:", underline=10)
+            frame_content, text="Pin final derecho:", underline=10)
         self.entry_pin_bt2 = tk.Entry(frame_content)
         self.lb_pin_joystick = tk.Label(
             frame_content, text="Pin botón Joystick:", underline=10)

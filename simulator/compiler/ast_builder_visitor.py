@@ -426,6 +426,8 @@ class ASTBuilderVisitor(ArduinoVisitor):
                 conv_type = UIntTypeNode()
             elif ctx.uc_type == "(unsigned long)":
                 conv_type = ULongTypeNode()
+            elif ctx.getText() == 'String':
+                conv_type = StringTypeNode()
         if ctx.c_type is not None:
             conv_type = self.visit(ctx.c_type)
         node = ConversionNode(conv_type, expr)
@@ -445,8 +447,6 @@ class ASTBuilderVisitor(ArduinoVisitor):
             node = IntTypeNode()
         elif ctx.getText() == 'long':
             node = LongTypeNode()
-        elif ctx.getText() == 'String':
-            node = StringTypeNode()
         elif ctx.getText() == 'word':
             node = WordTypeNode()
         self.__add_line_info(node, ctx)

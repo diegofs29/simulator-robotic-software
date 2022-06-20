@@ -155,6 +155,7 @@ expression
 conversion
        : uc_type=('(unsigned int)'|'(unsigned long)') expr=expression
        | '(' c_type=type_convert ')' expr=expression
+       | uc_type='String' '(' expr=expression ')'
        | c_type=type_convert '(' expr=expression ')'
        ;
 
@@ -164,7 +165,6 @@ type_convert
        | 'float'
        | 'int'
        | 'long'
-       | 'String'
        | 'word'
        ;
 

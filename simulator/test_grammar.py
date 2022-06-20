@@ -160,3 +160,11 @@ class TestArrayAccess(TestBase):
     def test_parsed(self):
         self.read_results("tests/grammar-tests/outputs/outputTestArrays.txt")
         self.assertEqual(self.tokens, self.lines)
+
+
+class TestConversion(TestBase):
+    file = "tests/grammar-tests/testConversion.txt"
+
+    def test_parsed(self):
+        self.read_results("tests/grammar-tests/outputs/outputTestConversion.txt")
+        self.assertEqual(self.tokens, self.lines)
