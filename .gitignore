@@ -8,3 +8,6 @@ arduino-examples.zip
 examples/
 build/
 dist/
+doc/
+.VSCodeCounter/
+stats.dump
