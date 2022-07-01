@@ -17,7 +17,7 @@ class MainApplication(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("Simulador Software para Robots")
         self.geometry("1280x720")
-        self.iconbitmap('assets/applogo.ico')
+        self.iconbitmap('assets/simlogo.ico')
 
         self.menu_bar = MenuBar(self, self)
 
